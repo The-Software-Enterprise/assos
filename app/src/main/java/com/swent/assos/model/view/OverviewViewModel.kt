@@ -20,7 +20,7 @@ constructor(
   private val dbService: DbService,
   private val authService: AuthService
 ) : ViewModel() {
-  val _allAssociations = MutableStateFlow(emptyList<Association>())
+  private val _allAssociations = MutableStateFlow(emptyList<Association>())
   val allAssociations = _allAssociations.asStateFlow()
 
   init {

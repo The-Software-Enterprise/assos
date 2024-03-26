@@ -19,9 +19,13 @@ constructor(
             .get()
             .await()
             .documents
-            .map { document ->
+            .map { doc ->
+                val fields = doc.data!!
                 Association(
-                    id = document.id,
-                )}
+                    acronym = fields["acronym"] as String,
+                    fullname = fields["fullname"] as String,
+                    url = fields["url"] as String
+                )
+            }
     }
 }
