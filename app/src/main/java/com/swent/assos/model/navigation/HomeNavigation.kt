@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeNavigation() {
     val coroutineScope = rememberCoroutineScope()
-    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 2 }
+    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,7 +60,7 @@ fun HomeNavigation() {
                 .background(MaterialTheme.colorScheme.surface),
             containerColor = Color.Transparent,
         ) {
-            repeat(2) { index ->
+            repeat(5) { index ->
                 NavigationBarItem(
                     modifier = Modifier.width(30.dp),
                     icon = {
