@@ -9,9 +9,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel
 @Inject
-constructor(
-    private val storageService: DbService,
-    private val accountService: AuthService
-) : ViewModel() {
-    val currentUser = accountService.currentUser
+constructor(private val storageService: DbService, private val accountService: AuthService) :
+    ViewModel() {
+  val currentUser = accountService.currentUser
 }

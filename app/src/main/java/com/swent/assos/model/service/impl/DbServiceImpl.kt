@@ -10,5 +10,4 @@ class DbServiceImpl
 constructor(
     private val firestore: FirebaseFirestore,
     private val auth: AuthService,
-) : DbService {
-}
+) : DbService {}
