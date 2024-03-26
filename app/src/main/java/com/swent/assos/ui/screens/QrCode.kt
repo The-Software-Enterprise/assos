@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun QrCode() {
-    Text("QrCode")
+  Text("QrCode")
 }

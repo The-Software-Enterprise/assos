@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun Explorer() {
-    Text("Explorer")
+  Text("Explorer")
 }
