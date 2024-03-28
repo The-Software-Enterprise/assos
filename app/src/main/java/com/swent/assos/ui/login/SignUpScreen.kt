@@ -24,11 +24,7 @@ fun SignUpScreen() {
   val loginViewModel: LoginViewModel = hiltViewModel()
 
   Column {
-    OutlinedTextField(
-        value = email,
-        onValueChange = { email = it },
-        label = { Text("Email") }
-    )
+    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
