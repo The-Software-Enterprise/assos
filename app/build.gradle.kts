@@ -115,3 +115,12 @@ tasks.register("jacocoTestReport", JacocoReport::class) {
         include("outputs/code_coverage/debugAndroidTest/connected/*/coverage.ec")
     })
 }
+
+sonarqube {
+    properties {
+        property("sonar.host.url", "http://localhost:9000")
+        property("sonar.projectKey", "the-software-enterprise")
+        property("sonar.projectName", "The Software Enterprise")
+        property("sonar.sources", "src/main/java")
+    }
+}
