@@ -9,9 +9,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel
 @Inject
-constructor(
-    private val storageService: DbService,
-    private val accountService: AuthService
-) : ViewModel() {
-    val currentUser = accountService.currentUser
+constructor(private val storageService: DbService, private val accountService: AuthService) :
+    ViewModel() {
+  val currentUser = accountService.currentUser
+
+  fun signIn(email: String, password: String) = accountService.signIn(email, password)
+
+  fun signUp(email: String, password: String) = accountService.signUp(email, password)
 }

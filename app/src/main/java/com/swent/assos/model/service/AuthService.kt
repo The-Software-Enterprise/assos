@@ -10,5 +10,7 @@ interface AuthService {
 
   fun signIn(email: String, password: String): Task<AuthResult>
 
+  fun signUp(email: String, password: String): Task<AuthResult>
+
   fun signOut()
 }
