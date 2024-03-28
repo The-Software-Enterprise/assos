@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
     id("com.ncorti.ktfmt.gradle") version "0.16.0"
+    id("org.sonarqube") version "3.3"
 }
 
 android {
