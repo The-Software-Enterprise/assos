@@ -11,9 +11,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.view.LoginViewModel
 
+@Preview
 @Composable
 fun SignUpScreen() {
   var email by remember { mutableStateOf("") }
@@ -22,7 +24,11 @@ fun SignUpScreen() {
   val loginViewModel: LoginViewModel = hiltViewModel()
 
   Column {
-    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+    OutlinedTextField(
+        value = email,
+        onValueChange = { email = it },
+        label = { Text("Email") }
+    )
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
