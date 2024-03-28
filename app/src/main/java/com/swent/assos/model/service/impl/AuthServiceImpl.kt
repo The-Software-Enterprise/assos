@@ -23,6 +23,10 @@ class AuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : Auth
     return auth.signInWithEmailAndPassword(email, password)
   }
 
+  override fun signUp(email: String, password: String): Task<AuthResult> {
+    return auth.createUserWithEmailAndPassword(email, password)
+  }
+
   override fun signOut() {
     auth.signOut()
   }
