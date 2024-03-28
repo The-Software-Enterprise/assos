@@ -4,8 +4,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlinx.coroutines.tasks.await
 
 class DbServiceImpl
 @Inject
@@ -14,18 +14,13 @@ constructor(
     private val auth: AuthService,
 ) : DbService {
 
-    override suspend fun getAllAssociations(): List<Association> {
-        return firestore.collection("associations")
-            .get()
-            .await()
-            .documents
-            .map { doc ->
-                val fields = doc.data!!
-                Association(
-                    acronym = fields["acronym"] as String,
-                    fullname = fields["fullname"] as String,
-                    url = fields["url"] as String
-                )
-            }
+  override suspend fun getAllAssociations(): List<Association> {
+    return firestore.collection("associations").get().await().documents.map { doc ->
+      val fields = doc.data!!
+      Association(
+          acronym = fields["acronym"] as String,
+          fullname = fields["fullname"] as String,
+          url = fields["url"] as String)
     }
+  }
 }
