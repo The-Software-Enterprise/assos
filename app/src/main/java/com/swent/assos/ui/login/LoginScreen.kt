@@ -46,17 +46,20 @@ fun LoginScreen() {
             onValueChange = { email = it },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth().padding(16.dp))
+
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             visualTransformation = PasswordVisualTransformation())
+
         Button(
             onClick = { loginViewModel.signIn(email, password) },
         ) {
           Text("Login")
         }
+
         Text(
             modifier = Modifier.clickable {},
             color = Color.Blue,
