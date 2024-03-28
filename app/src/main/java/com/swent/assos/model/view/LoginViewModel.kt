@@ -14,4 +14,6 @@ constructor(
     private val accountService: AuthService
 ) : ViewModel() {
     val currentUser = accountService.currentUser
+    fun signIn(email: String, password: String) = accountService.signIn(email, password)
+    fun signUp(email: String, password: String) = accountService.signUp(email, password)
 }
