@@ -16,38 +16,33 @@ import com.swent.assos.model.view.LoginViewModel
 
 @Composable
 fun SignUpScreen() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    val loginViewModel: LoginViewModel = hiltViewModel()
+  var email by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
+  var confirmPassword by remember { mutableStateOf("") }
+  val loginViewModel: LoginViewModel = hiltViewModel()
 
-    Column {
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") }
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation()
-        )
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirm Password") },
-            visualTransformation = PasswordVisualTransformation()
-        )
-        if (password != confirmPassword) {
-            Text("Passwords do not match", color = Color.Red)
-        }
-        Button(onClick = {
-            if (password == confirmPassword && password.isNotEmpty()) {
-                loginViewModel.signUp(email, password)
-            }
-        }) {
-            Text("Sign Up")
-        }
+  Column {
+    OutlinedTextField(value = email, onValueChange = { email = it }, label = { Text("Email") })
+    OutlinedTextField(
+        value = password,
+        onValueChange = { password = it },
+        label = { Text("Password") },
+        visualTransformation = PasswordVisualTransformation())
+    OutlinedTextField(
+        value = confirmPassword,
+        onValueChange = { confirmPassword = it },
+        label = { Text("Confirm Password") },
+        visualTransformation = PasswordVisualTransformation())
+    if (password != confirmPassword) {
+      Text("Passwords do not match", color = Color.Red)
     }
+    Button(
+        onClick = {
+          if (password == confirmPassword && password.isNotEmpty()) {
+            loginViewModel.signUp(email, password)
+          }
+        }) {
+          Text("Sign Up")
+        }
+  }
 }
