@@ -1,3 +1,7 @@
 package com.swent.assos.model.service
 
-interface DbService {}
+import com.swent.assos.model.data.Association
+
+interface DbService {
+  suspend fun getAllAssociations(): List<Association>
+}
