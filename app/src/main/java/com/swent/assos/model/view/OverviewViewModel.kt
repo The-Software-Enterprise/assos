@@ -6,7 +6,6 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,35 +13,56 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class OverviewViewModel @Inject constructor(
-  private val dbService: DbService,
-  private val authService: AuthService
-): ViewModel() {
+class OverviewViewModel
+@Inject
+constructor(private val dbService: DbService, private val authService: AuthService) : ViewModel() {
   private val _allAssociations = MutableStateFlow(emptyList<Association>())
   val allAssociations = _allAssociations.asStateFlow()
 
   private val _filteredAssociations = MutableStateFlow(emptyList<Association>())
   val filteredAssociations = _filteredAssociations.asStateFlow()
 
-  init {
-      viewModelScope.launch(Dispatchers.IO) {
-        dbService.getAllAssociations().let {
-          _allAssociations.value = it
-          _filteredAssociations.value = it
-        }
-      }
-  }
+  private val _researchQuery = MutableStateFlow("")
+  val researchQuery = _researchQuery.asStateFlow()
 
-  fun filterOnSearch(query: String) {
-    _filteredAssociations.value = _allAssociations.value.filter {
-      it.acronym.contains(query, ignoreCase = true) || it.fullname.contains(query, ignoreCase = true)
+  private var _loading = false
+
+  init {
+    viewModelScope.launch(Dispatchers.IO) {
+      dbService.getAllAssociations(null).let {
+        _allAssociations.value = it
+        filterOnSearch(_researchQuery.value)
+      }
     }
   }
 
+  fun filterOnSearch(query: String) {
+    _researchQuery.value = query
+    _filteredAssociations.value =
+        _allAssociations.value.filter {
+          it.acronym.contains(query, ignoreCase = true) ||
+              it.fullname.contains(query, ignoreCase = true)
+        }
+  }
 
-
+  fun loadMoreAssociations() {
+    if (!_loading) {
+      _loading = true
+      viewModelScope.launch(Dispatchers.IO) {
+        val lastDocumentSnapshot = _allAssociations.value.lastOrNull()?.documentSnapshot
+        dbService.getAllAssociations(lastDocumentSnapshot).let {
+          _allAssociations.value += it
+          _allAssociations.value = _allAssociations.value.distinct()
+          filterOnSearch(_researchQuery.value)
+          if (it.isNotEmpty()) {
+            _loading = false
+          }
+          if (_researchQuery.value.isNotEmpty() &&
+              (_filteredAssociations.value.isEmpty() || _filteredAssociations.value.size < 10)) {
+            loadMoreAssociations()
+          }
+        }
+      }
+    }
+  }
 }
-
-
-
-

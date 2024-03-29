@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Home
@@ -21,11 +22,13 @@ import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,19 +40,31 @@ import com.swent.assos.model.view.OverviewViewModel
 
 @Composable
 fun Overview(overviewViewModel: OverviewViewModel) {
-  val associations = overviewViewModel.filteredAssociations.collectAsState()
+  val associations by overviewViewModel.filteredAssociations.collectAsState()
+
+  val listState = rememberLazyListState()
+
+  LaunchedEffect(listState) {
+    snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == associations.size - 1) {
+            overviewViewModel.loadMoreAssociations()
+          }
+        }
+  }
 
   Scaffold(topBar = { TopResearchBar(overviewViewModel = overviewViewModel) }) { paddingValues ->
-    LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true) {
-      if (associations.value.isEmpty()) {
-        item { Text(text = "No results were found", textAlign = TextAlign.Center) }
-      } else {
-        items(items = associations.value, key = { it.hashCode() }) {
-          ListItemFrom(it)
-          Divider(modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+    LazyColumn(
+        modifier = Modifier.padding(paddingValues), userScrollEnabled = true, state = listState) {
+          if (associations.isEmpty()) {
+            item { Text(text = "No results were found", textAlign = TextAlign.Center) }
+          } else {
+            items(items = associations, key = { it.hashCode() }) {
+              ListItemFrom(it)
+              Divider(modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+            }
+          }
         }
-      }
-    }
   }
 }
 
@@ -72,37 +87,35 @@ fun ListItemFrom(asso: Association) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopResearchBar(overviewViewModel: OverviewViewModel) {
-
-  var query by remember { mutableStateOf("") }
+  val query by overviewViewModel.researchQuery.collectAsState()
   var isSearching by remember { mutableStateOf(false) }
   val focusManager = LocalFocusManager.current
 
-  Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-    DockedSearchBar(
-      leadingIcon = { Image(imageVector = Icons.Default.Home, contentDescription = null) },
-      trailingIcon = { 
-        if (isSearching) { 
-          Image(imageVector = Icons.Default.Close,
-                contentDescription = null,
-                modifier = 
-                  Modifier.clickable {
-                            query = ""
-                            overviewViewModel.filterOnSearch("")
-                            focusManager.clearFocus()
-                            isSearching = false
-                          })
-        } else {
-          Image(imageVector = Icons.Default.Search, contentDescription = null)
-        }
-      },
-      placeholder = { Text(text = "Search an Association") },
-      query = query,
-      onQueryChange = {
-        query = it
-        overviewViewModel.filterOnSearch(it)
-                      },
-      onSearch = {},
-      active = false,
-      onActiveChange = { isSearching = it}) {}
-  }
+  Column(
+      modifier = Modifier.fillMaxWidth().padding(16.dp),
+      horizontalAlignment = Alignment.CenterHorizontally) {
+        DockedSearchBar(
+            leadingIcon = { Image(imageVector = Icons.Default.Home, contentDescription = null) },
+            trailingIcon = {
+              if (isSearching) {
+                Image(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    modifier =
+                        Modifier.clickable {
+                          overviewViewModel.filterOnSearch("")
+                          focusManager.clearFocus()
+                          isSearching = false
+                        })
+              } else {
+                Image(imageVector = Icons.Default.Search, contentDescription = null)
+              }
+            },
+            placeholder = { Text(text = "Search an Association") },
+            query = query,
+            onQueryChange = { overviewViewModel.filterOnSearch(it) },
+            onSearch = {},
+            active = false,
+            onActiveChange = { isSearching = it }) {}
+      }
 }
