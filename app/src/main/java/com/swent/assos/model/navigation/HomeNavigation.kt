@@ -49,6 +49,7 @@ fun HomeNavigation() {
         4 -> Profil()
       }
     }
+    
 
     NavigationBar(
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
