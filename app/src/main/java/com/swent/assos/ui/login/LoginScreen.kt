@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.view.LoginViewModel
 
 @Composable
@@ -35,6 +36,10 @@ fun LoginScreen() {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
+
+
+
+
 
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -61,7 +66,11 @@ fun LoginScreen() {
         }
 
         Text(
-            modifier = Modifier.clickable {},
+            // if clikecd, go to sign up page using hilt navigation
+            modifier = Modifier.clickable {
+
+
+            },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")

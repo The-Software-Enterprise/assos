@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationGraph
 import com.swent.assos.model.view.OverviewViewModel
+import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
           NavigationGraph()
           val overviewViewModel: OverviewViewModel = hiltViewModel()
           Overview(overviewViewModel)
+          //LoginScreen()
         }
       }
     }
