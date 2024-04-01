@@ -6,11 +6,11 @@ import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 
 interface AuthService {
-  val currentUser: Flow<FirebaseUser>
+    val currentUser: Flow<FirebaseUser>
 
-  fun signIn(email: String, password: String): Task<AuthResult>
+    fun signIn(email: String, password: String): Task<AuthResult>
 
-  fun signUp(email: String, password: String): Task<AuthResult>
+    fun signUp(email: String, password: String): Task<AuthResult>
 
-  fun signOut()
+    fun signOut()
 }

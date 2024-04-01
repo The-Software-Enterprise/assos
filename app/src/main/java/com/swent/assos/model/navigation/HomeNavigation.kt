@@ -31,76 +31,85 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeNavigation() {
-  val coroutineScope = rememberCoroutineScope()
-  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
+    val coroutineScope = rememberCoroutineScope()
+    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
 
-  Column(
-      modifier = Modifier.fillMaxSize(),
-  ) {
-    HorizontalPager(
-        state = pagerState,
-        userScrollEnabled = false,
-        modifier = Modifier
-            .fillMaxSize()
-            .weight(1f),
-    ) { page ->
-      when (page) {
-        0 -> News()
-        1 -> Explorer()
-        2 -> Calendar()
-        3 -> QrCode()
-        4 -> Profil()
-          5-> LoginScreen()
-      }
-    }
-    
-
-    NavigationBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface),
-        containerColor = Color.Transparent,
+    Column(
+        modifier = Modifier.fillMaxSize(),
     ) {
-      repeat(5) { index ->
-        NavigationBarItem(
-            modifier = Modifier.width(30.dp),
-            icon = {
-              when (index) {
-                0 ->
-                    Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = "Overview",
-                        tint = MaterialTheme.colorScheme.onSurface)
-                1 ->
-                    Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = "Map",
-                        tint = MaterialTheme.colorScheme.onSurface)
-                2 ->
-                    Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = "Map",
-                        tint = MaterialTheme.colorScheme.onSurface)
-                3 ->
-                    Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = "Map",
-                        tint = MaterialTheme.colorScheme.onSurface)
-                4 ->
-                    Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = "Map",
-                        tint = MaterialTheme.colorScheme.onSurface)
-              }
-            },
-            selected = pagerState.currentPage == index,
-            onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-            colors =
-                NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
-                ),
-        )
-      }
+        HorizontalPager(
+            state = pagerState,
+            userScrollEnabled = false,
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f),
+        ) { page ->
+            when (page) {
+                0 -> News()
+                1 -> Explorer()
+                2 -> Calendar()
+                3 -> QrCode()
+                4 -> Profil()
+
+            }
+        }
+
+
+        NavigationBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface),
+            containerColor = Color.Transparent,
+        ) {
+            repeat(5) { index ->
+                NavigationBarItem(
+                    modifier = Modifier.width(30.dp),
+                    icon = {
+                        when (index) {
+                            0 ->
+                                Icon(
+                                    painterResource(id = R.drawable.menu),
+                                    contentDescription = "Overview",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+
+                            1 ->
+                                Icon(
+                                    painterResource(id = R.drawable.menu),
+                                    contentDescription = "Map",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+
+                            2 ->
+                                Icon(
+                                    painterResource(id = R.drawable.menu),
+                                    contentDescription = "Map",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+
+                            3 ->
+                                Icon(
+                                    painterResource(id = R.drawable.menu),
+                                    contentDescription = "Map",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+
+                            4 ->
+                                Icon(
+                                    painterResource(id = R.drawable.menu),
+                                    contentDescription = "Map",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                        }
+                    },
+                    selected = pagerState.currentPage == index,
+                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                    colors =
+                    NavigationBarItemDefaults.colors(
+                        indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                    ),
+                )
+            }
+        }
     }
-  }
 }

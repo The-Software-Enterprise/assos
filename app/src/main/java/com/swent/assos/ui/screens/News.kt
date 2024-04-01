@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun News() {
-  Text("News")
+    Text("News")
 }

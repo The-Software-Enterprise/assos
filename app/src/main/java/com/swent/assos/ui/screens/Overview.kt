@@ -18,39 +18,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.view.OverviewViewModel
 
 @Composable
-fun Overview(overviewViewModel: OverviewViewModel) {
-  val associations = overviewViewModel.allAssociations.collectAsState()
+fun Overview(overviewViewModel: OverviewViewModel, navController: NavHostController) {
+    val associations = overviewViewModel.allAssociations.collectAsState()
 
-  Scaffold { paddingValues ->
-    LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true) {
-      if (associations.value.isEmpty()) {
-        item { Text(text = "No results were found", textAlign = TextAlign.Center) }
-      } else {
-        items(items = associations.value, key = { it.hashCode() }) {
-          ListItemFrom(it)
-          Divider(modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+    Scaffold { paddingValues ->
+        LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true) {
+            if (associations.value.isEmpty()) {
+                item { Text(text = "No results were found", textAlign = TextAlign.Center) }
+            } else {
+                items(items = associations.value, key = { it.hashCode() }) {
+                    ListItemFrom(it)
+                    Divider(modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+                }
+            }
         }
-      }
     }
-  }
 }
 
 @Composable
 fun ListItemFrom(asso: Association) {
-  ListItem(
-      headlineContent = { Text(text = asso.acronym) },
-      overlineContent = { Text(text = asso.fullname) },
-      supportingContent = { Text(text = asso.url) },
-      trailingContent = {
-        Row {
-          Text(text = "more info")
-          Image(imageVector = Icons.Filled.PlayArrow, contentDescription = null)
-        }
-      },
-      colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-      modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+    ListItem(
+        headlineContent = { Text(text = asso.acronym) },
+        overlineContent = { Text(text = asso.fullname) },
+        supportingContent = { Text(text = asso.url) },
+        trailingContent = {
+            Row {
+                Text(text = "more info")
+                Image(imageVector = Icons.Filled.PlayArrow, contentDescription = null)
+            }
+        },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        modifier = Modifier.padding(start = 26.dp, end = 26.dp)
+    )
 }

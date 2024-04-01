@@ -16,12 +16,12 @@ import kotlinx.coroutines.launch
 class OverviewViewModel
 @Inject
 constructor(private val dbService: DbService, private val authService: AuthService) : ViewModel() {
-  private val _allAssociations = MutableStateFlow(emptyList<Association>())
-  val allAssociations = _allAssociations.asStateFlow()
+    private val _allAssociations = MutableStateFlow(emptyList<Association>())
+    val allAssociations = _allAssociations.asStateFlow()
 
-  init {
-    viewModelScope.launch(Dispatchers.IO) {
-      dbService.getAllAssociations().let { _allAssociations.value = it }
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            dbService.getAllAssociations().let { _allAssociations.value = it }
+        }
     }
-  }
 }

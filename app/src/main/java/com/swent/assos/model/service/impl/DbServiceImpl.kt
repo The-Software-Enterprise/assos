@@ -14,13 +14,14 @@ constructor(
     private val auth: AuthService,
 ) : DbService {
 
-  override suspend fun getAllAssociations(): List<Association> {
-    return firestore.collection("associations").get().await().documents.map { doc ->
-      val fields = doc.data!!
-      Association(
-          acronym = fields["acronym"] as String,
-          fullname = fields["fullname"] as String,
-          url = fields["url"] as String)
+    override suspend fun getAllAssociations(): List<Association> {
+        return firestore.collection("associations").get().await().documents.map { doc ->
+            val fields = doc.data!!
+            Association(
+                acronym = fields["acronym"] as String,
+                fullname = fields["fullname"] as String,
+                url = fields["url"] as String
+            )
+        }
     }
-  }
 }
