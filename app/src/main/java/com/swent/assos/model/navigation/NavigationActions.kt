@@ -7,7 +7,7 @@ class NavigationActions(private val navController: NavController) {
 
   fun navigateTo(destination: Destinations) {
     navController.navigate(destination.route) {
-      popUpTo(navController.graph.findStartDestination().id) { saveState = true}
+      popUpTo(navController.graph.findStartDestination().id) { saveState = true }
 
       launchSingleTop = true
 

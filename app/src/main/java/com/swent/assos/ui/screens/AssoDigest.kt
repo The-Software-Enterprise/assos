@@ -15,8 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
@@ -42,12 +40,8 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
                   modifier = Modifier.fillMaxWidth(),
                   painter = painterResource(id = R.drawable.logo),
                   contentDescription = null)
-              Text(
-                  text = asso.fullname
-              )
-              Text(
-                  text = "Website : " + asso.url
-              )
+              Text(text = asso.fullname)
+              Text(text = "Website : " + asso.url)
             }
       }
 }

@@ -130,10 +130,13 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
               supportingColor = Color(0xFF576490),
               trailingIconColor = Color(0xFF576490),
               containerColor = Color.Transparent),
-      modifier = Modifier.padding(start = 26.dp, end = 26.dp).clickable{
-        val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.acronym}/${asso.fullname}/${URLEncoder.encode(asso.url, StandardCharsets.UTF_8.toString())}"
-        navigationActions.navigateTo(dest)
-      })
+      modifier =
+          Modifier.padding(start = 26.dp, end = 26.dp).clickable {
+            val dest =
+                Destinations.ASSOCIATION_PAGE.route +
+                    "/${asso.acronym}/${asso.fullname}/${URLEncoder.encode(asso.url, StandardCharsets.UTF_8.toString())}"
+            navigationActions.navigateTo(dest)
+          })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

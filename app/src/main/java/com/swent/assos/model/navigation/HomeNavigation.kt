@@ -40,9 +40,7 @@ fun HomeNavigation(overviewViewModel: OverviewViewModel, navigationActions: Navi
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier
-          .fillMaxSize()
-          .weight(1f),
+        modifier = Modifier.fillMaxSize().weight(1f),
     ) { page ->
       when (page) {
         0 -> News()
@@ -54,9 +52,7 @@ fun HomeNavigation(overviewViewModel: OverviewViewModel, navigationActions: Navi
     }
 
     NavigationBar(
-        modifier = Modifier
-          .fillMaxWidth()
-          .background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->
@@ -70,7 +66,6 @@ fun HomeNavigation(overviewViewModel: OverviewViewModel, navigationActions: Navi
                         contentDescription = "Overview",
                         tint = MaterialTheme.colorScheme.onSurface)
                 1 ->
-
                     Icon(
                         painterResource(id = R.drawable.language),
                         contentDescription = "Map",

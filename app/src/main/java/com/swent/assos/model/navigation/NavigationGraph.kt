@@ -27,12 +27,13 @@ fun NavigationGraph() {
       composable(Destinations.HOME.route) {
         HomeNavigation(overviewViewModel = overviewViewModel, navigationActions = navigationActions)
       }
-      composable(Destinations.ASSOCIATION_PAGE.route + "/{acronym}/{fullname}/{url}") { backStackEntry ->
-        val association = Association(
-            acronym = backStackEntry.arguments?.getString("acronym")!!,
-            fullname = backStackEntry.arguments?.getString("fullname")!!,
-            url = backStackEntry.arguments?.getString("url")!!
-        )
+      composable(Destinations.ASSOCIATION_PAGE.route + "/{acronym}/{fullname}/{url}") {
+          backStackEntry ->
+        val association =
+            Association(
+                acronym = backStackEntry.arguments?.getString("acronym")!!,
+                fullname = backStackEntry.arguments?.getString("fullname")!!,
+                url = backStackEntry.arguments?.getString("url")!!)
         AssoDigest(asso = association, navigationActions = navigationActions)
       }
     }
