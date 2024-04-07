@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
@@ -38,12 +37,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.common.base.Defaults
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.view.OverviewViewModel
@@ -63,46 +60,51 @@ fun Overview(overviewViewModel: OverviewViewModel) {
         }
   }
 
-  Scaffold(topBar = {
-    Column {
-      Row(modifier = Modifier
-        .padding(8.dp)
-        .align(Alignment.CenterHorizontally)
-        .wrapContentHeight(Alignment.CenterVertically)) {
-        Text(
-          text = "Student",
-          style = TextStyle(
-            fontSize = 25.sp,
-            fontFamily = FontFamily(Font(R.font.impact)),
-            fontWeight = FontWeight(400),
-            color = Color(0xFF000000))
-        )
-        Text(
-          text = "Sphere",
-          style = TextStyle(
-            fontSize = 25.sp,
-            fontFamily = FontFamily(Font(R.font.impact)),
-            fontWeight = FontWeight(400),
-            color = Color(0xFFB51F1F))
-          )
-      }
+  Scaffold(
+      topBar = {
+        Column {
+          Row(
+              modifier =
+                  Modifier.padding(8.dp)
+                      .align(Alignment.CenterHorizontally)
+                      .wrapContentHeight(Alignment.CenterVertically)) {
+                Text(
+                    text = "Student",
+                    style =
+                        TextStyle(
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily(Font(R.font.impact)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFD1D2F9)))
+                Text(
+                    text = "Sphere",
+                    style =
+                        TextStyle(
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily(Font(R.font.impact)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFA3BCF9)))
+              }
 
-      TopResearchBar(overviewViewModel = overviewViewModel)
-    }
-
-  }) { paddingValues ->
-    LazyColumn(
-        modifier = Modifier.padding(paddingValues), userScrollEnabled = true, state = listState) {
-          if (associations.isEmpty()) {
-            item { Text(text = "No results were found", textAlign = TextAlign.Center) }
-          } else {
-            items(items = associations, key = { it.hashCode() }) {
-              ListItemFrom(it)
-              Divider(modifier = Modifier.padding(start = 26.dp, end = 26.dp))
-            }
-          }
+          TopResearchBar(overviewViewModel = overviewViewModel)
         }
-  }
+      }) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues),
+            userScrollEnabled = true,
+            state = listState) {
+              if (associations.isEmpty()) {
+                item { Text(text = "No results were found", textAlign = TextAlign.Center) }
+              } else {
+                items(items = associations, key = { it.hashCode() }) {
+                  ListItemFrom(it)
+                  Divider(
+                      modifier = Modifier.padding(start = 26.dp, end = 26.dp),
+                      color = Color(0xFFC9CAD9))
+                }
+              }
+            }
+      }
 }
 
 @Composable
@@ -117,7 +119,13 @@ fun ListItemFrom(asso: Association) {
           Image(imageVector = Icons.Filled.PlayArrow, contentDescription = null)
         }
       },
-      colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+      colors =
+          ListItemDefaults.colors(
+              headlineColor = Color(0xFF576490),
+              overlineColor = Color(0xFF576490),
+              supportingColor = Color(0xFF576490),
+              trailingIconColor = Color(0xFF576490),
+              containerColor = Color.Transparent),
       modifier = Modifier.padding(start = 26.dp, end = 26.dp))
 }
 
@@ -129,13 +137,11 @@ fun TopResearchBar(overviewViewModel: OverviewViewModel) {
   val focusManager = LocalFocusManager.current
 
   Column(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(8.dp),
+      modifier = Modifier.fillMaxWidth().padding(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
-            modifier = Modifier.fillMaxWidth(
-          ),
+            modifier = Modifier.fillMaxWidth(),
+            colors = SearchBarDefaults.colors(containerColor = Color(0x50C9CAD9)),
             trailingIcon = {
               if (isSearching) {
                 Image(
