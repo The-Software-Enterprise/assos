@@ -43,10 +43,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.OverviewViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
-fun Overview(overviewViewModel: OverviewViewModel) {
+fun Overview(overviewViewModel: OverviewViewModel, navigationActions: NavigationActions) {
   val associations by overviewViewModel.filteredAssociations.collectAsState()
 
   val listState = rememberLazyListState()
@@ -97,7 +101,7 @@ fun Overview(overviewViewModel: OverviewViewModel) {
                 item { Text(text = "No results were found", textAlign = TextAlign.Center) }
               } else {
                 items(items = associations, key = { it.hashCode() }) {
-                  ListItemFrom(it)
+                  ListItemFrom(asso = it, navigationActions = navigationActions)
                   Divider(
                       modifier = Modifier.padding(start = 26.dp, end = 26.dp),
                       color = Color(0xFFC9CAD9))
@@ -108,7 +112,7 @@ fun Overview(overviewViewModel: OverviewViewModel) {
 }
 
 @Composable
-fun ListItemFrom(asso: Association) {
+fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
   ListItem(
       headlineContent = { Text(text = asso.acronym) },
       overlineContent = { Text(text = asso.fullname) },
@@ -126,7 +130,10 @@ fun ListItemFrom(asso: Association) {
               supportingColor = Color(0xFF576490),
               trailingIconColor = Color(0xFF576490),
               containerColor = Color.Transparent),
-      modifier = Modifier.padding(start = 26.dp, end = 26.dp))
+      modifier = Modifier.padding(start = 26.dp, end = 26.dp).clickable{
+        val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.acronym}/${asso.fullname}/${URLEncoder.encode(asso.url, StandardCharsets.UTF_8.toString())}"
+        navigationActions.navigateTo(dest)
+      })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

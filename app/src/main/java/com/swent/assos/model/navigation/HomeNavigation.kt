@@ -20,16 +20,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
+import com.swent.assos.model.view.OverviewViewModel
 import com.swent.assos.ui.screens.Calendar
-import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
+import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeNavigation() {
+fun HomeNavigation(overviewViewModel: OverviewViewModel, navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
   val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
 
@@ -39,11 +40,13 @@ fun HomeNavigation() {
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier.fillMaxSize().weight(1f),
+        modifier = Modifier
+          .fillMaxSize()
+          .weight(1f),
     ) { page ->
       when (page) {
         0 -> News()
-        1 -> Explorer()
+        1 -> Overview(overviewViewModel = overviewViewModel, navigationActions = navigationActions)
         2 -> Calendar()
         3 -> QrCode()
         4 -> Profil()
@@ -51,7 +54,9 @@ fun HomeNavigation() {
     }
 
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.surface),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->
@@ -65,8 +70,9 @@ fun HomeNavigation() {
                         contentDescription = "Overview",
                         tint = MaterialTheme.colorScheme.onSurface)
                 1 ->
+
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.language),
                         contentDescription = "Map",
                         tint = MaterialTheme.colorScheme.onSurface)
                 2 ->

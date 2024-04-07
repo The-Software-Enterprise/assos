@@ -16,21 +16,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.swent.assos.R
+import com.swent.assos.model.data.Association
+import com.swent.assos.model.navigation.NavigationActions
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun AssoDigest() {
+fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
   Scaffold(
       topBar = {
         MediumTopAppBar(
-            title = { Text("Name of the Asso") },
+            title = { Text(asso.acronym) },
             navigationIcon = {
               Image(
                   imageVector = Icons.Default.ArrowBack,
                   contentDescription = null,
-                  modifier = Modifier.clickable {})
+                  modifier = Modifier.clickable { navigationActions.goBack() })
             })
       }) { paddingValues ->
         Column(
@@ -41,8 +43,10 @@ fun AssoDigest() {
                   painter = painterResource(id = R.drawable.logo),
                   contentDescription = null)
               Text(
-                  text =
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+                  text = asso.fullname
+              )
+              Text(
+                  text = "Website : " + asso.url
               )
             }
       }
