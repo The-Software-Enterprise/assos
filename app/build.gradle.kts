@@ -85,6 +85,9 @@ dependencies {
   implementation("com.google.dagger:hilt-android:2.49")
   kapt("com.google.dagger:hilt-android-compiler:2.47")
   implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+  //Calendar
+  implementation("androidx.compose.material:material-icons-extended:1.2.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
