@@ -1,6 +1,5 @@
 package com.swent.assos.model.service.impl
 
-import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
@@ -19,7 +18,6 @@ constructor(
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
-    Log.d("DbServiceImpl", "getAllAssociations")
     val query = firestore.collection("associations").orderBy("acronym")
     val snapshot =
         if (lastDocumentSnapshot == null) {
@@ -32,9 +30,9 @@ constructor(
     }
     return snapshot.documents.map {
       Association(
-          acronym = it.getString("acronym")!!,
-          fullname = it.getString("fullname")!!,
-          url = it.getString("url")!!,
+          acronym = it.getString("acronym") ?: "",
+          fullname = it.getString("fullname") ?: "",
+          url = it.getString("url") ?: "",
           documentSnapshot = it)
     }
   }

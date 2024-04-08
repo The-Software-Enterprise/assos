@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DockedSearchBar
@@ -34,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -41,16 +41,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.OverviewViewModel
+import com.swent.assos.ui.theme.Purple40
+import com.swent.assos.ui.theme.Purple80
+import com.swent.assos.ui.theme.PurpleGrey40
+import com.swent.assos.ui.theme.PurpleGrey80
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 @Composable
-fun Overview(overviewViewModel: OverviewViewModel, navigationActions: NavigationActions) {
+fun Overview(navigationActions: NavigationActions) {
+  val overviewViewModel: OverviewViewModel = hiltViewModel()
   val associations by overviewViewModel.filteredAssociations.collectAsState()
 
   val listState = rememberLazyListState()
@@ -79,7 +85,7 @@ fun Overview(overviewViewModel: OverviewViewModel, navigationActions: Navigation
                             fontSize = 35.sp,
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
-                            color = Color(0xFFD1D2F9)))
+                            color = Purple80))
                 Text(
                     text = "Sphere",
                     style =
@@ -87,7 +93,7 @@ fun Overview(overviewViewModel: OverviewViewModel, navigationActions: Navigation
                             fontSize = 35.sp,
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
-                            color = Color(0xFFA3BCF9)))
+                            color = Purple40))
               }
 
           TopResearchBar(overviewViewModel = overviewViewModel)
@@ -103,8 +109,7 @@ fun Overview(overviewViewModel: OverviewViewModel, navigationActions: Navigation
                 items(items = associations, key = { it.hashCode() }) {
                   ListItemFrom(asso = it, navigationActions = navigationActions)
                   Divider(
-                      modifier = Modifier.padding(start = 26.dp, end = 26.dp),
-                      color = Color(0xFFC9CAD9))
+                      modifier = Modifier.padding(start = 26.dp, end = 26.dp), color = PurpleGrey80)
                 }
               }
             }
@@ -120,21 +125,28 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
       trailingContent = {
         Row {
           Text(text = "more info")
-          Image(imageVector = Icons.Filled.PlayArrow, contentDescription = null)
+          Image(
+              painter = painterResource(id = R.drawable.baseline_arrow_right_24),
+              contentDescription = null)
         }
       },
       colors =
           ListItemDefaults.colors(
-              headlineColor = Color(0xFF576490),
-              overlineColor = Color(0xFF576490),
-              supportingColor = Color(0xFF576490),
-              trailingIconColor = Color(0xFF576490),
+              headlineColor = PurpleGrey40,
+              overlineColor = PurpleGrey40,
+              supportingColor = PurpleGrey40,
+              trailingIconColor = PurpleGrey40,
               containerColor = Color.Transparent),
       modifier =
           Modifier.padding(start = 26.dp, end = 26.dp).clickable {
             val dest =
                 Destinations.ASSOCIATION_PAGE.route +
-                    "/${asso.acronym}/${asso.fullname}/${URLEncoder.encode(asso.url, StandardCharsets.UTF_8.toString())}"
+                    "/${asso.acronym}/${asso.fullname}/${
+                              URLEncoder.encode(
+                                  asso.url,
+                                  StandardCharsets.UTF_8.toString()
+                              )
+                          }"
             navigationActions.navigateTo(dest)
           })
 }
