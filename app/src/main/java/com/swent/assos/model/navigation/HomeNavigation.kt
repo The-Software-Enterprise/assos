@@ -21,6 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.Calendar
+import com.swent.assos.ui.screens.CalendarAppPreview
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Profil
@@ -45,7 +46,7 @@ fun HomeNavigation() {
       when (page) {
         0 -> News()
         1 -> Explorer()
-        2 -> WeeklyCalendar()
+        2 -> CalendarAppPreview()
         3 -> QrCode()
         4 -> Profil()
       }

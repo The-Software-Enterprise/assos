@@ -96,43 +96,43 @@ private val sampleEvents = listOf(
     CalendarEvent(
         name = "Google I/O Keynote",
         color = Color(0xFFAFBBF2),
-        startTime = LocalDateTime.parse("2021-05-18T09:00:00"),
-        endTime = LocalDateTime.parse("2021-05-18T11:00:00"),
+        startTime = LocalDateTime.parse("2024-04-09T09:00:00"),
+        endTime = LocalDateTime.parse("2024-04-09T11:00:00"),
         description = "Tune in to find out about how we're furthering our mission to organize the world’s information and make it universally accessible and useful.",
     ),
     CalendarEvent(
         name = "Developer Keynote",
         color = Color(0xFFAFBBF2),
-        startTime = LocalDateTime.parse("2021-05-18T11:15:00"),
-        endTime = LocalDateTime.parse("2021-05-18T12:15:00"),
+        startTime = LocalDateTime.parse("2024-04-09T11:15:00"),
+        endTime = LocalDateTime.parse("2024-04-09T12:15:00"),
         description = "Learn about the latest updates to our developer products and platforms from Google Developers.",
     ),
     CalendarEvent(
         name = "What's new in Android",
         color = Color(0xFF1B998B),
-        startTime = LocalDateTime.parse("2021-05-18T12:30:00"),
-        endTime = LocalDateTime.parse("2021-05-18T15:00:00"),
+        startTime = LocalDateTime.parse("2024-04-09T12:30:00"),
+        endTime = LocalDateTime.parse("2024-04-09T15:00:00"),
         description = "In this Keynote, Chet Haase, Dan Sandler, and Romain Guy discuss the latest Android features and enhancements for developers.",
     ),
     CalendarEvent(
         name = "What's new in Machine Learning",
         color = Color(0xFFF4BFDB),
-        startTime = LocalDateTime.parse("2021-05-19T09:30:00"),
-        endTime = LocalDateTime.parse("2021-05-19T11:00:00"),
+        startTime = LocalDateTime.parse("2024-04-10T09:30:00"),
+        endTime = LocalDateTime.parse("2024-04-10T11:00:00"),
         description = "Learn about the latest and greatest in ML from Google. We’ll cover what’s available to developers when it comes to creating, understanding, and deploying models for a variety of different applications.",
     ),
     CalendarEvent(
         name = "What's new in Material Design",
         color = Color(0xFF6DD3CE),
-        startTime = LocalDateTime.parse("2021-05-19T11:00:00"),
-        endTime = LocalDateTime.parse("2021-05-19T12:15:00"),
+        startTime = LocalDateTime.parse("2024-04-10T11:00:00"),
+        endTime = LocalDateTime.parse("2024-04-10T12:15:00"),
         description = "Learn about the latest design improvements to help you build personal dynamic experiences with Material Design.",
     ),
     CalendarEvent(
         name = "Jetpack Compose Basics",
         color = Color(0xFF1B998B),
-        startTime = LocalDateTime.parse("2021-05-20T12:00:00"),
-        endTime = LocalDateTime.parse("2021-05-20T13:00:00"),
+        startTime = LocalDateTime.parse("2024-04-11T12:00:00"),
+        endTime = LocalDateTime.parse("2024-04-11T13:00:00"),
         description = "This Workshop will take you through the basics of building your first app with Jetpack Compose, Android's new modern UI toolkit that simplifies and accelerates UI development on Android.",
     ),
 )
@@ -147,9 +147,13 @@ fun Schedule(
     modifier: Modifier = Modifier,
     eventContent: @Composable (event: CalendarEvent) -> Unit = { BasicEvent(event = it) },
     dayHeader: @Composable (day: LocalDate) -> Unit = { BasicDayHeader(day = it) },
-    minDate: LocalDate = events.minByOrNull(CalendarEvent::startTime)!!.startTime.toLocalDate(),
-    maxDate: LocalDate = events.maxByOrNull(CalendarEvent::endTime)!!.endTime.toLocalDate(),
+    //minDate: LocalDate = LocalDate.parse("2024-05-09"),
+    //maxDate: LocalDate = LocalDate.parse("2021-05-25"),
 ) {
+    val dataSource = CalendarDataSource()
+    var data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
+    var minDate = dataSource.today
+    var maxDate = dataSource.today.plusDays(6)
     val dayWidth = 256.dp
     val hourHeight = 64.dp
     val verticalScrollState = rememberScrollState()
@@ -257,7 +261,6 @@ private class EventDataModifier(
 private fun Modifier.eventData(event: CalendarEvent) = this.then(EventDataModifier(event))
 
 private val DayFormatter = DateTimeFormatter.ofPattern("EE, MMM d")
-
 @Composable
 fun BasicDayHeader(
     day: LocalDate,
