@@ -39,6 +39,7 @@ android {
     }
   }
   compileOptions {
+    //coreLibraryDesugaringEnabled true
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
@@ -88,6 +89,7 @@ dependencies {
 
   //Calendar
   implementation("androidx.compose.material:material-icons-extended:1.2.0")
+  //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
