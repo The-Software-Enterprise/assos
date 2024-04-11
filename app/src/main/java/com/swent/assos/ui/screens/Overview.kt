@@ -36,6 +36,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
@@ -112,7 +113,9 @@ fun Overview(navigationActions: NavigationActions) {
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
-                item { Text(text = "No results were found", textAlign = TextAlign.Center) }
+                item {
+                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                }
               } else {
                 items(items = associations, key = { it.hashCode() }) {
                   ListItemFrom(asso = it, navigationActions = navigationActions)
@@ -150,11 +153,11 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
             val dest =
                 Destinations.ASSOCIATION_PAGE.route +
                     "/${asso.acronym}/${asso.fullname}/${
-                              URLEncoder.encode(
-                                  asso.url,
-                                  StandardCharsets.UTF_8.toString()
-                              )
-                          }"
+                      URLEncoder.encode(
+                        asso.url,
+                        StandardCharsets.UTF_8.toString()
+                      )
+                    }"
             navigationActions.navigateTo(dest)
           })
 }
