@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.calendar
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -15,7 +15,5 @@ data class CalendarUiModel(
         val date: LocalDate,
         val isSelected: Boolean,
         val isToday: Boolean
-    ) {
-        val day: String = date.format(DateTimeFormatter.ofPattern("E"))
-    }
+    )
 }

@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.material3.Text
@@ -8,25 +8,16 @@ import com.swent.assos.ui.theme.AssosTheme
 import androidx.compose.ui.Modifier
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
-
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -36,9 +27,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDirection.Companion.Content
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -52,7 +41,7 @@ import kotlin.math.roundToInt
 fun CalendarAppPreview() {
   AssosTheme {
     Calendar(
-        events = sampleEvents,
+      events = sampleEvents,
       modifier = Modifier.padding(16.dp)
     )
   }
@@ -60,6 +49,7 @@ fun CalendarAppPreview() {
 
 private val DayFormatter = DateTimeFormatter.ofPattern("EE, MMM d")
 private val HourFormatter = DateTimeFormatter.ofPattern("h a")
+private val EventTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
 
 @Composable
 fun Calendar(
@@ -73,11 +63,12 @@ fun Calendar(
   var data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
   val verticalScrollState = rememberScrollState()
   val horizontalScrollState = rememberScrollState()
-  var sidebarWidth by remember { mutableStateOf(0) }
+  var sidebarWidth by remember { mutableIntStateOf(0) }
   val dayWidth = 256.dp
   val hourHeight = 64.dp
 
   Column(modifier = modifier.fillMaxSize()) {
+
     ChangeWeek(
       data = data,
       onPrevClickListener = { startDate ->
@@ -89,21 +80,28 @@ fun Calendar(
         data = dataSource.getData(startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
       }
     )
-    WeekHeader(data = data, dayWidth = dayWidth, modifier = Modifier
+
+    WeekHeader(
+      data = data, dayWidth = dayWidth, modifier = Modifier
       .padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
-      .horizontalScroll(horizontalScrollState), dayHeader)
+      .horizontalScroll(horizontalScrollState), dayHeader
+    )
+
     Row {
+
       TimeSidebar(
         hourHeight = 64.dp,
         modifier = Modifier
           .verticalScroll(verticalScrollState)
           .onGloballyPositioned { sidebarWidth = it.size.width }
       )
+
       Event(
         events = events,
         eventContent = eventContent,
         dayWidth = dayWidth,
         hourHeight = hourHeight,
+        data = data,
         modifier = Modifier
           .weight(1f)
           .verticalScroll(verticalScrollState)
@@ -120,7 +118,6 @@ fun ChangeWeek(
   onNextClickListener: (LocalDate) -> Unit,
 ) {
   Row {
-
     IconButton(onClick = {
       onPrevClickListener(data.startDate.date)
     }) {
@@ -145,7 +142,7 @@ fun WeekHeader(
   data: CalendarUiModel,
   dayWidth: Dp,
   modifier: Modifier,
-  dayHeader: @Composable (day: LocalDate) -> Unit = { BasicDayHeader(day = it) },
+  dayHeader: @Composable (day: LocalDate) -> Unit = { WeekDayHeader(day = it) },
 ) {
   Row(modifier = modifier) {
     val numDays = 7
@@ -196,6 +193,7 @@ fun Event(
   eventContent: @Composable (event: CalendarEvent) -> Unit = { BasicEvent(event = it) },
   dayWidth: Dp,
   hourHeight: Dp,
+  data: CalendarUiModel,
 ) {
   val numDays = 7
   val dividerColor = Color.LightGray
@@ -206,8 +204,6 @@ fun Event(
           Box(modifier = Modifier.eventData(event)) {
             eventContent(event)
           }
-
-
 
       }
     },
@@ -241,16 +237,65 @@ fun Event(
       Pair(placeable, event)
     }
     layout(width, height) {
+
       placeablesWithEvents.forEach { (placeable, event) ->
         val eventOffsetMinutes = ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime.toLocalTime())
         val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
-        val minDate = events.minOfOrNull { it.startTime.toLocalDate() } ?: LocalDate.now()
-        val eventOffsetDays = ChronoUnit.DAYS.between(minDate, event.startTime.toLocalDate()).toInt()
+
+
+        val eventOffsetDays = ChronoUnit.DAYS.between(data.startDate.date, event.startTime.toLocalDate()).toInt()
         val eventX = eventOffsetDays * dayWidth.roundToPx()
+
         placeable.place(eventX, eventY)
       }
     }
   }
+}
+
+@Composable
+fun BasicEvent(
+  event: CalendarEvent,
+  modifier: Modifier = Modifier,
+) {
+  Column(
+    modifier = modifier
+      .fillMaxSize()
+      .padding(end = 2.dp, bottom = 2.dp)
+      .background(event.color, shape = RoundedCornerShape(4.dp))
+      .padding(4.dp)
+  ) {
+    Text(
+      text = "${event.startTime.format(EventTimeFormatter)} - ${event.endTime.format(
+        EventTimeFormatter
+      )}",
+    )
+
+    Text(
+      text = event.name,
+      fontWeight = FontWeight.Bold,
+    )
+
+    if (event.description != null) {
+      Text(
+        text = event.description,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis,
+      )
+    }
+  }
+}
+
+@Composable
+fun BasicSidebarLabel(
+  time: LocalTime,
+  modifier: Modifier = Modifier,
+) {
+  Text(
+    text = time.format(HourFormatter),
+    modifier = modifier
+      .fillMaxHeight()
+      .padding(4.dp)
+  )
 }
 
 private class CalendarEventDataModifier(
@@ -263,30 +308,24 @@ private fun Modifier.eventData(event: CalendarEvent) = this.then(CalendarEventDa
 
 private val sampleEvents = listOf(
   CalendarEvent(
-    name = "Google I/O Keynote",
+    name = "Sprint 3 Meeting",
     color = Color(0xFFAFBBF2),
-    startTime = LocalDateTime.parse("2024-04-09T13:00:00"),
-    endTime = LocalDateTime.parse("2024-04-09T15:00:00"),
-    description = "Tune in to find out about how we're furthering our mission to organize the world’s information and make it universally accessible and useful.",
+    startTime = LocalDateTime.parse("2024-04-12T11:00:00"),
+    endTime = LocalDateTime.parse("2024-04-12T13:00:00"),
+    description = "Discuss the progress of the current sprint and plan the next sprint.",
   ),
   CalendarEvent(
-    name = "Developer Keynote",
+    name = "Sprint 4 Meeting",
     color = Color(0xFFAFBBF2),
-    startTime = LocalDateTime.parse("2024-04-17T15:15:00"),
-    endTime = LocalDateTime.parse("2024-04-17T16:00:00"),
-    description = "Learn about the latest updates to our developer products and platforms from Google Developers.",
+    startTime = LocalDateTime.parse("2024-04-19T11:00:00"),
+    endTime = LocalDateTime.parse("2024-04-19T13:00:00"),
+    description = "Discuss the progress of the current sprint and plan the next sprint.",
   ),
   CalendarEvent(
-    name = "What's new in Android",
+    name = "Swent App Progress Meeting",
     color = Color(0xFF1B998B),
-    startTime = LocalDateTime.parse("2024-04-10T16:00:00"),
-    endTime = LocalDateTime.parse("2024-04-10T17:00:00"),
-    description = "In this Keynote, Chet Haase, Dan Sandler, and Romain Guy discuss the latest Android features and enhancements for developers.",
+    startTime = LocalDateTime.parse("2024-04-11T09:00:00"),
+    endTime = LocalDateTime.parse("2024-04-11T12:00:00"),
+    description = "Discuss the progress of the Swent app and plan the next steps.",
   ),
 )
-
-class CalendarEventsProvider : PreviewParameterProvider<CalendarEvent> {
-  override val values = sampleEvents.asSequence()
-}
-
-

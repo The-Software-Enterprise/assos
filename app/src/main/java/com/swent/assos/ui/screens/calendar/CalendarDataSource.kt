@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.calendar
 
 import java.time.DayOfWeek
 import java.time.LocalDate

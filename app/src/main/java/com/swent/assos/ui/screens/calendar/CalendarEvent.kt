@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.calendar
 
 import androidx.compose.ui.graphics.Color
 import java.time.LocalDateTime
