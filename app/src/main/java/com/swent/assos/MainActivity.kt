@@ -7,10 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationGraph
-import com.swent.assos.model.view.OverviewViewModel
-import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
 

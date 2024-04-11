@@ -23,13 +23,14 @@ import com.swent.assos.R
 import com.swent.assos.ui.screens.calendar.CalendarAppPreview
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
+import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeNavigation() {
+fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
   val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
 
@@ -43,7 +44,7 @@ fun HomeNavigation() {
     ) { page ->
       when (page) {
         0 -> News()
-        1 -> Explorer()
+        1 -> Overview(navigationActions = navigationActions)
         2 -> CalendarAppPreview()
         3 -> QrCode()
         4 -> Profil()
@@ -66,7 +67,7 @@ fun HomeNavigation() {
                         tint = MaterialTheme.colorScheme.onSurface)
                 1 ->
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.language),
                         contentDescription = "Map",
                         tint = MaterialTheme.colorScheme.onSurface)
                 2 ->
