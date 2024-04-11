@@ -18,5 +18,5 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun Profil() {
-    Text(text = "Profil")
+    Text(text = "Profil ")
 }
