@@ -81,12 +81,12 @@ fun Overview(navigationActions: NavigationActions) {
         Column {
           Row(
               modifier =
-                  Modifier.testTag("AppTitle")
-                      .padding(8.dp)
+                  Modifier.padding(8.dp)
                       .align(Alignment.CenterHorizontally)
                       .wrapContentHeight(Alignment.CenterVertically)) {
                 Text(
                     text = "Student",
+                    modifier = Modifier.testTag("AppTitle_1"),
                     style =
                         TextStyle(
                             fontSize = 35.sp,
@@ -95,6 +95,7 @@ fun Overview(navigationActions: NavigationActions) {
                             color = Purple80))
                 Text(
                     text = "Sphere",
+                    modifier = Modifier.testTag("AppTitle_2"),
                     style =
                         TextStyle(
                             fontSize = 35.sp,

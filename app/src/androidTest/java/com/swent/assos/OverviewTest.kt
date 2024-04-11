@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.OverviewScreen
 import com.swent.assos.ui.screens.Overview
@@ -58,7 +57,7 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
         assoListSearch {
           performTextClearance()
 
-          performTextInput("Challenge")
+          performTextInput("180°C")
         }
       }
 
@@ -71,6 +70,22 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
   @Test
   fun navigateToAssoDigestScreen() = run {
     ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
+      step("Open Search Bar") {
+        searchAsso {
+          assertIsDisplayed()
+
+          performClick()
+        }
+      }
+
+      step("search 180°C Association") {
+        assoListSearch {
+          performTextClearance()
+
+          performTextInput("180°C")
+        }
+      }
+
       assoListItems {
         assertIsDisplayed()
 
@@ -78,17 +93,18 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       }
     }
 
-    verify { mockNavActions.navigateTo(Destinations.ASSOCIATION_PAGE.route) }
+    verify {
+      mockNavActions.navigateTo(
+          "AssociationPage/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
+    }
     confirmVerified(mockNavActions)
   }
 
   @Test
   fun titleHasTheRightContent() = run {
     ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
-      appTitle {
-        assertTextContains("Student")
-        assertTextContains("Sphere")
-      }
+      appTitle1 { assertTextContains("Student") }
+      appTitle2 { assertTextContains("Sphere") }
     }
   }
 }

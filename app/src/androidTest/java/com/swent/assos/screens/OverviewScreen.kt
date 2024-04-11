@@ -9,7 +9,8 @@ class OverviewScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("OverviewScreen") }) {
 
-  val appTitle: KNode = child { hasTestTag("AppTitle") }
+  val appTitle1: KNode = child { hasTestTag("AppTitle_1") }
+  val appTitle2: KNode = child { hasTestTag("AppTitle_2") }
 
   val assoList: KNode = child { hasTestTag("AssoList") }
   val assoListItems: KNode = assoList.child { hasTestTag("AssoListItem") }
