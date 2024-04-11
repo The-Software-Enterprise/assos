@@ -81,7 +81,9 @@ fun News() {
                               color = Color(0xFFFFFFFF),
                               shape = RoundedCornerShape(size = 15.dp))) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                      if (n.eventId == "") {} else {
+                      if (n.eventId == "") {
+                          /*TODO: Implement the screen when an event is assigned to a news*/
+                      } else {
 
                         var association by remember {
                           mutableStateOf(Association("", "", "", null))
