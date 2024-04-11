@@ -1,15 +1,12 @@
 package com.swent.assos.model.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.navigation
-import com.swent.assos.ui.login.LoginScreen
-import com.swent.assos.ui.login.SignUpScreen
-import com.swent.assos.ui.screens.Overview
+import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
+import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.AssoDigest
 
 @Composable
@@ -21,8 +18,8 @@ fun NavigationGraph() {
     composable(Destinations.LOGIN.route) {
       // LoginScreen(navController = navController)
     }
-      composable(Destinations.SIGN_UP.route) { SignUpScreen(navController = navController) }
-      composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
+    composable(Destinations.SIGN_UP.route) { SignUpScreen(navController = navController) }
+    composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
       composable(Destinations.ASSOCIATION_PAGE.route + "/{acronym}/{fullname}/{url}") {
