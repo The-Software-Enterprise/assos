@@ -19,7 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.view.OverviewViewModel
 import com.swent.assos.ui.screens.Calendar
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Overview
@@ -39,7 +41,9 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier.fillMaxSize().weight(1f),
+        modifier = Modifier
+          .fillMaxSize()
+          .weight(1f),
     ) { page ->
       when (page) {
         0 -> News()
@@ -51,7 +55,9 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     }
 
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.surface),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->

@@ -1,7 +1,12 @@
 package com.swent.assos
 
 import android.app.Application
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
@@ -24,15 +29,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class OverviewTest: TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
 
   @get:Rule(order = 1)
   var hiltRule = HiltAndroidRule(this)
 
   @get:Rule(order = 2)
-  val composeTestRule = createComposeRule()
+  var composeTestRule = createAndroidComposeRule<MainActivity>()
 
   // This rule automatic initializes lateinit properties with @MockK, @RelaxedMockK, etc.
   @get:Rule(order = 3) val mockkRule = MockKRule(this)
@@ -42,37 +47,38 @@ class OverviewTest: TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSup
   lateinit var mockNavActions: NavigationActions
 
   @Before
-  fun testSetup() {
+  fun setup() {
     hiltRule.inject()
-    composeTestRule.setContent {
+    composeTestRule.activity.setContent {
       Overview(navigationActions = mockNavActions)
     }
   }
 
   @Test
-  fun searchAssoFilterList() = run {
-    ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
-      step("Open Search Bar") {
-        searchAsso {
-          assertIsDisplayed()
+  fun searchAssoFilterList() =
+    run {
+      ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
+        step("Open Search Bar") {
+          searchAsso {
+            assertIsDisplayed()
 
-          performClick()
+            performClick()
+          }
         }
-      }
 
-      step("search a specific Association") {
-        assoListSearch {
-          performTextClearance()
+        step("search a specific Association") {
+          assoListSearch {
+            performTextClearance()
 
-          performTextInput("Challenge")
+            performTextInput("Challenge")
+          }
         }
-      }
 
-      // Check if something is displayed when
-      // inputting "Challenge"
-      assoListItems { assertIsDisplayed() }
+        // Check if something is displayed when
+        // inputting "Challenge"
+        assoListItems { assertIsDisplayed() }
+      }
     }
-  }
 
   @Test
   fun navigateToAssoDigestScreen() = run {

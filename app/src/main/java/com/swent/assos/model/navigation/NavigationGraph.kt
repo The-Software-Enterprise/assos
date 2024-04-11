@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.view.OverviewViewModel
 import com.swent.assos.ui.screens.AssoDigest
 
 @Composable
