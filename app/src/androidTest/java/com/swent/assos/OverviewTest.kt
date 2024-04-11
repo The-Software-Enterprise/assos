@@ -1,20 +1,14 @@
 package com.swent.assos
 
-import android.app.Application
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.OverviewViewModel
 import com.swent.assos.screens.OverviewScreen
 import com.swent.assos.ui.screens.Overview
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -31,54 +25,48 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class OverviewTest: TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
+class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
 
-  @get:Rule(order = 1)
-  var hiltRule = HiltAndroidRule(this)
+  @get:Rule(order = 1) var hiltRule = HiltAndroidRule(this)
 
-  @get:Rule(order = 2)
-  var composeTestRule = createAndroidComposeRule<MainActivity>()
+  @get:Rule(order = 2) var composeTestRule = createAndroidComposeRule<MainActivity>()
 
   // This rule automatic initializes lateinit properties with @MockK, @RelaxedMockK, etc.
   @get:Rule(order = 3) val mockkRule = MockKRule(this)
 
   // Relaxed mocks methods have a default implementation returning values
-  @RelaxedMockK
-  lateinit var mockNavActions: NavigationActions
+  @RelaxedMockK lateinit var mockNavActions: NavigationActions
 
   @Before
   fun setup() {
     hiltRule.inject()
-    composeTestRule.activity.setContent {
-      Overview(navigationActions = mockNavActions)
-    }
+    composeTestRule.activity.setContent { Overview(navigationActions = mockNavActions) }
   }
 
   @Test
-  fun searchAssoFilterList() =
-    run {
-      ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
-        step("Open Search Bar") {
-          searchAsso {
-            assertIsDisplayed()
+  fun searchAssoFilterList() = run {
+    ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
+      step("Open Search Bar") {
+        searchAsso {
+          assertIsDisplayed()
 
-            performClick()
-          }
+          performClick()
         }
-
-        step("search a specific Association") {
-          assoListSearch {
-            performTextClearance()
-
-            performTextInput("Challenge")
-          }
-        }
-
-        // Check if something is displayed when
-        // inputting "Challenge"
-        assoListItems { assertIsDisplayed() }
       }
+
+      step("search a specific Association") {
+        assoListSearch {
+          performTextClearance()
+
+          performTextInput("Challenge")
+        }
+      }
+
+      // Check if something is displayed when
+      // inputting "Challenge"
+      assoListItems { assertIsDisplayed() }
     }
+  }
 
   @Test
   fun navigateToAssoDigestScreen() = run {

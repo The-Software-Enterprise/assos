@@ -35,7 +35,8 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
               Image(
                   imageVector = Icons.Default.ArrowBack,
                   contentDescription = null,
-                  modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+                  modifier =
+                      Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
             })
       }) { paddingValues ->
         Column(

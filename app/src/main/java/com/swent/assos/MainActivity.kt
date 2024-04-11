@@ -10,8 +10,6 @@ import androidx.compose.ui.Modifier
 import com.swent.assos.model.navigation.NavigationGraph
 import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

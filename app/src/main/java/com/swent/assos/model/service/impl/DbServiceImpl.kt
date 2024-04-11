@@ -5,7 +5,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
-import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
