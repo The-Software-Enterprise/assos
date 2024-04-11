@@ -15,3 +15,11 @@
 local.properties
 .idea
 functions/venv/*
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+app/src/debug/google-services.json
+functions/.env
+functions/.env.default
+functions/.env.local
+functions/__pycache__/*
