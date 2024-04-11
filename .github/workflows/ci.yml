@@ -86,6 +86,7 @@ jobs:
 
       - name : new python venv
         run: |
+          ls
           cd functions
           python3 -m venv venv
           source venv/bin/activate
