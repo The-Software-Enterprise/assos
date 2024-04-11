@@ -30,10 +30,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -54,6 +58,7 @@ import com.swent.assos.ui.theme.PurpleGrey80
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Overview(navigationActions: NavigationActions) {
   val overviewViewModel: OverviewViewModel = hiltViewModel()
@@ -71,11 +76,13 @@ fun Overview(navigationActions: NavigationActions) {
   }
 
   Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("OverviewScreen"),
       topBar = {
         Column {
           Row(
               modifier =
-                  Modifier.padding(8.dp)
+                  Modifier.testTag("AppTitle")
+                      .padding(8.dp)
                       .align(Alignment.CenterHorizontally)
                       .wrapContentHeight(Alignment.CenterVertically)) {
                 Text(
@@ -100,7 +107,7 @@ fun Overview(navigationActions: NavigationActions) {
         }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues).testTag("AssoList"),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
@@ -138,7 +145,7 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
               trailingIconColor = PurpleGrey40,
               containerColor = Color.Transparent),
       modifier =
-          Modifier.padding(start = 26.dp, end = 26.dp).clickable {
+          Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
             val dest =
                 Destinations.ASSOCIATION_PAGE.route +
                     "/${asso.acronym}/${asso.fullname}/${
@@ -162,7 +169,7 @@ fun TopResearchBar(overviewViewModel: OverviewViewModel) {
       modifier = Modifier.fillMaxWidth().padding(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
             colors = SearchBarDefaults.colors(containerColor = Color(0x50C9CAD9)),
             trailingIcon = {
               if (isSearching) {
