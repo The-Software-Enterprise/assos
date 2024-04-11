@@ -62,7 +62,7 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       }
 
       // Check if something is displayed when
-      // inputting "Challenge"
+      // inputting "180°C"
       assoListItems { assertIsDisplayed() }
     }
   }

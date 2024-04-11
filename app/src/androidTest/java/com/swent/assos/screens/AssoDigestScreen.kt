@@ -12,7 +12,6 @@ class AssoDigestScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
 
   val assoTitle: KNode = onNode { hasTestTag("AssoTitle") }
-  // val assoDescription: KNode = onNode { hasTestTag("AssoDescription") }
   val assoWebsite: KNode = onNode { hasTestTag("AssoWebsite") }
   val assoName: KNode = onNode { hasTestTag("AssoName") }
 }
