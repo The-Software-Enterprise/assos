@@ -33,7 +33,7 @@ fun Profil() {
                 actions = {
                     // Ajouter ici l'icône des paramètres
                     Icon(
-                        painterResource(id = R.drawable.settings),
+                        painterResource(id = R.drawable.language),
                         contentDescription = "Map",
                         modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
@@ -43,10 +43,12 @@ fun Profil() {
     ) { innerPadding ->
         Column(modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)) {
+            .padding(innerPadding)
+            .padding(top = 16.dp) ) {
 
             // Card pour "My associations"
             ProfileCard(title = "My associations", height = 100)
+            ProfileCard(title = "Associations I followed", height = 100)
         }
     }
 }
