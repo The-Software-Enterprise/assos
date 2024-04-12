@@ -86,11 +86,11 @@ jobs:
 
       - name : new python venv
         run: |
-          cd functions
-          python3 -m venv venv
+         
+          python3 -m venv functions/venv
           source venv/bin/activate
-          pip install -r requirements.txt
-          cd ..
+          pip install -r functions/requirements.txt
+          
 
       - name : install firebase tools
         run: |

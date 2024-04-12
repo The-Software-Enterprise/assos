@@ -59,7 +59,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-              loginViewModel.currentUser?.let { navigationActions.navigateTo(Destinations.HOME) }
+              navigationActions.navigateTo(Destinations.HOME)
             },
         ) {
           Text("Login")
