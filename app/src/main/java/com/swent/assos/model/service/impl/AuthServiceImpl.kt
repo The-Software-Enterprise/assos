@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class AuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : AuthService {
 
-  // TODO: if you are using the firestore emulator, make sure to change the host and port to match
+  // NB: if you are using the firestore emulator, make sure to change the host and port to match
   // your firestore emulator
   val config = Config()
 
@@ -21,8 +21,9 @@ class AuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : Auth
   val ok =
       if (config.get_demo()) {
         auth.useEmulator("10.0.2.2", 9099)
-      } else {}
-  // val ok = auth.useEmulator("10.0.2.2",9099)
+      } else {
+        null
+      }
 
   override val currentUser: Flow<FirebaseUser>
     get() = callbackFlow {

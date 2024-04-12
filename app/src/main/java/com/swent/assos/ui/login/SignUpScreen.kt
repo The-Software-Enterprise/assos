@@ -12,19 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavAction
 import androidx.navigation.NavController
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
 import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
 import org.w3c.dom.Text
 
 @Composable
-fun SignUpScreen(navController: NavController) {
+fun SignUpScreen(navigationActions: NavigationActions) {
   var email by remember { mutableStateOf("") }
   var password by remember { mutableStateOf("") }
   var confirmPassword by remember { mutableStateOf("") }
@@ -36,26 +39,26 @@ fun SignUpScreen(navController: NavController) {
         value = email,
         onValueChange = { email = it },
         label = { Text("Email") },
-        modifier = Modifier.semantics { testTag = "email" })
+        modifier = Modifier.testTag("email"))
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
         label = { Text("Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.semantics { testTag = "password" })
+        modifier = Modifier.testTag("password"))
     OutlinedTextField(
         value = confirmPassword,
         onValueChange = { confirmPassword = it },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.semantics { testTag = "confirmPassword" })
+        modifier = Modifier.testTag("confirmPassword"))
     if (password != confirmPassword) {
       Text("Passwords do not match", color = Color.Red)
     }
     Button(
         onClick = {
           if (password == confirmPassword && password.isNotEmpty()) {
-            println(loginViewModel.firestoreInstance)
+
             loginViewModel.signUp(email, password)
 
             // call the firebasefunction -> oncallFind.py
@@ -72,20 +75,20 @@ fun SignUpScreen(navController: NavController) {
                 .call(data)
                 .addOnSuccessListener { task ->
                   val result = task.data as? Map<String, String>
-                  println(result)
+
                   if (result?.get("response") == "User is Found") {
                     loginViewModel.updateUserInfo()
                   }
-                  navController.navigate(Destinations.ASSOCIATION_PAGE.route)
+                  navigationActions.navigateTo(Destinations.ASSOCIATION_PAGE)
                 }
                 .addOnFailureListener {
-                  // print the error
-                  println(it.message)
+
+
                   error = it.message.toString()
                 }
           }
         },
-        modifier = Modifier.semantics { testTag = "signUpB" }) {
+        modifier = Modifier.testTag("signUpButton")) {
           Text("Sign Up")
         }
     Text(error, color = Color.Red)
@@ -93,6 +96,6 @@ fun SignUpScreen(navController: NavController) {
 
     Text(
         "Already have an account?",
-        modifier = Modifier.clickable { navController.navigate("Login") })
+        modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) },)
   }
 }

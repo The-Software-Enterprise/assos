@@ -68,7 +68,7 @@ fun LoginScreen(navController: NavHostController) {
         }
 
         Text(
-            // if clikecd, go to sign up page using hilt navigation
+            // if clicked, go to sign up page using hilt navigation
             modifier = Modifier.clickable { navController.navigate("SignUp") },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,

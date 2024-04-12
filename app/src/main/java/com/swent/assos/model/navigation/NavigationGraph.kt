@@ -18,7 +18,7 @@ fun NavigationGraph() {
     composable(Destinations.LOGIN.route) {
       // LoginScreen(navController = navController)
     }
-    composable(Destinations.SIGN_UP.route) { SignUpScreen(navController = navController) }
+    composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions ) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }

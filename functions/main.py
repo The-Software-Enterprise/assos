@@ -22,7 +22,7 @@ initialize_app()
 def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
-    print(req)
+
     userID = req.auth.uid
     profile = epflpeople.find(email)
 
@@ -42,7 +42,6 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         #       'rank': 0, 'code': 50038}],
         # 'profile': 'marin.philippe'}
         associations = list()
-        print(profile[0])
 
         for i in range(len(profile[0]["accreds"]) - 1):
             temp = {
@@ -66,10 +65,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         firestore_client.document(f"users/{userID}").set(user)
         # transform profile insto a json format
         
-        print(user)
-        print(jsonify(user))
-        print("User added to firestore")
-        
+
         return {"response":"User is Found"}
 
     else:
