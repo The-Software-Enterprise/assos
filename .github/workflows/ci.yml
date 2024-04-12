@@ -107,13 +107,13 @@ jobs:
           ./gradlew assemble lint --parallel --build-cache
 
       # Run Unit tests
-      - name: Run tests
+      - name: run unit tests
         run: |
           # To run the CI with debug information, add --info
           firebase emulators:exec --only functions "./gradlew check --parallel --build-cache"
 
       # Run connected tests on the emulator
-      - name: run tests
+      - name: run connected tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -122,7 +122,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: firebase emulators:exec --only functions "./gradlew connectedCheck --parallel --build-cache"
+          script: ./gradlew connectedCheck --parallel --build-cache
 
 
           
