@@ -6,11 +6,19 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 
 interface DbService {
+  // Associations ---------------------------------------------------------------
   suspend fun getAllAssociations(lastDocumentSnapshot: DocumentSnapshot?): List<Association>
 
-  suspend fun getAllNews(): List<News>
+  suspend fun getAssociationById(associationId: String): Association
+
+  // News ---------------------------------------------------------------------
+  suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
+
+  fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
+
+  fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
+
+  fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   suspend fun getAllEvents(): List<Event>
-
-  suspend fun getAssociationById(associationId: String): Association
 }
