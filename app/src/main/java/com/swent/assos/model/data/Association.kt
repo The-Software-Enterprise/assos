@@ -9,4 +9,5 @@ data class Association(
     val url: String = "",
     val documentSnapshot: DocumentSnapshot? = null,
     val logo: String = "",
+    val description: String
 )

@@ -102,10 +102,11 @@ fun News() {
                         var association by remember {
                                 mutableStateOf(
                                     Association(
-                                        "",
-                                        "",
-                                        "",
-                                        ""
+                                        id = "",
+                                        acronym = "",
+                                        fullname = "",
+                                        description = "",
+                                        logo = ""
                                     )
                                 )
                             }

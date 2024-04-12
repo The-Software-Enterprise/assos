@@ -36,7 +36,8 @@ constructor(
           acronym = it.getString("acronym") ?: "",
           fullname = it.getString("fullname") ?: "",
           url = it.getString("url") ?: "",
-          documentSnapshot = it)
+          documentSnapshot = it,
+          description = it.getString("description") ?: "")
     }
   }
 
@@ -48,7 +49,8 @@ constructor(
         acronym = snapshot.getString("acronym") ?: "",
         fullname = snapshot.getString("fullname") ?: "",
         url = snapshot.getString("url") ?: "",
-        documentSnapshot = snapshot)
+        documentSnapshot = snapshot,
+        description = snapshot.getString("description") ?: "")
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
