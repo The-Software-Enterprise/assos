@@ -12,11 +12,14 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
+import com.swent.assos.ui.login.SignUpScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,79 +42,41 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
   @Before
   fun setup() {
     hiltRule.inject()
-    composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     val firebaseAuth = FirebaseAuth.getInstance()
     firebaseAuth.signOut()
   }
 
   @Test
-  fun navigateSignup() = run {
-    ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
-      step("Open Signup Screen") {
-        signUpButton {
-          assertIsDisplayed()
-          performClick()
-        }
-      }
-      step("assert signup screen") {
-        ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
-          signupScreen { assertIsDisplayed() }
-        }
-        step("Open Login Screen") {
-          loginButton {
+  fun navigateSignup() {
+    composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
+
+    run {
+      ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
+        step("Open Signup Screen") {
+          signUpButton {
             assertIsDisplayed()
             performClick()
           }
-          step("assert login screen") {
-            ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
-              loginScreen { assertIsDisplayed() }
-            }
-          }
-          step("Open Signup Screen") {
-            signUpButton {
-              assertIsDisplayed()
-              performClick()
-            }
-          }
-          // we are not supposed to be in signup screen
-          step("assert signup screen") {
-            ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
-              signupScreen { assertIsNotDisplayed() }
-            }
-          }
         }
+
+        verify { mockNavActions.navigateTo("SignUp") }
       }
+      confirmVerified(mockNavActions)
     }
-  }
 
-  fun signup() = run {
-    ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
-      // check if this email is already used
+    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
 
-      step("Enter email") {
-        emailField {
-          assertIsDisplayed()
-          performTextInput("marin.philippe@epfl.ch")
+    run {
+      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+        step("Open Signup Screen") {
+          signUpButton {
+            assertIsDisplayed()
+            performClick()
+          }
         }
+        verify { mockNavActions.navigateTo("SignUp") }
       }
-      step("Enter password") {
-        passwordField {
-          assertIsDisplayed()
-          performTextInput("password")
-        }
-      }
-      step("Enter confirm password") {
-        confirmPasswordField {
-          assertIsDisplayed()
-          performTextInput("password")
-        }
-      }
-      step("Click signup") {
-        signUpButton {
-          assertIsDisplayed()
-          performClick()
-        }
-      }
+      confirmVerified(mockNavActions)
     }
   }
 }
