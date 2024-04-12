@@ -18,3 +18,6 @@ To directly address the visibility issue, StudentSphere provides a centralized p
 
 **In Development** \
 Figma : https://www.figma.com/team_invite/redeem/Z6aOlqKXBjUkzQUDpnfWkr
+
+**Architecture Diagram** \
+![Image JPEG-4108-BDD7-76-0](https://github.com/The-Software-Enterprise/assos/assets/92825638/d712d536-488e-41cb-a954-a0cf7b7dcd5f)
