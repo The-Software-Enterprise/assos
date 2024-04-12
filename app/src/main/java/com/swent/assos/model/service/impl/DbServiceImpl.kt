@@ -67,22 +67,29 @@ constructor(
     }
   }
 
-    override suspend fun getAllEvents(): List<Event> {
-        return listOf<Event>(
-            Event(
-                title = "Distribution de crepes",
-                association = Association(acronym = "JE EPFL", fullname = "JE EPFL", url = "jeepfl.ch", documentSnapshot = null),
-                date = "01/04/2024",
-                description = "yepa des crepes",
-                image = null
-            ),
-            Event(
-                title = "Vin chaud",
-                association = Association(acronym = "Agepoly", fullname = "Agepoly", url = "agepoly.ch", documentSnapshot = null),
-                date = "15/04/2024",
-                description = "yepa du vin",
-                image = null
-        )
-        )
-    }
+  override suspend fun getAllEvents(): List<Event> {
+    return listOf<Event>(
+        Event(
+            title = "Distribution de crepes",
+            association =
+                Association(
+                    acronym = "JE EPFL",
+                    fullname = "JE EPFL",
+                    url = "jeepfl.ch",
+                    documentSnapshot = null),
+            date = "01/04/2024",
+            description = "yepa des crepes",
+            image = null),
+        Event(
+            title = "Vin chaud",
+            association =
+                Association(
+                    acronym = "Agepoly",
+                    fullname = "Agepoly",
+                    url = "agepoly.ch",
+                    documentSnapshot = null),
+            date = "15/04/2024",
+            description = "yepa du vin",
+            image = null))
+  }
 }

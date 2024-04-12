@@ -39,47 +39,40 @@ fun QrCode() {
   val eventViewModel: EventViewModel = hiltViewModel()
   val events by eventViewModel.allEvents.collectAsState()
   Scaffold(
-    topBar = {
-      Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-          modifier =
-          Modifier
-            .padding(8.dp)
-            .align(Alignment.CenterHorizontally)
-            .wrapContentHeight(align = Alignment.CenterVertically)) {
-          Text(
-            text = "Student",
-            style =
-            TextStyle(
-              fontSize = 35.sp,
-              fontFamily = FontFamily(Font(R.font.impact)),
-              fontWeight = FontWeight(400),
-              color = Purple80))
-          Text(
-            text = "Sphere",
-            style =
-            TextStyle(
-              fontSize = 35.sp,
-              fontFamily = FontFamily(Font(R.font.impact)),
-              fontWeight = FontWeight(400),
-              color = Purple40))
+      topBar = {
+        Column(modifier = Modifier.fillMaxWidth()) {
+          Row(
+              modifier =
+                  Modifier.padding(8.dp)
+                      .align(Alignment.CenterHorizontally)
+                      .wrapContentHeight(align = Alignment.CenterVertically)) {
+                Text(
+                    text = "Student",
+                    style =
+                        TextStyle(
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily(Font(R.font.impact)),
+                            fontWeight = FontWeight(400),
+                            color = Purple80))
+                Text(
+                    text = "Sphere",
+                    style =
+                        TextStyle(
+                            fontSize = 35.sp,
+                            fontFamily = FontFamily(Font(R.font.impact)),
+                            fontWeight = FontWeight(400),
+                            color = Purple40))
+              }
+        }
+      }) { paddingValues ->
+        Surface(color = MaterialTheme.colorScheme.background) {
+          LazyColumn(
+              modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
+              userScrollEnabled = true) {
+                items(events) { TicketItem(event = it) }
+              }
         }
       }
-    }) { paddingValues ->
-    Surface(color = MaterialTheme.colorScheme.background) {
-      LazyColumn(
-        modifier = Modifier
-          .fillMaxSize()
-          .padding(paddingValues)
-          .padding(16.dp),
-        userScrollEnabled = true
-      ) {
-        items(events) {
-          TicketItem(event = it)
-        }
-      }
-    }
-  }
 }
 
 @Composable
@@ -87,55 +80,34 @@ fun TicketItem(event: Event) {
   var isExpanded by remember { mutableStateOf(false) } // Keeps track of the expanded state
 
   Card(
-    modifier = Modifier
-      .fillMaxWidth()
-      .padding(vertical = 8.dp)
-      .clickable { isExpanded = !isExpanded }, // Toggle the expanded state on click
-    shape = RoundedCornerShape(8.dp),
-    //elevation = 2.dp
+      modifier =
+          Modifier.fillMaxWidth().padding(vertical = 8.dp).clickable {
+            isExpanded = !isExpanded
+          }, // Toggle the expanded state on click
+      shape = RoundedCornerShape(8.dp),
+      // elevation = 2.dp
   ) {
     Column {
       Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Column(
-          modifier = Modifier
-            .weight(1f)
-            .padding(end = 16.dp)
-        ) {
-          Text(
-            text = "Ticket ${event.title}",
-            style = MaterialTheme.typography.titleMedium
-          )
-          Spacer(modifier = Modifier.height(4.dp))
-          Text(
-            text = event.date,
-            style = MaterialTheme.typography.bodyMedium
-          )
-        }
-        // You can place an icon indicating the expanded state here
-      }
+          modifier = Modifier.fillMaxWidth().padding(16.dp),
+          verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+              Text(text = "Ticket ${event.title}", style = MaterialTheme.typography.titleMedium)
+              Spacer(modifier = Modifier.height(4.dp))
+              Text(text = event.date, style = MaterialTheme.typography.bodyMedium)
+            }
+            // You can place an icon indicating the expanded state here
+          }
       AnimatedVisibility(visible = isExpanded) {
-        Column(
-          modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-        ) {
-          Text(
-            text = event.description,
-            style = MaterialTheme.typography.bodyMedium
-          )
+        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+          Text(text = event.description, style = MaterialTheme.typography.bodyMedium)
           Spacer(modifier = Modifier.height(8.dp))
           Image(
-            painter = painterResource(id = R.drawable.logo), // Reference to drawable resource
-            contentDescription = "Event Logo",
-            modifier = Modifier
-              .fillMaxWidth()
-              .height(200.dp) // Set the desired height for the image
-          )
+              painter = painterResource(id = R.drawable.logo), // Reference to drawable resource
+              contentDescription = "Event Logo",
+              modifier =
+                  Modifier.fillMaxWidth().height(200.dp) // Set the desired height for the image
+              )
         }
       }
     }
