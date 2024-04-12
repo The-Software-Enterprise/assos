@@ -40,6 +40,7 @@ android {
     }
   }
   compileOptions {
+    //coreLibraryDesugaringEnabled true
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
   }
@@ -96,6 +97,10 @@ dependencies {
   implementation("com.google.dagger:hilt-android:2.49")
   kapt("com.google.dagger:hilt-android-compiler:2.47")
   implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+  //Calendar
+  implementation("androidx.compose.material:material-icons-extended:1.2.0")
+  //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
 
   androidTestImplementation("com.kaspersky.android-components:kaspresso:1.4.3")
   // Allure support
