@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -58,6 +59,7 @@ fun News() {
     }
 
   Scaffold(
+      modifier = Modifier.testTag("NewsScreen"),
       topBar = {
         Column(modifier = Modifier.fillMaxWidth()) {
           Row(
@@ -66,6 +68,7 @@ fun News() {
                       .align(Alignment.CenterHorizontally)
                       .wrapContentHeight(align = Alignment.CenterVertically)) {
                 Text(
+                    modifier = Modifier.testTag("AppTitle_1"),
                     text = "Student",
                     style =
                         TextStyle(
@@ -74,6 +77,7 @@ fun News() {
                             fontWeight = FontWeight(400),
                             color = Purple80))
                 Text(
+                    modifier = Modifier.testTag("AppTitle_2"),
                     text = "Sphere",
                     style =
                         TextStyle(
@@ -97,6 +101,7 @@ fun News() {
                             color = Color(0xFFFFFFFF),
                             shape = RoundedCornerShape(size = 15.dp)
                         )
+                        .testTag("NewsListItem")
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         var association by remember {
@@ -112,17 +117,21 @@ fun News() {
                             }
                             viewModel.getNewsAssociation(it.associationId) { association = it }
                             Text(
+                                modifier = Modifier.testTag("ItemsTitle"),
                                 fontSize = 20.sp,
                                 text = it.title,
                             )
                             Text(
+                                modifier = Modifier.testTag("ItemsDescription"),
                                 text = it.description,
                             )
                             Text(
+                                modifier = Modifier.testTag("ItemsDate"),
                                 text = it.date.toString(),
                             )
                             Text(
-                                text = association.acronym,
+                                modifier = Modifier.testTag("ItemsAssociation"),
+                                text = association.fullName,
                             )
                             Text(
                                 text = it.eventId,

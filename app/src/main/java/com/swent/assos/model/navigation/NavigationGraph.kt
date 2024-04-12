@@ -11,6 +11,7 @@ import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.manageAssos.CreateEvent
 import com.swent.assos.ui.manageAssos.CreateNews
 import com.swent.assos.ui.screens.AssoDigest
+import com.swent.assos.ui.screens.Settings
 
 @Composable
 fun NavigationGraph() {
@@ -43,6 +44,7 @@ fun NavigationGraph() {
         CreateEvent(navigationActions = navigationActions)
       }
     }
+    composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
 }
 
@@ -53,4 +55,5 @@ enum class Destinations(val route: String) {
   SIGN_UP("SignUp"),
   CREATE_NEWS("CreateNews"),
   CREATE_EVENT("CreateEvent"),
+  SETTINGS("Settings"),
 }
