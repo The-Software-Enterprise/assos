@@ -24,7 +24,7 @@ import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
-import com.swent.assos.ui.screens.UpcomingEventsScreen
+import com.swent.assos.ui.screens.calendar.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -39,19 +39,23 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier.fillMaxSize().weight(1f),
+        modifier = Modifier
+            .fillMaxSize()
+            .weight(1f),
     ) { page ->
       when (page) {
         0 -> News()
         1 -> Overview(navigationActions = navigationActions)
-        2 -> UpcomingEventsScreen()
+        2 -> Calendar()
         3 -> QrCode()
         4 -> Profil()
       }
     }
 
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->
