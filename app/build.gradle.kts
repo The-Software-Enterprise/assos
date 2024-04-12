@@ -122,6 +122,9 @@ dependencies {
   kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
   // ...with Java.
   androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+
+  implementation ("com.journeyapps:zxing-android-embedded:4.1.0")
+  implementation ("com.google.zxing:core:3.4.1")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

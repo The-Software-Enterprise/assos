@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.data.generateQRCodeBitmap
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.StudentSphereTitle
 
@@ -45,6 +46,7 @@ fun QrCode() {
 @Composable
 fun TicketItem(event: Event) {
   var isExpanded by remember { mutableStateOf(false) } // Keeps track of the expanded state
+    var qrCodeBitmap = remember { generateQRCodeBitmap(event.title + event.date, 500) } // Generate QR code for the event title
 
   Card(
       modifier =
@@ -52,7 +54,7 @@ fun TicketItem(event: Event) {
             isExpanded = !isExpanded
           }, // Toggle the expanded state on click
       shape = RoundedCornerShape(8.dp),
-      // elevation = 2.dp
+      //elevation = 2.dp
   ) {
     Column {
       Column(modifier = Modifier.fillMaxWidth().padding(16.dp).padding(end = 16.dp)) {
@@ -60,18 +62,18 @@ fun TicketItem(event: Event) {
         Spacer(modifier = Modifier.height(4.dp))
         Text(text = event.date, style = MaterialTheme.typography.bodyMedium)
       }
-      // You can place an icon indicating the expanded state here
 
       AnimatedVisibility(visible = isExpanded) {
         Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
           Text(text = event.description, style = MaterialTheme.typography.bodyMedium)
           Spacer(modifier = Modifier.height(8.dp))
-          Image(
-              painter = painterResource(id = R.drawable.logo), // Reference to drawable resource
-              contentDescription = "Event Logo",
-              modifier =
-                  Modifier.fillMaxWidth().height(200.dp) // Set the desired height for the image
-              )
+            Image(
+                bitmap = qrCodeBitmap,
+                contentDescription = "QR Code",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp) // Adjust size as needed
+            )
         }
       }
     }
