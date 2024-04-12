@@ -30,9 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
@@ -80,9 +80,9 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
               modifier = Modifier.fillMaxWidth(),
               painter = painterResource(id = R.drawable.logo),
               contentDescription = null)
-        Text(text = asso.fullname, modifier = Modifier.testTag("AssoName"))
-        Text(text = "Website : " + asso.url, modifier = Modifier.testTag("AssoWebsite"))
-    }
+          Text(text = asso.fullname, modifier = Modifier.testTag("AssoName"))
+          Text(text = "Website : " + asso.url, modifier = Modifier.testTag("AssoWebsite"))
+        }
   }
 
   if (showBottomSheetCreation) {

@@ -6,9 +6,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
+import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.manageAssos.CreateEvent
 import com.swent.assos.ui.manageAssos.CreateNews
-import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.AssoDigest
 
 @Composable

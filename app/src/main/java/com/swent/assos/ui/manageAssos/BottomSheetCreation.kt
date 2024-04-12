@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,7 @@ fun BottomSheetCreation(
       dragHandle = { BottomSheetDefaults.DragHandle() },
   ) {
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-      Row(Modifier.fillMaxWidth().clickable {}, verticalAlignment = Alignment.CenterVertically) {
+      Row(Modifier.fillMaxWidth().clickable { navigationActions.navigateTo(Destinations.CREATE_EVENT) }, verticalAlignment = Alignment.CenterVertically) {
         Image(
             imageVector = Icons.Default.Add,
             contentDescription = null,
@@ -62,7 +63,7 @@ fun BottomSheetCreation(
         Spacer(modifier = Modifier.width(10.dp))
         Text(text = "Create a new event")
       }
-      Spacer(modifier = Modifier.height(20.dp).clickable {})
+      Spacer(modifier = Modifier.height(20.dp).clickable { navigationActions.navigateTo(Destinations.CREATE_NEWS) })
       Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Image(
             imageVector = Icons.Default.Add,
