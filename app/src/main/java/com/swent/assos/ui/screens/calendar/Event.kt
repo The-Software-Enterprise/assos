@@ -33,15 +33,16 @@ fun BasicEvent(
     event: CalendarEvent,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(end = 2.dp, bottom = 2.dp)
-            .background(event.color, shape = RoundedCornerShape(4.dp))
-            .padding(4.dp)
-    ) {
+  Column(
+      modifier =
+          modifier
+              .fillMaxSize()
+              .padding(end = 2.dp, bottom = 2.dp)
+              .background(event.color, shape = RoundedCornerShape(4.dp))
+              .padding(4.dp)) {
         Text(
-            text = "${event.startTime.format(EventTimeFormatter)} - ${event.endTime.format(
+            text =
+                "${event.startTime.format(EventTimeFormatter)} - ${event.endTime.format(
                 EventTimeFormatter
             )}",
         )
@@ -52,13 +53,13 @@ fun BasicEvent(
         )
 
         if (event.description != null) {
-            Text(
-                text = event.description,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+          Text(
+              text = event.description,
+              maxLines = 1,
+              overflow = TextOverflow.Ellipsis,
+          )
         }
-    }
+      }
 }
 
 @Composable
@@ -70,61 +71,61 @@ fun Event(
     hourHeight: Dp,
     data: CalendarUiModel,
 ) {
-    val numDays = 7
-    val dividerColor = Color.LightGray
-    Layout(
-        content = {
-            events.sortedBy(CalendarEvent::startTime).forEach { event ->
-
-                Box(modifier = Modifier.eventData(event)) {
-                    eventContent(event)
-                }
-
+  val numDays = 7
+  val dividerColor = Color.LightGray
+  Layout(
+      content = {
+        events.sortedBy(CalendarEvent::startTime).forEach { event ->
+          Box(modifier = Modifier.eventData(event)) { eventContent(event) }
+        }
+      },
+      modifier =
+          modifier.drawBehind {
+            repeat(23) {
+              drawLine(
+                  dividerColor,
+                  start = Offset(0f, (it + 1) * hourHeight.toPx()),
+                  end = Offset(size.width, (it + 1) * hourHeight.toPx()),
+                  strokeWidth = 1.dp.toPx())
             }
-        },
-        modifier = modifier
-            .drawBehind {
-                repeat(23) {
-                    drawLine(
-                        dividerColor,
-                        start = Offset(0f, (it + 1) * hourHeight.toPx()),
-                        end = Offset(size.width, (it + 1) * hourHeight.toPx()),
-                        strokeWidth = 1.dp.toPx()
-                    )
-                }
-                repeat(numDays - 1) {
-                    drawLine(
-                        dividerColor,
-                        start = Offset((it + 1) * dayWidth.toPx(), 0f),
-                        end = Offset((it + 1) * dayWidth.toPx(), size.height),
-                        strokeWidth = 1.dp.toPx()
-                    )
-                }
+            repeat(numDays - 1) {
+              drawLine(
+                  dividerColor,
+                  start = Offset((it + 1) * dayWidth.toPx(), 0f),
+                  end = Offset((it + 1) * dayWidth.toPx(), size.height),
+                  strokeWidth = 1.dp.toPx())
             }
-    ){ measureables, constraints ->
+          }) { measureables, constraints ->
         val height = hourHeight.roundToPx() * 24
         val width = dayWidth.roundToPx() * numDays
-        val placeablesWithEvents = measureables.map { measurable ->
-            val event = measurable.parentData as CalendarEvent
-            val eventDurationMinutes = ChronoUnit.MINUTES.between(event.startTime, event.endTime)
-            val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
-            val placeable = measurable.measure(constraints.copy(minWidth = dayWidth.roundToPx(), maxWidth = dayWidth.roundToPx(), minHeight = eventHeight, maxHeight = eventHeight))
-            Pair(placeable, event)
-        }
-        layout(width, height) {
-
-            placeablesWithEvents.forEach { (placeable, event) ->
-                val eventOffsetMinutes = ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime.toLocalTime())
-                val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
-
-
-                val eventOffsetDays = ChronoUnit.DAYS.between(data.startDate.date, event.startTime.toLocalDate()).toInt()
-                val eventX = eventOffsetDays * dayWidth.roundToPx()
-
-                placeable.place(eventX, eventY)
+        val placeablesWithEvents =
+            measureables.map { measurable ->
+              val event = measurable.parentData as CalendarEvent
+              val eventDurationMinutes = ChronoUnit.MINUTES.between(event.startTime, event.endTime)
+              val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
+              val placeable =
+                  measurable.measure(
+                      constraints.copy(
+                          minWidth = dayWidth.roundToPx(),
+                          maxWidth = dayWidth.roundToPx(),
+                          minHeight = eventHeight,
+                          maxHeight = eventHeight))
+              Pair(placeable, event)
             }
+        layout(width, height) {
+          placeablesWithEvents.forEach { (placeable, event) ->
+            val eventOffsetMinutes =
+                ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime.toLocalTime())
+            val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
+
+            val eventOffsetDays =
+                ChronoUnit.DAYS.between(data.startDate.date, event.startTime.toLocalDate()).toInt()
+            val eventX = eventOffsetDays * dayWidth.roundToPx()
+
+            placeable.place(eventX, eventY)
+          }
         }
-    }
+      }
 }
 
 private fun Modifier.eventData(event: CalendarEvent) = this.then(CalendarEventDataModifier(event))
@@ -132,5 +133,5 @@ private fun Modifier.eventData(event: CalendarEvent) = this.then(CalendarEventDa
 private class CalendarEventDataModifier(
     val event: CalendarEvent,
 ) : ParentDataModifier {
-    override fun Density.modifyParentData(parentData: Any?) = event
+  override fun Density.modifyParentData(parentData: Any?) = event
 }

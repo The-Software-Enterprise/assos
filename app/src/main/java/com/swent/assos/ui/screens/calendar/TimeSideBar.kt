@@ -21,14 +21,12 @@ fun TimeSidebar(
     modifier: Modifier = Modifier,
     label: @Composable (time: LocalTime) -> Unit = { BasicSidebarLabel(time = it) },
 ) {
-    Column(modifier = modifier) {
-        val startTime = LocalTime.MIN
-        repeat(24) { i ->
-            Box(modifier = Modifier.height(hourHeight)) {
-                label(startTime.plusHours(i.toLong()))
-            }
-        }
+  Column(modifier = modifier) {
+    val startTime = LocalTime.MIN
+    repeat(24) { i ->
+      Box(modifier = Modifier.height(hourHeight)) { label(startTime.plusHours(i.toLong())) }
     }
+  }
 }
 
 @Composable
@@ -36,10 +34,5 @@ fun BasicSidebarLabel(
     time: LocalTime,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = time.format(HourFormatter),
-        modifier = modifier
-            .fillMaxHeight()
-            .padding(4.dp)
-    )
+  Text(text = time.format(HourFormatter), modifier = modifier.fillMaxHeight().padding(4.dp))
 }

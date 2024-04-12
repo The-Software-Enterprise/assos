@@ -11,31 +11,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.swent.assos.ui.theme.AssosTheme
 
-
 @Composable
 fun ManageAssociation() {
-    AssosTheme {
-        ManageAssociationContent()
-    }
+  AssosTheme { ManageAssociationContent() }
 }
 
 @Composable
 fun ManageAssociationContent() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Manage My Association",
-            modifier = Modifier.padding(16.dp)
-        )
-        Button(
-            onClick = { /* TODO: Implement navigation to event creation page */ },
-            modifier = Modifier.padding(16.dp),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-        ) {
-            Text("Create Event")
+  Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    Text(text = "Manage My Association", modifier = Modifier.padding(16.dp))
+    Button(
+        onClick = { /* TODO: Implement navigation to event creation page */},
+        modifier = Modifier.padding(16.dp),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)) {
+          Text("Create Event")
         }
-    }
+  }
 }

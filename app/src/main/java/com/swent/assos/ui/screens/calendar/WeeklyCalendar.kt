@@ -28,24 +28,14 @@ fun ChangeWeek(
     onPrevClickListener: (LocalDate) -> Unit,
     onNextClickListener: (LocalDate) -> Unit,
 ) {
-    Row {
-        IconButton(onClick = {
-            onPrevClickListener(data.startDate.date)
-        }) {
-            Icon(
-                imageVector = Icons.Filled.ChevronLeft,
-                contentDescription = "Back"
-            )
-        }
-        IconButton(onClick = {
-            onNextClickListener(data.endDate.date)
-        }) {
-            Icon(
-                imageVector = Icons.Filled.ChevronRight,
-                contentDescription = "Next"
-            )
-        }
+  Row {
+    IconButton(onClick = { onPrevClickListener(data.startDate.date) }) {
+      Icon(imageVector = Icons.Filled.ChevronLeft, contentDescription = "Back")
     }
+    IconButton(onClick = { onNextClickListener(data.endDate.date) }) {
+      Icon(imageVector = Icons.Filled.ChevronRight, contentDescription = "Next")
+    }
+  }
 }
 
 @Composable
@@ -55,16 +45,13 @@ fun WeekHeader(
     modifier: Modifier,
     dayHeader: @Composable (day: LocalDate) -> Unit = { WeekDayHeader(day = it) },
 ) {
-    Row(modifier = modifier) {
-        val numDays = 7
-        repeat(numDays) { i ->
-            val date = data.visibleDates[i]
-            Box(modifier = Modifier.width(dayWidth)
-            ) {
-                dayHeader(date.date)
-            }
-        }
+  Row(modifier = modifier) {
+    val numDays = 7
+    repeat(numDays) { i ->
+      val date = data.visibleDates[i]
+      Box(modifier = Modifier.width(dayWidth)) { dayHeader(date.date) }
     }
+  }
 }
 
 @Composable
@@ -72,11 +59,8 @@ fun WeekDayHeader(
     day: LocalDate,
     modifier: Modifier = Modifier,
 ) {
-    Text(
-        text = day.format(DayFormatter),
-        textAlign = TextAlign.Center,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-    )
+  Text(
+      text = day.format(DayFormatter),
+      textAlign = TextAlign.Center,
+      modifier = modifier.fillMaxWidth().padding(4.dp))
 }
