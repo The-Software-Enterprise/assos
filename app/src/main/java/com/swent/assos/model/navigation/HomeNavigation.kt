@@ -66,7 +66,6 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                         contentDescription = "Overview",
                         modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
-
                 1 ->
                     Icon(
                         painterResource(id = R.drawable.language),
