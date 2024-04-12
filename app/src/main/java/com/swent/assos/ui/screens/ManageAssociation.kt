@@ -31,7 +31,7 @@ import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun ManageAssociation(){
+fun ManageAssociation() {
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
