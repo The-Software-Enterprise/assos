@@ -96,11 +96,13 @@ val myAssociations =
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ))
 
 val associationsFollowed =
@@ -109,49 +111,59 @@ val associationsFollowed =
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ),
         Association(
             acronym = "ACRONYM",
             fullname = "NAME",
             url = "URL",
+            description = "",
         ))
