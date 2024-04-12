@@ -73,54 +73,53 @@ fun News() {
         }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .testTag("NewsList"),
-            userScrollEnabled = true
-        ) {
-          for (n in news) {
-            item {
-              Box(
-                  modifier =
-                      Modifier.padding(16.dp)
-                          .shadow(
-                              elevation = 10.dp, spotColor = Color.Gray, ambientColor = Color.Gray)
-                          .fillMaxSize()
-                          .background(
-                              color = Color(0xFFFFFFFF),
-                              shape = RoundedCornerShape(size = 15.dp)).testTag("NewsListItem")
-              ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
-                      if (n.eventId == "") {
-                        /*TODO: Implement the screen when an event is not assigned to a news*/
-                      } else {
+            modifier = Modifier.padding(paddingValues).testTag("NewsList"),
+            userScrollEnabled = true) {
+              for (n in news) {
+                item {
+                  Box(
+                      modifier =
+                          Modifier.padding(16.dp)
+                              .shadow(
+                                  elevation = 10.dp,
+                                  spotColor = Color.Gray,
+                                  ambientColor = Color.Gray)
+                              .fillMaxSize()
+                              .background(
+                                  color = Color(0xFFFFFFFF),
+                                  shape = RoundedCornerShape(size = 15.dp))
+                              .testTag("NewsListItem")) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                          if (n.eventId == "") {
+                            /*TODO: Implement the screen when an event is not assigned to a news*/
+                          } else {
 
-                        var association by remember {
-                          mutableStateOf(Association("", "", "", null))
+                            var association by remember {
+                              mutableStateOf(Association("", "", "", null))
+                            }
+                            newsViewModel.getNewsAssociation(n.associationId) { association = it }
+                            Text(
+                                modifier = Modifier.testTag("ItemsTitle"),
+                                fontSize = 20.sp,
+                                text = n.title,
+                            )
+                            Text(
+                                modifier = Modifier.testTag("ItemsDescription"),
+                                text = n.description,
+                            )
+                            Text(
+                                modifier = Modifier.testTag("ItemsDate"),
+                                text = n.date.toString(),
+                            )
+                            Text(
+                                modifier = Modifier.testTag("ItemsAssociation"),
+                                text = association.fullname,
+                            )
+                          }
                         }
-                        newsViewModel.getNewsAssociation(n.associationId) { association = it }
-                        Text(
-                            modifier = Modifier.testTag("ItemsTitle"),
-                            fontSize = 20.sp,
-                            text = n.title,
-                        )
-                        Text(
-                            modifier = Modifier.testTag("ItemsDescription"),
-                            text = n.description,
-                        )
-                        Text(
-                            modifier = Modifier.testTag("ItemsDate"),
-                            text = n.date.toString(),
-                        )
-                        Text(
-                            modifier = Modifier.testTag("ItemsAssociation"),
-                            text = association.fullname,
-                        )
                       }
-                    }
-                  }
+                }
+              }
             }
-          }
-        }
       }
 }
