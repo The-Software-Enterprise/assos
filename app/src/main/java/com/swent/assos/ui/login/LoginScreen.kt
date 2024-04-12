@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -37,6 +38,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
+        var userNotFound by remember { mutableStateOf(false) }
 
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -59,15 +61,25 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-              navigationActions.navigateTo(Destinations.HOME)
+              if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+                navigationActions.navigateTo(Destinations.HOME.route)
+              } else {
+                userNotFound = true
+              }
             },
         ) {
           Text("Login")
         }
 
+        if (userNotFound) {
+          Text("User not found, please sign up", color = Color.Red)
+        }
+
         Text(
             // if clicked, go to sign up page using hilt navigation
-            modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP) },
+
+            modifier =
+                Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")

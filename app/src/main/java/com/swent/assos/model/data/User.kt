@@ -5,6 +5,6 @@ data class User(
     val firstName: String,
     val lastName: String,
     val email: String,
-    var associations: List<Triple<String, String, Int>>,
+    var associations: List<String>,
     var following: List<String>
 )
