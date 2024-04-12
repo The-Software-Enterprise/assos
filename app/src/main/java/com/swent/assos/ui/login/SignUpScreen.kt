@@ -1,7 +1,10 @@
 package com.swent.assos.ui.login
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -10,11 +13,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
@@ -30,8 +35,13 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
   var error by remember { mutableStateOf("") }
+  var passwordTooShort by remember { mutableStateOf(false) }
 
-  Column {
+  Column(
+      modifier = Modifier.fillMaxWidth().padding(40.dp),
+      horizontalAlignment = Alignment.CenterHorizontally,
+      verticalArrangement = Arrangement.Center,
+  ) {
     OutlinedTextField(
         value = email,
         onValueChange = { email = it },
@@ -39,7 +49,10 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         modifier = Modifier.testTag("email"))
     OutlinedTextField(
         value = password,
-        onValueChange = { password = it },
+        onValueChange = {
+          passwordTooShort = false
+          password = it
+        },
         label = { Text("Password") },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.testTag("password"))
@@ -54,7 +67,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     }
     Button(
         onClick = {
-          if (password == confirmPassword && password.isNotEmpty()) {
+          if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
 
             loginViewModel.signUp(email, password)
 
@@ -79,17 +92,20 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   navigationActions.navigateTo(Destinations.HOME)
                 }
                 .addOnFailureListener { error = it.message.toString() }
+            navigationActions.goBack()
+          } else if (password.length < 6) {
+            passwordTooShort = true
           }
         },
         modifier = Modifier.testTag("signUpButton")) {
           Text("Sign Up")
         }
-    Text(error, color = Color.Red)
-    Text(loginViewModel.firestoreInstance.firestoreSettings.host)
-
+    if (passwordTooShort) {
+      Text("Password must be at least 6 characters", color = Color.Red)
+    }
     Text(
         "Already have an account?",
-        modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) },
+        modifier = Modifier.clickable { navigationActions.goBack() },
     )
   }
 }
