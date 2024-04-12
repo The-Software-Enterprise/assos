@@ -90,8 +90,11 @@ jobs:
           python3 -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
-          
           cd ..
+
+      - name : install firebase tools
+        run: |
+          npm install -g firebase-tools
 
       - name: start firebase emulator
         run: |
