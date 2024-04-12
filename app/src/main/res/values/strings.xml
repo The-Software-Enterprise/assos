@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Assos</string>
+    <string name="NoResult">No results were found</string>
 </resources>
