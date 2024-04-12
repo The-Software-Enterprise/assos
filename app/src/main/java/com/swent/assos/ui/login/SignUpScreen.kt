@@ -86,20 +86,19 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             val config = Config()
 
             // change the region of the function to europe-west6
-            if (config.get_all().contains("functions")){
-                functions.useEmulator("10.0.2.2", 5001)
+            if (config.get_all().contains("functions")) {
+              functions.useEmulator("10.0.2.2", 5001)
             }
-              functions
-                  .getHttpsCallable("oncallFind")
-                  .call(data)
-                  .addOnSuccessListener { task ->
-                    // keep result for future use
-                    val result = task.data as? Map<String, String>
+            functions
+                .getHttpsCallable("oncallFind")
+                .call(data)
+                .addOnSuccessListener { task ->
+                  // keep result for future use
+                  val result = task.data as? Map<String, String>
 
-                    navigationActions.navigateTo(Destinations.HOME)
-                  }
-                  .addOnFailureListener { error = it.message.toString() }
-
+                  navigationActions.navigateTo(Destinations.HOME)
+                }
+                .addOnFailureListener { error = it.message.toString() }
           } else if (password.length < 6) {
             passwordTooShort = true
           }
