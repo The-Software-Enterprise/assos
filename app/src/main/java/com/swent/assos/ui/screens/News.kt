@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -42,6 +43,7 @@ fun News() {
   val newsViewModel: NewsViewModel = hiltViewModel()
   val news by newsViewModel.allNews.collectAsState()
   Scaffold(
+      modifier = Modifier.testTag("NewsScreen"),
       topBar = {
         Column(modifier = Modifier.fillMaxWidth()) {
           Row(
@@ -50,6 +52,7 @@ fun News() {
                       .align(Alignment.CenterHorizontally)
                       .wrapContentHeight(align = Alignment.CenterVertically)) {
                 Text(
+                    modifier = Modifier.testTag("AppTitle_1"),
                     text = "Student",
                     style =
                         TextStyle(
@@ -58,6 +61,7 @@ fun News() {
                             fontWeight = FontWeight(400),
                             color = Purple80))
                 Text(
+                    modifier = Modifier.testTag("AppTitle_2"),
                     text = "Sphere",
                     style =
                         TextStyle(
@@ -68,7 +72,12 @@ fun News() {
               }
         }
       }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+                .testTag("NewsList"),
+            userScrollEnabled = true
+        ) {
           for (n in news) {
             item {
               Box(
@@ -79,10 +88,11 @@ fun News() {
                           .fillMaxSize()
                           .background(
                               color = Color(0xFFFFFFFF),
-                              shape = RoundedCornerShape(size = 15.dp))) {
+                              shape = RoundedCornerShape(size = 15.dp)).testTag("NewsListItem")
+              ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                       if (n.eventId == "") {
-                        /*TODO: Implement the screen when an event is assigned to a news*/
+                        /*TODO: Implement the screen when an event is not assigned to a news*/
                       } else {
 
                         var association by remember {
@@ -90,20 +100,21 @@ fun News() {
                         }
                         newsViewModel.getNewsAssociation(n.associationId) { association = it }
                         Text(
+                            modifier = Modifier.testTag("ItemsTitle"),
                             fontSize = 20.sp,
                             text = n.title,
                         )
                         Text(
+                            modifier = Modifier.testTag("ItemsDescription"),
                             text = n.description,
                         )
                         Text(
+                            modifier = Modifier.testTag("ItemsDate"),
                             text = n.date.toString(),
                         )
                         Text(
+                            modifier = Modifier.testTag("ItemsAssociation"),
                             text = association.fullname,
-                        )
-                        Text(
-                            text = n.eventId,
                         )
                       }
                     }
