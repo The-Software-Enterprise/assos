@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.swent.assos.R
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
@@ -78,7 +77,8 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         Text(
             // if clicked, go to sign up page using hilt navigation
-            modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) },
+            modifier =
+                Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")

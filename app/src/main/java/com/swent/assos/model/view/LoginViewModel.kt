@@ -38,9 +38,7 @@ constructor(private val storageService: DbService, private val accountService: A
                       (document.data?.get("firstname") ?: "") as String,
                       (document.data?.get("name") ?: "") as String,
                       (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations")
-                          ?: emptyList<String>())
-                          as List<String>,
+                      (document.data?.get("associations") ?: emptyList<String>()) as List<String>,
                       (document.data?.get("following") ?: emptyList<String>()) as List<String>)
             }
           }
