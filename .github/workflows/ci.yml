@@ -107,7 +107,7 @@ jobs:
       - name: run unit tests
         run: |
           # To run the CI with debug information, add --info
-          firebase emulators:exec --only functions "./gradlew check --parallel --build-cache"
+          firebase emulators:exec "./gradlew check --parallel --build-cache"
 
       # Run connected tests on the emulator
       - name: run connected tests
@@ -119,7 +119,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: firebase emulators:exec --only functions "./gradlew connectedCheck --parallel --build-cache"
+          script: firebase emulators:exec "./gradlew connectedCheck --parallel --build-cache"
 
 
           

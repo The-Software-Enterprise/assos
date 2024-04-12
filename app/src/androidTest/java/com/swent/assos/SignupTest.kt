@@ -67,6 +67,18 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               loginScreen { assertIsDisplayed() }
             }
           }
+          step("Open Signup Screen") {
+            signUpButton {
+              assertIsDisplayed()
+              performClick()
+            }
+          }
+          // we are not supposed to be in signup screen
+          step("assert signup screen") {
+            ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+              signupScreen { assertIsNotDisplayed() }
+            }
+          }
         }
       }
     }
