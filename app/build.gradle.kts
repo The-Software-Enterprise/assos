@@ -19,7 +19,8 @@ android {
     versionCode = 1
     versionName = "1.0"
 
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    // Replace com.example.android.dagger with your class path.
+    testInstrumentationRunner = "com.swent.assos.CustomTestRunner"
     vectorDrawables {
       useSupportLibrary = true
     }
@@ -54,6 +55,15 @@ android {
   packaging {
     resources {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
+      merges += "META-INF/LICENSE.md"
+      merges += "META-INF/LICENSE-notice.md"
+    }
+  }
+  testOptions {
+    packagingOptions {
+      jniLibs {
+        useLegacyPackaging = true
+      }
     }
   }
 }
@@ -68,6 +78,7 @@ dependencies {
   implementation("androidx.compose.ui:ui-graphics")
   implementation("androidx.compose.ui:ui-tooling-preview")
   implementation("androidx.compose.material3:material3")
+  implementation("com.google.firebase:firebase-functions-ktx:20.4.0")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -85,6 +96,27 @@ dependencies {
   implementation("com.google.dagger:hilt-android:2.49")
   kapt("com.google.dagger:hilt-android-compiler:2.47")
   implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+  androidTestImplementation("com.kaspersky.android-components:kaspresso:1.4.3")
+  // Allure support
+  androidTestImplementation("com.kaspersky.android-components:kaspresso-allure-support:1.4.3")
+  // Jetpack Compose support
+  androidTestImplementation("com.kaspersky.android-components:kaspresso-compose-support:1.4.1")
+
+  // Dependency for using Intents in instrumented tests
+  androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+
+  // Dependencies for using MockK in instrumented tests
+  androidTestImplementation("io.mockk:mockk:1.13.7")
+  androidTestImplementation("io.mockk:mockk-android:1.13.7")
+  androidTestImplementation("io.mockk:mockk-agent:1.13.7")
+
+  // Hilt Test Injection for instrumented tests.
+  androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+  // ...with Kotlin.
+  kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+  // ...with Java.
+  androidTestAnnotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

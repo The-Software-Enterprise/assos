@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
 import com.swent.assos.ui.manageAssos.CreateEvent
 import com.swent.assos.ui.manageAssos.CreateNews
+import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.AssoDigest
 
 @Composable
@@ -19,6 +20,7 @@ fun NavigationGraph() {
     composable(Destinations.LOGIN.route) {
       // LoginScreen(navController = navController)
     }
+    composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
@@ -45,6 +47,7 @@ enum class Destinations(val route: String) {
   LOGIN("Login"),
   HOME("Home"),
   ASSOCIATION_PAGE("AssociationPage"),
+  SIGN_UP("SignUp"),
   CREATE_NEWS("CreateNews"),
   CREATE_EVENT("CreateEvent"),
 }
