@@ -23,8 +23,10 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
 
+
     userID = req.auth.uid
     profile = epflpeople.find(email)
+    firestore_client: google.cloud.firestore.Client = firestore.Client()
 
     # profile is a format of a list of dictionnary we want first elem and change the dict into a json
     if profile:
@@ -60,7 +62,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
             "following": []
         }
         
-        firestore_client: google.cloud.firestore.Client = firestore.Client()
+
         
         firestore_client.document(f"users/{userID}").set(user)
         # transform profile insto a json format
@@ -78,6 +80,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
             "associations" : [],
             "following": []
         }
+        firestore_client.document(f"users/{userID}").set(user)
         
         
         return {"response":f"could not find: {email}"}
