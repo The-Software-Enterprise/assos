@@ -152,7 +152,7 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
           Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
             val dest =
                 Destinations.ASSOCIATION_PAGE.route +
-                    "/${asso.acronym}/${asso.fullname}/${
+                    "/${asso.id}/${asso.acronym}/${asso.fullname}/${
                       URLEncoder.encode(
                         asso.url,
                         StandardCharsets.UTF_8.toString()
