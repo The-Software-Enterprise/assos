@@ -16,7 +16,3 @@ val BlackLogo = Color(0xFF212121)
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
 val Gray = Color(0xFF9E9E9E)
-
-
-
-
