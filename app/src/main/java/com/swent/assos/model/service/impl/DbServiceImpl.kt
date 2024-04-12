@@ -35,18 +35,20 @@ constructor(
           acronym = it.getString("acronym") ?: "",
           fullname = it.getString("fullname") ?: "",
           url = it.getString("url") ?: "",
-          documentSnapshot = it)
+          documentSnapshot = it,
+          description = it.getString("description") ?: "")
     }
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
     val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association("", "", "", null)
+    val snapshot = query.get().await() ?: return Association("", "", "", null, "")
     return Association(
         acronym = snapshot.getString("acronym") ?: "",
         fullname = snapshot.getString("fullname") ?: "",
         url = snapshot.getString("url") ?: "",
-        documentSnapshot = snapshot)
+        documentSnapshot = snapshot,
+        description = snapshot.getString("description") ?: "")
   }
 
   override suspend fun getAllNews(): List<News> {
