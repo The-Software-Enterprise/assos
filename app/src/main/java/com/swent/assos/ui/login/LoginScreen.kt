@@ -25,10 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun LoginScreen(navigationActions: NavigationActions) {
   Column(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.Center,
@@ -59,17 +61,17 @@ fun LoginScreen(navController: NavHostController) {
             onClick = {
               loginViewModel.signIn(email, password)
               loginViewModel.currentUser?.let {
-                loginViewModel.updateUserInfo()
-                navController.navigate("AssociationPage")
+                navigationActions.navigateTo(Destinations.HOME)
               }
             },
         ) {
           Text("Login")
         }
 
+
         Text(
             // if clicked, go to sign up page using hilt navigation
-            modifier = Modifier.clickable { navController.navigate("SignUp") },
+            modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP) },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")
