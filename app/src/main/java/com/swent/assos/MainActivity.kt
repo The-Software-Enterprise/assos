@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
     val config = Config()
     if (config.get_demo()) {
       // Configure Firestore to use the Firestore emulator
-FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
     }
     setContent {
       AssosTheme {

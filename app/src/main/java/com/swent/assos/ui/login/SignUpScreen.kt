@@ -13,12 +13,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavAction
-import androidx.navigation.NavController
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
 import com.swent.assos.model.navigation.Destinations
@@ -81,11 +78,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   }
                   navigationActions.navigateTo(Destinations.ASSOCIATION_PAGE)
                 }
-                .addOnFailureListener {
-
-
-                  error = it.message.toString()
-                }
+                .addOnFailureListener { error = it.message.toString() }
           }
         },
         modifier = Modifier.testTag("signUpButton")) {
@@ -96,6 +89,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
     Text(
         "Already have an account?",
-        modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) },)
+        modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) },
+    )
   }
 }
