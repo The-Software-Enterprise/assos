@@ -23,7 +23,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -60,14 +59,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-              loginViewModel.currentUser?.let {
-                navigationActions.navigateTo(Destinations.HOME)
-              }
+              loginViewModel.currentUser?.let { navigationActions.navigateTo(Destinations.HOME) }
             },
         ) {
           Text("Login")
         }
-
 
         Text(
             // if clicked, go to sign up page using hilt navigation
