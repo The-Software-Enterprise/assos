@@ -48,7 +48,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
