@@ -47,7 +47,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         1 -> Overview(navigationActions = navigationActions)
         2 -> Calendar()
         3 -> QrCode()
-        4 -> Profil()
+        4 -> Profil(navigationActions = navigationActions)
       }
     }
 
