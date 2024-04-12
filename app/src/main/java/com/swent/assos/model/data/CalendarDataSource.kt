@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens.calendar
+package com.swent.assos.model.data
 
 import java.time.DayOfWeek
 import java.time.LocalDate

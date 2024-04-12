@@ -1,7 +1,6 @@
-package com.swent.assos.ui.screens.calendar
+package com.swent.assos.model.data
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 data class CalendarUiModel(
     val selectedDate: Date,
