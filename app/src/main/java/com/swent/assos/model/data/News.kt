@@ -1,5 +1,6 @@
 package com.swent.assos.model.data
 
+import com.google.firebase.firestore.DocumentSnapshot
 import java.util.Date
 
 data class News(
@@ -9,5 +10,6 @@ data class News(
     val image: String = "",
     val description: String = "",
     val date: Date = Date(),
-    val eventId: String = ""
+    val eventId: String = "",
+    val documentSnapshot: DocumentSnapshot? = null
 )

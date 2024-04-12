@@ -9,15 +9,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -39,8 +43,20 @@ import com.swent.assos.ui.theme.Purple80
 @Preview
 @Composable
 fun News() {
-  val newsViewModel: NewsViewModel = hiltViewModel()
-  val news by newsViewModel.allNews.collectAsState()
+  val viewModel: NewsViewModel = hiltViewModel()
+  val news by viewModel.allNews.collectAsState()
+
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+            .collect { visibleItems ->
+                if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
+                    viewModel.loadMoreAssociations()
+                }
+            }
+    }
+
   Scaffold(
       topBar = {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -68,46 +84,51 @@ fun News() {
               }
         }
       }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true) {
-          for (n in news) {
-            item {
-              Box(
-                  modifier =
-                      Modifier.padding(16.dp)
-                          .shadow(
-                              elevation = 10.dp, spotColor = Color.Gray, ambientColor = Color.Gray)
-                          .fillMaxSize()
-                          .background(
-                              color = Color(0xFFFFFFFF),
-                              shape = RoundedCornerShape(size = 15.dp))) {
+        LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true, state = listState) {
+            items(news) {
+                Box(
+                    modifier =
+                    Modifier.padding(16.dp)
+                        .shadow(
+                            elevation = 10.dp, spotColor = Color.Gray, ambientColor = Color.Gray
+                        )
+                        .fillMaxSize()
+                        .background(
+                            color = Color(0xFFFFFFFF),
+                            shape = RoundedCornerShape(size = 15.dp)
+                        )
+                ) {
                     Column(modifier = Modifier.padding(16.dp)) {
-                      if (n.eventId == "") {
-                        /*TODO: Implement the screen when an event is assigned to a news*/
-                      } else {
-
-                        var association by remember { mutableStateOf(Association("", "", "", "")) }
-                        newsViewModel.getNewsAssociation(n.associationId) { association = it }
-                        Text(
-                            fontSize = 20.sp,
-                            text = n.title,
-                        )
-                        Text(
-                            text = n.description,
-                        )
-                        Text(
-                            text = n.date.toString(),
-                        )
-                        Text(
-                            text = association.fullname,
-                        )
-                        Text(
-                            text = n.eventId,
-                        )
-                      }
+                        var association by remember {
+                                mutableStateOf(
+                                    Association(
+                                        "",
+                                        "",
+                                        "",
+                                        ""
+                                    )
+                                )
+                            }
+                            viewModel.getNewsAssociation(it.associationId) { association = it }
+                            Text(
+                                fontSize = 20.sp,
+                                text = it.title,
+                            )
+                            Text(
+                                text = it.description,
+                            )
+                            Text(
+                                text = it.date.toString(),
+                            )
+                            Text(
+                                text = association.acronym,
+                            )
+                            Text(
+                                text = it.eventId,
+                            )
                     }
-                  }
+                }
             }
-          }
         }
       }
 }

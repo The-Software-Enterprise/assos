@@ -51,14 +51,20 @@ constructor(
         documentSnapshot = snapshot)
   }
 
-  override suspend fun getAllNews(): List<News> {
+  override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
     val query = firestore.collection("news").orderBy("date")
-    val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
+      val snapshot =
+          if (lastDocumentSnapshot == null) {
+              query.limit(10).get().await()
+          } else {
+              query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+          }
+      if (snapshot.isEmpty) {
+          return emptyList()
+      }
     return snapshot.documents.map {
       News(
+          id = it.id,
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
           date = it.getDate("date") ?: Date(),
@@ -71,7 +77,16 @@ constructor(
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
-        .add(news)
+        .add(
+            mapOf(
+                "title" to news.title,
+                "description" to news.description,
+                "date" to Date(),
+                "associationId" to news.associationId,
+                "image" to news.image,
+                "eventId" to news.eventId
+            )
+        )
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -80,7 +95,13 @@ constructor(
     firestore
         .collection("news")
         .document(news.id)
-        .set(news)
+        .set(
+            mapOf(
+                "title" to news.title,
+                "description" to news.description,
+                "image" to news.image,
+            )
+        )
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }

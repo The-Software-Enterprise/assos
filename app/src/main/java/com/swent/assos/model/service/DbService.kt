@@ -11,7 +11,7 @@ interface DbService {
   suspend fun getAssociationById(associationId: String): Association
 
   // News ---------------------------------------------------------------------
-  suspend fun getAllNews(): List<News>
+  suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
