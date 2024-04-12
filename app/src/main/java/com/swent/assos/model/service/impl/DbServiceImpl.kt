@@ -1,14 +1,7 @@
 package com.swent.assos.model.service.impl
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -17,7 +10,6 @@ import com.swent.assos.model.service.DbService
 import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
-import android.media.Image
 
 class DbServiceImpl
 @Inject
@@ -75,22 +67,29 @@ constructor(
     }
   }
 
-    override suspend fun getAllEvents(): List<Event> {
-        return listOf<Event>(
-            Event(
-                title = "Distribution de crepes",
-                association = Association(acronym = "JE EPFL", fullname = "JE EPFL", url = "jeepfl.ch", documentSnapshot = null),
-                date = "01/04/2024",
-                description = "yepa des crepes",
-                image = ""
-            ),
-            Event(
-                title = "Vin chaud",
-                association = Association(acronym = "Agepoly", fullname = "Agepoly", url = "agepoly.ch", documentSnapshot = null),
-                date = "15/04/2024",
-                description = "yepa du vin",
-                image = ""
-        )
-        )
-    }
+  override suspend fun getAllEvents(): List<Event> {
+    return listOf<Event>(
+        Event(
+            title = "Distribution de crepes",
+            association =
+                Association(
+                    acronym = "JE EPFL",
+                    fullname = "JE EPFL",
+                    url = "jeepfl.ch",
+                    documentSnapshot = null),
+            date = "01/04/2024",
+            description = "yepa des crepes",
+            image = ""),
+        Event(
+            title = "Vin chaud",
+            association =
+                Association(
+                    acronym = "Agepoly",
+                    fullname = "Agepoly",
+                    url = "agepoly.ch",
+                    documentSnapshot = null),
+            date = "15/04/2024",
+            description = "yepa du vin",
+            image = ""))
+  }
 }
