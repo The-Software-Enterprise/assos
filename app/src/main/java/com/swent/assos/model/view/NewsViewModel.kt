@@ -25,7 +25,7 @@ constructor(
   private val _allNews = MutableStateFlow(emptyList<News>())
   val allNews = _allNews.asStateFlow()
 
-    private var _loading = false
+  private var _loading = false
 
   init {
     viewModelScope.launch(ioDispatcher) { dbService.getAllNews(null).let { _allNews.value = it } }
@@ -35,20 +35,20 @@ constructor(
     viewModelScope.launch(ioDispatcher) { callback(dbService.getAssociationById(associationId)) }
   }
 
-    fun loadMoreAssociations() {
-        if (!_loading) {
-            _loading = true
-            viewModelScope.launch(Dispatchers.IO) {
-                val lastDocumentSnapshot = _allNews.value.lastOrNull()?.documentSnapshot
-                dbService.getAllNews(lastDocumentSnapshot).let {
-                    Log.d("NewsViewModel", "loadMoreAssociations: $it")
-                    _allNews.value += it
-                    _allNews.value = _allNews.value.distinct()
-                    if (it.isNotEmpty()) {
-                        _loading = false
-                    }
-                }
-            }
+  fun loadMoreAssociations() {
+    if (!_loading) {
+      _loading = true
+      viewModelScope.launch(Dispatchers.IO) {
+        val lastDocumentSnapshot = _allNews.value.lastOrNull()?.documentSnapshot
+        dbService.getAllNews(lastDocumentSnapshot).let {
+          Log.d("NewsViewModel", "loadMoreAssociations: $it")
+          _allNews.value += it
+          _allNews.value = _allNews.value.distinct()
+          if (it.isNotEmpty()) {
+            _loading = false
+          }
         }
+      }
     }
+  }
 }

@@ -47,16 +47,16 @@ fun News() {
   val viewModel: NewsViewModel = hiltViewModel()
   val news by viewModel.allNews.collectAsState()
 
-    val listState = rememberLazyListState()
+  val listState = rememberLazyListState()
 
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-            .collect { visibleItems ->
-                if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
-                    viewModel.loadMoreAssociations()
-                }
-            }
-    }
+  LaunchedEffect(listState) {
+    snapshotFlow { listState.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
+            viewModel.loadMoreAssociations()
+          }
+        }
+  }
 
   Scaffold(
       modifier = Modifier.testTag("NewsScreen"),
@@ -88,57 +88,56 @@ fun News() {
               }
         }
       }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("NewsList"), userScrollEnabled = true, state = listState) {
-            items(news) {
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues).testTag("NewsList"),
+            userScrollEnabled = true,
+            state = listState) {
+              items(news) {
                 Box(
                     modifier =
-                    Modifier.padding(16.dp)
-                        .shadow(
-                            elevation = 10.dp, spotColor = Color.Gray, ambientColor = Color.Gray
-                        )
-                        .fillMaxSize()
-                        .background(
-                            color = Color(0xFFFFFFFF),
-                            shape = RoundedCornerShape(size = 15.dp)
-                        )
-                        .testTag("NewsListItem")
-                ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                        Modifier.padding(16.dp)
+                            .shadow(
+                                elevation = 10.dp,
+                                spotColor = Color.Gray,
+                                ambientColor = Color.Gray)
+                            .fillMaxSize()
+                            .background(
+                                color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
+                            .testTag("NewsListItem")) {
+                      Column(modifier = Modifier.padding(16.dp)) {
                         var association by remember {
-                                mutableStateOf(
-                                    Association(
-                                        id = "",
-                                        acronym = "",
-                                        fullname = "",
-                                        description = "",
-                                        logo = ""
-                                    )
-                                )
-                            }
-                            viewModel.getNewsAssociation(it.associationId) { association = it }
-                            Text(
-                                modifier = Modifier.testTag("ItemsTitle"),
-                                fontSize = 20.sp,
-                                text = it.title,
-                            )
-                            Text(
-                                modifier = Modifier.testTag("ItemsDescription"),
-                                text = it.description,
-                            )
-                            Text(
-                                modifier = Modifier.testTag("ItemsDate"),
-                                text = it.date.toString(),
-                            )
-                            Text(
-                                modifier = Modifier.testTag("ItemsAssociation"),
-                                text = association.fullname,
-                            )
-                            Text(
-                                text = it.eventId,
-                            )
+                          mutableStateOf(
+                              Association(
+                                  id = "",
+                                  acronym = "",
+                                  fullname = "",
+                                  description = "",
+                                  logo = ""))
+                        }
+                        viewModel.getNewsAssociation(it.associationId) { association = it }
+                        Text(
+                            modifier = Modifier.testTag("ItemsTitle"),
+                            fontSize = 20.sp,
+                            text = it.title,
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsDescription"),
+                            text = it.description,
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsDate"),
+                            text = it.date.toString(),
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsAssociation"),
+                            text = association.fullname,
+                        )
+                        Text(
+                            text = it.eventId,
+                        )
+                      }
                     }
-                }
+              }
             }
-        }
       }
 }

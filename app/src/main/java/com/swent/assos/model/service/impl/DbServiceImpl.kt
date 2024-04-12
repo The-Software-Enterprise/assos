@@ -32,7 +32,7 @@ constructor(
     }
     return snapshot.documents.map {
       Association(
-            id = it.id,
+          id = it.id,
           acronym = it.getString("acronym") ?: "",
           fullname = it.getString("fullname") ?: "",
           url = it.getString("url") ?: "",
@@ -55,15 +55,15 @@ constructor(
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
     val query = firestore.collection("news").orderBy("date")
-      val snapshot =
-          if (lastDocumentSnapshot == null) {
-              query.limit(10).get().await()
-          } else {
-              query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-          }
-      if (snapshot.isEmpty) {
-          return emptyList()
-      }
+    val snapshot =
+        if (lastDocumentSnapshot == null) {
+          query.limit(10).get().await()
+        } else {
+          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
     return snapshot.documents.map {
       News(
           id = it.id,
@@ -86,9 +86,7 @@ constructor(
                 "date" to Date(),
                 "associationId" to news.associationId,
                 "image" to news.image,
-                "eventId" to news.eventId
-            )
-        )
+                "eventId" to news.eventId))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -102,8 +100,7 @@ constructor(
                 "title" to news.title,
                 "description" to news.description,
                 "image" to news.image,
-            )
-        )
+            ))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }

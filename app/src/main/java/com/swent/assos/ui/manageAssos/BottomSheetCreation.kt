@@ -58,7 +58,7 @@ fun BottomSheetCreation(
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
       Row(
           Modifier.fillMaxWidth().clickable {
-              navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/$assoId")
+            navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/$assoId")
           },
           verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -68,9 +68,7 @@ fun BottomSheetCreation(
             Spacer(modifier = Modifier.width(10.dp))
             Text(text = "Create a news")
           }
-      Spacer(
-          modifier =
-              Modifier.height(20.dp))
+      Spacer(modifier = Modifier.height(20.dp))
       Row(
           Modifier.fillMaxWidth().clickable {
             navigationActions.navigateTo(Destinations.CREATE_EVENT)
