@@ -89,7 +89,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   if (result?.get("response") == "User is Found") {
                     loginViewModel.updateUserInfo()
                   }
-                  navigationActions.navigateTo(Destinations.ASSOCIATION_PAGE)
+                  navigationActions.navigateTo(Destinations.HOME)
                 }
                 .addOnFailureListener { error = it.message.toString() }
             navigationActions.goBack()

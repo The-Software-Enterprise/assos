@@ -77,6 +77,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         Text(
             // if clicked, go to sign up page using hilt navigation
+
             modifier =
                 Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) },
             color = Color.Blue,

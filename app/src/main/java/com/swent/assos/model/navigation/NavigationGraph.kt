@@ -18,6 +18,7 @@ fun NavigationGraph() {
   NavHost(navController = navController, startDestination = Destinations.LOGIN.route) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
+
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
       composable(Destinations.ASSOCIATION_PAGE.route + "/{acronym}/{fullname}/{url}") {
