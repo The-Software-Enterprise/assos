@@ -23,11 +23,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.swent.assos.R
 import com.swent.assos.model.view.LoginViewModel
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController) {
   Column(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.Center,
@@ -55,13 +56,20 @@ fun LoginScreen() {
             visualTransformation = PasswordVisualTransformation())
 
         Button(
-            onClick = { loginViewModel.signIn(email, password) },
+            onClick = {
+              loginViewModel.signIn(email, password)
+              loginViewModel.currentUser?.let {
+                loginViewModel.updateUserInfo()
+                navController.navigate("AssociationPage")
+              }
+            },
         ) {
           Text("Login")
         }
 
         Text(
-            modifier = Modifier.clickable {},
+            // if clicked, go to sign up page using hilt navigation
+            modifier = Modifier.clickable { navController.navigate("SignUp") },
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")
