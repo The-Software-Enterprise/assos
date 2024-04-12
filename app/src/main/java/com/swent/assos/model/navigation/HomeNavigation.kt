@@ -5,8 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -52,51 +52,65 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     }
 
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface),
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->
         NavigationBarItem(
-            modifier = Modifier.width(30.dp),
             icon = {
               when (index) {
                 0 ->
                     Icon(
                         painterResource(id = R.drawable.house),
-                        contentDescription = "Overview",
-                        modifier = Modifier.width(40.dp).height(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = "Home",
+                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
+                        tint =
+                            if (pagerState.currentPage == index)
+                                MaterialTheme.colorScheme.onBackground
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 1 ->
                     Icon(
                         painterResource(id = R.drawable.language),
-                        contentDescription = "Map",
-                        modifier = Modifier.width(40.dp).height(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = "All",
+                        modifier = Modifier.size(28.dp),
+                        tint =
+                            if (pagerState.currentPage == index)
+                                MaterialTheme.colorScheme.onBackground
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 2 ->
                     Icon(
                         painterResource(id = R.drawable.calendar),
-                        contentDescription = "Map",
-                        modifier = Modifier.width(40.dp).height(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = "Cal",
+                        modifier = Modifier.size(28.dp),
+                        tint =
+                            if (pagerState.currentPage == index)
+                                MaterialTheme.colorScheme.onBackground
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 3 ->
                     Icon(
                         painterResource(id = R.drawable.qrcode),
-                        contentDescription = "Map",
-                        modifier = Modifier.width(35.dp).height(35.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = "QR",
+                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
+                        tint =
+                            if (pagerState.currentPage == index)
+                                MaterialTheme.colorScheme.onBackground
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 4 ->
                     Icon(
                         painterResource(id = R.drawable.profil),
-                        contentDescription = "Map",
-                        modifier = Modifier.width(40.dp).height(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
+                        contentDescription = "Profil",
+                        modifier = Modifier.size(28.dp).padding((2.5).dp),
+                        tint =
+                            if (pagerState.currentPage == index)
+                                MaterialTheme.colorScheme.onBackground
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
               }
             },
             selected = pagerState.currentPage == index,
             onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
             colors =
                 NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer,
+                    indicatorColor = MaterialTheme.colorScheme.background,
                 ),
         )
       }
