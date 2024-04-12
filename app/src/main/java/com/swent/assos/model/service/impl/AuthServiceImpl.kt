@@ -1,6 +1,5 @@
 package com.swent.assos.model.service.impl
 
-import android.util.Log
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth

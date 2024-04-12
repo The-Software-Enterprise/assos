@@ -61,18 +61,18 @@ fun LoginScreen(navController: NavHostController) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-                if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
-                  navController.navigate(Destinations.HOME.route)
-                } else {
-                    userNotFound = true
-                }
+              if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+                navController.navigate(Destinations.HOME.route)
+              } else {
+                userNotFound = true
+              }
             },
         ) {
           Text("Login")
         }
 
         if (userNotFound) {
-            Text("User not found, please sign up", color = Color.Red)
+          Text("User not found, please sign up", color = Color.Red)
         }
 
         Text(

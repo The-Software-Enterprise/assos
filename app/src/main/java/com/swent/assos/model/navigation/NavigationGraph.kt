@@ -16,9 +16,7 @@ fun NavigationGraph() {
   val navigationActions = NavigationActions(navController = navController)
 
   NavHost(navController = navController, startDestination = Destinations.LOGIN.route) {
-    composable(Destinations.LOGIN.route) {
-      LoginScreen(navController = navController)
-    }
+    composable(Destinations.LOGIN.route) { LoginScreen(navController = navController) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }

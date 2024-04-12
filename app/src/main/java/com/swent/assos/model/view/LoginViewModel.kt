@@ -38,7 +38,9 @@ constructor(private val storageService: DbService, private val accountService: A
                       (document.data?.get("firstname") ?: "") as String,
                       (document.data?.get("name") ?: "") as String,
                       (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations") ?: emptyList<Triple<String, String, Int>>()) as List<Triple<String, String, Int>>,
+                      (document.data?.get("associations")
+                          ?: emptyList<Triple<String, String, Int>>())
+                          as List<Triple<String, String, Int>>,
                       (document.data?.get("following") ?: emptyList<String>()) as List<String>)
             }
           }
@@ -58,22 +60,22 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignIn() = navController.navigate("Login")
 
   fun signIn(email: String, password: String) {
-      accountService.signIn(email, password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                updateUserInfo()
-            } else {
-                Log.e("LoginViewModel", "Error signing in")
-            }
+    accountService.signIn(email, password).addOnCompleteListener {
+      if (it.isSuccessful) {
+        updateUserInfo()
+      } else {
+        Log.e("LoginViewModel", "Error signing in")
       }
+    }
   }
 
   fun signUp(email: String, password: String) {
-      accountService.signUp(email, password).addOnCompleteListener {
-             if (it.isSuccessful) {
-                updateUserInfo()
-            } else {
-                Log.e("LoginViewModel", "Error signing up")
-            }
+    accountService.signUp(email, password).addOnCompleteListener {
+      if (it.isSuccessful) {
+        updateUserInfo()
+      } else {
+        Log.e("LoginViewModel", "Error signing up")
       }
+    }
   }
 }
