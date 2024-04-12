@@ -8,8 +8,8 @@ import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
-import com.swent.assos.ui.screens.manageAssos.AssoDigest
 import com.swent.assos.ui.screens.Settings
+import com.swent.assos.ui.screens.manageAssos.AssoDigest
 import com.swent.assos.ui.screens.manageAssos.CreateEvent
 import com.swent.assos.ui.screens.manageAssos.CreateNews
 

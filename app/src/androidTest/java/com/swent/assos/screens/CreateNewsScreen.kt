@@ -10,7 +10,15 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         viewBuilderAction = { hasTestTag("CreateNewsScreen") }) {
 
   val form: KNode = child { hasTestTag("Form") }
-  val inputTitle: KNode = form.child { hasTestTag("InputTitle"); hasSetTextAction() }
-  val inputDescription: KNode = form.child { hasTestTag("InputDescription"); hasSetTextAction() }
+  val inputTitle: KNode =
+      form.child {
+        hasTestTag("InputTitle")
+        hasSetTextAction()
+      }
+  val inputDescription: KNode =
+      form.child {
+        hasTestTag("InputDescription")
+        hasSetTextAction()
+      }
   val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
 }
