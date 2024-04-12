@@ -2,15 +2,17 @@
 
 package com.swent.assos.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,55 +22,136 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
+import com.swent.assos.model.data.Association
+import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
-fun Profil() {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Profil") },
-                actions = {
-                    // Ajouter ici l'icône des paramètres
-                    Icon(
-                        painterResource(id = R.drawable.language),
-                        contentDescription = "Map",
-                        modifier = Modifier.width(40.dp).height(40.dp),
-                        tint = MaterialTheme.colorScheme.onSurface)
-                }
-            )
-        }
-    ) { innerPadding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPadding)
-            .padding(top = 16.dp) ) {
+fun Profil(navigationActions: NavigationActions) {
 
-            // Card pour "My associations"
-            ProfileCard(title = "My associations", height = 100)
-            ProfileCard(title = "Associations I followed", height = 100)
-        }
-    }
+  val firstname = "Maximilien"
+  val surname = "GRIDEL"
+
+  val completeName = "$firstname $surname"
+
+  Scaffold(
+      topBar = {
+        TopAppBar(
+            title = { Text(text = completeName) },
+            actions = {
+              // Ajouter ici l'icône des paramètres
+
+              Icon(
+                  painterResource(id = R.drawable.settings),
+                  contentDescription = "Map",
+                  modifier =
+                      Modifier.width(40.dp).height(40.dp).clickable {
+                        navigationActions.navigateTo(destination = Destinations.SETTINGS)
+                      },
+                  tint = MaterialTheme.colorScheme.onSurface)
+            })
+      }) { innerPadding ->
+        LazyColumn(
+            contentPadding = innerPadding,
+            modifier = Modifier.background(MaterialTheme.colorScheme.background).padding(16.dp)) {
+              item {
+                Text(text = "My associations", style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(20.dp))
+              }
+
+              items(myAssociations) {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.background)) {
+                      Text(text = it.acronym)
+                    }
+              }
+
+              item {
+                Text(text = "Associations followed", style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(20.dp))
+              }
+
+              items(associationsFollowed) {
+                Card(
+                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp),
+                    colors =
+                        CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.background)) {
+                      Text(text = it.acronym)
+                    }
+              }
+            }
+      }
 }
 
-@Composable
-fun ProfileCard(title: String, height: Int) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .height(height.dp)
+// TODO delete
+val myAssociations =
+    listOf(
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ))
 
-    ) {
-        Text(text = title, modifier = Modifier.padding(16.dp))
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Profil()
-}
+val associationsFollowed =
+    listOf(
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ),
+        Association(
+            acronym = "ACRONYM",
+            fullname = "NAME",
+            url = "URL",
+        ))

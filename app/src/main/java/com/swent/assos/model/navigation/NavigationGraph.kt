@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
 import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.AssoDigest
+import com.swent.assos.ui.screens.Settings
 
 @Composable
 fun NavigationGraph() {
@@ -32,6 +33,7 @@ fun NavigationGraph() {
         AssoDigest(asso = association, navigationActions = navigationActions)
       }
     }
+    composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
 }
 
@@ -40,4 +42,5 @@ enum class Destinations(val route: String) {
   HOME("Home"),
   ASSOCIATION_PAGE("AssociationPage"),
   SIGN_UP("SignUp"),
+  SETTINGS("Settings"),
 }
