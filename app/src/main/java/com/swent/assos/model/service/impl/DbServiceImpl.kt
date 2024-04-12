@@ -2,6 +2,7 @@ package com.swent.assos.model.service.impl
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -55,7 +56,7 @@ constructor(
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
-    val query = firestore.collection("news").orderBy("date")
+    val query = firestore.collection("news").orderBy("date", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()

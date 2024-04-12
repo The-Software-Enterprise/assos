@@ -1,4 +1,4 @@
-package com.swent.assos.ui.manageAssos
+package com.swent.assos.ui.screens.manageAssos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

@@ -1,4 +1,4 @@
-package com.swent.assos.ui.manageAssos
+package com.swent.assos.ui.screens.manageAssos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -23,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -50,16 +51,18 @@ fun BottomSheetCreation(
 
   ModalBottomSheet(
       onDismissRequest = { dismiss() },
-      modifier = Modifier.padding(bottom = 50.dp).height(200.dp),
+      modifier = Modifier.padding(bottom = 50.dp).height(200.dp).testTag("BottomSheetCreation"),
       containerColor = Color(0xFFFFFFFF),
       sheetState = modalBottomSheetState,
       dragHandle = { BottomSheetDefaults.DragHandle() },
   ) {
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
       Row(
-          Modifier.fillMaxWidth().clickable {
-            navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/$assoId")
-          },
+          Modifier.fillMaxWidth()
+              .clickable {
+                navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/$assoId")
+              }
+              .testTag("CreateNewsButton"),
           verticalAlignment = Alignment.CenterVertically) {
             Image(
                 imageVector = Icons.Default.Add,

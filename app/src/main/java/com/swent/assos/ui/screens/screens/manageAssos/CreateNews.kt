@@ -1,4 +1,4 @@
-package com.swent.assos.ui.manageAssos
+package com.swent.assos.ui.screens.manageAssos
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -42,10 +42,9 @@ fun CreateNews(
   val viewModel: CreateNewsViewModel = hiltViewModel()
 
   val news by viewModel.news.collectAsState()
-  val showAlertSuccess by viewModel.showAlertSuccess.collectAsState()
-  val showAlertError by viewModel.showAlertError.collectAsState()
 
   Scaffold(
+      modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
       topBar = {
         TopAppBar(
             title = { Text("Create a news") },
@@ -64,7 +63,8 @@ fun CreateNews(
       },
   ) { paddingValues ->
     LazyColumn(
-        modifier = Modifier.padding(top = 10.dp, start = 26.dp, end = 26.dp).fillMaxSize(),
+        modifier =
+            Modifier.padding(top = 10.dp, start = 26.dp, end = 26.dp).fillMaxSize().testTag("Form"),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = paddingValues,
@@ -73,7 +73,7 @@ fun CreateNews(
         OutlinedTextField(
             value = news.title,
             onValueChange = { viewModel.setTitle(it) },
-            modifier = Modifier.fillMaxWidth().height(64.dp),
+            modifier = Modifier.fillMaxWidth().height(64.dp).testTag("InputTitle"),
             label = { Text(text = "Title") },
             placeholder = { Text(text = "Title of the news") },
             textStyle = MaterialTheme.typography.bodyLarge,
@@ -90,7 +90,7 @@ fun CreateNews(
         OutlinedTextField(
             value = news.description,
             onValueChange = { viewModel.setDescription(it) },
-            modifier = Modifier.fillMaxWidth().height(150.dp),
+            modifier = Modifier.fillMaxWidth().height(150.dp).testTag("InputDescription"),
             label = { Text(text = "Description") },
             placeholder = { Text(text = "Description of the news") },
             singleLine = false,
@@ -109,7 +109,8 @@ fun CreateNews(
             modifier =
                 Modifier.fillMaxWidth()
                     .padding(top = 10.dp, bottom = if (isEdit) 0.dp else 40.dp)
-                    .height(40.dp),
+                    .height(40.dp)
+                    .testTag("ButtonSave"),
             shape = RoundedCornerShape(10.dp),
             colors =
                 IconButtonDefaults.iconButtonColors(
@@ -123,8 +124,4 @@ fun CreateNews(
       }
     }
   }
-
-  if (showAlertSuccess) {}
-
-  if (showAlertError) {}
 }

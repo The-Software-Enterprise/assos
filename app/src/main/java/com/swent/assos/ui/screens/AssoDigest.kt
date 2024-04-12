@@ -36,8 +36,9 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.ui.manageAssos.BottomSheetCreation
+import com.swent.assos.ui.screens.manageAssos.BottomSheetCreation
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -69,7 +70,11 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
                 Modifier.size(50.dp)
                     .clip(RoundedCornerShape(100))
                     .background(MaterialTheme.colorScheme.surface)
-                    .clickable { showBottomSheetCreation = true },
+                    .clickable {
+                      // showBottomSheetCreation = true
+                      navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${asso.id}")
+                    }
+                    .testTag("CreateButton"),
             contentAlignment = Alignment.Center) {
               Image(
                   imageVector = Icons.Default.Add,
