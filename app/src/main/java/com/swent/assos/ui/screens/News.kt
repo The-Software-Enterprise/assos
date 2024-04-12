@@ -86,7 +86,7 @@ fun News() {
                       } else {
 
                         var association by remember {
-                          mutableStateOf(Association("", "", "", null))
+                          mutableStateOf(Association("", "", "", null, ""))
                         }
                         newsViewModel.getNewsAssociation(n.associationId) { association = it }
                         Text(
