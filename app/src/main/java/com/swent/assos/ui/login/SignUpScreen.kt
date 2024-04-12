@@ -30,6 +30,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
   var error by remember { mutableStateOf("") }
+    var passwordTooShort by remember { mutableStateOf(false) }
 
   Column {
     OutlinedTextField(
@@ -39,7 +40,10 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         modifier = Modifier.testTag("email"))
     OutlinedTextField(
         value = password,
-        onValueChange = { password = it },
+        onValueChange = {
+            passwordTooShort = false
+            password = it
+                        },
         label = { Text("Password") },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.testTag("password"))
@@ -54,7 +58,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     }
     Button(
         onClick = {
-          if (password == confirmPassword && password.isNotEmpty()) {
+          if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
 
             loginViewModel.signUp(email, password)
 
@@ -79,17 +83,21 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   navigationActions.navigateTo(Destinations.ASSOCIATION_PAGE)
                 }
                 .addOnFailureListener { error = it.message.toString() }
+              navigationActions.goBack()
+          } else if (password.length < 6) {
+              passwordTooShort = true
           }
         },
         modifier = Modifier.testTag("signUpButton")) {
           Text("Sign Up")
         }
-    Text(error, color = Color.Red)
-    Text(loginViewModel.firestoreInstance.firestoreSettings.host)
-
+    if (passwordTooShort) {
+        Text("Password must be at least 6 characters", color = Color.Red)
+    }
     Text(
         "Already have an account?",
-        modifier = Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) },
+        modifier = Modifier.clickable { navigationActions.goBack() },
     )
   }
 }
+

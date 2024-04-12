@@ -1,5 +1,6 @@
 package com.swent.assos.model.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -34,11 +35,11 @@ constructor(private val storageService: DbService, private val accountService: A
               user =
                   User(
                       document.id as String,
-                      document.data?.get("firstname") as String,
-                      document.data?.get("name") as String,
-                      document.data?.get("email") as String,
-                      document.data?.get("associations") as List<Triple<String, String, Int>>,
-                      document.data?.get("following") as List<String>)
+                      (document.data?.get("firstname") ?: "") as String,
+                      (document.data?.get("name") ?: "") as String,
+                      (document.data?.get("email") ?: "") as String,
+                      (document.data?.get("associations") ?: emptyList<Triple<String, String, Int>>()) as List<Triple<String, String, Int>>,
+                      (document.data?.get("following") ?: emptyList<String>()) as List<String>)
             }
           }
           .addOnFailureListener { exception -> println("Error getting documents: $exception") }
@@ -56,7 +57,23 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String) = accountService.signIn(email, password)
+  fun signIn(email: String, password: String) {
+      accountService.signIn(email, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                updateUserInfo()
+            } else {
+                Log.e("LoginViewModel", "Error signing in")
+            }
+      }
+  }
 
-  fun signUp(email: String, password: String) = accountService.signUp(email, password)
+  fun signUp(email: String, password: String) {
+      accountService.signUp(email, password).addOnCompleteListener {
+             if (it.isSuccessful) {
+                updateUserInfo()
+            } else {
+                Log.e("LoginViewModel", "Error signing up")
+            }
+      }
+  }
 }

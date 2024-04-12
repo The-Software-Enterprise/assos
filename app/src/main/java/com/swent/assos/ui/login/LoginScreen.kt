@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.swent.assos.R
+import com.swent.assos.model.data.User
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.view.LoginViewModel
 
 @Composable
@@ -36,6 +38,7 @@ fun LoginScreen(navController: NavHostController) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
+        var userNotFound by remember { mutableStateOf(false) }
 
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -58,13 +61,18 @@ fun LoginScreen(navController: NavHostController) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-              loginViewModel.currentUser?.let {
-                loginViewModel.updateUserInfo()
-                navController.navigate("AssociationPage")
-              }
+                if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+                  navController.navigate(Destinations.HOME.route)
+                } else {
+                    userNotFound = true
+                }
             },
         ) {
           Text("Login")
+        }
+
+        if (userNotFound) {
+            Text("User not found, please sign up", color = Color.Red)
         }
 
         Text(
