@@ -28,7 +28,8 @@ fun NavigationGraph() {
             Association(
                 acronym = backStackEntry.arguments?.getString("acronym") ?: "",
                 fullname = backStackEntry.arguments?.getString("fullname") ?: "",
-                url = backStackEntry.arguments?.getString("url") ?: "")
+                url = backStackEntry.arguments?.getString("url") ?: "",
+                description = backStackEntry.arguments?.getString("description") ?: "")
         AssoDigest(asso = association, navigationActions = navigationActions)
       }
     }

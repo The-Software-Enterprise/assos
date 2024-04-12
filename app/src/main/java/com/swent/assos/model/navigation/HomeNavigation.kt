@@ -24,7 +24,7 @@ import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
-import com.swent.assos.ui.screens.calendar.Calendar
+import com.swent.assos.ui.screens.UpcomingEventsScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -44,7 +44,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
       when (page) {
         0 -> News()
         1 -> Overview(navigationActions = navigationActions)
-        2 -> Calendar()
+        2 -> UpcomingEventsScreen()
         3 -> QrCode()
         4 -> Profil()
       }
