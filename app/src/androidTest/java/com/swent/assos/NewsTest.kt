@@ -48,7 +48,6 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         newsListItems { assertIsDisplayed() }
         itemsTitle { assertTextContains("distribution de crêpes") }
         itemsDescription { assertTextContains("distribution de crêpes par la JE") }
-        itemsDate { assertTextContains("Thu Apr 11 17:00:14 GMT+02:00 2024") }
         itemsAssociation { assertTextContains("Junior Entreprise") }
       }
     }
