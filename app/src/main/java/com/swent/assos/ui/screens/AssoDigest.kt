@@ -13,24 +13,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
   Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDigestScreen"),
       topBar = {
         MediumTopAppBar(
-            title = { Text(asso.acronym) },
+            title = { Text(asso.acronym, modifier = Modifier.testTag("AssoTitle")) },
             navigationIcon = {
               Image(
                   imageVector = Icons.Default.ArrowBack,
                   contentDescription = null,
-                  modifier = Modifier.clickable { navigationActions.goBack() })
+                  modifier =
+                      Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
             })
       }) { paddingValues ->
         Column(
@@ -40,8 +46,8 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
                   modifier = Modifier.fillMaxWidth(),
                   painter = painterResource(id = R.drawable.logo),
                   contentDescription = null)
-              Text(text = asso.fullname)
-              Text(text = "Website : " + asso.url)
+              Text(text = asso.fullname, modifier = Modifier.testTag("AssoName"))
+              Text(text = "Website : " + asso.url, modifier = Modifier.testTag("AssoWebsite"))
             }
       }
 }
