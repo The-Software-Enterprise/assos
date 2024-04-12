@@ -6,5 +6,6 @@ data class Association(
     val acronym: String,
     val fullname: String,
     val url: String,
-    val documentSnapshot: DocumentSnapshot? = null
+    val documentSnapshot: DocumentSnapshot? = null,
+    val description: String
 )
