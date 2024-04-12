@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -20,11 +21,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
-import com.swent.assos.ui.screens.Calendar
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
+import com.swent.assos.ui.screens.calendar.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -61,28 +62,33 @@ fun HomeNavigation(navigationActions: NavigationActions) {
               when (index) {
                 0 ->
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.house),
                         contentDescription = "Overview",
+                        modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
                 1 ->
                     Icon(
                         painterResource(id = R.drawable.language),
                         contentDescription = "Map",
+                        modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
                 2 ->
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.calendar),
                         contentDescription = "Map",
+                        modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
                 3 ->
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.qrcode),
                         contentDescription = "Map",
+                        modifier = Modifier.width(35.dp).height(35.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
                 4 ->
                     Icon(
-                        painterResource(id = R.drawable.menu),
+                        painterResource(id = R.drawable.profil),
                         contentDescription = "Map",
+                        modifier = Modifier.width(40.dp).height(40.dp),
                         tint = MaterialTheme.colorScheme.onSurface)
               }
             },
