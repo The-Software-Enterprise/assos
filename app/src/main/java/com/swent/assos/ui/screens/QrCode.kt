@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.ui.components.StudentSphereTitle
 import com.swent.assos.ui.theme.Purple40
 import com.swent.assos.ui.theme.Purple80
 
@@ -40,31 +41,7 @@ fun QrCode() {
   val events by eventViewModel.allEvents.collectAsState()
   Scaffold(
     topBar = {
-      Column(modifier = Modifier.fillMaxWidth()) {
-        Row(
-          modifier =
-          Modifier
-            .padding(8.dp)
-            .align(Alignment.CenterHorizontally)
-            .wrapContentHeight(align = Alignment.CenterVertically)) {
-          Text(
-            text = "Student",
-            style =
-            TextStyle(
-              fontSize = 35.sp,
-              fontFamily = FontFamily(Font(R.font.impact)),
-              fontWeight = FontWeight(400),
-              color = Purple80))
-          Text(
-            text = "Sphere",
-            style =
-            TextStyle(
-              fontSize = 35.sp,
-              fontFamily = FontFamily(Font(R.font.impact)),
-              fontWeight = FontWeight(400),
-              color = Purple40))
-        }
-      }
+      StudentSphereTitle()
     }) { paddingValues ->
     Surface(color = MaterialTheme.colorScheme.background) {
       LazyColumn(
@@ -95,15 +72,10 @@ fun TicketItem(event: Event) {
     //elevation = 2.dp
   ) {
     Column {
-      Row(
-        modifier = Modifier
-          .fillMaxWidth()
-          .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
-      ) {
-        Column(
+      Column(
           modifier = Modifier
-            .weight(1f)
+            .fillMaxWidth()
+            .padding(16.dp)
             .padding(end = 16.dp)
         ) {
           Text(
@@ -117,7 +89,7 @@ fun TicketItem(event: Event) {
           )
         }
         // You can place an icon indicating the expanded state here
-      }
+
       AnimatedVisibility(visible = isExpanded) {
         Column(
           modifier = Modifier
