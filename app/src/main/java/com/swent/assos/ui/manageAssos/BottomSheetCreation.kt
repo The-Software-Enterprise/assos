@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 fun BottomSheetCreation(
     navigationActions: NavigationActions,
     onDismiss: () -> Unit,
+    assoId: String,
 ) {
   val scope = rememberCoroutineScope()
   val modalBottomSheetState = rememberModalBottomSheetState()
@@ -55,23 +56,33 @@ fun BottomSheetCreation(
       dragHandle = { BottomSheetDefaults.DragHandle() },
   ) {
     Column(modifier = Modifier.fillMaxSize().padding(horizontal = 20.dp)) {
-      Row(Modifier.fillMaxWidth().clickable { navigationActions.navigateTo(Destinations.CREATE_EVENT) }, verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            modifier = Modifier.size(25.dp))
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(text = "Create a new event")
-      }
-      Spacer(modifier = Modifier.height(20.dp).clickable { navigationActions.navigateTo(Destinations.CREATE_NEWS) })
-      Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        Image(
-            imageVector = Icons.Default.Add,
-            contentDescription = null,
-            modifier = Modifier.size(25.dp))
-        Spacer(modifier = Modifier.width(10.dp))
-        Text(text = "Create a news")
-      }
+      Row(
+          Modifier.fillMaxWidth().clickable {
+              navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/$assoId")
+          },
+          verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp))
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = "Create a news")
+          }
+      Spacer(
+          modifier =
+              Modifier.height(20.dp))
+      Row(
+          Modifier.fillMaxWidth().clickable {
+            navigationActions.navigateTo(Destinations.CREATE_EVENT)
+          },
+          verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                imageVector = Icons.Default.Add,
+                contentDescription = null,
+                modifier = Modifier.size(25.dp))
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = "Create an event")
+          }
     }
   }
 }

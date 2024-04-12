@@ -85,9 +85,7 @@ fun News() {
                         /*TODO: Implement the screen when an event is assigned to a news*/
                       } else {
 
-                        var association by remember {
-                          mutableStateOf(Association("", "", "", null))
-                        }
+                        var association by remember { mutableStateOf(Association("", "", "", "")) }
                         newsViewModel.getNewsAssociation(n.associationId) { association = it }
                         Text(
                             fontSize = 20.sp,

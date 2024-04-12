@@ -24,17 +24,20 @@ fun NavigationGraph() {
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
-      composable(Destinations.ASSOCIATION_PAGE.route + "/{acronym}/{fullname}/{url}") {
+      composable(Destinations.ASSOCIATION_PAGE.route + "/{id}/{acronym}/{fullname}/{url}") {
           backStackEntry ->
         val association =
             Association(
+                id = backStackEntry.arguments?.getString("id") ?: "",
                 acronym = backStackEntry.arguments?.getString("acronym") ?: "",
                 fullname = backStackEntry.arguments?.getString("fullname") ?: "",
                 url = backStackEntry.arguments?.getString("url") ?: "")
         AssoDigest(asso = association, navigationActions = navigationActions)
       }
-      composable(Destinations.CREATE_NEWS.route) {
-        CreateNews(navigationActions = navigationActions)
+      composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+        CreateNews(
+            navigationActions = navigationActions,
+            associationId = backStackEntry.arguments?.getString("assoId") ?: "")
       }
       composable(Destinations.CREATE_EVENT.route) {
         CreateEvent(navigationActions = navigationActions)

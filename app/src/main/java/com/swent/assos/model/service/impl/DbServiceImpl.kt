@@ -32,6 +32,7 @@ constructor(
     }
     return snapshot.documents.map {
       Association(
+            id = it.id,
           acronym = it.getString("acronym") ?: "",
           fullname = it.getString("fullname") ?: "",
           url = it.getString("url") ?: "",
@@ -41,8 +42,9 @@ constructor(
 
   override suspend fun getAssociationById(associationId: String): Association {
     val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association("", "", "", null)
+    val snapshot = query.get().await() ?: return Association("", "", "", "")
     return Association(
+        id = snapshot.id,
         acronym = snapshot.getString("acronym") ?: "",
         fullname = snapshot.getString("fullname") ?: "",
         url = snapshot.getString("url") ?: "",
@@ -64,5 +66,31 @@ constructor(
           image = it.getString("image") ?: "",
           eventId = it.getString("eventId") ?: "")
     }
+  }
+
+  override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
+    firestore
+        .collection("news")
+        .add(news)
+        .addOnSuccessListener { onSucess() }
+        .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
+    firestore
+        .collection("news")
+        .document(news.id)
+        .set(news)
+        .addOnSuccessListener { onSucess() }
+        .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
+    firestore
+        .collection("news")
+        .document(news.id)
+        .delete()
+        .addOnSuccessListener { onSucess() }
+        .addOnFailureListener { onError(it.message ?: "Error") }
   }
 }

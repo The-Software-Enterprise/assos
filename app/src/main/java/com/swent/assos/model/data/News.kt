@@ -3,10 +3,11 @@ package com.swent.assos.model.data
 import java.util.Date
 
 data class News(
-    val title: String,
+    val id: String = "",
+    val title: String = "",
     val associationId: String = "",
-    val image: String,
-    val description: String,
-    val date: Date,
+    val image: String = "",
+    val description: String = "",
+    val date: Date = Date(),
     val eventId: String = ""
 )
