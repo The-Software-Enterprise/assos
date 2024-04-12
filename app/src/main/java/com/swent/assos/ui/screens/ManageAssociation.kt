@@ -69,7 +69,7 @@ fun UpcomingEventsScreen() {
         }
         item {
           HeaderWithButton(
-              header = "Upcoming Posts", buttonText = "Add Post", onButtonClick = { /* TODO */})
+              header = "Latest Posts", buttonText = "Add Post", onButtonClick = { /* TODO */})
         }
         item {
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
