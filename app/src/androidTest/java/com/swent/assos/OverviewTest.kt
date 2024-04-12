@@ -94,7 +94,7 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
     verify {
       mockNavActions.navigateTo(
-          "AssociationPage/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
+          "AssociationPage/jMWo6NgngIS2hCq054TF/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
     }
     confirmVerified(mockNavActions)
   }

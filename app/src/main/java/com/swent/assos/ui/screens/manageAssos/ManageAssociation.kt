@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.manageAssos
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
