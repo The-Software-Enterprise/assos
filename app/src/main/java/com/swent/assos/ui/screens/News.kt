@@ -88,7 +88,7 @@ fun News() {
               }
         }
       }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues), userScrollEnabled = true, state = listState) {
+        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("NewsList"), userScrollEnabled = true, state = listState) {
             items(news) {
                 Box(
                     modifier =
@@ -131,7 +131,7 @@ fun News() {
                             )
                             Text(
                                 modifier = Modifier.testTag("ItemsAssociation"),
-                                text = association.fullName,
+                                text = association.fullname,
                             )
                             Text(
                                 text = it.eventId,

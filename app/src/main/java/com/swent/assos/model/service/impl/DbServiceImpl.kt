@@ -43,7 +43,7 @@ constructor(
 
   override suspend fun getAssociationById(associationId: String): Association {
     val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association("", "", "", "")
+    val snapshot = query.get().await() ?: return Association("", "", "", "", description = "")
     return Association(
         id = snapshot.id,
         acronym = snapshot.getString("acronym") ?: "",
