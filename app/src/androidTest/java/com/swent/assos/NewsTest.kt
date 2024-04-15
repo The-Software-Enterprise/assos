@@ -3,6 +3,8 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -21,6 +23,7 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
+import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 import org.junit.Before
 import org.junit.Rule
@@ -51,6 +54,8 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   private val newsTitle = "Test news $randomInt"
   private val newsDescription = "Test description $randomInt"
 
+  val firestore = Firebase.firestore
+
   @Test
   fun redirectToCreateNews() {
     composeTestRule.activity.setContent {
@@ -77,9 +82,11 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
           }*/
         }
       }
+      // get the association id with the acronym
+        val association = firestore.collection("associations").whereEqualTo("acronym", "180°C").get().result!!.documents[0]
 
       step("Verify navigation to create news") {
-        verify { mockNavActions.navigateTo("CreateNews/jMWo6NgngIS2hCq054TF") }
+        verify { mockNavActions.navigateTo("CreateNews/${association.id}") }
         confirmVerified(mockNavActions)
       }
     }
@@ -88,7 +95,9 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+      val association = firestore.collection("associations").whereEqualTo("acronym", "180°C").get().result!!.documents[0]
+
+      CreateNews(navigationActions = mockNavActions, associationId = association.id )
     }
 
     run {

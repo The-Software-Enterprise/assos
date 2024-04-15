@@ -24,7 +24,7 @@ fun NavigationGraph() {
 
     navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
       composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
-      composable(Destinations.ASSOCIATION_PAGE.route + "/{id}/{acronym}/{fullname}/{url}") {
+      composable(Destinations.ASSOCIATION_PAGE.route + "/{id}") {
           backStackEntry ->
         val association =
             Association(

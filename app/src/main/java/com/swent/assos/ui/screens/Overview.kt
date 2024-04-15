@@ -152,12 +152,8 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
           Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
             val dest =
                 Destinations.ASSOCIATION_PAGE.route +
-                    "/${asso.id}/${asso.acronym}/${asso.fullname}/${
-                      URLEncoder.encode(
-                        asso.url,
-                        StandardCharsets.UTF_8.toString()
-                      )
-                    }"
+                    "/${asso.id}"
+              //AssociationPage/jMWo6NgngIS2hCq054TF
             navigationActions.navigateTo(dest)
           })
 }

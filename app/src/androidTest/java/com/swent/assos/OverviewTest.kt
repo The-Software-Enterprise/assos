@@ -4,6 +4,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -13,6 +17,7 @@ import com.swent.assos.ui.screens.Overview
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.InternalPlatformDsl.toStr
 import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
@@ -35,7 +40,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
   // Relaxed mocks methods have a default implementation returning values
   @RelaxedMockK lateinit var mockNavActions: NavigationActions
-
   @Before
   fun setup() {
     hiltRule.inject()
@@ -88,14 +92,40 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
       assoListItems {
         assertIsDisplayed()
-
         performClick()
       }
     }
+    val firestore = Firebase.firestore
+    var association = ""
+    var all_collections = emptyList<String>()
+    firestore.collection("associations")
+      .get()
+      .addOnSuccessListener { querySnapshot ->
+        if (!querySnapshot.isEmpty) {
+          all_collections = querySnapshot.documents.map { it.data?.get("acronym").toString() }
+        } else {
+        }
+      }
+      .addOnFailureListener { exception ->
 
+      }
+    print(all_collections.toStr())
+    firestore.collection("associations")
+      .whereEqualTo("acronym", "180°C")
+      .get()
+      .addOnSuccessListener { querySnapshot ->
+        if (!querySnapshot.isEmpty) {
+          association = querySnapshot.documents[0].id
+        } else {
+        }
+      }
+      .addOnFailureListener { exception ->
+
+      }
+    print(association)
     verify {
       mockNavActions.navigateTo(
-          "AssociationPage/jMWo6NgngIS2hCq054TF/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
+          "AssociationPage/${association}")
     }
     confirmVerified(mockNavActions)
   }
