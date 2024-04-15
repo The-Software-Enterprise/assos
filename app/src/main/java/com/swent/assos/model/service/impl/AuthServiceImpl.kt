@@ -17,13 +17,6 @@ class AuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : Auth
   // your firestore emulator
   val config = Config()
 
-  // if config.get_demo() is true, we are in debug mode and we want to use the firestore emulator
-  val ok =
-      if (config.get_demo()) {
-        auth.useEmulator("10.0.2.2", 9099)
-      } else {
-        null
-      }
 
   override val currentUser: Flow<FirebaseUser>
     get() = callbackFlow {
