@@ -56,8 +56,6 @@ import com.swent.assos.ui.theme.Purple40
 import com.swent.assos.ui.theme.Purple80
 import com.swent.assos.ui.theme.PurpleGrey40
 import com.swent.assos.ui.theme.PurpleGrey80
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -150,10 +148,8 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
               containerColor = Color.Transparent),
       modifier =
           Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
-            val dest =
-                Destinations.ASSOCIATION_PAGE.route +
-                    "/${asso.id}"
-              //AssociationPage/jMWo6NgngIS2hCq054TF
+            val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.id}"
+            // AssociationPage/jMWo6NgngIS2hCq054TF
             navigationActions.navigateTo(dest)
           })
 }

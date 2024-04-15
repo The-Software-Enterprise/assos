@@ -23,7 +23,6 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
-import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 import org.junit.Before
 import org.junit.Rule
@@ -83,7 +82,13 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         }
       }
       // get the association id with the acronym
-        val association = firestore.collection("associations").whereEqualTo("acronym", "180°C").get().result!!.documents[0]
+      val association =
+          firestore
+              .collection("associations")
+              .whereEqualTo("acronym", "180°C")
+              .get()
+              .result!!
+              .documents[0]
 
       step("Verify navigation to create news") {
         verify { mockNavActions.navigateTo("CreateNews/${association.id}") }
@@ -95,9 +100,15 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
-      val association = firestore.collection("associations").whereEqualTo("acronym", "180°C").get().result!!.documents[0]
+      val association =
+          firestore
+              .collection("associations")
+              .whereEqualTo("acronym", "180°C")
+              .get()
+              .result!!
+              .documents[0]
 
-      CreateNews(navigationActions = mockNavActions, associationId = association.id )
+      CreateNews(navigationActions = mockNavActions, associationId = association.id)
     }
 
     run {
