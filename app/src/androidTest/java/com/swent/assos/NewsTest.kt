@@ -3,6 +3,9 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -21,11 +24,13 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
+import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -41,9 +46,17 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   // Relaxed mocks methods have a default implementation returning values
   @RelaxedMockK lateinit var mockNavActions: NavigationActions
 
+  var associationAcronym = "180°C"
+
+  val newsHeader = "Test description -1934310868"
+
+
+
   @Before
   fun setup() {
     hiltRule.inject()
+
+
   }
 
   private val random = Random(0)
@@ -53,21 +66,31 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
 
   @Test
   fun redirectToCreateNews() {
+    val firestore = Firebase.firestore
+
+
+    firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+      .addOnSuccessListener {
+        val association = Association(
+          id = it.documents[0].id,
+          acronym = it.documents[0].getString("acronym") ?: "",
+          fullname = it.documents[0].getString("fullname") ?: "",
+          url = it.documents[0].getString("url") ?: "",
+          description = it.documents[0].getString("description") ?: ""
+        )
+
     composeTestRule.activity.setContent {
       AssoDigest(
           asso =
-              Association(
-                  id = "jMWo6NgngIS2hCq054TF",
-                  acronym = "180°C",
-                  fullname = "Association to promote cooking amongst students",
-                  url = "https://www.180c.ch/association/",
-                  description = ""),
-          navigationActions = mockNavActions)
+          association,
+        navigationActions = mockNavActions
+      )
+    }
     }
 
     run {
       ComposeScreen.onComposeScreen<AssoDigestScreen>(composeTestRule) {
-        step("Open the association 180°C") {
+        step("Open the association ${associationAcronym}") {
           createButton { performClick() }
           /*bottomSheetCreation {
             assertIsDisplayed()
@@ -77,19 +100,31 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
           }*/
         }
       }
-
       step("Verify navigation to create news") {
-        verify { mockNavActions.navigateTo("CreateNews/jMWo6NgngIS2hCq054TF") }
+
+        var newsID = ""
+        firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+          .addOnSuccessListener {
+            newsID = it.documents[0].id
+
+            verify { mockNavActions.navigateTo("CreateNews/${newsID}") }
         confirmVerified(mockNavActions)
+          }
       }
     }
   }
 
   @Test
   fun createNewsAndVerifyCreation() {
+    val firestore = Firebase.firestore
+    firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+      .addOnSuccessListener {
+
+
     composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+      CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
     }
+      }
 
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {

@@ -25,7 +25,10 @@ class MainActivity : ComponentActivity() {
     val authEmu = config.get_all().contains("auth")
     if (firestoreEmu) {
       // Configure Firestore to use the Firestore emulator
-      FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      //check if firestore is already using the emulator
+      if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+        FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      }
       //load data from res/raw/epfl_associations.csv to firestore
       val firestore = FirebaseFirestore.getInstance()
       //check if collection (associations) is empty

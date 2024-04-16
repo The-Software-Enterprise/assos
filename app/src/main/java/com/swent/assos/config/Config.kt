@@ -52,99 +52,22 @@ class Config {
       responseMessage = connection.inputStream.bufferedReader().use { it.readText() }
     }
 
-    /* Output:
-          {
-      "hub": {
-        "listen": [
-          {
-            "address": "127.0.0.1",
-            "family": "IPv4",
-            "port": 4400
-          }
-        ],
-        "name": "hub",
-        "host": "127.0.0.1",
-        "port": 4400
-      },
-      "ui": {
-        "listen": [
-          {
-            "address": "127.0.0.1",
-            "family": "IPv4",
-            "port": 4000
-          }
-        ],
-        "name": "ui",
-        "host": "127.0.0.1",
-        "port": 4000,
-        "pid": 223714
-      },
-      "logging": {
-        "listen": [
-          {
-            "address": "127.0.0.1",
-            "family": "IPv4",
-            "port": 4500
-          }
-        ],
-        "name": "logging",
-        "host": "127.0.0.1",
-        "port": 4500
-      },
-      "auth": {
-        "listen": [
-          {
-            "address": "127.0.0.1",
-            "family": "IPv4",
-            "port": 9099
-          }
-        ],
-        "name": "auth",
-        "host": "127.0.0.1",
-        "port": 9099
-      },
-      "functions": {
-        "name": "functions",
-        "host": "127.0.0.1",
-        "port": 5001
-      },
-      "firestore": {
-        "listen": [
-          {
-            "address": "127.0.0.1",
-            "family": "IPv4",
-            "port": 8080
-          }
-        ],
-        "name": "firestore",
-        "host": "127.0.0.1",
-        "port": 8080,
-        "pid": 223671,
-        "reservedPorts": [
-          9150
-        ],
-        "webSocketHost": "127.0.0.1",
-        "webSocketPort": 9150
-      },
-      "eventarc": {
-        "name": "eventarc",
-        "host": "127.0.0.1",
-        "port": 9299
-      }
-    }*/
-
-    thread1.start()
-    thread1.join()
-
+      try {
+          thread1.start()
+          thread1.join()
+      
     var json = responseMessage.trimIndent()
     val services = JSONObject(json)
 
-    onlineServices = mutableListOf<String>()
+
     services.keys().forEach { serviceName ->
       val service = services.getJSONObject(serviceName)
       if (service.has("port")) {
         onlineServices.add("$serviceName")
       }
+    }
+      } catch (e: Exception) {
+          println("Error checking Firebase Emulator status: ${e.message}")
     }
 
     return onlineServices

@@ -38,16 +38,18 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
   // Relaxed mocks methods have a default implementation returning values
   @RelaxedMockK lateinit var mockNavActions: NavigationActions
 
-  val firestore = Firebase.firestore
+
 
   @Before
   fun setup() {
     hiltRule.inject()
     composeTestRule.activity.setContent { Overview(navigationActions = mockNavActions) }
+
   }
 
   @Test
   fun searchAssoFilterList() = run {
+
     ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
       step("Open Search Bar") {
         searchAsso {
@@ -93,14 +95,21 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
         performClick()
       }
     }
+    val firestore = Firebase.firestore
+
     //get the id of the association
-    val oneeightyID =  firestore.collection("associations").whereEqualTo("acronym", "180°C").get().result?.documents?.get(0)?.id
+    var oneeightyID = ""
+    firestore.collection("associations").whereEqualTo("acronym", "180°C").get()
+      .addOnSuccessListener {
+        oneeightyID = it.documents[0].id
+
 
     verify {
       mockNavActions.navigateTo(
           "AssociationPage/${oneeightyID}")
     }
     confirmVerified(mockNavActions)
+      }
   }
 
 
