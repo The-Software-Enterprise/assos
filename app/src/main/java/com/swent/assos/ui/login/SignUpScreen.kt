@@ -40,7 +40,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
   var error by remember { mutableStateOf("") }
-  var passwordTooShort by remember { mutableStateOf(false) }
+  var badCredentials by remember { mutableStateOf(false) }
 
   Column(
       modifier =
@@ -58,7 +58,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     OutlinedTextField(
         value = password,
         onValueChange = {
-          passwordTooShort = false
+          badCredentials = false
           password = it
         },
         label = { Text("Password") },
@@ -75,7 +75,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     }
     Button(
         onClick = {
-          if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
+          if (password == confirmPassword && password.length >= 6 && email.isNotEmpty()) {
 
             loginViewModel.signUp(email, password) { success ->
               if (!success) {
@@ -104,14 +104,14 @@ fun SignUpScreen(navigationActions: NavigationActions) {
               }
             }
           } else if (password.length < 6) {
-            passwordTooShort = true
+              badCredentials = true
           }
         },
         modifier = Modifier.testTag("SignUpButton")) {
           Text("Sign Up")
         }
-    if (passwordTooShort) {
-      Text("Password must be at least 6 characters", color = Color.Red)
+    if (badCredentials) {
+      Text("", color = Color.Red)
     }
     Text(
         "Already have an account?",
