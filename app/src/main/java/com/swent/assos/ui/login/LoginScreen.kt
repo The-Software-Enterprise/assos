@@ -1,5 +1,6 @@
 package com.swent.assos.ui.login
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,11 +35,13 @@ fun LoginScreen(navigationActions: NavigationActions) {
   Column(
       modifier = Modifier.fillMaxWidth(),
       verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally) {
+      horizontalAlignment = Alignment.CenterHorizontally
+  ) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
         var userNotFound by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf("") }
 
         Image(
             painter = painterResource(id = R.drawable.logo),
@@ -47,32 +50,49 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {
+                userNotFound = false
+                email = it
+                            },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth().padding(16.dp))
 
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+                userNotFound = false
+                password = it
+                            },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             visualTransformation = PasswordVisualTransformation())
 
         Button(
             onClick = {
-              loginViewModel.signIn(email, password)
-              if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
-                navigationActions.navigateTo(Destinations.HOME.route)
-              } else {
-                userNotFound = true
-              }
-            },
+                if (email.isEmpty() || password.isEmpty()) {
+                    userNotFound = true
+                    errorMessage = "Please fill in all fields"
+                } else {
+                    loginViewModel.signIn(email, password) { e ->
+                        Log.d("LoginScreen", "User: ${loginViewModel.user}")
+                        if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+                            navigationActions.navigateTo(Destinations.HOME.route)
+                        } else {
+                            userNotFound = true
+                            errorMessage = e?.message ?: "User not found"
+                        }
+                    }
+                }
+            }
         ) {
           Text("Login")
         }
 
         if (userNotFound) {
-          Text("User not found, please sign up", color = Color.Red)
+          Text(
+              text = errorMessage,
+              color = Color.Red
+          )
         }
 
         Text(

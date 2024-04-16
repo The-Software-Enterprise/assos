@@ -23,7 +23,7 @@ constructor(private val storageService: DbService, private val accountService: A
 
   var user = User("", "", "", "", emptyList(), emptyList())
 
-  fun updateUserInfo() {
+  fun updateUserInfo(callback: () -> Unit = {}) {
 
     val cuser = Firebase.auth.currentUser
     cuser?.let {
@@ -32,15 +32,17 @@ constructor(private val storageService: DbService, private val accountService: A
           .get()
           .addOnSuccessListener { document ->
             if (document != null) {
-              user =
-                  User(
-                      document.id as String,
-                      (document.data?.get("firstname") ?: "") as String,
-                      (document.data?.get("name") ?: "") as String,
-                      (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations") ?: emptyList<String>()) as List<String>,
-                      (document.data?.get("following") ?: emptyList<String>()) as List<String>)
+                user =
+                    User(
+                        document.id as String,
+                        (document.data?.get("firstname") ?: "") as String,
+                        (document.data?.get("name") ?: "") as String,
+                        (document.data?.get("email") ?: "") as String,
+                        (document.data?.get("associations") ?: emptyList<String>()) as List<String>,
+                        (document.data?.get("following") ?: emptyList<String>()) as List<String>
+                    )
             }
+            callback()
           }
           .addOnFailureListener { exception -> println("Error getting documents: $exception") }
     }
@@ -57,13 +59,15 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String) {
+  fun signIn(email: String, password: String, callback: (Exception?) -> Unit) {
     accountService.signIn(email, password).addOnCompleteListener {
       if (it.isSuccessful) {
-        updateUserInfo()
+        updateUserInfo {
+        }
       } else {
         Log.e("LoginViewModel", "Error signing in")
       }
+        callback(it.exception)
     }
   }
 
