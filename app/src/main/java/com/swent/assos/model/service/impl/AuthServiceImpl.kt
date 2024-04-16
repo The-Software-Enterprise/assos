@@ -17,7 +17,6 @@ class AuthServiceImpl @Inject constructor(private val auth: FirebaseAuth) : Auth
   // your firestore emulator
   val config = Config()
 
-
   override val currentUser: Flow<FirebaseUser>
     get() = callbackFlow {
       val listener =
