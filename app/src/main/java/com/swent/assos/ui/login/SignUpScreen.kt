@@ -104,7 +104,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
               }
             }
           } else if (password.length < 6) {
-              badCredentials = true
+            badCredentials = true
           }
         },
         modifier = Modifier.testTag("SignUpButton")) {

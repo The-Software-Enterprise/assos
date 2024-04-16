@@ -41,8 +41,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
       modifier =
           Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true }.testTag("LoginScreen"),
       verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally
-  ) {
+      horizontalAlignment = Alignment.CenterHorizontally) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
@@ -57,48 +56,44 @@ fun LoginScreen(navigationActions: NavigationActions) {
         OutlinedTextField(
             value = email,
             onValueChange = {
-                userNotFound = false
-                email = it
-                            },
+              userNotFound = false
+              email = it
+            },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("EmailField"))
 
         OutlinedTextField(
             value = password,
             onValueChange = {
-                userNotFound = false
-                password = it
-                            },
+              userNotFound = false
+              password = it
+            },
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             visualTransformation = PasswordVisualTransformation())
 
         Button(
             onClick = {
-                if (email.isEmpty() || password.isEmpty()) {
+              if (email.isEmpty() || password.isEmpty()) {
+                userNotFound = true
+                errorMessage = "Please fill in all fields"
+              } else {
+                loginViewModel.signIn(email, password) { e ->
+                  Log.d("LoginScreen", "User: ${loginViewModel.user}")
+                  if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+                    navigationActions.navigateTo(Destinations.HOME.route)
+                  } else {
                     userNotFound = true
-                    errorMessage = "Please fill in all fields"
-                } else {
-                    loginViewModel.signIn(email, password) { e ->
-                        Log.d("LoginScreen", "User: ${loginViewModel.user}")
-                        if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
-                            navigationActions.navigateTo(Destinations.HOME.route)
-                        } else {
-                            userNotFound = true
-                            errorMessage = e?.message ?: "User not found"
-                        }
-                    }
+                    errorMessage = e?.message ?: "User not found"
+                  }
                 }
+              }
+            }) {
+              Text("Login")
             }
-        ) {
-          Text("Login")
-        }
 
         if (userNotFound) {
-          Text(
-              text = errorMessage,
-              color = Color.Red
-          )
+          Text(text = errorMessage, color = Color.Red)
         }
 
         Text(
