@@ -94,7 +94,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 .addOnFailureListener { error = it.message.toString() }
             navigationActions.goBack()
           } else if (password.length < 6) {
-              badCredentials = true
+            badCredentials = true
           }
         },
         modifier = Modifier.testTag("signUpButton")) {
