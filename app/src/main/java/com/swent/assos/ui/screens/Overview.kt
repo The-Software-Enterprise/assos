@@ -47,8 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
@@ -58,8 +56,6 @@ import com.swent.assos.ui.theme.Purple40
 import com.swent.assos.ui.theme.Purple80
 import com.swent.assos.ui.theme.PurpleGrey40
 import com.swent.assos.ui.theme.PurpleGrey80
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -89,7 +85,8 @@ fun Overview(navigationActions: NavigationActions) {
               Modifier
                   .padding(8.dp)
                   .align(Alignment.CenterHorizontally)
-                  .wrapContentHeight(Alignment.CenterVertically)) {
+                  .wrapContentHeight(Alignment.CenterVertically)
+          ) {
                 Text(
                     text = "Student",
                     modifier = Modifier.testTag("AppTitle_1"),
@@ -99,7 +96,7 @@ fun Overview(navigationActions: NavigationActions) {
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
                             color = Purple80))
-              Text(text ="")
+              Text(text = "")
                 Text(
                     text = "Sphere",
                     modifier = Modifier.testTag("AppTitle_2"),
@@ -161,9 +158,7 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
           .testTag("AssoListItem")
           .padding(start = 26.dp, end = 26.dp)
           .clickable {
-              val dest =
-                  Destinations.ASSOCIATION_PAGE.route +
-                          "/${asso.id}"
+              val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.id}"
               navigationActions.navigateTo(dest)
           })
 }

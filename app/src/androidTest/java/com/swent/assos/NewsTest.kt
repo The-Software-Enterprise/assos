@@ -3,7 +3,6 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.kaspersky.components.composesupport.config.withComposeSupport
@@ -24,13 +23,11 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
-import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -50,13 +47,9 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
 
   val newsHeader = "Test description -1934310868"
 
-
-
   @Before
   fun setup() {
     hiltRule.inject()
-
-
   }
 
   private val random = Random(0)
@@ -68,25 +61,24 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   fun redirectToCreateNews() {
     val firestore = Firebase.firestore
 
-
-    firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+    firestore
+      .collection("associations")
+      .whereEqualTo("acronym", associationAcronym)
+      .get()
       .addOnSuccessListener {
-        val association = Association(
-          id = it.documents[0].id,
-          acronym = it.documents[0].getString("acronym") ?: "",
-          fullname = it.documents[0].getString("fullname") ?: "",
-          url = it.documents[0].getString("url") ?: "",
-          description = it.documents[0].getString("description") ?: ""
-        )
+        val association =
+          Association(
+            id = it.documents[0].id,
+            acronym = it.documents[0].getString("acronym") ?: "",
+            fullname = it.documents[0].getString("fullname") ?: "",
+            url = it.documents[0].getString("url") ?: "",
+            description = it.documents[0].getString("description") ?: ""
+          )
 
-    composeTestRule.activity.setContent {
-      AssoDigest(
-          asso =
-          association,
-        navigationActions = mockNavActions
-      )
-    }
-    }
+        composeTestRule.activity.setContent {
+          AssoDigest(asso = association, navigationActions = mockNavActions)
+        }
+      }
 
     run {
       ComposeScreen.onComposeScreen<AssoDigestScreen>(composeTestRule) {
@@ -101,14 +93,16 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         }
       }
       step("Verify navigation to create news") {
-
         var newsID = ""
-        firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+        firestore
+          .collection("associations")
+          .whereEqualTo("acronym", associationAcronym)
+          .get()
           .addOnSuccessListener {
             newsID = it.documents[0].id
 
             verify { mockNavActions.navigateTo("CreateNews/${newsID}") }
-        confirmVerified(mockNavActions)
+            confirmVerified(mockNavActions)
           }
       }
     }
@@ -117,13 +111,14 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun createNewsAndVerifyCreation() {
     val firestore = Firebase.firestore
-    firestore.collection("associations").whereEqualTo("acronym", associationAcronym).get()
+    firestore
+      .collection("associations")
+      .whereEqualTo("acronym", associationAcronym)
+      .get()
       .addOnSuccessListener {
-
-
-    composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
-    }
+        composeTestRule.activity.setContent {
+          CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
+        }
       }
 
     run {

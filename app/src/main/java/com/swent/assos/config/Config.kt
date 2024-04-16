@@ -52,22 +52,21 @@ class Config {
       responseMessage = connection.inputStream.bufferedReader().use { it.readText() }
     }
 
-      try {
-          thread1.start()
-          thread1.join()
-      
-    var json = responseMessage.trimIndent()
-    val services = JSONObject(json)
+    try {
+      thread1.start()
+      thread1.join()
 
+      var json = responseMessage.trimIndent()
+      val services = JSONObject(json)
 
-    services.keys().forEach { serviceName ->
-      val service = services.getJSONObject(serviceName)
-      if (service.has("port")) {
-        onlineServices.add("$serviceName")
+      services.keys().forEach { serviceName ->
+        val service = services.getJSONObject(serviceName)
+        if (service.has("port")) {
+          onlineServices.add("$serviceName")
+        }
       }
-    }
-      } catch (e: Exception) {
-          println("Error checking Firebase Emulator status: ${e.message}")
+    } catch (e: Exception) {
+      println("Error checking Firebase Emulator status: ${e.message}")
     }
 
     return onlineServices
