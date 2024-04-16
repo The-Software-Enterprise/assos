@@ -62,23 +62,22 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
     val firestore = Firebase.firestore
 
     firestore
-      .collection("associations")
-      .whereEqualTo("acronym", associationAcronym)
-      .get()
-      .addOnSuccessListener {
-        val association =
-          Association(
-            id = it.documents[0].id,
-            acronym = it.documents[0].getString("acronym") ?: "",
-            fullname = it.documents[0].getString("fullname") ?: "",
-            url = it.documents[0].getString("url") ?: "",
-            description = it.documents[0].getString("description") ?: ""
-          )
+        .collection("associations")
+        .whereEqualTo("acronym", associationAcronym)
+        .get()
+        .addOnSuccessListener {
+          val association =
+              Association(
+                  id = it.documents[0].id,
+                  acronym = it.documents[0].getString("acronym") ?: "",
+                  fullname = it.documents[0].getString("fullname") ?: "",
+                  url = it.documents[0].getString("url") ?: "",
+                  description = it.documents[0].getString("description") ?: "")
 
-        composeTestRule.activity.setContent {
-          AssoDigest(asso = association, navigationActions = mockNavActions)
+          composeTestRule.activity.setContent {
+            AssoDigest(asso = association, navigationActions = mockNavActions)
+          }
         }
-      }
 
     run {
       ComposeScreen.onComposeScreen<AssoDigestScreen>(composeTestRule) {
@@ -95,15 +94,15 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
       step("Verify navigation to create news") {
         var newsID = ""
         firestore
-          .collection("associations")
-          .whereEqualTo("acronym", associationAcronym)
-          .get()
-          .addOnSuccessListener {
-            newsID = it.documents[0].id
+            .collection("associations")
+            .whereEqualTo("acronym", associationAcronym)
+            .get()
+            .addOnSuccessListener {
+              newsID = it.documents[0].id
 
-            verify { mockNavActions.navigateTo("CreateNews/${newsID}") }
-            confirmVerified(mockNavActions)
-          }
+              verify { mockNavActions.navigateTo("CreateNews/${newsID}") }
+              confirmVerified(mockNavActions)
+            }
       }
     }
   }
@@ -112,14 +111,14 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   fun createNewsAndVerifyCreation() {
     val firestore = Firebase.firestore
     firestore
-      .collection("associations")
-      .whereEqualTo("acronym", associationAcronym)
-      .get()
-      .addOnSuccessListener {
-        composeTestRule.activity.setContent {
-          CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
+        .collection("associations")
+        .whereEqualTo("acronym", associationAcronym)
+        .get()
+        .addOnSuccessListener {
+          composeTestRule.activity.setContent {
+            CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
+          }
         }
-      }
 
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {

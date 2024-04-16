@@ -96,15 +96,15 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
     // get the id of the association
     var oneeightyID = ""
     firestore
-      .collection("associations")
-      .whereEqualTo("acronym", "180°C")
-      .get()
-      .addOnSuccessListener {
-        oneeightyID = it.documents[0].id
+        .collection("associations")
+        .whereEqualTo("acronym", "180°C")
+        .get()
+        .addOnSuccessListener {
+          oneeightyID = it.documents[0].id
 
-        verify { mockNavActions.navigateTo("AssociationPage/${oneeightyID}") }
-        confirmVerified(mockNavActions)
-      }
+          verify { mockNavActions.navigateTo("AssociationPage/${oneeightyID}") }
+          confirmVerified(mockNavActions)
+        }
   }
 
   @Test

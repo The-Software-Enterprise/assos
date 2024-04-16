@@ -75,18 +75,14 @@ fun Overview(navigationActions: NavigationActions) {
   }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("OverviewScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("OverviewScreen"),
       topBar = {
         Column {
           Row(
               modifier =
-              Modifier
-                  .padding(8.dp)
-                  .align(Alignment.CenterHorizontally)
-                  .wrapContentHeight(Alignment.CenterVertically)
-          ) {
+                  Modifier.padding(8.dp)
+                      .align(Alignment.CenterHorizontally)
+                      .wrapContentHeight(Alignment.CenterVertically)) {
                 Text(
                     text = "Student",
                     modifier = Modifier.testTag("AppTitle_1"),
@@ -96,7 +92,7 @@ fun Overview(navigationActions: NavigationActions) {
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
                             color = Purple80))
-              Text(text = "")
+                Text(text = "")
                 Text(
                     text = "Sphere",
                     modifier = Modifier.testTag("AppTitle_2"),
@@ -112,9 +108,7 @@ fun Overview(navigationActions: NavigationActions) {
         }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .padding(paddingValues)
-                .testTag("AssoList"),
+            modifier = Modifier.padding(paddingValues).testTag("AssoList"),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
@@ -154,12 +148,9 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
               trailingIconColor = PurpleGrey40,
               containerColor = Color.Transparent),
       modifier =
-      Modifier
-          .testTag("AssoListItem")
-          .padding(start = 26.dp, end = 26.dp)
-          .clickable {
-              val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.id}"
-              navigationActions.navigateTo(dest)
+          Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
+            val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.id}"
+            navigationActions.navigateTo(dest)
           })
 }
 
@@ -171,14 +162,10 @@ fun TopResearchBar(overviewViewModel: OverviewViewModel) {
   val focusManager = LocalFocusManager.current
 
   Column(
-      modifier = Modifier
-          .fillMaxWidth()
-          .padding(8.dp),
+      modifier = Modifier.fillMaxWidth().padding(8.dp),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
-            modifier = Modifier
-                .fillMaxWidth()
-                .testTag("SearchAsso"),
+            modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
             colors = SearchBarDefaults.colors(containerColor = Color(0x50C9CAD9)),
             trailingIcon = {
               if (isSearching) {

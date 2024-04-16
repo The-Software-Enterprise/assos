@@ -60,11 +60,11 @@ class MainActivity : ComponentActivity() {
     for (line in lines) {
       val data = line.split(",")
       val asso =
-        hashMapOf(
-          "acronym" to data[0],
-          "fullname" to data[2],
-          "url" to data[1],
-        )
+          hashMapOf(
+              "acronym" to data[0],
+              "fullname" to data[2],
+              "url" to data[1],
+          )
       firestore.collection("associations").add(asso)
     }
   }
