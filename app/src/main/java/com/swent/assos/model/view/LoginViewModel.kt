@@ -34,11 +34,13 @@ constructor(private val storageService: DbService, private val accountService: A
             if (document != null) {
               user =
                   User(
-                      document.id as String,
+                      document.id,
                       (document.data?.get("firstname") ?: "") as String,
                       (document.data?.get("name") ?: "") as String,
                       (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations") ?: emptyList<String>()) as List<String>,
+                      (document.data?.get("associations")
+                          ?: emptyList<Triple<String, String, Int>>())
+                          as List<Triple<String, String, Int>>,
                       (document.data?.get("following") ?: emptyList<String>()) as List<String>)
             }
             callback()

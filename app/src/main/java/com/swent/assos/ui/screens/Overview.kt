@@ -56,8 +56,6 @@ import com.swent.assos.ui.theme.Purple40
 import com.swent.assos.ui.theme.Purple80
 import com.swent.assos.ui.theme.PurpleGrey40
 import com.swent.assos.ui.theme.PurpleGrey80
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -94,6 +92,7 @@ fun Overview(navigationActions: NavigationActions) {
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
                             color = Purple80))
+                Text(text = "")
                 Text(
                     text = "Sphere",
                     modifier = Modifier.testTag("AppTitle_2"),
@@ -150,14 +149,7 @@ fun ListItemFrom(asso: Association, navigationActions: NavigationActions) {
               containerColor = Color.Transparent),
       modifier =
           Modifier.testTag("AssoListItem").padding(start = 26.dp, end = 26.dp).clickable {
-            val dest =
-                Destinations.ASSOCIATION_PAGE.route +
-                    "/${asso.id}/${asso.acronym}/${asso.fullname}/${
-                      URLEncoder.encode(
-                        asso.url,
-                        StandardCharsets.UTF_8.toString()
-                      )
-                    }"
+            val dest = Destinations.ASSOCIATION_PAGE.route + "/${asso.id}"
             navigationActions.navigateTo(dest)
           })
 }

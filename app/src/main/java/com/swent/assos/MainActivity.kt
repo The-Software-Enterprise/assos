@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.NavigationGraph
@@ -17,11 +18,30 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
     // if we are in debug mode, we want to use the firestore emulator
     val config = Config()
-    if (config.get_demo()) {
+    val firestoreEmu = config.get_all().contains("firestore")
+    val authEmu = config.get_all().contains("auth")
+    if (firestoreEmu) {
       // Configure Firestore to use the Firestore emulator
-      FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      // check if firestore is already using the emulator
+      if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+        FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      }
+      // load data from res/raw/epfl_associations.csv to firestore
+      val firestore = FirebaseFirestore.getInstance()
+      // check if collection (associations) is empty
+      firestore.collection("associations").get().addOnSuccessListener { documents ->
+        if (documents.isEmpty) {
+          loadAssociations(firestore)
+        }
+      }
+    }
+
+    if (authEmu) {
+      // Configure Firebase Auth to use the Auth emulator
+      FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
     }
     setContent {
       AssosTheme {
@@ -30,6 +50,22 @@ class MainActivity : ComponentActivity() {
           NavigationGraph()
         }
       }
+    }
+  }
+
+  fun loadAssociations(firestore: FirebaseFirestore) {
+    val inputStream = resources.openRawResource(R.raw.epfl_associations)
+    val reader = inputStream.bufferedReader()
+    val lines = reader.readLines()
+    for (line in lines) {
+      val data = line.split(",")
+      val asso =
+          hashMapOf(
+              "acronym" to data[0],
+              "fullname" to data[2],
+              "url" to data[1],
+          )
+      firestore.collection("associations").add(asso)
     }
   }
 }

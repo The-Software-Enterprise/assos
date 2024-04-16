@@ -17,9 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -30,10 +34,12 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navigationActions: NavigationActions) {
   Column(
-      modifier = Modifier.fillMaxWidth(),
+      modifier =
+          Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true }.testTag("LoginScreen"),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally) {
         var email by remember { mutableStateOf("") }
@@ -54,7 +60,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
               email = it
             },
             label = { Text("Email") },
-            modifier = Modifier.fillMaxWidth().padding(16.dp))
+            modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("EmailField"))
 
         OutlinedTextField(
             value = password,
@@ -92,9 +98,9 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         Text(
             // if clicked, go to sign up page using hilt navigation
-
             modifier =
-                Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) },
+                Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP.route) }
+                    .testTag("SignUpNavButton"),
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")

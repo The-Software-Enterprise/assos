@@ -23,6 +23,7 @@ constructor(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
     val query = firestore.collection("associations").orderBy("acronym")
+
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()

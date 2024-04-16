@@ -4,6 +4,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -48,7 +50,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -73,7 +74,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -88,16 +88,23 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
       assoListItems {
         assertIsDisplayed()
-
         performClick()
       }
     }
+    val firestore = Firebase.firestore
 
-    verify {
-      mockNavActions.navigateTo(
-          "AssociationPage/jMWo6NgngIS2hCq054TF/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
-    }
-    confirmVerified(mockNavActions)
+    // get the id of the association
+    var oneeightyID = ""
+    firestore
+        .collection("associations")
+        .whereEqualTo("acronym", "180°C")
+        .get()
+        .addOnSuccessListener {
+          oneeightyID = it.documents[0].id
+
+          verify { mockNavActions.navigateTo("AssociationPage/${oneeightyID}") }
+          confirmVerified(mockNavActions)
+        }
   }
 
   @Test
