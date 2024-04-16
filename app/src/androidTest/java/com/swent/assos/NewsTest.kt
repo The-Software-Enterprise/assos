@@ -116,9 +116,13 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         .get()
         .addOnSuccessListener {
           composeTestRule.activity.setContent {
+            if (it.documents.isEmpty()) {
+              throw Exception("Association not found")
+            }
             CreateNews(navigationActions = mockNavActions, associationId = it.documents[0].id)
           }
         }
+        .addOnFailureListener { throw Exception("Association not found") }
 
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
