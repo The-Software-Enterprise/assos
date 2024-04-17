@@ -1,7 +1,6 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
@@ -58,13 +57,14 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
 
   @Test
   fun redirectToCreateNews() {
+    val associationID = " jMWo6NgngIS2hCq054TF"
 
     val association =
         Association(
             acronym = associationAcronym,
             description = "Association to promote cooking amongst students",
             fullname = "Association to promote cooking amongst students",
-            id = "jMWo6NgngIS2hCq054TF",
+            id = associationID,
             url = "https://www.180c.ch/association/",
         )
 
@@ -85,19 +85,18 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         }
       }
       step("Verify navigation to create news") {
-        var associationID = " jMWo6NgngIS2hCq054TF"
-
         verify { mockNavActions.navigateTo("CreateNews/${associationID}") }
         confirmVerified(mockNavActions)
       }
     }
   }
 
-  @Composable
   @Test
   fun createNewsAndVerifyCreation() {
 
-    CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+    composeTestRule.activity.setContent {
+      CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+    }
 
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
