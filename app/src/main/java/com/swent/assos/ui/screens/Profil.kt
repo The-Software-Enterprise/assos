@@ -42,7 +42,7 @@ fun Profil(navigationActions: NavigationActions) {
   val completeName = "$firstname $surname"
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("OverviewScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
       topBar = {
         TopAppBar(
             title = { Text(text = completeName) },
