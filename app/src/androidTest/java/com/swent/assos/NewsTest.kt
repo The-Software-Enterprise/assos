@@ -41,6 +41,10 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   // Relaxed mocks methods have a default implementation returning values
   @RelaxedMockK lateinit var mockNavActions: NavigationActions
 
+  var associationAcronym = "180°C"
+  var associationID = " jMWo6NgngIS2hCq054TF"
+  val newsHeader = "Test description -1934310868"
+
   @Before
   fun setup() {
     hiltRule.inject()
@@ -53,21 +57,24 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
 
   @Test
   fun redirectToCreateNews() {
+    val association =
+      Association(
+        id = associationID,
+        acronym = associationAcronym,
+        fullname = "Association to promote cooking amongst students",
+        url = "https://www.180c.ch/association/",
+        description = ""
+      )
+
     composeTestRule.activity.setContent {
       AssoDigest(
-          asso =
-              Association(
-                  id = "jMWo6NgngIS2hCq054TF",
-                  acronym = "180°C",
-                  fullname = "Association to promote cooking amongst students",
-                  url = "https://www.180c.ch/association/",
-                  description = ""),
-          navigationActions = mockNavActions)
+        asso = association,
+        navigationActions = mockNavActions)
     }
 
     run {
       ComposeScreen.onComposeScreen<AssoDigestScreen>(composeTestRule) {
-        step("Open the association 180°C") {
+        step("Open the association $associationAcronym") {
           createButton { performClick() }
           /*bottomSheetCreation {
             assertIsDisplayed()
@@ -79,7 +86,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
       }
 
       step("Verify navigation to create news") {
-        verify { mockNavActions.navigateTo("CreateNews/jMWo6NgngIS2hCq054TF") }
+        verify { mockNavActions.navigateTo("CreateNews/${associationID}") }
         confirmVerified(mockNavActions)
       }
     }
@@ -88,7 +95,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+      CreateNews(navigationActions = mockNavActions, associationId = associationID)
     }
 
     run {
