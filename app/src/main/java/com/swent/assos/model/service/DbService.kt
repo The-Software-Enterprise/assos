@@ -21,4 +21,6 @@ interface DbService {
   fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   suspend fun getAllEvents(): List<Event>
+
+  suspend fun followAssociation(associationId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 }

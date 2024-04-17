@@ -56,7 +56,7 @@ fun ManageAssociation() {
         }
         item {
           HeaderWithButton(
-              header = "Upcoming Events", buttonText = "Add Event", onButtonClick = { /* TODO */})
+              header = "Upcoming Events", buttonText = "Add Event", onButtonClick = {/* TODO */})
         }
         item {
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
