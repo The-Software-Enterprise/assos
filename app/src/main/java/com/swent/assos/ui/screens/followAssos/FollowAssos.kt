@@ -22,22 +22,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.view.AssoViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun FollowAssociation() {
+fun FollowAssociation(associationId: String) {
+    val assoViewModel: AssoViewModel = hiltViewModel()
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           HeaderWithButton(
-              header = association.fullname, buttonText = "Follow", onButtonClick = { /* TODO */})
+              header = association.fullname, buttonText = "Follow", onButtonClick = { assoViewModel.followAssociation(associationId) })
         }
 
         item {
