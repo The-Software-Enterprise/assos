@@ -18,7 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Event
@@ -26,11 +30,15 @@ import com.swent.assos.model.data.generateQRCodeBitmap
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.StudentSphereTitle
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun QrCode() {
   val eventViewModel: EventViewModel = hiltViewModel()
   val events by eventViewModel.allEvents.collectAsState()
-  Scaffold(topBar = { StudentSphereTitle() }) { paddingValues ->
+  Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("QrCodeScreen"),
+      topBar = { StudentSphereTitle() })
+  { paddingValues ->
     Surface(color = MaterialTheme.colorScheme.background) {
       LazyColumn(
           modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
