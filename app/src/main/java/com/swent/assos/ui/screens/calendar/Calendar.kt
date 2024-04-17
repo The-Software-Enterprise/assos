@@ -6,10 +6,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.CalendarDataSource
@@ -17,6 +21,7 @@ import com.swent.assos.model.data.CalendarEvent
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Preview(showSystemUi = true)
 @Composable
 fun Calendar(
@@ -32,7 +37,7 @@ fun Calendar(
   val dayWidth = 256.dp
   val hourHeight = 64.dp
 
-  Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
+  Column(modifier = Modifier.padding(16.dp).fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("CalendarScreen")) {
     ChangeWeek(
         data = data,
         onPrevClickListener = { startDate ->
