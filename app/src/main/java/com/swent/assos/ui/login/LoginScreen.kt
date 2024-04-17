@@ -69,10 +69,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
               password = it
             },
             label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("PasswordField"),
             visualTransformation = PasswordVisualTransformation())
 
         Button(
+            modifier = Modifier.testTag("LoginButton"),
             onClick = {
               if (email.isEmpty() || password.isEmpty()) {
                 userNotFound = true
