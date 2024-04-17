@@ -20,19 +20,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.NewsViewModel
+import com.swent.assos.model.view.ProfileViewModel
 
 @Composable
 fun Profil(navigationActions: NavigationActions) {
 
   val firstname = "Maximilien"
   val surname = "GRIDEL"
+
+    val viewModel: ProfileViewModel = hiltViewModel()
+    val followedAssociationsList by viewModel.followedAssociations.collectAsState()
 
   val completeName = "$firstname $surname"
 
@@ -76,7 +84,7 @@ fun Profil(navigationActions: NavigationActions) {
                 Spacer(modifier = Modifier.height(20.dp))
               }
 
-              items(associationsFollowed) {
+              items(followedAssociationsList) {
                 Card(
                     modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp),
                     colors =
