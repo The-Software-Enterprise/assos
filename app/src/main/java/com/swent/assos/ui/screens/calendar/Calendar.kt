@@ -37,50 +37,55 @@ fun Calendar(
   val dayWidth = 256.dp
   val hourHeight = 64.dp
 
-  Column(modifier = Modifier.padding(16.dp).fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("CalendarScreen")) {
-    ChangeWeek(
-        data = data,
-        onPrevClickListener = { startDate ->
-          val finalStartDate = startDate.minusDays(1)
-          data =
-              dataSource.getData(
-                  startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-        },
-        onNextClickListener = { endDate ->
-          val finalStartDate = endDate.plusDays(2)
-          data =
-              dataSource.getData(
-                  startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-        })
+  Column(
+      modifier =
+          Modifier.padding(16.dp)
+              .fillMaxSize()
+              .semantics { testTagsAsResourceId = true }
+              .testTag("CalendarScreen")) {
+        ChangeWeek(
+            data = data,
+            onPrevClickListener = { startDate ->
+              val finalStartDate = startDate.minusDays(1)
+              data =
+                  dataSource.getData(
+                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
+            },
+            onNextClickListener = { endDate ->
+              val finalStartDate = endDate.plusDays(2)
+              data =
+                  dataSource.getData(
+                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
+            })
 
-    WeekHeader(
-        data = data,
-        dayWidth = dayWidth,
-        modifier =
-            Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
-                .horizontalScroll(horizontalScrollState),
-        dayHeader)
+        WeekHeader(
+            data = data,
+            dayWidth = dayWidth,
+            modifier =
+                Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
+                    .horizontalScroll(horizontalScrollState),
+            dayHeader)
 
-    Row {
-      TimeSidebar(
-          hourHeight = 64.dp,
-          modifier =
-              Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
-                sidebarWidth = it.size.width
-              })
+        Row {
+          TimeSidebar(
+              hourHeight = 64.dp,
+              modifier =
+                  Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
+                    sidebarWidth = it.size.width
+                  })
 
-      Event(
-          events = sampleEvents,
-          eventContent = eventContent,
-          dayWidth = dayWidth,
-          hourHeight = hourHeight,
-          data = data,
-          modifier =
-              Modifier.weight(1f)
-                  .verticalScroll(verticalScrollState)
-                  .horizontalScroll(horizontalScrollState))
-    }
-  }
+          Event(
+              events = sampleEvents,
+              eventContent = eventContent,
+              dayWidth = dayWidth,
+              hourHeight = hourHeight,
+              data = data,
+              modifier =
+                  Modifier.weight(1f)
+                      .verticalScroll(verticalScrollState)
+                      .horizontalScroll(horizontalScrollState))
+        }
+      }
 }
 
 private val sampleEvents =

@@ -37,16 +37,15 @@ fun QrCode() {
   val events by eventViewModel.allEvents.collectAsState()
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("QrCodeScreen"),
-      topBar = { StudentSphereTitle() })
-  { paddingValues ->
-    Surface(color = MaterialTheme.colorScheme.background) {
-      LazyColumn(
-          modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
-          userScrollEnabled = true) {
-            items(events) { TicketItem(event = it) }
-          }
-    }
-  }
+      topBar = { StudentSphereTitle() }) { paddingValues ->
+        Surface(color = MaterialTheme.colorScheme.background) {
+          LazyColumn(
+              modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
+              userScrollEnabled = true) {
+                items(events) { TicketItem(event = it) }
+              }
+        }
+      }
 }
 
 @Composable

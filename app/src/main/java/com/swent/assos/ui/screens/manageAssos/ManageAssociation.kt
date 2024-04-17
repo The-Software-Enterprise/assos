@@ -39,7 +39,11 @@ import java.util.Date
 fun ManageAssociation() {
 
   LazyColumn(
-      modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("ManageAssociationScreen"), horizontalAlignment = Alignment.CenterHorizontally) {
+      modifier =
+          Modifier.fillMaxSize()
+              .semantics { testTagsAsResourceId = true }
+              .testTag("ManageAssociationScreen"),
+      horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           Text(
               text = association.fullname,

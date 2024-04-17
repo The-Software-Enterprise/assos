@@ -5,4 +5,5 @@ import io.github.kakaocup.compose.node.element.ComposeScreen
 
 class ManageAssociationScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<CalendarScreen>(
-        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("ManageAssociationScreen") })
+        semanticsProvider = semanticsProvider,
+        viewBuilderAction = { hasTestTag("ManageAssociationScreen") })
