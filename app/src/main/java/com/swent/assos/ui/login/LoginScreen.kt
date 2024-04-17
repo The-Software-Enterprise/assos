@@ -93,7 +93,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
             }
 
         if (userNotFound) {
-          Text(text = errorMessage, color = Color.Red)
+          Text(
+              modifier = Modifier.testTag("ErrorMessage"),
+              text = errorMessage,
+              color = Color.Red
+          )
         }
 
         Text(
