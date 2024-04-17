@@ -20,14 +20,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Profil(navigationActions: NavigationActions) {
 
@@ -37,6 +42,7 @@ fun Profil(navigationActions: NavigationActions) {
   val completeName = "$firstname $surname"
 
   Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("OverviewScreen"),
       topBar = {
         TopAppBar(
             title = { Text(text = completeName) },
