@@ -33,119 +33,113 @@ import java.util.Date
 @Composable
 fun FollowAssociation() {
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-
+  LazyColumn(
+      modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
-            HeaderWithButton(
-                header = association.fullname,
-                buttonText = "Follow",
-                onButtonClick = { /* TODO */})
-
+          HeaderWithButton(
+              header = association.fullname, buttonText = "Follow", onButtonClick = { /* TODO */})
         }
 
         item {
-            Text(
-                text = association.description,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
+          Text(
+              text = association.description,
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
         }
 
         item {
-            Text(
-                text = "Upcoming Events",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+          Text(
+              text = "Upcoming Events",
+              style = MaterialTheme.typography.headlineMedium,
+              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
 
         item {
-            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(events.size) { index ->
-                    val event = events[index]
-                    EventBlock(event)
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
+          LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+            items(events.size) { index ->
+              val event = events[index]
+              EventBlock(event)
+              Spacer(modifier = Modifier.width(8.dp))
             }
+          }
         }
 
         item {
-            Text(
-                text = "Latest Posts",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+          Text(
+              text = "Latest Posts",
+              style = MaterialTheme.typography.headlineMedium,
+              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
 
         item {
-            LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(news.size) { index ->
-                    val n = news[index]
-                    NewsBlock(n)
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
+          LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+            items(news.size) { index ->
+              val n = news[index]
+              NewsBlock(n)
+              Spacer(modifier = Modifier.width(8.dp))
             }
+          }
         }
-    }
+      }
 }
 
 @Composable
 fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+  Row(
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = header, style = MaterialTheme.typography.headlineMedium)
         Button(
             onClick = onButtonClick,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-            Text(buttonText, color = Color.White)
-        }
-    }
+              Text(buttonText, color = Color.White)
+            }
+      }
 }
 
 @Composable
 fun EventBlock(event: Event) {
-    Surface(
-        modifier = Modifier.width(200.dp).padding(vertical = 4.dp),
-        color = Color(0xFFE0E0E0),
-        // elevation = 4.dp
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = event.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = event.description)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+  Surface(
+      modifier = Modifier.width(200.dp).padding(vertical = 4.dp),
+      color = Color(0xFFE0E0E0),
+      // elevation = 4.dp
+  ) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+      Text(text = event.title, style = MaterialTheme.typography.titleMedium)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = event.description)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
+      Spacer(modifier = Modifier.height(8.dp))
     }
+  }
 }
 
 @Composable
 fun NewsBlock(news: News) {
-    Surface(
-        modifier = Modifier.width(200.dp).padding(vertical = 4.dp),
-        color = Color(0xFFE0E0E0),
-        // elevation = 4.dp
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = news.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = news.description)
-            Spacer(modifier = Modifier.height(8.dp))
-            // Text(text = formatDateTime(news.date.toString()), style =
-            // MaterialTheme.typography.bodySmall)
-            // Spacer(modifier = Modifier.height(8.dp))
-        }
+  Surface(
+      modifier = Modifier.width(200.dp).padding(vertical = 4.dp),
+      color = Color(0xFFE0E0E0),
+      // elevation = 4.dp
+  ) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+      Text(text = news.title, style = MaterialTheme.typography.titleMedium)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = news.description)
+      Spacer(modifier = Modifier.height(8.dp))
+      // Text(text = formatDateTime(news.date.toString()), style =
+      // MaterialTheme.typography.bodySmall)
+      // Spacer(modifier = Modifier.height(8.dp))
     }
+  }
 }
 
 private fun formatDateTime(dateString: String): String {
-    val formatter = DateTimeFormatter.ISO_DATE_TIME
-    val dateTime = LocalDateTime.parse(dateString, formatter)
-    return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+  val formatter = DateTimeFormatter.ISO_DATE_TIME
+  val dateTime = LocalDateTime.parse(dateString, formatter)
+  return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 }
-
-
 
 private val association =
     Association(
@@ -153,7 +147,7 @@ private val association =
         fullname = "Junior Entreprise",
         url = "https://junior-entreprise.com/",
         description =
-        "Junior Entreprise is a student association that provides consulting services to companies.",
+            "Junior Entreprise is a student association that provides consulting services to companies.",
     )
 
 private val events =

@@ -26,8 +26,6 @@ import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
 import com.swent.assos.ui.screens.calendar.Calendar
-import com.swent.assos.ui.screens.followAssos.FollowAssociation
-import com.swent.assos.ui.screens.manageAssos.ManageAssociation
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -42,23 +40,19 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier
-            .fillMaxSize()
-            .weight(1f),
+        modifier = Modifier.fillMaxSize().weight(1f),
     ) { page ->
       when (page) {
         0 -> News()
         1 -> Overview(navigationActions = navigationActions)
         2 -> Calendar()
-        3 -> FollowAssociation() //QrCode()
+        3 -> QrCode()
         4 -> Profil(navigationActions = navigationActions)
       }
     }
 
     NavigationBar(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background),
+        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
         containerColor = Color.Transparent,
     ) {
       repeat(5) { index ->
@@ -69,9 +63,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.house),
                         contentDescription = "Home",
-                        modifier = Modifier
-                            .size(28.dp)
-                            .padding(vertical = (2.5).dp),
+                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
@@ -98,9 +90,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.qrcode),
                         contentDescription = "QR",
-                        modifier = Modifier
-                            .size(28.dp)
-                            .padding(vertical = (2.5).dp),
+                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
@@ -109,9 +99,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.profil),
                         contentDescription = "Profil",
-                        modifier = Modifier
-                            .size(28.dp)
-                            .padding((2.5).dp),
+                        modifier = Modifier.size(28.dp).padding((2.5).dp),
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
