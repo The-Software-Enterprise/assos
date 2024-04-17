@@ -4,8 +4,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.Firebase
-import com.google.firebase.firestore.firestore
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -91,20 +89,11 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
         performClick()
       }
     }
-    val firestore = Firebase.firestore
 
     // get the id of the association
-    var oneeightyID = ""
-    firestore
-        .collection("associations")
-        .whereEqualTo("acronym", "180°C")
-        .get()
-        .addOnSuccessListener {
-          oneeightyID = it.documents[0].id
 
-          verify { mockNavActions.navigateTo("AssociationPage/${oneeightyID}") }
-          confirmVerified(mockNavActions)
-        }
+    verify { mockNavActions.navigateTo("AssociationPage/jMWo6NgngIS2hCq054TF") }
+    confirmVerified(mockNavActions)
   }
 
   @Test
