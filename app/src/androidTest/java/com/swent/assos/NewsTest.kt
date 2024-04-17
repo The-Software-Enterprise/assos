@@ -58,18 +58,15 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun redirectToCreateNews() {
     val association =
-      Association(
-        id = associationID,
-        acronym = associationAcronym,
-        fullname = "Association to promote cooking amongst students",
-        url = "https://www.180c.ch/association/",
-        description = ""
-      )
+        Association(
+            id = associationID,
+            acronym = associationAcronym,
+            fullname = "Association to promote cooking amongst students",
+            url = "https://www.180c.ch/association/",
+            description = "")
 
     composeTestRule.activity.setContent {
-      AssoDigest(
-        asso = association,
-        navigationActions = mockNavActions)
+      AssoDigest(asso = association, navigationActions = mockNavActions)
     }
 
     run {
