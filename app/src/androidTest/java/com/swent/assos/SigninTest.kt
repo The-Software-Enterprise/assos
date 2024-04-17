@@ -66,6 +66,10 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           errorMessage { assertTextEquals("Please fill in all fields") }
         }
         step("Sign in with empty email") {
+          emailField {
+            assertIsDisplayed()
+            performTextClearance()
+          }
           passwordField {
             assertIsDisplayed()
             performTextInput("password")
@@ -98,7 +102,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             assertIsDisplayed()
             performClick()
           }
-          errorMessage { assertTextContains("badly formatted email") }
+          errorMessage { assertTextContains("The email address is badly formatted") }
         }
       }
     }
