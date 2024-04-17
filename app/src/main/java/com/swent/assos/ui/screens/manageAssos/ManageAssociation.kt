@@ -19,8 +19,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
@@ -30,11 +34,12 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ManageAssociation() {
 
   LazyColumn(
-      modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+      modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("ManageAssociationScreen"), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           Text(
               text = association.fullname,
