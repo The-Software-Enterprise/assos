@@ -41,7 +41,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
   var error by remember { mutableStateOf("") }
-  var badCredentials by remember { mutableStateOf(false) }
+  val badCredentials by remember { loginViewModel.badCredentials }
 
   Column(
       modifier =
@@ -59,7 +59,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     OutlinedTextField(
         value = password,
         onValueChange = {
-          badCredentials = false
+          loginViewModel.badCredentials.value = false
           password = it
         },
         label = { Text("Password") },
@@ -76,32 +76,27 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     }
     Button(
         onClick = {
-          if (password == confirmPassword && password.length >= 6 && email.isNotEmpty()) {
+          loginViewModel.signUp(email, password, confirmPassword)
 
-            loginViewModel.signUp(email, password)
+          // call the firebasefunction -> oncallFind.py
+          val data = hashMapOf("email" to email)
 
-            // call the firebasefunction -> oncallFind.py
-            val data = hashMapOf("email" to email)
+          val functions = FirebaseFunctions.getInstance("europe-west6")
+          val config = Config()
 
-            val functions = FirebaseFunctions.getInstance("europe-west6")
-            val config = Config()
-
-            // change the region of the function to europe-west6
-            if (config.get_all().contains("functions")) {
-              functions.useEmulator(R.string.emulatorIP.toString(), 5001)
-            }
-            functions
-                .getHttpsCallable("oncallFind")
-                .call(data)
-                .addOnSuccessListener { task ->
-                  // keep result for future use
-
-                  navigationActions.navigateTo(Destinations.HOME)
-                }
-                .addOnFailureListener { error = it.message.toString() }
-          } else if (password.length < 6) {
-            badCredentials = true
+          // change the region of the function to europe-west6
+          if (config.get_all().contains("functions")) {
+            functions.useEmulator(R.string.emulatorIP.toString(), 5001)
           }
+          functions
+              .getHttpsCallable("oncallFind")
+              .call(data)
+              .addOnSuccessListener { task ->
+                // keep result for future use
+
+                navigationActions.navigateTo(Destinations.HOME)
+              }
+              .addOnFailureListener { error = it.message.toString() }
         },
         modifier = Modifier.testTag("SignUpButton")) {
           Text("Sign Up")

@@ -1,6 +1,9 @@
 package com.swent.assos.model.view
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -22,8 +25,11 @@ constructor(private val storageService: DbService, private val accountService: A
   val firestoreInstance = Firebase.firestore
 
   var user = User("", "", "", "", emptyList(), emptyList())
+  var userNotFound = mutableStateOf(false)
+  var errorMessage = mutableStateOf("")
+  var badCredentials = mutableStateOf(false)
 
-  fun updateUserInfo(callback: () -> Unit = {}) {
+  fun updateUserInfo() {
 
     val cuser = Firebase.auth.currentUser
     cuser?.let {
@@ -43,7 +49,6 @@ constructor(private val storageService: DbService, private val accountService: A
                           as List<Triple<String, String, Int>>,
                       (document.data?.get("following") ?: emptyList<String>()) as List<String>)
             }
-            callback()
           }
           .addOnFailureListener { exception -> println("Error getting documents: $exception") }
     }
@@ -60,24 +65,35 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String, callback: (Exception?) -> Unit) {
+  fun signIn(email: String, password: String, callback: () -> Unit) {
+    if (email.isEmpty() || password.isEmpty()) {
+      userNotFound.value = true
+      errorMessage.value = "Please fill in all fields"
+      return
+    }
     accountService.signIn(email, password).addOnCompleteListener {
       if (it.isSuccessful) {
-        updateUserInfo {}
+        updateUserInfo()
+        callback()
       } else {
+        errorMessage.value = it.exception?.message ?: ""
+        userNotFound.value = true
         Log.e("LoginViewModel", "Error signing in")
       }
-      callback(it.exception)
     }
   }
 
-  fun signUp(email: String, password: String) {
-    accountService.signUp(email, password).addOnCompleteListener {
-      if (it.isSuccessful) {
-        updateUserInfo()
-      } else {
-        Log.e("LoginViewModel", "Error signing up")
+  fun signUp(email: String, password: String, confirmPassword: String) {
+    if (password == confirmPassword && password.length >= 6 && email.isNotEmpty()) {
+      accountService.signUp(email, password).addOnCompleteListener {
+        if (it.isSuccessful) {
+          updateUserInfo()
+        } else {
+          Log.e("LoginViewModel", "Error signing up")
+        }
       }
+    } else {
+      badCredentials.value = true
     }
   }
 }

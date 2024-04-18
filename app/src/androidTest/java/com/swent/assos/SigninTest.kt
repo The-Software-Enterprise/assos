@@ -8,14 +8,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.ui.login.LoginScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -47,7 +50,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
-        step("Signin with empty mail and empty password") {
+        step("Sign in with empty mail and empty password") {
           loginButton {
             assertIsDisplayed()
             performClick()
@@ -89,7 +92,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
-        step("Signin with badly formatted email") {
+        step("Sign in with badly formatted email") {
           emailField {
             assertIsDisplayed()
             performTextInput("jules.herrscher")
@@ -102,7 +105,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             assertIsDisplayed()
             performClick()
           }
-          errorMessage { assertTextContains("The email address is badly formatted") }
+          errorMessage { assertTextContains("The email address is badly formatted.") }
         }
       }
     }
@@ -113,7 +116,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
-        step("Signin with wrong credentials") {
+        step("Sign in with wrong credentials") {
           emailField {
             assertIsDisplayed()
             performTextInput("jules.herrscher@icloud.com")
@@ -122,11 +125,20 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             assertIsDisplayed()
             performTextInput("password")
           }
+          loginButton {
+            assertIsDisplayed()
+            performClick()
+          }
+          errorMessage {
+            assertIsDisplayed()
+            assertTextEquals("The supplied auth credential is incorrect, malformed or has expired.")
+          }
         }
       }
     }
   }
 
+  @Test
   fun signInWithGoodCredentials() {
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     run {
@@ -140,6 +152,13 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             assertIsDisplayed()
             performTextInput("test1234")
           }
+          loginButton {
+            assertIsDisplayed()
+            performClick()
+          }
+
+          verify { mockNavActions.navigateTo(Destinations.HOME.route) }
+          confirmVerified(mockNavActions)
         }
       }
     }
