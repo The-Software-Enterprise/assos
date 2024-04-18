@@ -78,6 +78,17 @@ constructor(
     }
   }
 
+    override suspend fun getNewsFromFollowedAssociations(lastDocumentSnapshot: DocumentSnapshot?, userId: String): List<News> {
+        val query = firestore.collection("users").document(userId)
+        val snapshot = query.get().await() ?: return emptyList()
+        val followedAssociations: List<Association> = snapshot.get("following") as List<Association>
+        val news = getAllNews(lastDocumentSnapshot).filter {
+            news -> news.associationId in followedAssociations.map { association -> association.id
+            }
+        }
+        return news
+    }
+
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
