@@ -76,13 +76,13 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     Button(
         onClick = {
           if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
-            try {
-              loginViewModel.signUp(email, password)
-            } catch (e: Exception) {
-              error = e.message.toString()
-              return@Button
+
+            loginViewModel.signUp(email, password) { success ->
+              if (!success) {
+                return@signUp
+              }
             }
-            print(loginViewModel.currentUser)
+
             navigationActions.navigateTo(Destinations.HOME)
 
             // call the firebasefunction -> oncallFind.py
@@ -120,8 +120,8 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     Text(
         "Already have an account?",
         modifier =
-            Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) }
-                .testTag("LoginNavButton")
-                .clickable { navigationActions.goBack() })
+            Modifier.testTag("LoginNavButton").clickable {
+              navigationActions.navigateTo(Destinations.LOGIN)
+            })
   }
 }

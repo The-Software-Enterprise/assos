@@ -69,13 +69,13 @@ constructor(private val storageService: DbService, private val accountService: A
     }
   }
 
-  fun signUp(email: String, password: String) {
-    accountService.signUp(email, password).addOnCompleteListener {
-      if (it.isSuccessful) {
-        updateUserInfo()
+  fun signUp(email: String, password: String, callback: (Boolean) -> Unit) {
+    accountService.signUp(email, password).addOnCompleteListener { task ->
+      if (task.isSuccessful) {
+        callback(true)
       } else {
         Log.e("LoginViewModel", "Error signing up")
-        throw Exception("Error signing up")
+        callback(false)
       }
     }
   }

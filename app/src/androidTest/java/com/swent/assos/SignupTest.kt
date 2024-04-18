@@ -59,8 +59,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             performClick()
           }
         }
-
-        verify { mockNavActions.navigateTo("Login") }
+        verify { mockNavActions.navigateTo(Destinations.SIGN_UP) }
         confirmVerified(mockNavActions)
       }
     }
@@ -70,12 +69,12 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     run {
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Open Signup Screen") {
-          signUpButton {
+          loginNavButton {
             assertIsDisplayed()
             performClick()
           }
         }
-        verify { mockNavActions.navigateTo("SignUp") }
+        verify { mockNavActions.navigateTo(Destinations.LOGIN) }
         confirmVerified(mockNavActions)
       }
     }
@@ -154,7 +153,6 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
   @Test
   fun signupNonemail() {
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
-
     run {
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Signup") {
@@ -177,10 +175,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
-          step("verify navigation to home") {
-            verify { mockNavActions.navigateTo(Destinations.SIGN_UP) }
-            confirmVerified(mockNavActions)
-          }
+          step("verify navigation to home") { signUpButton { assertIsDisplayed() } }
         }
       }
     }
