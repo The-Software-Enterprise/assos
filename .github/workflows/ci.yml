@@ -88,14 +88,7 @@ jobs:
       - name: KTFmt Check
         run: |
           ./gradlew ktfmtCheck
-
-      - name : new python venv
-        run: |
-         
-          python3 -m venv functions/venv
-          source functions/venv/bin/activate
-          pip install -r functions/requirements.txt
-          
+      
 
       - name : install firebase tools
         run: |
