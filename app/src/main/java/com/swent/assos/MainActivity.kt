@@ -21,20 +21,24 @@ class MainActivity : ComponentActivity() {
 
     // if we are in debug mode, we want to use the firestore emulator
     val config = Config()
-    val firestoreEmu = config.get_all().contains("firestore")
-    val authEmu = config.get_all().contains("auth")
-    if (firestoreEmu) {
-      // Configure Firestore to use the Firestore emulator
-      // check if firestore is already using the emulator
-      if (FirebaseFirestore.getInstance().firestoreSettings.host != "${R.string.emulatorIP}:8080") {
-        FirebaseFirestore.getInstance().useEmulator(R.string.emulatorIP.toString(), 8080)
+    var firestoreEmu = false
+    var authEmu = false
+    config.get_all { onlineServices ->
+      firestoreEmu = onlineServices.contains("firestore")
+      authEmu = onlineServices.contains("auth")
+      if (firestoreEmu) {
+        // Configure Firestore to use the Firestore emulator
+        // check if firestore is already using the emulator
+        if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+          FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+        }
+      }
+      if (authEmu) {
+        // Configure Firebase Auth to use the Auth emulator
+        FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
       }
     }
 
-    if (authEmu) {
-      // Configure Firebase Auth to use the Auth emulator
-      FirebaseAuth.getInstance().useEmulator(R.string.emulatorIP.toString(), 9099)
-    }
     setContent {
       AssosTheme {
         // A surface container using the 'background' color from the theme

@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
-import com.swent.assos.R
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -70,7 +69,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         onValueChange = { confirmPassword = it },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.testTag("ConfirmPassword"))
+        modifier = Modifier.testTag("ConfirmPasswordField"))
     if (password != confirmPassword) {
       Text("Passwords do not match", color = Color.Red)
     }
@@ -79,25 +78,29 @@ fun SignUpScreen(navigationActions: NavigationActions) {
           if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
 
             loginViewModel.signUp(email, password)
+            print(loginViewModel.currentUser)
+            navigationActions.navigateTo(Destinations.HOME)
 
             // call the firebasefunction -> oncallFind.py
             val data = hashMapOf("email" to email)
 
             val functions = FirebaseFunctions.getInstance("europe-west6")
             val config = Config()
+            var emu = false
+
+            config.get_all { onlineServices ->
+              emu = onlineServices.contains("functions")
+              if (emu) {
+                functions.useEmulator("10.0.2.2", 5001)
+              }
+            }
 
             // change the region of the function to europe-west6
-            if (config.get_all().contains("functions")) {
-              functions.useEmulator(R.string.emulatorIP.toString(), 5001)
-            }
+
             functions
                 .getHttpsCallable("oncallFind")
                 .call(data)
-                .addOnSuccessListener { task ->
-                  // keep result for future use
-
-                  navigationActions.navigateTo(Destinations.HOME)
-                }
+                .addOnSuccessListener { task -> }
                 .addOnFailureListener { error = it.message.toString() }
           } else if (password.length < 6) {
             passwordTooShort = true
