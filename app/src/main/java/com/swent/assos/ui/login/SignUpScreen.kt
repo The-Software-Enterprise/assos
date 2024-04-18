@@ -95,7 +95,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 .call(data)
                 .addOnSuccessListener { task ->
                   // keep result for future use
-                  val result = task.data as? Map<String, String>
 
                   navigationActions.navigateTo(Destinations.HOME)
                 }
