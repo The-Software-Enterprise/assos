@@ -23,6 +23,7 @@ constructor(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
     val query = firestore.collection("associations").orderBy("acronym")
+
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -142,5 +143,20 @@ constructor(
             date = "15/04/2024",
             description = "yepa du vin",
             image = ""))
+  }
+
+  override fun followAssociation(
+      userId: String,
+      associationId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    /*val old = firestore.collection("users").document(userId).get()
+    val res = old.result.data?.toMutableMap().put("following", old.result.data!!["following"])?: mutableMapOf()
+    firestore.collection("users")
+        .document(associationId)
+        .set(res)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError(it.message ?: "Error") }*/
   }
 }

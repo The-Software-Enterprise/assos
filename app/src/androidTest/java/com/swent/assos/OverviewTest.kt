@@ -48,7 +48,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -73,7 +72,6 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -88,15 +86,13 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
       assoListItems {
         assertIsDisplayed()
-
         performClick()
       }
     }
 
-    verify {
-      mockNavActions.navigateTo(
-          "AssociationPage/jMWo6NgngIS2hCq054TF/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
-    }
+    // get the id of the association
+
+    verify { mockNavActions.navigateTo("AssociationPage/jMWo6NgngIS2hCq054TF") }
     confirmVerified(mockNavActions)
   }
 
