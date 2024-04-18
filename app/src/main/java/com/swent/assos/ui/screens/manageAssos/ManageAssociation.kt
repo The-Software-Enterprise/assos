@@ -48,7 +48,7 @@ fun ManageAssociation() {
           Text(
               text = association.fullname,
               style = MaterialTheme.typography.headlineLarge,
-              modifier = Modifier.padding(top = 16.dp))
+              modifier = Modifier.padding(top = 15.dp))
         }
         item {
           Text(
