@@ -1,23 +1,26 @@
 package com.swent.assos.config
 
+import com.swent.assos.R
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class Config {
   data class Service(val name: String, val host: String, val port: Int?)
 
-  fun checkFirebaseEmulator(ip: String, port: String): Boolean {
+  suspend fun checkFirebaseEmulator(ip: String, port: String): Boolean {
     val url = URL("http://${ip}:${port}")
     val connection = url.openConnection() as HttpURLConnection
     connection.requestMethod = "GET"
 
-    var connected: Boolean = false
-    var responseCode: Int
-    val thread = Thread {
+    var connected = false
+
+    return withContext(Dispatchers.IO) {
       try {
         connection.connect()
-        responseCode = connection.responseCode
+        val responseCode = connection.responseCode
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
           println("Firebase Authentication Emulator is online.")
@@ -27,43 +30,38 @@ class Config {
               "Firebase Authentication Emulator is not yet online. Response code: $responseCode")
         }
       } catch (e: Exception) {
-
         println("Error checking Firebase Authentication Emulator status: ${e.message}")
       } finally {
         connection.disconnect()
       }
+      connected
     }
-    thread.start()
-    thread.join()
-    return connected
   }
 
   fun get_all(): List<String> {
-    var onlineServices: MutableList<String> = mutableListOf<String>()
-    var responseMessage: String = ""
-    var responseCode: Int = 0
-    val thread1 = Thread {
-      // curl localhost:4400/emulators
-      val url = URL("http://10.0.2.2:4400/emulators")
-      val connection = url.openConnection() as HttpURLConnection
-      connection.requestMethod = "GET"
-      connection.connect()
-      responseCode = connection.responseCode
-      responseMessage = connection.inputStream.bufferedReader().use { it.readText() }
-    }
+    val onlineServices = mutableListOf<String>()
 
     try {
-      thread1.start()
-      thread1.join()
+      val url = URL("http://${R.string.emulatorIP}:4400/emulators")
+      val connection = url.openConnection() as HttpURLConnection
+      connection.requestMethod = "GET"
 
-      var json = responseMessage.trimIndent()
-      val services = JSONObject(json)
+      connection.connect()
+      val responseCode = connection.responseCode
+      val responseMessage = connection.inputStream.bufferedReader().use { it.readText() }
 
-      services.keys().forEach { serviceName ->
-        val service = services.getJSONObject(serviceName)
-        if (service.has("port")) {
-          onlineServices.add("$serviceName")
+      if (responseCode == HttpURLConnection.HTTP_OK) {
+        val json = responseMessage.trimIndent()
+        val services = JSONObject(json)
+
+        services.keys().forEach { serviceName ->
+          val service = services.getJSONObject(serviceName)
+          if (service.has("port")) {
+            onlineServices.add("$serviceName")
+          }
         }
+      } else {
+        println("Error checking Firebase Emulator status: Response code $responseCode")
       }
     } catch (e: Exception) {
       println("Error checking Firebase Emulator status: ${e.message}")
@@ -72,7 +70,5 @@ class Config {
     return onlineServices
   }
 
-  fun get_demo(): Boolean {
-    return checkFirebaseEmulator("10.0.2.2", "9099")
-  }
+  suspend fun get_demo(): Boolean = checkFirebaseEmulator(R.string.emulatorIP.toString(), "9099")
 }

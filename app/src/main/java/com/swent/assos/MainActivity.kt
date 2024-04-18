@@ -26,22 +26,14 @@ class MainActivity : ComponentActivity() {
     if (firestoreEmu) {
       // Configure Firestore to use the Firestore emulator
       // check if firestore is already using the emulator
-      if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
-        FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
-      }
-      // load data from res/raw/epfl_associations.csv to firestore
-      val firestore = FirebaseFirestore.getInstance()
-      // check if collection (associations) is empty
-      firestore.collection("associations").get().addOnSuccessListener { documents ->
-        if (documents.isEmpty) {
-          loadAssociations(firestore)
-        }
+      if (FirebaseFirestore.getInstance().firestoreSettings.host != "${R.string.emulatorIP}:8080") {
+        FirebaseFirestore.getInstance().useEmulator(R.string.emulatorIP.toString(), 8080)
       }
     }
 
     if (authEmu) {
       // Configure Firebase Auth to use the Auth emulator
-      FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+      FirebaseAuth.getInstance().useEmulator(R.string.emulatorIP.toString(), 9099)
     }
     setContent {
       AssosTheme {
@@ -50,22 +42,6 @@ class MainActivity : ComponentActivity() {
           NavigationGraph()
         }
       }
-    }
-  }
-
-  fun loadAssociations(firestore: FirebaseFirestore) {
-    val inputStream = resources.openRawResource(R.raw.epfl_associations)
-    val reader = inputStream.bufferedReader()
-    val lines = reader.readLines()
-    for (line in lines) {
-      val data = line.split(",")
-      val asso =
-          hashMapOf(
-              "acronym" to data[0],
-              "fullname" to data[2],
-              "url" to data[1],
-          )
-      firestore.collection("associations").add(asso)
     }
   }
 }

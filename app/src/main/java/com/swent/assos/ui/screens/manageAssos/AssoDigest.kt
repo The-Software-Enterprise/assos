@@ -81,19 +81,18 @@ fun AssoDigest(asso: Association, navigationActions: NavigationActions) {
                   modifier = Modifier.size(30.dp))
             }
       },
-      floatingActionButtonPosition = FabPosition.End,
-  ) { paddingValues ->
-    Column(
-        modifier = Modifier.fillMaxSize().padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-          Image(
-              modifier = Modifier.fillMaxWidth(),
-              painter = painterResource(id = R.drawable.logo),
-              contentDescription = null)
-          Text(text = asso.fullname, modifier = Modifier.testTag("AssoName"))
-          Text(text = "Website : " + asso.url, modifier = Modifier.testTag("AssoWebsite"))
-        }
-  }
+      floatingActionButtonPosition = FabPosition.End) { paddingValues ->
+        Column(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+              Image(
+                  modifier = Modifier.fillMaxWidth(),
+                  painter = painterResource(id = R.drawable.logo),
+                  contentDescription = null)
+              Text(text = asso.fullname, modifier = Modifier.testTag("AssoName"))
+              Text(text = "Website : " + asso.url, modifier = Modifier.testTag("AssoWebsite"))
+            }
+      }
 
   if (showBottomSheetCreation) {
     BottomSheetCreation(navigationActions, { showBottomSheetCreation = false }, asso.id)
