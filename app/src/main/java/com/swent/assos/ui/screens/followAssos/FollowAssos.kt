@@ -1,5 +1,7 @@
 package com.swent.assos.ui.screens.followAssos
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,32 +14,56 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.AssoViewModel
+import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.NewsViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun FollowAssociation() {
+fun FollowAssociation(association: Association, navigationActions: NavigationActions) {
+    val assoViewModel: AssoViewModel = hiltViewModel()
+    //TODO : Find a way to have only the associationId and not the whole association as parameter
+
+    val eventsViewModel: EventViewModel = hiltViewModel()
+    //val events by eventsViewModel.allEvents.collectAsState(emptyList())
+
+    val newsViewModel: NewsViewModel = hiltViewModel()
+    //val news by newsViewModel.allNews.collectAsState(emptyList())
+
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           HeaderWithButton(
-              header = association.fullname, buttonText = "Follow", onButtonClick = { /* TODO */})
+              header = association.fullname, buttonText = "Follow", onButtonClick = { assoViewModel.followAssociation(association.id) })
+            Image(
+                imageVector = Icons.Default.ArrowBack,
+                contentDescription = null,
+                modifier =
+                Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
         }
 
         item {

@@ -1,6 +1,7 @@
 package com.swent.assos.model.service.impl
 
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
@@ -8,6 +9,7 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
+import kotlinx.coroutines.flow.first
 import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
@@ -145,18 +147,19 @@ constructor(
             image = ""))
   }
 
-  override fun followAssociation(
-      userId: String,
+override suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    /*val old = firestore.collection("users").document(userId).get()
-    val res = old.result.data?.toMutableMap().put("following", old.result.data!!["following"])?: mutableMapOf()
-    firestore.collection("users")
-        .document(associationId)
-        .set(res)
+    val user = auth.currentUser.first()
+    firestore
+        .collection("users")
+        .document(user.uid)
+        .update("following", FieldValue.arrayUnion(associationId))
         .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError(it.message ?: "Error") }*/
+        .addOnFailureListener { onError("Error") }
   }
+
+
 }

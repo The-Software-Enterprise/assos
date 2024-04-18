@@ -22,10 +22,6 @@ interface DbService {
 
   suspend fun getAllEvents(): List<Event>
 
-  fun followAssociation(
-      userId: String,
-      associationId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  )
+  suspend fun followAssociation(associationId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
 }
