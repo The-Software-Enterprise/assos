@@ -86,6 +86,8 @@ jobs:
 
       - name : new python venv
         run: |
+          python3 --version
+          python --version
          
           python3 -m venv functions/venv
           source functions/venv/bin/activate
