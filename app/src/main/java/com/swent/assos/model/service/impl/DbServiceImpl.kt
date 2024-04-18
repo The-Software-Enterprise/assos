@@ -9,9 +9,9 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
-import kotlinx.coroutines.flow.first
 import java.util.Date
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 class DbServiceImpl
@@ -147,7 +147,7 @@ constructor(
             image = ""))
   }
 
-override suspend fun followAssociation(
+  override suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
@@ -160,6 +160,4 @@ override suspend fun followAssociation(
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError("Error") }
   }
-
-
 }

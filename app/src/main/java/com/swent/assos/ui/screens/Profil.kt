@@ -30,7 +30,6 @@ import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.model.view.ProfileViewModel
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -41,9 +40,9 @@ fun Profil(navigationActions: NavigationActions) {
   val firstname = "Maximilien"
   val surname = "GRIDEL"
 
-    val viewModel: ProfileViewModel = hiltViewModel()
-    val followedAssociationsList by viewModel.followedAssociations.collectAsState()
-    val myAssociations by viewModel.memberAssociations.collectAsState()
+  val viewModel: ProfileViewModel = hiltViewModel()
+  val followedAssociationsList by viewModel.followedAssociations.collectAsState()
+  val myAssociations by viewModel.memberAssociations.collectAsState()
 
   val completeName = "$firstname $surname"
 
@@ -74,16 +73,18 @@ fun Profil(navigationActions: NavigationActions) {
 
               items(myAssociations) {
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {  val dest =
-                        Destinations.ASSO_MODIFY_PAGE.route +
-                                "/${it.id}/${it.acronym}/${it.fullname}/${
+                    modifier =
+                        Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
+                          val dest =
+                              Destinations.ASSO_MODIFY_PAGE.route +
+                                  "/${it.id}/${it.acronym}/${it.fullname}/${
                                     URLEncoder.encode(
                                         it.url,
                                         StandardCharsets.UTF_8.toString()
                                     )
                                 }"
-                        navigationActions.navigateTo(dest)
-                    },
+                          navigationActions.navigateTo(dest)
+                        },
                     colors =
                         CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.background)) {
@@ -98,16 +99,18 @@ fun Profil(navigationActions: NavigationActions) {
 
               items(followedAssociationsList) {
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {  val dest =
-                        Destinations.ASSO_PAGE.route +
-                                "/${it.id}/${it.acronym}/${it.fullname}/${
+                    modifier =
+                        Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
+                          val dest =
+                              Destinations.ASSO_PAGE.route +
+                                  "/${it.id}/${it.acronym}/${it.fullname}/${
                                     URLEncoder.encode(
                                         it.url,
                                         StandardCharsets.UTF_8.toString()
                                     )
                                 }"
-                        navigationActions.navigateTo(dest)
-                    },
+                          navigationActions.navigateTo(dest)
+                        },
                     colors =
                         CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.background)) {

@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
+import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
-import com.swent.assos.ui.screens.Overview
 import com.swent.assos.ui.screens.Profil
 import com.swent.assos.ui.screens.QrCode
 import com.swent.assos.ui.screens.calendar.Calendar
@@ -44,7 +44,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
     ) { page ->
       when (page) {
         0 -> News()
-        1 -> Overview(navigationActions = navigationActions)
+        1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
         3 -> QrCode()
         4 -> Profil(navigationActions = navigationActions)

@@ -3,67 +3,35 @@ package com.swent.assos.model.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import com.swent.assos.model.data.Association
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.Settings
-import com.swent.assos.ui.screens.followAssos.FollowAssociation
-import com.swent.assos.ui.screens.manageAssos.AssoDigest
+import com.swent.assos.ui.screens.followAssos.AssoDetails
 import com.swent.assos.ui.screens.manageAssos.CreateEvent
 import com.swent.assos.ui.screens.manageAssos.CreateNews
-import com.swent.assos.ui.screens.manageAssos.ManageAssociation
 
 @Composable
 fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
 
-  NavHost(navController = navController, startDestination = Destinations.LOGIN.route) {
+  NavHost(navController = navController, startDestination = Destinations.HOME.route) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
-
-    navigation(startDestination = Destinations.HOME.route, route = "DisplayAssociations") {
-      composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
-      composable(Destinations.ASSOCIATION_PAGE.route + "/{id}") { backStackEntry ->
-        val association =
-            Association(
-                id = backStackEntry.arguments?.getString("id") ?: "",
-                acronym = backStackEntry.arguments?.getString("acronym") ?: "",
-                fullname = backStackEntry.arguments?.getString("fullname") ?: "",
-                url = backStackEntry.arguments?.getString("url") ?: "",
-                description = backStackEntry.arguments?.getString("description") ?: "")
-        AssoDigest(asso = association, navigationActions = navigationActions)
-      }
-      composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
-        CreateNews(
-            navigationActions = navigationActions,
-            associationId = backStackEntry.arguments?.getString("assoId") ?: "")
-      }
-      composable(Destinations.CREATE_EVENT.route) {
-        CreateEvent(navigationActions = navigationActions)
-      }
-        composable(Destinations.ASSO_PAGE.route + "/{id}/{acronym}/{fullname}/{url}") { backStackEntry ->
-            val association =
-                Association(
-                    id = backStackEntry.arguments?.getString("id") ?: "",
-                    acronym = backStackEntry.arguments?.getString("acronym") ?: "",
-                    fullname = backStackEntry.arguments?.getString("fullname") ?: "",
-                    url = backStackEntry.arguments?.getString("url") ?: "",
-                    description = backStackEntry.arguments?.getString("description") ?: "")
-            FollowAssociation(association, navigationActions = navigationActions)
-        }
-        composable(Destinations.ASSO_MODIFY_PAGE.route + "/{id}/{acronym}/{fullname}/{url}") { backStackEntry ->
-            val association =
-                Association(
-                    id = backStackEntry.arguments?.getString("id") ?: "",
-                    acronym = backStackEntry.arguments?.getString("acronym") ?: "",
-                    fullname = backStackEntry.arguments?.getString("fullname") ?: "",
-                    url = backStackEntry.arguments?.getString("url") ?: "",
-                    description = backStackEntry.arguments?.getString("description") ?: "")
-            ManageAssociation(association, navigationActions = navigationActions)
-        }
+    composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
+    composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
+      AssoDetails(
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+      CreateNews(
+          navigationActions = navigationActions,
+          associationId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
+    composable(Destinations.CREATE_EVENT.route) {
+      CreateEvent(navigationActions = navigationActions)
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
@@ -72,11 +40,11 @@ fun NavigationGraph() {
 enum class Destinations(val route: String) {
   LOGIN("Login"),
   HOME("Home"),
-  ASSOCIATION_PAGE("AssociationPage"),
+  ASSO_DETAILS("AssoDetails"),
   SIGN_UP("SignUp"),
   CREATE_NEWS("CreateNews"),
   CREATE_EVENT("CreateEvent"),
   SETTINGS("Settings"),
-    ASSO_PAGE("AssoPage"),
-    ASSO_MODIFY_PAGE("AssoModifyPage")
+  ASSO_PAGE("AssoPage"),
+  ASSO_MODIFY_PAGE("AssoModifyPage")
 }

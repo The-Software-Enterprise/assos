@@ -46,11 +46,10 @@ fun ManageAssociation(association: Association, navigationActions: NavigationAct
               text = association.fullname,
               style = MaterialTheme.typography.headlineLarge,
               modifier = Modifier.padding(top = 16.dp))
-            Image(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                modifier =
-                Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+          Image(
+              imageVector = Icons.Default.ArrowBack,
+              contentDescription = null,
+              modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
         }
         item {
           Text(
@@ -67,7 +66,7 @@ fun ManageAssociation(association: Association, navigationActions: NavigationAct
         }
         item {
           HeaderWithButton(
-              header = "Upcoming Events", buttonText = "Add Event", onButtonClick = {/* TODO */})
+              header = "Upcoming Events", buttonText = "Add Event", onButtonClick = { /* TODO */})
         }
         item {
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {

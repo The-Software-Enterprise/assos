@@ -22,8 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,27 +41,18 @@ import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun FollowAssociation(association: Association, navigationActions: NavigationActions) {
-    val assoViewModel: AssoViewModel = hiltViewModel()
-    //TODO : Find a way to have only the associationId and not the whole association as parameter
-
-    val eventsViewModel: EventViewModel = hiltViewModel()
-    //val events by eventsViewModel.allEvents.collectAsState(emptyList())
-
-    val newsViewModel: NewsViewModel = hiltViewModel()
-    //val news by newsViewModel.allNews.collectAsState(emptyList())
-
+fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
+  val assoViewModel: AssoViewModel = hiltViewModel()
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           HeaderWithButton(
-              header = association.fullname, buttonText = "Follow", onButtonClick = { assoViewModel.followAssociation(association.id) })
-            Image(
-                imageVector = Icons.Default.ArrowBack,
-                contentDescription = null,
-                modifier =
-                Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+              header = association.fullname,
+              buttonText = "Follow",
+              onButtonClick = { assoViewModel.followAssociation(association.id) },
+            navigationActions = navigationActions,
+          )
         }
 
         item {
@@ -110,11 +99,15 @@ fun FollowAssociation(association: Association, navigationActions: NavigationAct
 }
 
 @Composable
-fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit) {
+fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit, navigationActions: NavigationActions) {
   Row(
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween) {
+      Image(
+          imageVector = Icons.Default.ArrowBack,
+          contentDescription = null,
+          modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
         Text(text = header, style = MaterialTheme.typography.headlineMedium)
         Button(
             onClick = onButtonClick,
