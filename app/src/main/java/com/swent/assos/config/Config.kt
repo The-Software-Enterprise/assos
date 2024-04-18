@@ -1,5 +1,6 @@
 package com.swent.assos.config
 
+import com.swent.assos.R
 import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +42,7 @@ class Config {
     val onlineServices = mutableListOf<String>()
 
     try {
-      val url = URL("http://10.0.2.2:4400/emulators")
+      val url = URL("http://${R.string.emulatorIP}:4400/emulators")
       val connection = url.openConnection() as HttpURLConnection
       connection.requestMethod = "GET"
 
@@ -69,5 +70,5 @@ class Config {
     return onlineServices
   }
 
-  suspend fun get_demo(): Boolean = checkFirebaseEmulator("10.0.2.2", "9099")
+  suspend fun get_demo(): Boolean = checkFirebaseEmulator(R.string.emulatorIP.toString(), "9099")
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
+import com.swent.assos.R
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -87,7 +88,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
             // change the region of the function to europe-west6
             if (config.get_all().contains("functions")) {
-              functions.useEmulator("10.0.2.2", 5001)
+              functions.useEmulator(R.string.emulatorIP.toString(), 5001)
             }
             functions
                 .getHttpsCallable("oncallFind")

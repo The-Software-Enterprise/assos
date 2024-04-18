@@ -26,8 +26,8 @@ class MainActivity : ComponentActivity() {
     if (firestoreEmu) {
       // Configure Firestore to use the Firestore emulator
       // check if firestore is already using the emulator
-      if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
-        FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      if (FirebaseFirestore.getInstance().firestoreSettings.host != "${R.string.emulatorIP}:8080") {
+        FirebaseFirestore.getInstance().useEmulator(R.string.emulatorIP.toString(), 8080)
       }
       // load data from res/raw/epfl_associations.csv to firestore
       val firestore = FirebaseFirestore.getInstance()
@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
     if (authEmu) {
       // Configure Firebase Auth to use the Auth emulator
-      FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+      FirebaseAuth.getInstance().useEmulator(R.string.emulatorIP.toString(), 9099)
     }
     setContent {
       AssosTheme {
