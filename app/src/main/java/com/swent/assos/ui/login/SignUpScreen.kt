@@ -76,8 +76,12 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     Button(
         onClick = {
           if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
-
-            loginViewModel.signUp(email, password)
+            try {
+              loginViewModel.signUp(email, password)
+            } catch (e: Exception) {
+              error = e.message.toString()
+              return@Button
+            }
             print(loginViewModel.currentUser)
             navigationActions.navigateTo(Destinations.HOME)
 

@@ -27,8 +27,10 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
     userID = req.auth.uid
     try:
         profile = epflpeople.find(email)
+      
     except:
         profile = None
+        
     
 
     # profile is a format of a list of dictionnary we want first elem and change the dict into a json

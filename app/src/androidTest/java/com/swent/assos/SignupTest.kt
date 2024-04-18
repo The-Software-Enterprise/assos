@@ -60,9 +60,9 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
         }
 
-        verify { mockNavActions.navigateTo("SignUp") }
+        verify { mockNavActions.navigateTo("Login") }
+        confirmVerified(mockNavActions)
       }
-      confirmVerified(mockNavActions)
     }
 
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
@@ -76,8 +76,8 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
         }
         verify { mockNavActions.navigateTo("SignUp") }
+        confirmVerified(mockNavActions)
       }
-      confirmVerified(mockNavActions)
     }
   }
 
@@ -112,8 +112,6 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             confirmVerified(mockNavActions)
           }
         }
-
-
       }
     }
   }
@@ -149,14 +147,12 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             confirmVerified(mockNavActions)
           }
         }
-
-
       }
     }
   }
 
   @Test
-  fun signupNonEPFL() {
+  fun signupNonemail() {
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
 
     run {
@@ -182,18 +178,11 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             }
           }
           step("verify navigation to home") {
-            verify { mockNavActions.navigateTo(Destinations.HOME) }
+            verify { mockNavActions.navigateTo(Destinations.SIGN_UP) }
             confirmVerified(mockNavActions)
           }
         }
-
-
       }
     }
   }
-
-
-  }
-
-
-
+}

@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
       authEmu = onlineServices.contains("auth")
       if (firestoreEmu) {
         // Configure Firestore to use the Firestore emulator
-        // check if firestore is already using the emulator
         if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
           FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
         }

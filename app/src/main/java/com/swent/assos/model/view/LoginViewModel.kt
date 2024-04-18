@@ -75,6 +75,7 @@ constructor(private val storageService: DbService, private val accountService: A
         updateUserInfo()
       } else {
         Log.e("LoginViewModel", "Error signing up")
+        throw Exception("Error signing up")
       }
     }
   }
