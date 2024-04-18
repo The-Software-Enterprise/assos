@@ -31,13 +31,7 @@ constructor(
         }
     }
 
-    fun getAssociationById(associationId: String) {
-        viewModelScope.launch(ioDispatcher) {
-            dbService.getAssociationById(associationId).let {
-                _currentAssociation.value = it
-            }
-        }
-    }
+
 
 
 }

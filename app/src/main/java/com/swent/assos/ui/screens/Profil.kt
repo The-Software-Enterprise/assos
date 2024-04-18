@@ -43,6 +43,7 @@ fun Profil(navigationActions: NavigationActions) {
 
     val viewModel: ProfileViewModel = hiltViewModel()
     val followedAssociationsList by viewModel.followedAssociations.collectAsState()
+    val myAssociations by viewModel.memberAssociations.collectAsState()
 
   val completeName = "$firstname $surname"
 
@@ -73,7 +74,16 @@ fun Profil(navigationActions: NavigationActions) {
 
               items(myAssociations) {
                 Card(
-                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp),
+                    modifier = Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {  val dest =
+                        Destinations.ASSO_MODIFY_PAGE.route +
+                                "/${it.id}/${it.acronym}/${it.fullname}/${
+                                    URLEncoder.encode(
+                                        it.url,
+                                        StandardCharsets.UTF_8.toString()
+                                    )
+                                }"
+                        navigationActions.navigateTo(dest)
+                    },
                     colors =
                         CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.background)) {

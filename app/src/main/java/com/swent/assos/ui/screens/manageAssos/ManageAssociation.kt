@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.NavigationActions
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun ManageAssociation() {
+fun ManageAssociation(association: Association, navigationActions: NavigationActions) {
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
