@@ -18,6 +18,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,21 +28,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
+import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.NewsViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun FollowAssociation(associationId: String) {
+fun FollowAssociation(association: Association, navigationActions: NavigationActions) {
     val assoViewModel: AssoViewModel = hiltViewModel()
+    //TODO : Find a way to have only the associationId and not the whole association as parameter
+
+    val eventsViewModel: EventViewModel = hiltViewModel()
+    //val events by eventsViewModel.allEvents.collectAsState(emptyList())
+
+    val newsViewModel: NewsViewModel = hiltViewModel()
+    //val news by newsViewModel.allNews.collectAsState(emptyList())
+
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         item {
           HeaderWithButton(
-              header = association.fullname, buttonText = "Follow", onButtonClick = { assoViewModel.followAssociation(associationId) })
+              header = association.fullname, buttonText = "Follow", onButtonClick = { assoViewModel.followAssociation(association.id) })
         }
 
         item {

@@ -2,6 +2,7 @@ package com.swent.assos.model.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
@@ -20,9 +21,23 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
+    private val _currentAssociation = MutableStateFlow<Association?>(null)
+    val currentAssociation = _currentAssociation.asStateFlow()
+
+
     fun followAssociation(associationId: String) {
         viewModelScope.launch(ioDispatcher) {
             dbService.followAssociation(associationId, {}, {})
         }
     }
+
+    fun getAssociationById(associationId: String) {
+        viewModelScope.launch(ioDispatcher) {
+            dbService.getAssociationById(associationId).let {
+                _currentAssociation.value = it
+            }
+        }
+    }
+
+
 }

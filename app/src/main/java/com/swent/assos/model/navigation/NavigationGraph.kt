@@ -9,6 +9,7 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.Settings
+import com.swent.assos.ui.screens.followAssos.FollowAssociation
 import com.swent.assos.ui.screens.manageAssos.AssoDigest
 import com.swent.assos.ui.screens.manageAssos.CreateEvent
 import com.swent.assos.ui.screens.manageAssos.CreateNews
@@ -43,6 +44,16 @@ fun NavigationGraph() {
       composable(Destinations.CREATE_EVENT.route) {
         CreateEvent(navigationActions = navigationActions)
       }
+        composable(Destinations.ASSO_PAGE.route + "/{id}/{acronym}/{fullname}/{url}") { backStackEntry ->
+            val association =
+                Association(
+                    id = backStackEntry.arguments?.getString("id") ?: "",
+                    acronym = backStackEntry.arguments?.getString("acronym") ?: "",
+                    fullname = backStackEntry.arguments?.getString("fullname") ?: "",
+                    url = backStackEntry.arguments?.getString("url") ?: "",
+                    description = backStackEntry.arguments?.getString("description") ?: "")
+            FollowAssociation(association, navigationActions = navigationActions)
+        }
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
@@ -56,4 +67,5 @@ enum class Destinations(val route: String) {
   CREATE_NEWS("CreateNews"),
   CREATE_EVENT("CreateEvent"),
   SETTINGS("Settings"),
+    ASSO_PAGE("AssoPage")
 }
