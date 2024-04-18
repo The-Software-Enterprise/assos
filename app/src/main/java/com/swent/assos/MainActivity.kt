@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.NavigationGraph
@@ -17,11 +18,22 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
     // if we are in debug mode, we want to use the firestore emulator
     val config = Config()
-    if (config.get_demo()) {
+    val firestoreEmu = config.get_all().contains("firestore")
+    val authEmu = config.get_all().contains("auth")
+    if (firestoreEmu) {
       // Configure Firestore to use the Firestore emulator
-      FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+      // check if firestore is already using the emulator
+      if (FirebaseFirestore.getInstance().firestoreSettings.host != "${R.string.emulatorIP}:8080") {
+        FirebaseFirestore.getInstance().useEmulator(R.string.emulatorIP.toString(), 8080)
+      }
+    }
+
+    if (authEmu) {
+      // Configure Firebase Auth to use the Auth emulator
+      FirebaseAuth.getInstance().useEmulator(R.string.emulatorIP.toString(), 9099)
     }
     setContent {
       AssosTheme {
