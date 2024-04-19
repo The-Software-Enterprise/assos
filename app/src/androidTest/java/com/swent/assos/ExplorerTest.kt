@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.ExplorerScreen
 import com.swent.assos.ui.screens.Explorer
@@ -23,7 +24,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class ExplorerViewModelTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
+class ExplorerTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
 
   @get:Rule(order = 1) var hiltRule = HiltAndroidRule(this)
 
@@ -91,7 +92,7 @@ class ExplorerViewModelTest : TestCase(kaspressoBuilder = Kaspresso.Builder.with
 
     // get the id of the association
 
-    verify { mockNavActions.navigateTo("AssociationPage/jMWo6NgngIS2hCq054TF") }
+    verify { mockNavActions.navigateTo("${Destinations.ASSO_DETAILS.route}/jMWo6NgngIS2hCq054TF") }
     confirmVerified(mockNavActions)
   }
 }

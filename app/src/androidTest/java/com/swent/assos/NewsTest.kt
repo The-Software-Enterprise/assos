@@ -8,11 +8,11 @@ import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.screens.AssoDigestScreen
+import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
-import com.swent.assos.ui.screens.manageAsso.AssoDigest
+import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -56,46 +56,10 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   private val newsDescription = "Test description $randomInt"
 
   @Test
-  fun redirectToCreateNews() {
-    val associationID = " jMWo6NgngIS2hCq054TF"
-
-    val association =
-        Association(
-            acronym = associationAcronym,
-            description = "Association to promote cooking amongst students",
-            fullname = "Association to promote cooking amongst students",
-            id = associationID,
-            url = "https://www.180c.ch/association/",
-        )
-
-    composeTestRule.activity.setContent {
-      AssoDigest(asso = association, navigationActions = mockNavActions)
-    }
-
-    run {
-      ComposeScreen.onComposeScreen<AssoDigestScreen>(composeTestRule) {
-        step("Open the association ${associationAcronym}") {
-          createButton { performClick() }
-          /*bottomSheetCreation {
-            assertIsDisplayed()
-          }
-          createNewsButton {
-            performClick()
-          }*/
-        }
-      }
-      step("Verify navigation to create news") {
-        verify { mockNavActions.navigateTo("CreateNews/${associationID}") }
-        confirmVerified(mockNavActions)
-      }
-    }
-  }
-
-  @Test
   fun createNewsAndVerifyCreation() {
 
     composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, associationId = "jMWo6NgngIS2hCq054TF")
+      CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
     }
 
     run {
