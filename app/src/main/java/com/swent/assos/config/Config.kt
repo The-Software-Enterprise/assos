@@ -1,5 +1,7 @@
 package com.swent.assos.config
 
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.net.HttpURLConnection
 import java.net.URL
 import org.json.JSONObject
@@ -70,6 +72,25 @@ class Config {
           callback(onlineServices)
         }
         .start()
+  }
+
+  fun init() {
+    get_all { onlineServices ->
+      this.get_all { onlineServices ->
+        val firestoreEmu = onlineServices.contains("firestore")
+        val authEmu = onlineServices.contains("auth")
+        if (firestoreEmu) {
+          // Configure Firestore to use the Firestore emulator
+          if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+            FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
+          }
+        }
+        if (authEmu) {
+          // Configure Firebase Auth to use the Auth emulator
+          FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+        }
+      }
+    }
   }
 
   fun get_demo(callback: (Boolean) -> Unit) {
