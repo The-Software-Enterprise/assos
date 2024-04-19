@@ -1,13 +1,17 @@
 package com.swent.assos.model.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.Settings
-import com.swent.assos.ui.screens.followAssos.AssoDetails
+import com.swent.assos.ui.screens.assoDetails.AssoDetails
+import com.swent.assos.ui.screens.assoDetails.EventDetails
+import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import com.swent.assos.ui.screens.manageAssos.CreateEvent
 import com.swent.assos.ui.screens.manageAssos.CreateNews
 
@@ -15,6 +19,7 @@ import com.swent.assos.ui.screens.manageAssos.CreateNews
 fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
+  val appViewModel: AppViewModel = hiltViewModel()
 
   NavHost(navController = navController, startDestination = Destinations.HOME.route) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
@@ -33,6 +38,16 @@ fun NavigationGraph() {
     composable(Destinations.CREATE_EVENT.route) {
       CreateEvent(navigationActions = navigationActions)
     }
+    composable(Destinations.EVENT_DETAILS.route + "/{eventId}") { backStackEntry ->
+      EventDetails(
+          eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->
+      NewsDetails(
+          newsId = backStackEntry.arguments?.getString("newsId").toString(),
+          navigationActions = navigationActions)
+    }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
 }
@@ -46,5 +61,7 @@ enum class Destinations(val route: String) {
   CREATE_EVENT("CreateEvent"),
   SETTINGS("Settings"),
   ASSO_PAGE("AssoPage"),
-  ASSO_MODIFY_PAGE("AssoModifyPage")
+  ASSO_MODIFY_PAGE("AssoModifyPage"),
+  EVENT_DETAILS("EventDetails"),
+  NEWS_DETAILS("NewsDetails"),
 }

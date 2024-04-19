@@ -27,7 +27,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
@@ -120,82 +119,3 @@ fun Profil(navigationActions: NavigationActions) {
             }
       }
 }
-
-// TODO delete
-val myAssociations =
-    listOf(
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ))
-
-val associationsFollowed =
-    listOf(
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ),
-        Association(
-            acronym = "ACRONYM",
-            fullname = "NAME",
-            url = "URL",
-            description = "",
-        ))

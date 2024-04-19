@@ -34,7 +34,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.util.Date
 
 @Composable
 fun ManageAssociation(association: Association, navigationActions: NavigationActions) {
@@ -170,65 +169,6 @@ private val association =
             "Junior Entreprise is a student association that provides consulting services to companies.",
     )
 
-private val events =
-    listOf(
-        Event(
-            title = "Crepes at Esplanade #1",
-            association = association,
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = "2024-04-20T12:00:00",
-        ),
-        Event(
-            title = "Crepes at Esplanade #2",
-            association = association,
-            image = "https://source.unsplash.com/random/400x400?sig=2",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = "2024-05-10T12:00:00",
-        ),
-        Event(
-            title = "Crepes at Esplanade #3",
-            association = association,
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = "2024-06-10T12:00:00",
-        ),
-        Event(
-            title = "Crepes at Esplanade #4",
-            association = association,
-            image = "https://source.unsplash.com/random/400x400?sig=2",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = "2024-06-20T12:00:00",
-        ),
-    )
+private val events = emptyList<Event>()
 
-private val news =
-    listOf(
-        News(
-            title = "Crepes at Esplanade #1",
-            associationId = "JE",
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = Date(),
-            eventId = "1"),
-        News(
-            title = "Crepes at Esplanade #2",
-            associationId = "JE",
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = Date(),
-            eventId = "2"),
-        News(
-            title = "Crepes at Esplanade #3",
-            associationId = "JE",
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = Date(),
-            eventId = "2"),
-        News(
-            title = "Crepes at Esplanade #4",
-            associationId = "JE",
-            image = "https://source.unsplash.com/random/400x400?sig=1",
-            description = "Come and enjoy some delicious crepes at the Esplanade!",
-            date = Date(),
-            eventId = "4"))
+private val news = emptyList<News>()

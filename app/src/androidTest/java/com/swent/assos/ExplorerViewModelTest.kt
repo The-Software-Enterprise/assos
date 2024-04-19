@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class ExplorerTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
+class ExplorerViewModelTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
 
   @get:Rule(order = 1) var hiltRule = HiltAndroidRule(this)
 

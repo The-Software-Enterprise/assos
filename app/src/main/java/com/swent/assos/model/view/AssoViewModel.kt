@@ -3,6 +3,8 @@ package com.swent.assos.model.view
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
@@ -21,26 +23,58 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-  private val _currentAssociation = MutableStateFlow<Association?>(null)
-  val currentAssociation = _currentAssociation.asStateFlow()
+  private val _association = MutableStateFlow(Association())
+  val association = _association.asStateFlow()
 
-    private val _news = MutableStateFlow<List<News>>(emptyList())
-    val news = _news.asStateFlow()
+  private val _news = MutableStateFlow<List<News>>(emptyList())
+  val news = _news.asStateFlow()
+
+  private val _events = MutableStateFlow<List<Event>>(emptyList())
+  val events = _events.asStateFlow()
+
+  fun getAssociation(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _association.value = dbService.getAssociationById(associationId)
+    }
+  }
 
   fun followAssociation(associationId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            following = DataCache.currentUser.value.following + associationId)
     viewModelScope.launch(ioDispatcher) { dbService.followAssociation(associationId, {}, {}) }
   }
 
-    fun getNews(associationId: String) {
-        viewModelScope.launch(ioDispatcher) {
-            //_news.value = dbService.getNews(associationId, lastDocumentSnapshot = null)
-        }
-    }
+  fun unfollowAssociation(associationId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            following = DataCache.currentUser.value.following - associationId)
+    viewModelScope.launch(ioDispatcher) { dbService.unfollowAssociation(associationId, {}, {}) }
+  }
 
-    fun getMoreNews(associationId: String) {
-        viewModelScope.launch(ioDispatcher) {
-            val lastDocumentSnapshot = _news.value.lastOrNull()?.documentSnapshot
-            //_news.value += dbService.getNews(associationId, lastDocumentSnapshot)
-        }
+  fun getNews(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _news.value = dbService.getNews(associationId, lastDocumentSnapshot = null)
     }
+  }
+
+  fun getMoreNews(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      val lastDocumentSnapshot = _news.value.lastOrNull()?.documentSnapshot
+      _news.value += dbService.getNews(associationId, lastDocumentSnapshot)
+    }
+  }
+
+  fun getEvents(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _events.value = dbService.getEvents(associationId, lastDocumentSnapshot = null)
+    }
+  }
+
+  fun getMoreEvents(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      val lastDocumentSnapshot = _events.value.lastOrNull()?.documentSnapshot
+      _events.value += dbService.getEvents(associationId, lastDocumentSnapshot)
+    }
+  }
 }

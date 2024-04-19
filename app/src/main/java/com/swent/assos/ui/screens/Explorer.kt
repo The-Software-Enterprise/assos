@@ -51,14 +51,14 @@ import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.Explorer
+import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.theme.PurpleGrey40
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Explorer(navigationActions: NavigationActions) {
-  val explorer: Explorer = hiltViewModel()
-  val associations by explorer.filteredAssociations.collectAsState()
+  val explorerViewModel: ExplorerViewModel = hiltViewModel()
+  val associations by explorerViewModel.filteredAssociations.collectAsState()
 
   val listState = rememberLazyListState()
 
@@ -66,7 +66,7 @@ fun Explorer(navigationActions: NavigationActions) {
     snapshotFlow { listState.layoutInfo.visibleItemsInfo }
         .collect { visibleItems ->
           if (visibleItems.isNotEmpty() && visibleItems.last().index == associations.size - 1) {
-            explorer.loadMoreAssociations()
+            explorerViewModel.loadMoreAssociations()
           }
         }
   }
@@ -87,7 +87,7 @@ fun Explorer(navigationActions: NavigationActions) {
                         ),
                     modifier = Modifier.padding(start = 20.dp))
               }
-          TopResearchBar(explorer = explorer)
+          TopResearchBar(explorerViewModel = explorerViewModel)
         }
       }) { paddingValues ->
         LazyColumn(
@@ -117,8 +117,7 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
           Modifier.fillMaxWidth()
               .testTag("AssoListItem")
               .clickable {
-                val dest =
-                    Destinations.ASSO_DETAILS.route + "/${asso.id
+                val dest = Destinations.ASSO_DETAILS.route + "/${asso.id
                       }"
                 navigationActions.navigateTo(dest)
               }
@@ -157,8 +156,8 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopResearchBar(explorer: Explorer) {
-  val query by explorer.researchQuery.collectAsState()
+fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
+  val query by explorerViewModel.researchQuery.collectAsState()
   var isSearching by remember { mutableStateOf(false) }
   val focusManager = LocalFocusManager.current
 
@@ -175,7 +174,7 @@ fun TopResearchBar(explorer: Explorer) {
                     contentDescription = null,
                     modifier =
                         Modifier.clickable {
-                          explorer.filterOnSearch("")
+                          explorerViewModel.filterOnSearch("")
                           focusManager.clearFocus()
                           isSearching = false
                         })
@@ -185,7 +184,7 @@ fun TopResearchBar(explorer: Explorer) {
             },
             placeholder = { Text(text = "Search an Association") },
             query = query,
-            onQueryChange = { explorer.filterOnSearch(it) },
+            onQueryChange = { explorerViewModel.filterOnSearch(it) },
             onSearch = {},
             active = false,
             onActiveChange = { isSearching = it }) {}

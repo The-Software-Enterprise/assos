@@ -4,8 +4,12 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.User
 
 interface DbService {
+  // Users --------------------------------------------------------------------
+  suspend fun getUser(userId: String): User
+
   // Associations ---------------------------------------------------------------
   suspend fun getAllAssociations(lastDocumentSnapshot: DocumentSnapshot?): List<Association>
 
@@ -20,9 +24,20 @@ interface DbService {
 
   fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
+  suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
+
+  // Events -------------------------------------------------------------------
   suspend fun getAllEvents(): List<Event>
 
+  suspend fun getEvents(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Event>
+
   suspend fun followAssociation(
+      associationId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
+  suspend fun unfollowAssociation(
       associationId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
