@@ -116,6 +116,41 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
   }
 
   @Test
+  fun signupNonEPFL() {
+    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
+
+    run {
+      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+        step("Signup") {
+          emailField { performTextInput("marinphilippe2304@gmail.com") }
+          step("password") {
+            passwordField {
+              assertIsDisplayed()
+              performTextInput("123456")
+            }
+          }
+          step("confirm password") {
+            confirmPasswordField {
+              assertIsDisplayed()
+              performTextInput("123456")
+            }
+          }
+        }
+        step("nav") {
+          signUpButton {
+            assertIsDisplayed()
+            performClick()
+          }
+        }
+        step("verify navigation to home") {
+          verify { mockNavActions.navigateTo(Destinations.HOME.route) }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
   fun signupNonemail() {
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
     run {
