@@ -1,4 +1,4 @@
-package com.swent.assos.model.data
+package com.swent.assos.model
 
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
@@ -6,6 +6,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
   val bitMatrix: BitMatrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size)
@@ -16,4 +19,10 @@ fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
     }
   }
   return bitmap.asImageBitmap()
+}
+
+fun formatDateTime(dateString: String): String {
+    val formatter = DateTimeFormatter.ISO_DATE_TIME
+    val dateTime = LocalDateTime.parse(dateString, formatter)
+    return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 }

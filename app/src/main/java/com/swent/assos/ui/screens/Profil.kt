@@ -50,8 +50,6 @@ fun Profil(navigationActions: NavigationActions) {
         TopAppBar(
             title = { Text(text = completeName) },
             actions = {
-              // Ajouter ici l'icône des paramètres
-
               Icon(
                   painterResource(id = R.drawable.settings),
                   contentDescription = "Map",
@@ -76,12 +74,7 @@ fun Profil(navigationActions: NavigationActions) {
                         Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
                           val dest =
                               Destinations.ASSO_MODIFY_PAGE.route +
-                                  "/${it.id}/${it.acronym}/${it.fullname}/${
-                                    URLEncoder.encode(
-                                        it.url,
-                                        StandardCharsets.UTF_8.toString()
-                                    )
-                                }"
+                                  "/${it.id}"
                           navigationActions.navigateTo(dest)
                         },
                     colors =
@@ -101,13 +94,8 @@ fun Profil(navigationActions: NavigationActions) {
                     modifier =
                         Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
                           val dest =
-                              Destinations.ASSO_PAGE.route +
-                                  "/${it.id}/${it.acronym}/${it.fullname}/${
-                                    URLEncoder.encode(
-                                        it.url,
-                                        StandardCharsets.UTF_8.toString()
-                                    )
-                                }"
+                              Destinations.ASSO_DETAILS.route +
+                                  "/${it.id}"
                           navigationActions.navigateTo(dest)
                         },
                     colors =

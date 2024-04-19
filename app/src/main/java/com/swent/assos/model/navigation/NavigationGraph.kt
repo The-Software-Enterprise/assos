@@ -12,8 +12,9 @@ import com.swent.assos.ui.screens.Settings
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
-import com.swent.assos.ui.screens.manageAssos.CreateEvent
-import com.swent.assos.ui.screens.manageAssos.CreateNews
+import com.swent.assos.ui.screens.manageAsso.CreateEvent
+import com.swent.assos.ui.screens.manageAsso.CreateNews
+import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 
 @Composable
 fun NavigationGraph() {
@@ -30,14 +31,6 @@ fun NavigationGraph() {
           assoId = backStackEntry.arguments?.getString("assoId").toString(),
           navigationActions = navigationActions)
     }
-    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
-      CreateNews(
-          navigationActions = navigationActions,
-          associationId = backStackEntry.arguments?.getString("assoId") ?: "")
-    }
-    composable(Destinations.CREATE_EVENT.route) {
-      CreateEvent(navigationActions = navigationActions)
-    }
     composable(Destinations.EVENT_DETAILS.route + "/{eventId}") { backStackEntry ->
       EventDetails(
           eventId = backStackEntry.arguments?.getString("eventId").toString(),
@@ -47,6 +40,22 @@ fun NavigationGraph() {
       NewsDetails(
           newsId = backStackEntry.arguments?.getString("newsId").toString(),
           navigationActions = navigationActions)
+    }
+    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+      CreateNews(
+        navigationActions = navigationActions,
+        assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
+    composable(Destinations.CREATE_EVENT.route + "/{assoId}") { backStackEntry ->
+      CreateEvent(
+        navigationActions = navigationActions,
+        assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
+    composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
+      ManageAssociation(
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          navigationActions = navigationActions
+      )
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
   }
@@ -60,7 +69,6 @@ enum class Destinations(val route: String) {
   CREATE_NEWS("CreateNews"),
   CREATE_EVENT("CreateEvent"),
   SETTINGS("Settings"),
-  ASSO_PAGE("AssoPage"),
   ASSO_MODIFY_PAGE("AssoModifyPage"),
   EVENT_DETAILS("EventDetails"),
   NEWS_DETAILS("NewsDetails"),

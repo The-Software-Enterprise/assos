@@ -41,6 +41,8 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
+import com.swent.assos.ui.components.EventItem
+import com.swent.assos.ui.components.NewsItem
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -129,7 +131,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
                 state = listStateEvents,
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                   items(events) {
-                    EventBlock(it, navigationActions)
+                    EventItem(it, navigationActions)
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }
@@ -154,7 +156,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
                 state = listStateNews,
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                   items(news) {
-                    NewsBlock(it, navigationActions)
+                    NewsItem(it, navigationActions)
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }
@@ -166,48 +168,4 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
           }
         }
       }
-}
-
-@Composable
-fun EventBlock(event: Event, navigationActions: NavigationActions) {
-  Surface(
-      modifier =
-          Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
-            navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
-          },
-      color = Color(0xFFE0E0E0),
-  ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-      Text(text = event.title, style = MaterialTheme.typography.titleMedium)
-      Spacer(modifier = Modifier.height(8.dp))
-      Text(text = event.description)
-      Spacer(modifier = Modifier.height(8.dp))
-      Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
-      Spacer(modifier = Modifier.height(8.dp))
-    }
-  }
-}
-
-@Composable
-fun NewsBlock(news: News, navigationActions: NavigationActions) {
-  Surface(
-      modifier =
-          Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
-            navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
-          },
-      color = Color(0xFFE0E0E0),
-  ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-      Text(text = news.title, style = MaterialTheme.typography.titleMedium)
-      Spacer(modifier = Modifier.height(8.dp))
-      Text(text = news.description)
-      Spacer(modifier = Modifier.height(8.dp))
-    }
-  }
-}
-
-private fun formatDateTime(dateString: String): String {
-  val formatter = DateTimeFormatter.ISO_DATE_TIME
-  val dateTime = LocalDateTime.parse(dateString, formatter)
-  return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 }

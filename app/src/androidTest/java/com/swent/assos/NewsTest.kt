@@ -12,8 +12,8 @@ import com.swent.assos.screens.AssoDigestScreen
 import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
-import com.swent.assos.ui.screens.manageAssos.AssoDigest
-import com.swent.assos.ui.screens.manageAssos.CreateNews
+import com.swent.assos.ui.screens.manageAsso.AssoDigest
+import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
