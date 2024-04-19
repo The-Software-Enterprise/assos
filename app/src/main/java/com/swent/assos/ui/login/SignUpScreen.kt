@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
+import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -40,7 +41,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   val loginViewModel: LoginViewModel = hiltViewModel()
   var error by remember { mutableStateOf("") }
   var passwordTooShort by remember { mutableStateOf(false) }
-  val functions = FirebaseFunctions.getInstance("europe-west6")
 
   Column(
       modifier =
@@ -79,18 +79,31 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
             loginViewModel.signUp(email, password) { success ->
               if (!success) {
-                // return out of onclick
                 return@signUp
-              } else {
-                navigationActions.navigateTo(Destinations.HOME)
-                val data = hashMapOf("email" to email)
-                functions
-                    .getHttpsCallable("oncallFind")
-                    .call(data)
-                    .addOnSuccessListener { loginViewModel.updateUserInfo() }
-                    .addOnFailureListener { error = it.message.toString() }
               }
             }
+
+            navigationActions.navigateTo(Destinations.HOME)
+
+            // call the firebasefunction -> oncallFind.py
+            val data = hashMapOf("email" to email)
+
+            val functions = FirebaseFunctions.getInstance("europe-west6")
+            val config = Config()
+            config.get_all { onlineServices ->
+              val emu = onlineServices.contains("functions")
+              if (emu) {
+                functions.useEmulator("10.0.2.2", 5001)
+              }
+            }
+
+            // change the region of the function to europe-west6
+
+            functions
+                .getHttpsCallable("oncallFind")
+                .call(data)
+                .addOnSuccessListener { loginViewModel.updateUserInfo() }
+                .addOnFailureListener { error = it.message.toString() }
           } else if (password.length < 6) {
             passwordTooShort = true
           }

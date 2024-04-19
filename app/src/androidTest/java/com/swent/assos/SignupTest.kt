@@ -106,11 +106,11 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
+          step("verify navigation to home") {
+            verify { mockNavActions.navigateTo(Destinations.HOME) }
+            confirmVerified(mockNavActions)
+          }
         }
-      }
-      step("verify navigation to home") {
-        verify { mockNavActions.navigateTo(Destinations.HOME) }
-        confirmVerified(mockNavActions)
       }
     }
   }
@@ -135,17 +135,17 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performTextInput("123456")
             }
           }
-        }
-        step("nav") {
-          signUpButton {
-            assertIsDisplayed()
-            performClick()
+          step("nav") {
+            signUpButton {
+              assertIsDisplayed()
+              performClick()
+            }
+          }
+          step("verify navigation to home") {
+            verify { mockNavActions.navigateTo(Destinations.HOME) }
+            confirmVerified(mockNavActions)
           }
         }
-      }
-      step("verify navigation to home") {
-        verify { mockNavActions.navigateTo(Destinations.HOME) }
-        confirmVerified(mockNavActions)
       }
     }
   }
@@ -175,7 +175,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
-          step("verify navigation none") { signUpButton { assertIsDisplayed() } }
+          step("verify navigation to home") { signUpButton { assertIsDisplayed() } }
         }
       }
     }
