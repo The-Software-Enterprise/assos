@@ -90,10 +90,8 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
             val functions = FirebaseFunctions.getInstance("europe-west6")
             val config = Config()
-            var emu = false
-
             config.get_all { onlineServices ->
-              emu = onlineServices.contains("functions")
+              val emu = onlineServices.contains("functions")
               if (emu) {
                 functions.useEmulator("10.0.2.2", 5001)
               }
@@ -104,7 +102,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             functions
                 .getHttpsCallable("oncallFind")
                 .call(data)
-                .addOnSuccessListener { task -> }
+                .addOnSuccessListener { loginViewModel.updateUserInfo() }
                 .addOnFailureListener { error = it.message.toString() }
           } else if (password.length < 6) {
             passwordTooShort = true
