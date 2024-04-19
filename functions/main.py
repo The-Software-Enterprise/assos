@@ -22,6 +22,7 @@ initialize_app()
 def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
+    print(email)
 
     firestore_client: google.cloud.firestore.Client = firestore.Client()
     userID = req.auth.uid
