@@ -79,15 +79,16 @@ class Config {
       this.get_all { onlineServices ->
         val firestoreEmu = onlineServices.contains("firestore")
         val authEmu = onlineServices.contains("auth")
-        if (firestoreEmu) {
-          // Configure Firestore to use the Firestore emulator
-          if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+
+        // Configure Firestore to use the Firestore emulator
+        if (FirebaseFirestore.getInstance().firestoreSettings.host != "10.0.2.2:8080") {
+          if (firestoreEmu) {
             FirebaseFirestore.getInstance().useEmulator("10.0.2.2", 8080)
           }
-        }
-        if (authEmu) {
-          // Configure Firebase Auth to use the Auth emulator
-          FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+          if (authEmu) {
+            // Configure Firebase Auth to use the Auth emulator
+            FirebaseAuth.getInstance().useEmulator("10.0.2.2", 9099)
+          }
         }
       }
     }

@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
 
     // if we are in debug mode, we want to use the firestore emulator
     val config = Config()
+    config.init()
 
     setContent {
       AssosTheme {

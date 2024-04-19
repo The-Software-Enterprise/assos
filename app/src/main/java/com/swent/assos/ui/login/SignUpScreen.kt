@@ -80,30 +80,29 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.signUp(email, password) { success ->
               if (!success) {
                 return@signUp
+              } else {
+                navigationActions.navigateTo(Destinations.HOME.route)
+
+                // call the firebasefunction -> oncallFind.py
+                val data = hashMapOf("email" to email)
+                // wait for user to be created
+
+                val functions = FirebaseFunctions.getInstance("europe-west6")
+                val config = Config()
+                config.get_all { onlineServices ->
+                  val emu = onlineServices.contains("functions")
+                  if (emu) {
+                    functions.useEmulator("10.0.2.2", 5001)
+                  }
+                }
+
+                // change the region of the function to europe-west6
+
+                functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener {
+                  throw it
+                }
               }
             }
-
-            navigationActions.navigateTo(Destinations.HOME)
-
-            // call the firebasefunction -> oncallFind.py
-            val data = hashMapOf("email" to email)
-
-            val functions = FirebaseFunctions.getInstance("europe-west6")
-            val config = Config()
-            config.get_all { onlineServices ->
-              val emu = onlineServices.contains("functions")
-              if (emu) {
-                functions.useEmulator("10.0.2.2", 5001)
-              }
-            }
-
-            // change the region of the function to europe-west6
-
-            functions
-                .getHttpsCallable("oncallFind")
-                .call(data)
-                .addOnSuccessListener { loginViewModel.updateUserInfo() }
-                .addOnFailureListener { error = it.message.toString() }
           } else if (password.length < 6) {
             passwordTooShort = true
           }
