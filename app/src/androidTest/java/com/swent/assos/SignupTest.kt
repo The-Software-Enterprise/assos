@@ -110,6 +110,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
+          Thread.sleep(1000)
 
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
