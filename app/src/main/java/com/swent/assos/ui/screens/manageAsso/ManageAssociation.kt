@@ -40,38 +40,38 @@ import com.swent.assos.ui.components.NewsItem
 
 @Composable
 fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
-    val viewModel: AssoViewModel = hiltViewModel()
+  val viewModel: AssoViewModel = hiltViewModel()
 
-    val association by viewModel.association.collectAsState()
-    val news by viewModel.news.collectAsState()
-    val events by viewModel.events.collectAsState()
+  val association by viewModel.association.collectAsState()
+  val news by viewModel.news.collectAsState()
+  val events by viewModel.events.collectAsState()
 
-    val listStateNews = rememberLazyListState()
-    val listStateEvents = rememberLazyListState()
+  val listStateNews = rememberLazyListState()
+  val listStateEvents = rememberLazyListState()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getAssociation(assoId)
-        viewModel.getNews(assoId)
-        viewModel.getEvents(assoId)
-    }
+  LaunchedEffect(key1 = Unit) {
+    viewModel.getAssociation(assoId)
+    viewModel.getNews(assoId)
+    viewModel.getEvents(assoId)
+  }
 
-    LaunchedEffect(listStateNews) {
-        snapshotFlow { listStateNews.layoutInfo.visibleItemsInfo }
-            .collect { visibleItems ->
-                if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
-                    viewModel.getMoreNews(assoId)
-                }
-            }
-    }
+  LaunchedEffect(listStateNews) {
+    snapshotFlow { listStateNews.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
+            viewModel.getMoreNews(assoId)
+          }
+        }
+  }
 
-    LaunchedEffect(listStateEvents) {
-        snapshotFlow { listStateEvents.layoutInfo.visibleItemsInfo }
-            .collect { visibleItems ->
-                if (visibleItems.isNotEmpty() && visibleItems.last().index == events.size - 1) {
-                    viewModel.getMoreEvents(assoId)
-                }
-            }
-    }
+  LaunchedEffect(listStateEvents) {
+    snapshotFlow { listStateEvents.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == events.size - 1) {
+            viewModel.getMoreEvents(assoId)
+          }
+        }
+  }
 
   LazyColumn(
       modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -83,17 +83,13 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
           Image(
               imageVector = Icons.Default.ArrowBack,
               contentDescription = null,
-              modifier = Modifier
-                  .testTag("GoBackButton")
-                  .clickable { navigationActions.goBack() })
+              modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
         }
         item {
           Text(
               text = association.description,
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 16.dp, vertical = 8.dp))
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
         }
         item {
           Button(
@@ -104,7 +100,11 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
         }
         item {
           HeaderWithButton(
-              header = "Upcoming Events", buttonText = "Add Event", onButtonClick = { navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}") })
+              header = "Upcoming Events",
+              buttonText = "Add Event",
+              onButtonClick = {
+                navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
+              })
         }
         item {
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
@@ -116,7 +116,11 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
         }
         item {
           HeaderWithButton(
-              header = "Latest Posts", buttonText = "Add Post", onButtonClick = { navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}") })
+              header = "Latest Posts",
+              buttonText = "Add Post",
+              onButtonClick = {
+                navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
+              })
         }
         item {
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
@@ -131,21 +135,17 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 
 @Composable
 fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+  Row(
+      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+      verticalAlignment = Alignment.CenterVertically,
+      horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = header, style = MaterialTheme.typography.headlineMedium)
         Button(
             onClick = onButtonClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-        ) {
-            Text(buttonText, color = Color.White)
-        }
-    }
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+              Text(buttonText, color = Color.White)
+            }
+      }
 }
 
 private val association =

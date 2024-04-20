@@ -30,8 +30,6 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 @Composable
 fun Profil(navigationActions: NavigationActions) {
@@ -72,9 +70,7 @@ fun Profil(navigationActions: NavigationActions) {
                 Card(
                     modifier =
                         Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
-                          val dest =
-                              Destinations.ASSO_MODIFY_PAGE.route +
-                                  "/${it.id}"
+                          val dest = Destinations.ASSO_MODIFY_PAGE.route + "/${it.id}"
                           navigationActions.navigateTo(dest)
                         },
                     colors =
@@ -93,9 +89,7 @@ fun Profil(navigationActions: NavigationActions) {
                 Card(
                     modifier =
                         Modifier.fillMaxWidth().padding(8.dp).height(50.dp).clickable {
-                          val dest =
-                              Destinations.ASSO_DETAILS.route +
-                                  "/${it.id}"
+                          val dest = Destinations.ASSO_DETAILS.route + "/${it.id}"
                           navigationActions.navigateTo(dest)
                         },
                     colors =

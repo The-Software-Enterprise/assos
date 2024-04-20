@@ -20,18 +20,18 @@ import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
 fun NewsItem(news: News, navigationActions: NavigationActions) {
-    Surface(
-        modifier =
-        Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
+  Surface(
+      modifier =
+          Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
             navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
-        },
-        color = Color(0xFFE0E0E0),
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = news.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = news.description)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+          },
+      color = Color(0xFFE0E0E0),
+  ) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+      Text(text = news.title, style = MaterialTheme.typography.titleMedium)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = news.description)
+      Spacer(modifier = Modifier.height(8.dp))
     }
+  }
 }

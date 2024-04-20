@@ -22,7 +22,7 @@ fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
 }
 
 fun formatDateTime(dateString: String): String {
-    val formatter = DateTimeFormatter.ISO_DATE_TIME
-    val dateTime = LocalDateTime.parse(dateString, formatter)
-    return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+  val formatter = DateTimeFormatter.ISO_DATE_TIME
+  val dateTime = LocalDateTime.parse(dateString, formatter)
+  return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 }

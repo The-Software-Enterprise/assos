@@ -21,20 +21,20 @@ import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions) {
-    Surface(
-        modifier =
-        Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
+  Surface(
+      modifier =
+          Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
             navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
-        },
-        color = Color(0xFFE0E0E0),
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-            Text(text = event.title, style = MaterialTheme.typography.titleMedium)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = event.description)
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
+          },
+      color = Color(0xFFE0E0E0),
+  ) {
+    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
+      Text(text = event.title, style = MaterialTheme.typography.titleMedium)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = event.description)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
+      Spacer(modifier = Modifier.height(8.dp))
     }
+  }
 }

@@ -34,11 +34,7 @@ import com.swent.assos.model.view.CreateNewsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNews(
-    navigationActions: NavigationActions,
-    assoId: String,
-    isEdit: Boolean = false
-) {
+fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boolean = false) {
   val viewModel: CreateNewsViewModel = hiltViewModel()
 
   val news by viewModel.news.collectAsState()
