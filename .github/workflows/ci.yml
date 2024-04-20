@@ -107,6 +107,8 @@ jobs:
 
       # Run Unit tests
       - name: run unit tests
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
         run: |
           # To run the CI with debug information, add --info
           firebase emulators:exec "./gradlew check --parallel --build-cache" --import ./emulatorFiles/.emulator-data/firestore_export --token $FIREBASE_TOKEN
@@ -119,9 +121,11 @@ jobs:
           target: google_apis
           arch: x86_64
           force-avd-creation: false
+          env:
+            FIREBASE_TOKEN: ${{ secrets.FIREBASE_CI_TOKEN }}
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew connectedCheck --parallel --build-cache --stacktrace" $FIREBASE_TOKEN
+          script: firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew connectedCheck --parallel --build-cache --stacktrace" --token $FIREBASE_TOKEN
 
 
           
