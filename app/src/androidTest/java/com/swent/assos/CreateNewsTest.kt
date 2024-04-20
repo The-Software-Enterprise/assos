@@ -2,6 +2,7 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.common.base.Verify.verify
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -9,6 +10,8 @@ import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.confirmVerified
+import io.mockk.verify
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -67,4 +70,17 @@ class CreateNewsTest : SuperTest() {
       Firebase.auth.signOut()
     }
   }
+
+    @Test
+    fun goBack() {
+        run {
+            ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
+                step("Go back") {
+                    goBackButton { performClick() }
+                    verify { mockNavActions.goBack() }
+                    confirmVerified(mockNavActions)
+                }
+            }
+        }
+    }
 }

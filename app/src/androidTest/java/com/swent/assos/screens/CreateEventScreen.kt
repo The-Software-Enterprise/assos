@@ -5,9 +5,10 @@ import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.github.kakaocup.compose.node.element.KNode
 
 class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
-    ComposeScreen<AssoDetailsScreen>(
+    ComposeScreen<CreateEventScreen>(
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("CreateEvent") }) {
 
+        val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
     val form: KNode = child { hasTestTag("Form") }
     val inputTitle: KNode =
         form.child {
