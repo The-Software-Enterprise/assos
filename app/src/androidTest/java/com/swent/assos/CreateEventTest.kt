@@ -15,28 +15,28 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class CreateEventTest : SuperTest() {
-    private val assoId = "jMWo6NgngIS2hCq054TF"
-    private val randomInt = Random.nextInt()
-    private val eventTitle = "Test event $randomInt"
-    private val eventDescription = "Test description $randomInt"
+  private val assoId = "jMWo6NgngIS2hCq054TF"
+  private val randomInt = Random.nextInt()
+  private val eventTitle = "Test event $randomInt"
+  private val eventDescription = "Test description $randomInt"
 
-    override fun setup() {
-        super.setup()
-        composeTestRule.activity.setContent {
-            CreateEvent(assoId = assoId, navigationActions = mockNavActions)
-        }
+  override fun setup() {
+    super.setup()
+    composeTestRule.activity.setContent {
+      CreateEvent(assoId = assoId, navigationActions = mockNavActions)
     }
+  }
 
-    @Test
-    fun goBack() {
-        run {
-            ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
-                step("Go back") {
-                    goBackButton { performClick() }
-                    verify { mockNavActions.goBack() }
-                    confirmVerified(mockNavActions)
-                }
-            }
+  @Test
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("Go back") {
+          goBackButton { performClick() }
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
         }
+      }
     }
+  }
 }

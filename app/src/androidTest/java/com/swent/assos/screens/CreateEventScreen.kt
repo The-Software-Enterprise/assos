@@ -8,22 +8,22 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<CreateEventScreen>(
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("CreateEvent") }) {
 
-        val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
-    val form: KNode = child { hasTestTag("Form") }
-    val inputTitle: KNode =
-        form.child {
-            hasTestTag("InputTitle")
-            hasSetTextAction()
-        }
-    val inputDescription: KNode =
-        form.child {
-            hasTestTag("InputDescription")
-            hasSetTextAction()
-        }
-    val inputDate: KNode =
-        form.child {
-            hasTestTag("InputDate")
-            hasSetTextAction()
-        }
-    val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
+  val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
+  val form: KNode = child { hasTestTag("Form") }
+  val inputTitle: KNode =
+      form.child {
+        hasTestTag("InputTitle")
+        hasSetTextAction()
+      }
+  val inputDescription: KNode =
+      form.child {
+        hasTestTag("InputDescription")
+        hasSetTextAction()
+      }
+  val inputDate: KNode =
+      form.child {
+        hasTestTag("InputDate")
+        hasSetTextAction()
+      }
+  val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
 }

@@ -71,16 +71,16 @@ class CreateNewsTest : SuperTest() {
     }
   }
 
-    @Test
-    fun goBack() {
-        run {
-            ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
-                step("Go back") {
-                    goBackButton { performClick() }
-                    verify { mockNavActions.goBack() }
-                    confirmVerified(mockNavActions)
-                }
-            }
+  @Test
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
+        step("Go back") {
+          goBackButton { performClick() }
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
         }
+      }
     }
+  }
 }
