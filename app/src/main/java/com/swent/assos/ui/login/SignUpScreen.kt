@@ -82,7 +82,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 return@signUp
               } else {
                 try {
-                  navigationActions.navigateTo(Destinations.HOME.route)
+                  navigationActions.navigateTo(Destinations.HOME)
                 } catch (e: Exception) {
                   throw e
                 }
