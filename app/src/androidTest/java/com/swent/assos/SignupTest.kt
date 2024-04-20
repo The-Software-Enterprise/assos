@@ -110,10 +110,9 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
-          step("verify navigation to home") {
-            verify { mockNavActions.navigateTo(Destinations.HOME) }
-            confirmVerified(mockNavActions)
-          }
+
+          verify { mockNavActions.navigateTo(Destinations.HOME) }
+          confirmVerified(mockNavActions)
         }
       }
     }
