@@ -114,6 +114,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
       }
     }
   }
+
   @Test
   fun signupNonemail() {
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
