@@ -104,9 +104,7 @@ jobs:
           # To run the CI with debug information, add --info
           ./gradlew assemble lint --parallel --build-cache
 
-      - name: Authenticate with Firebase
-        run: |
-          echo $FIREBASE_TOKEN | firebase login:ci
+
       # Run Unit tests
       - name: run unit tests
         run: |
