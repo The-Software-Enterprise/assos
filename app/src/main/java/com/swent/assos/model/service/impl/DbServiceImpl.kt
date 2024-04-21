@@ -31,7 +31,12 @@ constructor(
         firstName = snapshot.getString("firstName") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following = (snapshot.get("following") ?: emptyList<String>()) as List<String>)
+        following =
+            if (snapshot.get("following") is List<*>) {
+              (snapshot.get("following") as List<*>).filterIsInstance<String>()
+            } else {
+              emptyList<String>()
+            })
   }
 
   override suspend fun getAllAssociations(
