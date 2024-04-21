@@ -26,18 +26,16 @@ class DbServiceTest {
     val mockDocumentSnapshot = mockk<DocumentSnapshot>(relaxed = true)
     val mockQuerySnapshot = mockk<QuerySnapshot>(relaxed = true)
 
-    coEvery { mockFirestore.collection(any()).get() } returns
-            Tasks.forResult(mockQuerySnapshot)
+    coEvery { mockFirestore.collection(any()).get() } returns Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).orderBy(any<String>()).get() } returns
-            Tasks.forResult(mockQuerySnapshot)
+        Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).limit(any()).get() } returns
-            Tasks.forResult(mockQuerySnapshot)
+        Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).orderBy(any<String>()).limit(any()).get() } returns
-            Tasks.forResult(mockQuerySnapshot)
-    coEvery { mockFirestore.collection(any()).add(any()) } returns
-            Tasks.forResult(null)
+        Tasks.forResult(mockQuerySnapshot)
+    coEvery { mockFirestore.collection(any()).add(any()) } returns Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).get() } returns
-            Tasks.forResult(mockDocumentSnapshot)
+        Tasks.forResult(mockDocumentSnapshot)
     coEvery { mockFirestore.collection(any()).document(any()).update(any<String>(), any()) } returns
         Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).set(any()) } returns
@@ -47,9 +45,7 @@ class DbServiceTest {
 
     val mockAuth = mockk<AuthService>()
     val mockUser = mockk<FirebaseUser>()
-    val userFlow: Flow<FirebaseUser> = flow {
-      emit(mockUser)
-    }
+    val userFlow: Flow<FirebaseUser> = flow { emit(mockUser) }
 
     coEvery { mockAuth.currentUser } returns userFlow
     coEvery { mockUser.uid } returns "id"
