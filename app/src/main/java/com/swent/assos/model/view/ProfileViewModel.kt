@@ -34,7 +34,6 @@ constructor(
   init {
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
-        Log.d("ProfileViewModel", "currentUser: $currentUser")
         currentUser.following.forEach { id ->
           dbService.getAssociationById(id).let {
             _followedAssociations.value += it

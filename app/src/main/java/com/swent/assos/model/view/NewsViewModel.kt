@@ -41,7 +41,6 @@ constructor(
       viewModelScope.launch(Dispatchers.IO) {
         val lastDocumentSnapshot = _allNews.value.lastOrNull()?.documentSnapshot
         dbService.getAllNews(lastDocumentSnapshot).let {
-          Log.d("NewsViewModel", "loadMoreAssociations: $it")
           _allNews.value += it
           _allNews.value = _allNews.value.distinct()
           if (it.isNotEmpty()) {
