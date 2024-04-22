@@ -1,7 +1,6 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
@@ -10,9 +9,7 @@ import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
 import org.junit.Test
-import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class AssoDetailsTest : SuperTest() {
   val assoId = "jMWo6NgngIS2hCq054TF"
