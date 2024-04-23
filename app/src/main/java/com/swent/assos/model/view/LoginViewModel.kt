@@ -5,7 +5,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.swent.assos.model.data.User
@@ -29,31 +28,6 @@ constructor(private val storageService: DbService, private val accountService: A
   var errorMessage = mutableStateOf("")
   var badCredentials = mutableStateOf(false)
 
-  fun updateUserInfo() {
-
-    val cuser = Firebase.auth.currentUser
-    cuser?.let {
-      val docRef = firestoreInstance.collection("users").document(it.uid)
-      docRef
-          .get()
-          .addOnSuccessListener { document ->
-            if (document != null) {
-              user =
-                  User(
-                      document.id,
-                      (document.data?.get("firstname") ?: "") as String,
-                      (document.data?.get("name") ?: "") as String,
-                      (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations")
-                          ?: emptyList<Triple<String, String, Int>>())
-                          as List<Triple<String, String, Int>>,
-                      (document.data?.get("following") ?: emptyList<String>()) as List<String>)
-            }
-          }
-          .addOnFailureListener { exception -> println("Error getting documents: $exception") }
-    }
-  }
-
   fun hashEmail(email: String): Int {
     val bytes = email.toByteArray()
     val md = MessageDigest.getInstance("SHA-256")
@@ -75,6 +49,7 @@ constructor(private val storageService: DbService, private val accountService: A
       if (it.isSuccessful) {
         updateUserInfo()
         callback()
+        Log.d("LoginViewModel", "User signed in")
       } else {
         errorMessage.value = it.exception?.message ?: ""
         userNotFound.value = true
