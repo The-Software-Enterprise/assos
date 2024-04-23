@@ -9,9 +9,9 @@ import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.MainActivity
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.screens.home.NewsScreen
 import com.swent.assos.screens.overview.AssoDigestScreen
 import com.swent.assos.screens.profile.CreateNewsScreen
-import com.swent.assos.screens.home.NewsScreen
 import com.swent.assos.ui.screens.home.News
 import com.swent.assos.ui.screens.overview.AssoDigest
 import com.swent.assos.ui.screens.profile.CreateNews
