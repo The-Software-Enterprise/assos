@@ -1,4 +1,4 @@
-package com.swent.assos.login
+package com.swent.assos.authentification
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule

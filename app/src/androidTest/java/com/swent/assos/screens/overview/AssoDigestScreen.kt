@@ -17,5 +17,4 @@ class AssoDigestScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val createButton: KNode = child { hasTestTag("CreateButton") }
 
   val bottomSheetCreation: KNode = child { hasTestTag("BottomSheetCreation") }
-  val createNewsButton: KNode = bottomSheetCreation.child { hasTestTag("CreateNewsButton") }
 }
