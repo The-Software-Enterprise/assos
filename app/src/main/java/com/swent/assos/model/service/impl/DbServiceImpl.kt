@@ -32,10 +32,12 @@ constructor(
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
         following =
-            if (snapshot.get("following") is List<*>) {
-              (snapshot.get("following") as List<*>).filterIsInstance<String>()
+            if (snapshot.get("following") is MutableList<*>) {
+              (snapshot.get("following") as MutableList<*>)
+                  .filterIsInstance<String>()
+                  .toMutableList()
             } else {
-              emptyList<String>()
+              mutableListOf()
             })
   }
 

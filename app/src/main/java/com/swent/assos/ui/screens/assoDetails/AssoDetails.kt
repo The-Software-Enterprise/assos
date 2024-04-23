@@ -26,9 +26,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
@@ -39,6 +42,7 @@ import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   val viewModel: AssoViewModel = hiltViewModel()
@@ -77,8 +81,10 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
       topBar = {
         TopAssoBar(
+            assoId = assoId,
             asso = association,
             navigationActions = navigationActions,
             currentUser = currentUser,
@@ -138,6 +144,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAssoBar(
+    assoId: String,
     asso: Association,
     navigationActions: NavigationActions,
     currentUser: User,
@@ -156,13 +163,13 @@ fun TopAssoBar(
         Button(
             modifier = Modifier.testTag("FollowButton"),
             onClick = {
-              if (currentUser.following.contains(asso.id)) viewModel.unfollowAssociation(asso.id)
-              else viewModel.followAssociation(asso.id)
+              if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
+              else viewModel.followAssociation(assoId)
             },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
               Text(
                   modifier = Modifier.testTag("TextFollowButton"),
-                  text = if (currentUser.following.contains(asso.id)) "Unfollow" else "Follow",
+                  text = if (currentUser.following.contains(assoId)) "Unfollow" else "Follow",
                   color = Color.White)
             }
       })

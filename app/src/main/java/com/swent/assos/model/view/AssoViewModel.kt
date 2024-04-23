@@ -39,16 +39,12 @@ constructor(
   }
 
   fun followAssociation(associationId: String) {
-    DataCache.currentUser.value =
-        DataCache.currentUser.value.copy(
-            following = DataCache.currentUser.value.following + associationId)
+    DataCache.currentUser.value.following += associationId
     viewModelScope.launch(ioDispatcher) { dbService.followAssociation(associationId, {}, {}) }
   }
 
   fun unfollowAssociation(associationId: String) {
-    DataCache.currentUser.value =
-        DataCache.currentUser.value.copy(
-            following = DataCache.currentUser.value.following - associationId)
+    DataCache.currentUser.value.following -= associationId
     viewModelScope.launch(ioDispatcher) { dbService.unfollowAssociation(associationId, {}, {}) }
   }
 

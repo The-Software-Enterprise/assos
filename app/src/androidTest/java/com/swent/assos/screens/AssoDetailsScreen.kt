@@ -6,7 +6,8 @@ import io.github.kakaocup.compose.node.element.KNode
 
 class AssoDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<AssoDetailsScreen>(
-        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("AssoDetails") }) {
+        semanticsProvider = semanticsProvider,
+        viewBuilderAction = { hasTestTag("AssoDetailsScreen") }) {
 
   val header: KNode = onNode { hasTestTag("Header") }
   val goBackButton: KNode = header.child { hasTestTag("GoBackButton") }

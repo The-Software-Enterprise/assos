@@ -20,7 +20,7 @@ constructor(private val storageService: DbService, private val accountService: A
 
   val firestoreInstance = Firebase.firestore
 
-  var user = User("", "", "", "", emptyList(), emptyList())
+  var user = User("", "", "", "", emptyList(), mutableListOf())
 
   fun hashEmail(email: String): Int {
     val bytes = email.toByteArray()
