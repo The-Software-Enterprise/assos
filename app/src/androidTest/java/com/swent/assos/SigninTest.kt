@@ -132,9 +132,10 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
           errorMessage {
             assertIsDisplayed()
-            assertTextEquals("The supplied auth credential is incorrect, malformed or has expired.")
-            // assertTextEquals("There is no user record corresponding to this identifier. The user
-            // may have been deleted.")
+            // assertTextEquals("The supplied auth credential is incorrect, malformed or has
+            // expired.")
+            assertTextEquals(
+                "There is no user record corresponding to this identifier. The user may have been deleted.")
           }
         }
       }
@@ -153,7 +154,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
           passwordField {
             assertIsDisplayed()
-            performTextInput("test12")
+            performTextInput("test1234")
           }
           loginButton {
             assertIsDisplayed()
