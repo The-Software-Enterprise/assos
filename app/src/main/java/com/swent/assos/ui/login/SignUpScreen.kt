@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
+import com.swent.assos.R
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -69,41 +70,23 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         onValueChange = { confirmPassword = it },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.testTag("ConfirmPasswordField"))
+        modifier = Modifier.testTag("ConfirmPassword"))
     if (password != confirmPassword) {
       Text("Passwords do not match", color = Color.Red)
     }
     Button(
         onClick = {
           loginViewModel.signUp(email, password, confirmPassword)
-            loginViewModel.signUp(email, password) { success ->
-              if (!success) {
-                return@signUp
-              } else {
-                try {
-                  navigationActions.navigateTo(Destinations.HOME)
-                } catch (e: Exception) {
-                  throw e
-                }
-                // call the firebasefunction -> oncallFind.py
-                val data = hashMapOf("email" to email)
-                // wait for user to be created
-                val functions = FirebaseFunctions.getInstance("europe-west6")
-                val config = Config()
-                config.get_all { onlineServices ->
-                  val emu = onlineServices.contains("functions")
-                  if (emu) {
-                    functions.useEmulator("10.0.2.2", 5001)
-                  }
-                }
-                // change the region of the function to europe-west6
-                functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener {
-                  throw it
-                }
-              }
-            }
-          } else if (password.length < 6) {
-            passwordTooShort = true
+
+          // call the firebasefunction -> oncallFind.py
+          val data = hashMapOf("email" to email)
+
+          val functions = FirebaseFunctions.getInstance("europe-west6")
+          val config = Config()
+
+          // change the region of the function to europe-west6
+          if (config.get_all().contains("functions")) {
+            functions.useEmulator(R.string.emulatorIP.toString(), 5001)
           }
           functions
               .getHttpsCallable("oncallFind")
@@ -121,11 +104,12 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     if (badCredentials) {
       Text("", color = Color.Red)
     }
+
     Text(
         "Already have an account?",
         modifier =
-            Modifier.testTag("LoginNavButton").clickable {
-              navigationActions.navigateTo(Destinations.LOGIN)
-            })
+            Modifier.clickable { navigationActions.navigateTo(Destinations.LOGIN) }
+                .testTag("LoginNavButton")
+                .clickable { navigationActions.goBack() })
   }
 }

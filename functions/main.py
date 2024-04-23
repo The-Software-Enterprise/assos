@@ -23,15 +23,10 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
 
-    firestore_client: google.cloud.firestore.Client = firestore.Client()
+
     userID = req.auth.uid
-    try:
-        profile = epflpeople.find(email)
-      
-    except:
-        profile = None
-        
-    
+    profile = epflpeople.find(email)
+    firestore_client: google.cloud.firestore.Client = firestore.Client()
 
     # profile is a format of a list of dictionnary we want first elem and change the dict into a json
     if profile:
@@ -52,11 +47,15 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
 
         for i in range(len(profile[0]["accreds"]) - 1):
             acronym = profile[0]["accreds"][i + 1]["acronym"]
-            temp = {"acronym": profile[0]["accreds"][i + 1]["acronym"],
-            "position": profile[0]["accreds"][i + 1]["position"],
-            "rank": profile[0]["accreds"][i + 1]["rank"]}
-                
-            associations.append(temp)
+            query = firestore_client.collection(f"associations").where("acronym", "==", acronym).limit(1).stream()
+            for doc in query:
+                association = doc.to_dict()
+                temp = {
+                    "id": doc.id,
+                    "position": profile[0]["accreds"][i + 1]["position"],
+                    "rank": profile[0]["accreds"][i + 1]["rank"],
+                }
+                associations.append(temp)
             
            
         user = {
