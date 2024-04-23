@@ -1,6 +1,5 @@
 package com.swent.assos.model.view
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
@@ -21,6 +20,8 @@ constructor(
     private val dbService: DbService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
+  /* TODO: Link to dataBase the membership,
+  for now all users are "Balélec" & "The Consulting Society" members */
   private val _memberAssociationIDs = listOf("1UYICvqVKbImYMNK3Sz3", "5Ala8A5MEmoFe5JGJxJV")
 
   private val _followedAssociations = MutableStateFlow(emptyList<Association>())

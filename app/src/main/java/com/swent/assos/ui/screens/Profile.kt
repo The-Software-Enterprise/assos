@@ -32,7 +32,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
 
 @Composable
-fun Profil(navigationActions: NavigationActions) {
+fun Profile(navigationActions: NavigationActions) {
 
   val firstname = "Maximilien"
   val surname = "GRIDEL"

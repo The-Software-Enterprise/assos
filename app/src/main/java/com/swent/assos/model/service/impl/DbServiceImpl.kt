@@ -229,6 +229,6 @@ constructor(
         .document(user.uid)
         .update("following", FieldValue.arrayRemove(associationId))
         .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Error") }
+        .addOnFailureListener { onError("Unfollow Error") }
   }
 }
