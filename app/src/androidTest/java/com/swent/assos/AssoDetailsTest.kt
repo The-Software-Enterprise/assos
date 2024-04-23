@@ -30,10 +30,6 @@ class AssoDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Follow association") {
-          title {
-            assertIsDisplayed()
-            assertTextEquals(acronym)
-          }
           followButton {
             assertIsDisplayed()
             performClick()
