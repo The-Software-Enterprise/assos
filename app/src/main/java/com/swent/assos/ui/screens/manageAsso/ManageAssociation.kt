@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,9 +29,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
@@ -40,6 +44,7 @@ import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
   val viewModel: AssoViewModel = hiltViewModel()
@@ -75,16 +80,19 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
         }
   }
 
-  Scaffold(topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }) {
-      paddingValues ->
+  Scaffold(
+    modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ManageAssoScreen"),
+    topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }
+  ) { paddingValues ->
     Column(
         modifier = Modifier.padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally) {
           Text(
-              text = association.description,
+              text = association.fullname,
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
+              modifier = Modifier.testTag("DescriptionField").fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
           Button(
+            modifier = Modifier.testTag("EditDescriptionButton"),
               onClick = { /* TODO */},
               colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
                 Text("Edit description", color = Color.White)
@@ -94,7 +102,9 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
               buttonText = "Add Event",
               onButtonClick = {
                 navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
-              })
+              },
+              modifierButton = Modifier.testTag("AddEventButton")
+            )
 
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
             items(events) {
@@ -107,7 +117,9 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
               buttonText = "Add Post",
               onButtonClick = {
                 navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
-              })
+              },
+              modifierButton = Modifier.testTag("AddPostButton")
+          )
           LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
             items(news) {
               NewsItem(it, navigationActions)
@@ -119,13 +131,14 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 }
 
 @Composable
-fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit) {
+fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit, modifierButton: Modifier) {
   Row(
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = header, style = MaterialTheme.typography.headlineMedium)
         Button(
+            modifier = modifierButton,
             onClick = onButtonClick,
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
               Text(buttonText, color = Color.White)

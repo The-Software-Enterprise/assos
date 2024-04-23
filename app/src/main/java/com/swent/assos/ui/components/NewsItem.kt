@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
@@ -22,7 +23,7 @@ import com.swent.assos.model.navigation.NavigationActions
 fun NewsItem(news: News, navigationActions: NavigationActions) {
   Surface(
       modifier =
-          Modifier.width(200.dp).padding(vertical = 4.dp).clickable {
+          Modifier.testTag("NewsItem").width(200.dp).padding(vertical = 4.dp).clickable {
             navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
           },
       color = Color(0xFFE0E0E0),
