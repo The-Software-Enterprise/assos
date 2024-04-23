@@ -5,7 +5,6 @@ import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.screens.ManageAssoScreen
-import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -16,11 +15,10 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class ManageAssoTest: SuperTest() {
+class ManageAssoTest : SuperTest() {
   val assoId = "SHJfKFTgplnrMzoBdDGS"
   val acronym = "Swiss Solar Boat"
-  val fullname =
-    "Association participating in the Monaco Solar & Energy Boat Challenge – MAKE"
+  val fullname = "Association participating in the Monaco Solar & Energy Boat Challenge – MAKE"
 
   override fun setup() {
     super.setup()

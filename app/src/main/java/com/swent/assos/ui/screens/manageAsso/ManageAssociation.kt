@@ -1,6 +1,5 @@
 package com.swent.assos.ui.screens.manageAsso
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -81,57 +80,63 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
-    modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ManageAssoScreen"),
-    topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }
-  ) { paddingValues ->
-    Column(
-        modifier = Modifier.padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-          Text(
-              text = association.fullname,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.testTag("DescriptionField").fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp))
-          Button(
-            modifier = Modifier.testTag("EditDescriptionButton"),
-              onClick = { /* TODO */},
-              colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                Text("Edit description", color = Color.White)
-              }
-          HeaderWithButton(
-              header = "Upcoming Events",
-              buttonText = "Add Event",
-              onButtonClick = {
-                navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
-              },
-              modifierButton = Modifier.testTag("AddEventButton")
-            )
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ManageAssoScreen"),
+      topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }) {
+          paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+              Text(
+                  text = association.fullname,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier =
+                      Modifier.testTag("DescriptionField")
+                          .fillMaxWidth()
+                          .padding(horizontal = 16.dp, vertical = 8.dp))
+              Button(
+                  modifier = Modifier.testTag("EditDescriptionButton"),
+                  onClick = { /* TODO */},
+                  colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                    Text("Edit description", color = Color.White)
+                  }
+              HeaderWithButton(
+                  header = "Upcoming Events",
+                  buttonText = "Add Event",
+                  onButtonClick = {
+                    navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
+                  },
+                  modifierButton = Modifier.testTag("AddEventButton"))
 
-          LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-            items(events) {
-              EventItem(it, navigationActions)
-              Spacer(modifier = Modifier.width(8.dp))
+              LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(events) {
+                  EventItem(it, navigationActions)
+                  Spacer(modifier = Modifier.width(8.dp))
+                }
+              }
+              HeaderWithButton(
+                  header = "Latest Posts",
+                  buttonText = "Add Post",
+                  onButtonClick = {
+                    navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
+                  },
+                  modifierButton = Modifier.testTag("AddPostButton"))
+              LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(news) {
+                  NewsItem(it, navigationActions)
+                  Spacer(modifier = Modifier.width(8.dp))
+                }
+              }
             }
-          }
-          HeaderWithButton(
-              header = "Latest Posts",
-              buttonText = "Add Post",
-              onButtonClick = {
-                navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
-              },
-              modifierButton = Modifier.testTag("AddPostButton")
-          )
-          LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-            items(news) {
-              NewsItem(it, navigationActions)
-              Spacer(modifier = Modifier.width(8.dp))
-            }
-          }
-        }
-  }
+      }
 }
 
 @Composable
-fun HeaderWithButton(header: String, buttonText: String, onButtonClick: () -> Unit, modifierButton: Modifier) {
+fun HeaderWithButton(
+    header: String,
+    buttonText: String,
+    onButtonClick: () -> Unit,
+    modifierButton: Modifier
+) {
   Row(
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
