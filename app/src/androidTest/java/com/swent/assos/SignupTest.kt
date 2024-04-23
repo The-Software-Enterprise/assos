@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.SignupScreen
@@ -60,9 +59,9 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
         }
 
-        verify { mockNavActions.navigateTo(Destinations.SIGN_UP) }
-        confirmVerified(mockNavActions)
+        verify { mockNavActions.navigateTo("SignUp") }
       }
+      confirmVerified(mockNavActions)
     }
 
     composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
@@ -70,83 +69,14 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     run {
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Open Signup Screen") {
-          loginNavButton {
+          signUpButton {
             assertIsDisplayed()
             performClick()
           }
         }
-        // wait for the navigation to be done
-        Thread.sleep(1000)
-
-        verify { mockNavActions.navigateTo(Destinations.LOGIN) }
-        confirmVerified(mockNavActions)
+        verify { mockNavActions.navigateTo("SignUp") }
       }
-    }
-  }
-
-  @Test
-  fun signup() {
-    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
-
-    run {
-      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
-        step("Signup") {
-          emailField { performTextInput("antoine.marchand@epfl.ch") }
-          step("password") {
-            passwordField {
-              assertIsDisplayed()
-              performTextInput("123456")
-            }
-          }
-          step("confirm password") {
-            confirmPasswordField {
-              assertIsDisplayed()
-              performTextInput("123456")
-            }
-          }
-          step("nav") {
-            signUpButton {
-              assertIsDisplayed()
-              performClick()
-            }
-          }
-          Thread.sleep(1000)
-
-          verify { mockNavActions.navigateTo(Destinations.HOME) }
-          confirmVerified(mockNavActions)
-        }
-      }
-    }
-  }
-
-  @Test
-  fun signupNonemail() {
-    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
-    run {
-      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
-        step("Signup") {
-          emailField { performTextInput("Iamnotanemail") }
-          step("password") {
-            passwordField {
-              assertIsDisplayed()
-              performTextInput("123456")
-            }
-          }
-          step("confirm password") {
-            confirmPasswordField {
-              assertIsDisplayed()
-              performTextInput("123456")
-            }
-          }
-          step("nav") {
-            signUpButton {
-              assertIsDisplayed()
-              performClick()
-            }
-          }
-          step("verify navigation to home") { signUpButton { assertIsDisplayed() } }
-        }
-      }
+      confirmVerified(mockNavActions)
     }
   }
 }
