@@ -18,6 +18,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.CalendarDataSource
 import com.swent.assos.model.data.CalendarEvent
+import com.swent.assos.ui.components.TimeSidebar
+import com.swent.assos.ui.screens.overview.BasicEvent
+import com.swent.assos.ui.screens.overview.Event
 import java.time.LocalDate
 import java.time.LocalDateTime
 

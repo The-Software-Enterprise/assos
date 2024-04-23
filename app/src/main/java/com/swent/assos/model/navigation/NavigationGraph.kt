@@ -6,12 +6,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.data.Association
-import com.swent.assos.ui.login.LoginScreen
-import com.swent.assos.ui.login.SignUpScreen
-import com.swent.assos.ui.screens.Settings
-import com.swent.assos.ui.screens.manageAssos.AssoDigest
-import com.swent.assos.ui.screens.manageAssos.CreateEvent
-import com.swent.assos.ui.screens.manageAssos.CreateNews
+import com.swent.assos.ui.screens.login.LoginScreen
+import com.swent.assos.ui.screens.login.SignUpScreen
+import com.swent.assos.ui.screens.profile.Settings
+import com.swent.assos.ui.screens.overview.AssoDigest
+import com.swent.assos.ui.screens.profile.CreateEvent
+import com.swent.assos.ui.screens.profile.CreateNews
 
 @Composable
 fun NavigationGraph() {
