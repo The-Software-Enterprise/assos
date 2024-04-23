@@ -19,6 +19,7 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
+import java.lang.Thread.sleep
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -132,6 +133,8 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           errorMessage {
             assertIsDisplayed()
             assertTextEquals("The supplied auth credential is incorrect, malformed or has expired.")
+            // assertTextEquals("There is no user record corresponding to this identifier. The user
+            // may have been deleted.")
           }
         }
       }
@@ -150,7 +153,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
           passwordField {
             assertIsDisplayed()
-            performTextInput("test1234")
+            performTextInput("test12")
           }
           loginButton {
             assertIsDisplayed()
@@ -158,6 +161,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           }
         }
       }
+      sleep(1000)
       verify { mockNavActions.navigateTo(Destinations.HOME.route) }
       confirmVerified(mockNavActions)
     }

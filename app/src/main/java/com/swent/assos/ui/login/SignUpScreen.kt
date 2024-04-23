@@ -39,7 +39,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var password by remember { mutableStateOf("") }
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
-  var badCredentials by remember { loginViewModel.badCredentials }
+  val badCredentials by remember { loginViewModel.badCredentials }
 
   Column(
       modifier =
