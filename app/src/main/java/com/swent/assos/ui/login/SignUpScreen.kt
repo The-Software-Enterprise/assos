@@ -39,8 +39,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var password by remember { mutableStateOf("") }
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
-  var error by remember { mutableStateOf("") }
-  var passwordTooShort by remember { mutableStateOf(false) }
+  var badCredentials by remember { loginViewModel.badCredentials }
 
   Column(
       modifier =
@@ -58,7 +57,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     OutlinedTextField(
         value = password,
         onValueChange = {
-          passwordTooShort = false
+          loginViewModel.badCredentials.value = false
           password = it
         },
         label = { Text("Password") },
@@ -66,7 +65,10 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         modifier = Modifier.testTag("PasswordField"))
     OutlinedTextField(
         value = confirmPassword,
-        onValueChange = { confirmPassword = it },
+        onValueChange = {
+          confirmPassword = it
+          loginViewModel.badCredentials.value = false
+        },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
         modifier = Modifier.testTag("ConfirmPasswordField"))
@@ -75,43 +77,36 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     }
     Button(
         onClick = {
-          if (password == confirmPassword && password.isNotEmpty() && password.length >= 6) {
-
-            loginViewModel.signUp(email, password) { success ->
-              if (!success) {
-                return@signUp
-              } else {
-                try {
-                  navigationActions.navigateTo(Destinations.HOME)
-                } catch (e: Exception) {
-                  throw e
-                }
-                // call the firebasefunction -> oncallFind.py
-                val data = hashMapOf("email" to email)
-                // wait for user to be created
-                val functions = FirebaseFunctions.getInstance("europe-west6")
-                val config = Config()
-                config.get_all { onlineServices ->
-                  val emu = onlineServices.contains("functions")
-                  if (emu) {
-                    functions.useEmulator("10.0.2.2", 5001)
-                  }
-                }
-                // change the region of the function to europe-west6
-                functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener {
-                  throw it
+          loginViewModel.signUp(email, password, confirmPassword) { success ->
+            if (!success) {
+              return@signUp
+            } else {
+              try {
+                navigationActions.navigateTo(Destinations.HOME)
+              } catch (e: Exception) {
+                throw e
+              }
+              // call the firebasefunction -> oncallFind.py
+              val data = hashMapOf("email" to email)
+              // wait for user to be created
+              val functions = FirebaseFunctions.getInstance("europe-west6")
+              val config = Config()
+              config.get_all { onlineServices ->
+                val emu = onlineServices.contains("functions")
+                if (emu) {
+                  functions.useEmulator("10.0.2.2", 5001)
                 }
               }
+              // change the region of the function to europe-west6
+              functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener { throw it }
             }
-          } else if (password.length < 6) {
-            passwordTooShort = true
           }
         },
         modifier = Modifier.testTag("SignUpButton")) {
           Text("Sign Up")
         }
-    if (passwordTooShort) {
-      Text("Password must be at least 6 characters", color = Color.Red)
+    if (badCredentials) {
+      Text("Password must be at least 6 characters and email must be filled", color = Color.Red)
     }
     Text(
         "Already have an account?",
