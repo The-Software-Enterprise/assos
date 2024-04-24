@@ -1,25 +1,28 @@
 package com.swent.assos.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -91,7 +94,10 @@ fun Explorer(navigationActions: NavigationActions) {
         }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).testTag("AssoList"),
+            modifier =
+                Modifier.padding(paddingValues)
+                    .testTag("AssoList")
+                    .background(color = Color(0x0F979797)),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
@@ -99,11 +105,9 @@ fun Explorer(navigationActions: NavigationActions) {
                   Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
+                item { Spacer(modifier = Modifier.height(5.dp)) }
                 items(items = associations, key = { it.id }) {
                   ListItemAsso(asso = it, navigationActions = navigationActions)
-                  Divider(
-                      modifier = Modifier.padding(horizontal = 20.dp),
-                      color = MaterialTheme.colorScheme.surface)
                 }
               }
             }
@@ -115,10 +119,15 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
   ListItem(
       modifier =
           Modifier.fillMaxWidth()
+              .padding(5.dp)
+              .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable {
-                val dest = Destinations.ASSO_DETAILS.route + "/${asso.id
-                      }"
+                val dest =
+                    Destinations.ASSO_DETAILS.route +
+                        "/${
+                  asso.id
+              }"
                 navigationActions.navigateTo(dest)
               }
               .padding(start = 20.dp, top = 5.dp, bottom = 5.dp, end = 5.dp),
@@ -136,12 +145,6 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
         Image(
             modifier = Modifier.size(40.dp),
             painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null)
-      },
-      trailingContent = {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = R.drawable.baseline_arrow_right_24),
             contentDescription = null)
       },
       colors =
@@ -162,7 +165,10 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
   val focusManager = LocalFocusManager.current
 
   Column(
-      modifier = Modifier.fillMaxWidth().padding(8.dp),
+      modifier =
+          Modifier.fillMaxWidth()
+              .padding(10.dp)
+              .background(color = Color(0xFFD9D9D9), shape = RoundedCornerShape(size = 28.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
@@ -182,6 +188,7 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
                 Image(imageVector = Icons.Default.Search, contentDescription = null)
               }
             },
+            leadingIcon = { Image(imageVector = Icons.Default.Menu, contentDescription = null) },
             placeholder = { Text(text = "Search an Association") },
             query = query,
             onQueryChange = { explorerViewModel.filterOnSearch(it) },
