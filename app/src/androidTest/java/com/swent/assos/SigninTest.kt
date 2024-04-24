@@ -162,6 +162,10 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             assertIsDisplayed()
             performTextInput("test1234")
           }
+          signUpButton {
+            assertIsDisplayed()
+            performClick()
+          }
         }
       }
     }
