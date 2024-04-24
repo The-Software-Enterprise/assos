@@ -67,7 +67,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Button(
             onClick = {
               loginViewModel.signIn(email, password)
-              if (loginViewModel.user != User("", "", "", "", emptyList(), emptyList())) {
+              if (loginViewModel.user != User("", "", "", "", emptyList(), mutableListOf())) {
                 navigationActions.navigateTo(Destinations.HOME.route)
               } else {
                 userNotFound = true
