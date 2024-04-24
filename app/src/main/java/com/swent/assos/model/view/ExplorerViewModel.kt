@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class OverviewViewModel
+class ExplorerViewModel
 @Inject
 constructor(private val dbService: DbService, private val authService: AuthService) : ViewModel() {
   private val _allAssociations = MutableStateFlow(emptyList<Association>())

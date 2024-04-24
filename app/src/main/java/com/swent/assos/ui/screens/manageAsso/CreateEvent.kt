@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens.manageAssos
+package com.swent.assos.ui.screens.manageAsso
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import com.swent.assos.model.navigation.NavigationActions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEvent(navigationActions: NavigationActions) {
+fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   Scaffold(
       topBar = {
         TopAppBar(

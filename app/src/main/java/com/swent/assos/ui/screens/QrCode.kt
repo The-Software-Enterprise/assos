@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.generateQRCodeBitmap
+import com.swent.assos.model.generateQRCodeBitmap
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.StudentSphereTitle
 
