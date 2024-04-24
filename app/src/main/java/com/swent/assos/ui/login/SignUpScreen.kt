@@ -40,6 +40,8 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   var confirmPassword by remember { mutableStateOf("") }
   val loginViewModel: LoginViewModel = hiltViewModel()
   val badCredentials by remember { loginViewModel.badCredentials }
+  val responseError by remember { loginViewModel.responseError }
+  val firebaseError by remember { loginViewModel.firebaseError }
 
   Column(
       modifier =
@@ -51,13 +53,18 @@ fun SignUpScreen(navigationActions: NavigationActions) {
   ) {
     OutlinedTextField(
         value = email,
-        onValueChange = { email = it },
+        onValueChange = {
+          email = it
+          loginViewModel.badCredentials.value = false
+          loginViewModel.firebaseError.value = false
+        },
         label = { Text("Email") },
         modifier = Modifier.testTag("EmailField"))
     OutlinedTextField(
         value = password,
         onValueChange = {
           loginViewModel.badCredentials.value = false
+          loginViewModel.firebaseError.value = false
           password = it
         },
         label = { Text("Password") },
@@ -68,6 +75,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         onValueChange = {
           confirmPassword = it
           loginViewModel.badCredentials.value = false
+          loginViewModel.firebaseError.value = false
         },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
@@ -105,6 +113,9 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         modifier = Modifier.testTag("SignUpButton")) {
           Text("Sign Up")
         }
+    if (firebaseError) {
+      Text(text = responseError, color = Color.Red)
+    }
     if (badCredentials) {
       Text("Password must be at least 6 characters and email must be filled", color = Color.Red)
     }
@@ -112,6 +123,8 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         "Already have an account?",
         modifier =
             Modifier.testTag("LoginNavButton").clickable {
+              loginViewModel.firebaseError.value = false
+              loginViewModel.badCredentials.value = false
               navigationActions.navigateTo(Destinations.LOGIN)
             })
   }

@@ -23,6 +23,8 @@ constructor(private val storageService: DbService, private val accountService: A
   var errorMessage = mutableStateOf("")
   var userNotFound = mutableStateOf(false)
   var badCredentials = mutableStateOf(false)
+  var responseError = mutableStateOf("")
+  var firebaseError = mutableStateOf(false)
 
   fun hashEmail(email: String): Int {
     val bytes = email.toByteArray()
@@ -63,9 +65,12 @@ constructor(private val storageService: DbService, private val accountService: A
       accountService.signUp(email, password).addOnCompleteListener { task ->
         if (task.isSuccessful) {
           Log.d("LoginViewModel", "User signed up")
+          responseError.value = ""
           callback(true)
         } else {
-          Log.e("LoginViewModel", "Error signing up")
+          Log.e("LoginViewModel", "Error signing up: ${task.exception}")
+          firebaseError.value = true
+          responseError.value = task.exception?.message ?: "Error signing up"
           callback(false)
         }
       }

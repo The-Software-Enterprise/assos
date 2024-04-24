@@ -11,7 +11,9 @@ import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.screens.LoginScreen
+import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
+import com.swent.assos.ui.login.SignUpScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -144,6 +146,25 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
 
   @Test
   fun signInWithGoodCredentials() {
+    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
+    run {
+      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+        step("Signup") {
+          emailField {
+            assertIsDisplayed()
+            performTextInput("jules.herrscher@epfl.ch")
+          }
+          passwordField {
+            assertIsDisplayed()
+            performTextInput("test1234")
+          }
+          confirmPasswordField {
+            assertIsDisplayed()
+            performTextInput("test1234")
+          }
+        }
+      }
+    }
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
