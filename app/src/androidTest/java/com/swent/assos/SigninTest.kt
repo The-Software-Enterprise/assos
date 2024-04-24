@@ -167,6 +167,9 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             performClick()
           }
         }
+        sleep(1000)
+        verify { mockNavActions.navigateTo(Destinations.HOME) }
+        confirmVerified(mockNavActions)
       }
     }
     composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
