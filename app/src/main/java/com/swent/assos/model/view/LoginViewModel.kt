@@ -62,6 +62,7 @@ constructor(private val storageService: DbService, private val accountService: A
     if (password == confirmPassword && password.length >= 6 && email.isNotEmpty()) {
       accountService.signUp(email, password).addOnCompleteListener { task ->
         if (task.isSuccessful) {
+          Log.d("LoginViewModel", "User signed up")
           callback(true)
         } else {
           Log.e("LoginViewModel", "Error signing up")
