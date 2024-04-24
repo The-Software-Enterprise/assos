@@ -21,9 +21,9 @@ import kotlinx.coroutines.launch
 class NewsViewModel
 @Inject
 constructor(
-  private val dbService: DbService,
-  private val authService: AuthService,
-  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val dbService: DbService,
+    private val authService: AuthService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
   private val _allNews = MutableStateFlow(emptyList<News>())
   val allNews = _allNews.asStateFlow()
@@ -34,13 +34,11 @@ constructor(
   private var _loading = false
 
   init {
-    viewModelScope.launch(ioDispatcher) { dbService.getAllNews(null).let { _allNews.value = it }
+    viewModelScope.launch(ioDispatcher) {
+      dbService.getAllNews(null).let { _allNews.value = it }
       userId = user.first().uid
-      dbService.getNewsFromFollowedAssociations(null, userId).let{
-        _news.value = it
-      }
+      dbService.getNewsFromFollowedAssociations(null, userId).let { _news.value = it }
     }
-
   }
 
   fun getNewsAssociation(associationId: String, callback: (Association) -> Unit) {
