@@ -14,7 +14,7 @@ interface DbService {
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
-  suspend fun getNewsFromFollowedAssociations(
+  suspend fun filterNewsBasedOnAssociations(
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
   ): List<News>

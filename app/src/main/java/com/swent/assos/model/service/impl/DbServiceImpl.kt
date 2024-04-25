@@ -78,16 +78,18 @@ constructor(
     }
   }
 
-  override suspend fun getNewsFromFollowedAssociations(
+  override suspend fun filterNewsBasedOnAssociations(
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
   ): List<News> {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return emptyList()
     val followedAssociations: List<Association> = snapshot.get("following") as List<Association>
+      val associationsTheUserBelongsTo: List<Association> = snapshot.get("associations") as List<Association>
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
-          news.associationId in followedAssociations.map { association -> association.id }
+          news.associationId in followedAssociations.map { association -> association.id } ||
+                  news.associationId in associationsTheUserBelongsTo.map { association -> association.id }
         }
     return news
   }
