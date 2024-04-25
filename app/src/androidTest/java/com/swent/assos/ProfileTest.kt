@@ -7,7 +7,7 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.screens.ProfileScreen
-import com.swent.assos.ui.screens.Profile
+import com.swent.assos.ui.screens.profile.Profile
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified

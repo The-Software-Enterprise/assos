@@ -8,13 +8,15 @@ import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
-import com.swent.assos.ui.screens.Settings
+import com.swent.assos.ui.screens.profile.NotificationSettings
+import com.swent.assos.ui.screens.profile.Settings
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import com.swent.assos.ui.screens.manageAsso.CreateEvent
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
+import com.swent.assos.ui.screens.profile.Appearance
 
 @Composable
 fun NavigationGraph() {
@@ -51,12 +53,18 @@ fun NavigationGraph() {
           navigationActions = navigationActions,
           assoId = backStackEntry.arguments?.getString("assoId") ?: "")
     }
+      composable(Destinations.NOTIFICATION_SETTINGS.route ) {
+          NotificationSettings(
+              navigationActions = navigationActions,
+              )
+      }
     composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
       ManageAssociation(
           assoId = backStackEntry.arguments?.getString("assoId").toString(),
           navigationActions = navigationActions)
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
+      composable(Destinations.APPEARANCE.route) { Appearance(navigationActions = navigationActions) }
   }
 }
 
@@ -71,4 +79,6 @@ enum class Destinations(val route: String) {
   ASSO_MODIFY_PAGE("AssoModifyPage"),
   EVENT_DETAILS("EventDetails"),
   NEWS_DETAILS("NewsDetails"),
+    NOTIFICATION_SETTINGS("NotificationSettings"),
+    APPEARANCE("Appearance"),
 }

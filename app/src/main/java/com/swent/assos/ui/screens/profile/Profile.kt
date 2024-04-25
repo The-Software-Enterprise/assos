@@ -1,44 +1,47 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.swent.assos.ui.screens
+package com.swent.assos.ui.screens.profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,11 +49,14 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.BasicButtonWithIcon
 import com.swent.assos.ui.components.PageTitle
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Profile(navigationActions: NavigationActions) {
+
+    var showLogOut by remember { mutableStateOf(false) }
 
   val viewModel: ProfileViewModel = hiltViewModel()
   val followedAssociationsList by viewModel.followedAssociations.collectAsState()
@@ -69,12 +75,17 @@ fun Profile(navigationActions: NavigationActions) {
             .padding(paddingValues)
             .fillMaxWidth()) {
           UserNameDisplay(completeName)
-            UserButtons("My Associations", navigationActions, Icons.Default.Home, Destinations.SETTINGS)
-            UserButtons("Following Associations", navigationActions, Icons.Default.Add, Destinations.SETTINGS)
-            UserButtons("Settings", navigationActions, Icons.Default.Settings, Destinations.SETTINGS)
-            UserButtons("Logout", navigationActions, Icons.Default.Logout, Destinations.SETTINGS)
+            BasicButtonWithIcon("My Associations",
+                { navigationActions.navigateTo(Destinations.SETTINGS) }, Icons.Default.Home)
+            BasicButtonWithIcon("Following Associations",
+                { navigationActions.navigateTo(Destinations.SETTINGS) }, Icons.Default.Add)
+            BasicButtonWithIcon("Settings", {navigationActions.navigateTo(Destinations.SETTINGS)}, Icons.Default.Settings)
+            BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
         }
       }
+    if (showLogOut) {
+        Logout(onConfirm = { /* Handle confirm action */ }, onDismiss = { showLogOut = false })
+    }
 }
 
 @Composable
@@ -105,31 +116,6 @@ fun UserNameDisplay(name: String) {
       }
 }
 
-@Composable
-fun UserButtons(buttonName: String, navigationActions: NavigationActions, icon: ImageVector, destination: Destinations) {
-    Row(
-        modifier =
-        Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .clickable { navigationActions.navigateTo(destination) },
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically) {
-        Spacer(modifier = Modifier.width(16.dp))
-        Image(imageVector = icon, contentDescription = buttonName, modifier = Modifier
-            .width(24.dp)
-            .height(24.dp))
-        Text(
-            text = buttonName,
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight(500),
-                color = Color(0xFF49454F),
-                letterSpacing = 0.1.sp,
-            )
-        )
-    }
 
-}
+
+
