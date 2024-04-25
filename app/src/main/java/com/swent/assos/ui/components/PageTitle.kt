@@ -1,10 +1,16 @@
 package com.swent.assos.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -12,34 +18,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
-import com.swent.assos.ui.screens.*
-import com.swent.assos.ui.theme.Purple40
-import com.swent.assos.ui.theme.Purple80
 
 @Composable
-fun StudentSphereTitle() {
-  Column(modifier = Modifier.fillMaxWidth()) {
+fun PageTitle(title: String) {
+  Column {
     Row(
-        modifier =
-            Modifier.padding(8.dp)
-                .align(Alignment.CenterHorizontally)
-                .wrapContentHeight(align = Alignment.CenterVertically)) {
+        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).testTag("TopBar"),
+        verticalAlignment = Alignment.CenterVertically) {
           Text(
-              text = "Student",
+              text = title,
               style =
                   TextStyle(
-                      fontSize = 35.sp,
-                      fontFamily = FontFamily(Font(R.font.impact)),
-                      fontWeight = FontWeight(400),
-                      color = Purple80))
-          Text(
-              text = "Sphere",
-              style =
-                  TextStyle(
-                      fontSize = 35.sp,
-                      fontFamily = FontFamily(Font(R.font.impact)),
-                      fontWeight = FontWeight(400),
-                      color = Purple40))
+                      fontSize = 24.sp,
+                      lineHeight = 32.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(600),
+                      color = Color.Black),
+              modifier = Modifier.padding(20.dp))
         }
   }
 }

@@ -24,13 +24,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.generateQRCodeBitmap
 import com.swent.assos.model.view.EventViewModel
-import com.swent.assos.ui.components.StudentSphereTitle
+import com.swent.assos.ui.components.PageTitle
 
 @Composable
 fun QrCode() {
   val eventViewModel: EventViewModel = hiltViewModel()
   val events by eventViewModel.allEvents.collectAsState()
-  Scaffold(topBar = { StudentSphereTitle() }) { paddingValues ->
+  Scaffold(topBar = { PageTitle("QR") }) { paddingValues ->
     Surface(color = MaterialTheme.colorScheme.background) {
       LazyColumn(
           modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
