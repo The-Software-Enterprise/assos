@@ -48,7 +48,7 @@ constructor(
                 _followedAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
-        currentUser.associations.forEach { (assoId, pos, rank) ->
+        currentUser.associations.forEach { (assoId, _, _) ->
           dbService.getAssociationById(assoId).let {
             _memberAssociations.value += it
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
