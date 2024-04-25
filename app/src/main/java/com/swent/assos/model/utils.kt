@@ -26,3 +26,8 @@ fun formatDateTime(dateString: String): String {
   val dateTime = LocalDateTime.parse(dateString, formatter)
   return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
 }
+
+fun generateUniqueID(): String {
+  val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  return (1..20).map { chars.random() }.joinToString("")
+}
