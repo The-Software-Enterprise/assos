@@ -1,6 +1,9 @@
 package com.swent.assos.model.data
 
+import androidx.compose.ui.graphics.Color
 import com.google.firebase.firestore.DocumentSnapshot
+import java.time.LocalDateTime
+import java.util.Date
 
 data class Event(
     val id: String,
@@ -9,5 +12,7 @@ data class Event(
     val image: String,
     val description: String,
     val date: String,
+    val startTime: Date,
+    val endTime: Date,
     val documentSnapshot: DocumentSnapshot? = null,
 )
