@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,11 +44,10 @@ class DbServiceTest {
     coEvery { mockFirestore.collection(any()).document(any()).delete() } returns
         Tasks.forResult(null)
 
-    val mockAuth = mockk<AuthService>()
+    val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()
-    val userFlow: Flow<FirebaseUser> = flow { emit(mockUser) }
 
-    coEvery { mockAuth.currentUser } returns userFlow
+    coEvery { mockAuth.currentUser } returns mockUser
     coEvery { mockUser.uid } returns "id"
 
     val dbService = DbServiceImpl(mockFirestore, mockAuth)
