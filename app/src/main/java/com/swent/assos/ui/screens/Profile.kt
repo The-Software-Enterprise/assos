@@ -39,14 +39,13 @@ import com.swent.assos.model.view.ProfileViewModel
 @Composable
 fun Profile(navigationActions: NavigationActions) {
 
-  val firstname = "Maximilien"
-  val surname = "GRIDEL"
-
   val viewModel: ProfileViewModel = hiltViewModel()
   val followedAssociationsList by viewModel.followedAssociations.collectAsState()
   val myAssociations by viewModel.memberAssociations.collectAsState()
+  val firstName by viewModel.firstName.collectAsState()
+  val lastName by viewModel.lastName.collectAsState()
 
-  val completeName = "$firstname $surname"
+  val completeName = "$firstName $lastName"
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
