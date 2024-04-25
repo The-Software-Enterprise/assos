@@ -211,14 +211,14 @@ constructor(
       onError: (String) -> Unit
   ) {
     val user = auth.currentUser
-      if (user != null) {
-          firestore
-              .collection("users")
-              .document(user.uid)
-              .update("following", FieldValue.arrayUnion(associationId))
-              .addOnSuccessListener { onSuccess() }
-              .addOnFailureListener { onError("Error") }
-      }
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayUnion(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
   }
 
   override suspend fun unfollowAssociation(
@@ -227,13 +227,13 @@ constructor(
       onError: (String) -> Unit
   ) {
     val user = auth.currentUser
-      if (user != null) {
-          firestore
-              .collection("users")
-              .document(user.uid)
-              .update("following", FieldValue.arrayRemove(associationId))
-              .addOnSuccessListener { onSuccess() }
-              .addOnFailureListener { onError("Unfollow Error") }
-      }
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayRemove(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Unfollow Error") }
+    }
   }
 }

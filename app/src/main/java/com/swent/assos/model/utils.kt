@@ -29,7 +29,5 @@ fun formatDateTime(dateString: String): String {
 
 fun generateUniqueID(): String {
   val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  return (1..20)
-    .map { chars.random() }
-    .joinToString("")
+  return (1..20).map { chars.random() }.joinToString("")
 }

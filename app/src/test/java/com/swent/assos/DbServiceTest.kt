@@ -7,12 +7,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.swent.assos.model.data.News
-import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.impl.DbServiceImpl
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
