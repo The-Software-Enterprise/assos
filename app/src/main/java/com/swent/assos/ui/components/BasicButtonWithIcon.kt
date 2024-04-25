@@ -21,34 +21,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
-import com.swent.assos.model.navigation.Destinations
-import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
 fun BasicButtonWithIcon(buttonName: String, callback: () -> Unit, icon: ImageVector) {
-    Row(
-        modifier =
-        Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .clickable { callback() },
-        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically) {
+  Row(
+      modifier = Modifier.fillMaxWidth().height(56.dp).clickable { callback() },
+      horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
+      verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(16.dp))
-        Image(imageVector = icon, contentDescription = buttonName, modifier = Modifier
-            .width(24.dp)
-            .height(24.dp))
+        Image(
+            imageVector = icon,
+            contentDescription = buttonName,
+            modifier = Modifier.width(24.dp).height(24.dp))
         Text(
             text = buttonName,
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight(500),
-                color = Color(0xFF49454F),
-                letterSpacing = 0.1.sp,
-            )
-        )
-    }
-
+            style =
+                TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight(500),
+                    color = Color(0xFF49454F),
+                    letterSpacing = 0.1.sp,
+                ))
+      }
 }

@@ -2,27 +2,21 @@
 
 package com.swent.assos.ui.screens.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,7 +26,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -41,7 +34,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -56,7 +48,7 @@ import com.swent.assos.ui.components.PageTitle
 @Composable
 fun Profile(navigationActions: NavigationActions) {
 
-    var showLogOut by remember { mutableStateOf(false) }
+  var showLogOut by remember { mutableStateOf(false) }
 
   val viewModel: ProfileViewModel = hiltViewModel()
   val followedAssociationsList by viewModel.followedAssociations.collectAsState()
@@ -67,35 +59,37 @@ fun Profile(navigationActions: NavigationActions) {
   val completeName = "$firstName $lastName"
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("ProfileScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
       topBar = { PageTitle(title = "Profile") }) { paddingValues ->
-        Column(modifier = Modifier
-            .padding(paddingValues)
-            .fillMaxWidth()) {
+        Column(modifier = Modifier.padding(paddingValues).fillMaxWidth()) {
           UserNameDisplay(completeName)
-            BasicButtonWithIcon("My Associations",
-                { navigationActions.navigateTo(Destinations.SETTINGS) }, Icons.Default.Home)
-            BasicButtonWithIcon("Following Associations",
-                { navigationActions.navigateTo(Destinations.SETTINGS) }, Icons.Default.Add)
-            BasicButtonWithIcon("Settings", {navigationActions.navigateTo(Destinations.SETTINGS)}, Icons.Default.Settings)
-            BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
+          BasicButtonWithIcon(
+              "My Associations",
+              { navigationActions.navigateTo(Destinations.MY_ASSOCIATIONS) },
+              Icons.Default.Home)
+          BasicButtonWithIcon(
+              "Following Associations",
+              { navigationActions.navigateTo(Destinations.FOLLOWING) },
+              Icons.Default.Add)
+          BasicButtonWithIcon(
+              "Settings",
+              { navigationActions.navigateTo(Destinations.SETTINGS) },
+              Icons.Default.Settings)
+          BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
         }
       }
-    if (showLogOut) {
-        Logout(onConfirm = { /* Handle confirm action */ }, onDismiss = { showLogOut = false })
-    }
+  if (showLogOut) {
+    Logout(onConfirm = { /* Handle confirm action */}, onDismiss = { showLogOut = false })
+  }
 }
 
 @Composable
 fun UserNameDisplay(name: String) {
   Row(
       modifier =
-      Modifier
-          .fillMaxWidth()
-          .height(56.dp)
-          .padding(start = 28.dp, top = 18.dp, end = 28.dp, bottom = 18.dp),
+          Modifier.fillMaxWidth()
+              .height(56.dp)
+              .padding(start = 28.dp, top = 18.dp, end = 28.dp, bottom = 18.dp),
       horizontalArrangement = Arrangement.Start,
       verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -109,13 +103,6 @@ fun UserNameDisplay(name: String) {
                     color = Color(0xFF49454F),
                     letterSpacing = 0.1.sp,
                 ),
-            modifier = Modifier
-                .width(106.dp)
-                .height(20.dp)
-                .testTag("Name"))
+            modifier = Modifier.width(106.dp).height(20.dp).testTag("Name"))
       }
 }
-
-
-
-

@@ -15,65 +15,64 @@ import com.swent.assos.R
 
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(
+  AlertDialog(
+      onDismissRequest = onDismiss,
+      title = {
+        Text(
             text = "Log out",
-            style = TextStyle(
-                fontSize = 24.sp,
-                lineHeight = 32.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight(400),
-                color = Color(0xFF1D1B20),
-
-                )
-        ) },
-        containerColor = Color.White,
-        text = { Text(
+            style =
+                TextStyle(
+                    fontSize = 24.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF1D1B20),
+                ))
+      },
+      containerColor = Color.White,
+      text = {
+        Text(
             text = "You will be returned to the login screen",
-            style = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 20.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight(400),
-                color = Color(0xFF49454F),
-
-                letterSpacing = 0.25.sp,
-            )
-        ) },
-        confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text(
-                    text = "Log out",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF6750A4),
-
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp,
-                    )
-                )
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text(
-                    text = "Cancel",
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF6750A4),
-
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp,
-                    )
-                )
-            }
+            style =
+                TextStyle(
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFF49454F),
+                    letterSpacing = 0.25.sp,
+                ))
+      },
+      confirmButton = {
+        TextButton(onClick = onConfirm) {
+          Text(
+              text = "Log out",
+              style =
+                  TextStyle(
+                      fontSize = 14.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(500),
+                      color = Color(0xFF6750A4),
+                      textAlign = TextAlign.Center,
+                      letterSpacing = 0.1.sp,
+                  ))
         }
-    )
+      },
+      dismissButton = {
+        TextButton(onClick = onDismiss) {
+          Text(
+              text = "Cancel",
+              style =
+                  TextStyle(
+                      fontSize = 14.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(600),
+                      color = Color(0xFF6750A4),
+                      textAlign = TextAlign.Center,
+                      letterSpacing = 0.1.sp,
+                  ))
+        }
+      })
 }

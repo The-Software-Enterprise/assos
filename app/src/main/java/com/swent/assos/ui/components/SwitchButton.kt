@@ -16,23 +16,21 @@ import androidx.compose.ui.semantics.Role.Companion.Switch
 
 @Composable
 fun SwitchButton() {
-    var checked by remember { mutableStateOf(true) }
+  var checked by remember { mutableStateOf(true) }
 
-    Switch(
-        checked = checked,
-        onCheckedChange = {
-            checked = it
-        },
-        thumbContent = if (checked) {
+  Switch(
+      checked = checked,
+      onCheckedChange = { checked = it },
+      thumbContent =
+          if (checked) {
             {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = null,
-                    modifier = Modifier.size(SwitchDefaults.IconSize),
-                )
+              Icon(
+                  imageVector = Icons.Filled.Check,
+                  contentDescription = null,
+                  modifier = Modifier.size(SwitchDefaults.IconSize),
+              )
             }
-        } else {
+          } else {
             null
-        }
-    )
+          })
 }

@@ -11,10 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,23 +30,25 @@ import com.swent.assos.model.navigation.NavigationActions
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(20.dp).testTag("TopBar"),
-            verticalAlignment = Alignment.CenterVertically) {
-            Image(imageVector = Icons.Default.ArrowBack, contentDescription = "goBack", modifier = Modifier
-                .width(24.dp)
-                .height(24.dp).clickable { navigationActions.goBack() })
-            Text(
-                text = title,
-                style =
-                TextStyle(
-                    fontSize = 24.sp,
-                    lineHeight = 32.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight(600),
-                    color = Color.Black),
-                modifier = Modifier.padding(10.dp))
+  Column {
+    Row(
+        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(20.dp).testTag("TopBar"),
+        verticalAlignment = Alignment.CenterVertically) {
+          Image(
+              imageVector = Icons.Default.ArrowBack,
+              contentDescription = "goBack",
+              modifier =
+                  Modifier.width(24.dp).height(24.dp).clickable { navigationActions.goBack() })
+          Text(
+              text = title,
+              style =
+                  TextStyle(
+                      fontSize = 24.sp,
+                      lineHeight = 32.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(600),
+                      color = Color.Black),
+              modifier = Modifier.padding(10.dp))
         }
-    }
+  }
 }
