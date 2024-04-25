@@ -24,7 +24,6 @@ import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Profile
-import com.swent.assos.ui.screens.QrCode
 import com.swent.assos.ui.screens.calendar.Calendar
 import kotlinx.coroutines.launch
 
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
-  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
+  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
 
   Column(
       modifier = Modifier.fillMaxSize(),
@@ -46,8 +45,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         0 -> News()
         1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
-        3 -> QrCode()
-        4 -> Profile(navigationActions = navigationActions)
+        3 -> Profile(navigationActions = navigationActions)
       }
     }
 
@@ -86,7 +84,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
-                3 ->
+                /*3 ->
                     Icon(
                         painterResource(id = R.drawable.qrcode),
                         contentDescription = "QR",
@@ -94,8 +92,8 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
-                4 ->
+                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))*/
+                3 ->
                     Icon(
                         painterResource(id = R.drawable.profil),
                         contentDescription = "Profil",

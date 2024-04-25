@@ -24,7 +24,7 @@ fun Calendar(
     eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
 ) {
     val calendarViewModel: CalendarViewModel = hiltViewModel()
-    val events = calendarViewModel._events.collectAsState()
+    val events = calendarViewModel.events.collectAsState()
   val dataSource = CalendarDataSource()
   var data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
   val verticalScrollState = rememberScrollState()

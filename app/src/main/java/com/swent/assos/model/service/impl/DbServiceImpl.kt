@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,6 +16,9 @@ import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 class DbServiceImpl
 @Inject
@@ -189,8 +193,8 @@ constructor(
               date = it.getString("date") ?: "",
               associationId = it.getString("associationId") ?: "",
               image = it.getString("image") ?: "",
-              startTime = it.getDate("startTime") ?: Date(),
-              endTime = it.getDate("endTime") ?: Date(),
+              startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
+              endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
               documentSnapshot = it
           )
       }
@@ -218,8 +222,8 @@ constructor(
                 date = it.getString("date") ?: "",
                 associationId = it.getString("associationId") ?: "",
                 image = it.getString("image") ?: "",
-                startTime = it.getDate("startTime") ?: Date(),
-                endTime = it.getDate("endTime") ?: Date(),
+                startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
+                endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
                 documentSnapshot = it
             )
         }
@@ -252,8 +256,8 @@ constructor(
           date = it.getString("date") ?: "",
           associationId = it.getString("associationId") ?: "",
           image = it.getString("image") ?: "",
-          startTime = it.getDate("startTime") ?: Date(),
-          endTime = it.getDate("endTime") ?: Date(),
+          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
+          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           documentSnapshot = it)
     }
   }
@@ -285,4 +289,11 @@ constructor(
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError("Unfollow Error") }
   }
+
+    private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime{
+        return LocalDateTime.ofInstant(
+            Instant.ofEpochSecond(timestamp?.seconds ?: 0),
+            ZoneId.systemDefault()
+        )
+    }
 }
