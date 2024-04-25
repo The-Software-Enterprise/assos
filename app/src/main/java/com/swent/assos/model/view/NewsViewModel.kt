@@ -37,7 +37,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       dbService.getAllNews(null).let { _allNews.value = it }
       userId = user.first().uid
-      dbService.getNewsFromFollowedAssociations(null, userId).let { _news.value = it }
+      dbService.filterNewsBasedOnAssociations(null, userId).let { _news.value = it }
     }
   }
 
