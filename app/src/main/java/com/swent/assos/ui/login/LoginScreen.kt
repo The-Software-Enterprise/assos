@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -43,7 +44,9 @@ fun LoginScreen(navigationActions: NavigationActions) {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
-        var userNotFound by remember { mutableStateOf(false) }
+        val userNotFound by remember { loginViewModel.userNotFound }
+        val errorMessage by remember { loginViewModel.errorMessage }
+
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
@@ -51,24 +54,29 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = {
+              email = it
+              loginViewModel.userNotFound.value = false
+            },
             label = { Text("Email") },
             modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("EmailField"))
 
         OutlinedTextField(
             value = password,
-            onValueChange = { password = it },
+            onValueChange = {
+              password = it
+              loginViewModel.userNotFound.value = false
+            },
             label = { Text("Password") },
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(16.dp).testTag("PasswordField"),
             visualTransformation = PasswordVisualTransformation())
 
         Button(
+            modifier = Modifier.testTag("LoginButton"),
             onClick = {
               loginViewModel.signIn(email, password) {
                 if (it) {
                   navigationActions.navigateTo(Destinations.HOME)
-                } else {
-                  userNotFound = true
                 }
               }
             },
@@ -77,13 +85,16 @@ fun LoginScreen(navigationActions: NavigationActions) {
         }
 
         if (userNotFound) {
-          Text("User not found, please sign up", color = Color.Red)
+          Text(modifier = Modifier.testTag("ErrorMessage"), text = errorMessage, color = Color.Red)
         }
 
         Text(
             // if clicked, go to sign up page using hilt navigation
             modifier =
-                Modifier.clickable { navigationActions.navigateTo(Destinations.SIGN_UP) }
+                Modifier.clickable {
+                      loginViewModel.userNotFound.value = false
+                      navigationActions.navigateTo(Destinations.SIGN_UP)
+                    }
                     .testTag("SignUpNavButton"),
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,

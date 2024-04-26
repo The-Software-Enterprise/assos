@@ -23,55 +23,43 @@ fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
   val appViewModel: AppViewModel = hiltViewModel()
-  // start destination is login screen if currentUser exists else home
-  val currentUser = appViewModel.getAuthUser().collectAsState().value.id
-  NavHost(
-      navController = navController,
-      startDestination =
-          if (currentUser == "") Destinations.LOGIN.route else Destinations.HOME.route) {
-        composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
-        composable(Destinations.SIGN_UP.route) {
-          SignUpScreen(navigationActions = navigationActions)
-        }
-        composable(Destinations.HOME.route) {
-          HomeNavigation(navigationActions = navigationActions)
-        }
-        composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
-          AssoDetails(
-              assoId = backStackEntry.arguments?.getString("assoId").toString(),
-              navigationActions = navigationActions)
-        }
-        composable(Destinations.EVENT_DETAILS.route + "/{eventId}") { backStackEntry ->
-          EventDetails(
-              eventId = backStackEntry.arguments?.getString("eventId").toString(),
-              navigationActions = navigationActions)
-        }
-        composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->
-          NewsDetails(
-              newsId = backStackEntry.arguments?.getString("newsId").toString(),
-              navigationActions = navigationActions)
-        }
-        composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
-          CreateNews(
-              navigationActions = navigationActions,
-              assoId = backStackEntry.arguments?.getString("assoId") ?: "")
-        }
-        composable(Destinations.CREATE_EVENT.route + "/{assoId}") { backStackEntry ->
-          CreateEvent(
-              navigationActions = navigationActions,
-              assoId = backStackEntry.arguments?.getString("assoId") ?: "")
-        }
-        composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
-          ManageAssociation(
-              assoId = backStackEntry.arguments?.getString("assoId").toString(),
-              navigationActions = navigationActions)
-        }
-        composable(Destinations.SETTINGS.route) {
-          Settings(
-              navigationActions = navigationActions,
-          )
-        }
-      }
+
+  NavHost(navController = navController, startDestination = Destinations.HOME.route) {
+    composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
+    composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
+    composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
+    composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
+      AssoDetails(
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.EVENT_DETAILS.route + "/{eventId}") { backStackEntry ->
+      EventDetails(
+          eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->
+      NewsDetails(
+          newsId = backStackEntry.arguments?.getString("newsId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+      CreateNews(
+          navigationActions = navigationActions,
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
+    composable(Destinations.CREATE_EVENT.route + "/{assoId}") { backStackEntry ->
+      CreateEvent(
+          navigationActions = navigationActions,
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
+    composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
+      ManageAssociation(
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
+  }
 }
 
 enum class Destinations(val route: String) {

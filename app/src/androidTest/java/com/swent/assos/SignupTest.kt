@@ -21,6 +21,7 @@ import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.verify
+import java.lang.Thread.sleep
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -75,9 +76,6 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
             performClick()
           }
         }
-        // wait for the navigation to be done
-        Thread.sleep(1000)
-
         verify { mockNavActions.navigateTo(Destinations.LOGIN) }
         confirmVerified(mockNavActions)
       }
@@ -91,7 +89,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     run {
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Signup") {
-          emailField { performTextInput("antoine.marchand@epfl.ch") }
+          emailField { performTextInput("emailtest@epfl.ch") }
           step("password") {
             passwordField {
               assertIsDisplayed()
@@ -110,11 +108,10 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               performClick()
             }
           }
-          Thread.sleep(1000)
-
-          verify { mockNavActions.navigateTo(Destinations.HOME) }
-          confirmVerified(mockNavActions)
         }
+        sleep(1000)
+        verify { mockNavActions.navigateTo(Destinations.HOME) }
+        confirmVerified(mockNavActions)
       }
     }
   }

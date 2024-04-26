@@ -22,15 +22,18 @@ constructor(
     private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-  /* TODO: Link to dataBase the membership,
-  for now all users are "Balélec" & "The Consulting Society" members */
-  private val _memberAssociationIDs = listOf("1UYICvqVKbImYMNK3Sz3", "5Ala8A5MEmoFe5JGJxJV")
 
   private val _followedAssociations = MutableStateFlow(emptyList<Association>())
   val followedAssociations = _followedAssociations.asStateFlow()
 
   private val _memberAssociations = MutableStateFlow(emptyList<Association>())
   val memberAssociations = _memberAssociations.asStateFlow()
+
+  private val _firstName = MutableStateFlow("")
+  val firstName = _firstName.asStateFlow()
+
+  private val _lastName = MutableStateFlow("")
+  val lastName = _lastName.asStateFlow()
 
   private var _loading = false
 
@@ -45,6 +48,9 @@ constructor(
   init {
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
+        _firstName.value = currentUser.firstName
+        _lastName.value = currentUser.lastName
+
         currentUser.following.forEach { id ->
           dbService.getAssociationById(id).let {
             _followedAssociations.value += it
@@ -52,8 +58,8 @@ constructor(
                 _followedAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
-        _memberAssociationIDs.forEach { id ->
-          dbService.getAssociationById(id).let {
+        currentUser.associations.forEach { (assoId, _, _) ->
+          dbService.getAssociationById(assoId).let {
             _memberAssociations.value += it
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
