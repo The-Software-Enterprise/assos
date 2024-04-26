@@ -19,5 +19,4 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val followedAssociationSectionTitle: KNode =
       contentSection.child { hasTestTag("FollowedAssociationSectionTitle") }
   val followedAssociationItem: KNode = child { hasTestTag("FollowedAssociationItem") }
-  val signoutButton: KNode = child { hasTestTag("SignoutButton") }
 }

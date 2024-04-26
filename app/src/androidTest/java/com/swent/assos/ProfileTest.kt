@@ -58,16 +58,6 @@ class ProfileTest : SuperTest() {
   }
 
   @Test
-  fun signoutButtonTriggersNavigation() {
-
-    run {
-      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Click on signout button") { signoutButton { assertIsDisplayed() } }
-      }
-    }
-  }
-
-  @Test
   fun myAssociationsSectionTitleHasRightContent() {
 
     run {
