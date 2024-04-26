@@ -15,7 +15,7 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val contentSection: KNode = child { hasTestTag("ContentSection") }
   val myAssociationSectionTitle: KNode =
       contentSection.child { hasTestTag("MyAssociationSectionTitle") }
-  val myAssociationItem: KNode = child { hasTestTag("MyAssociationItem") }
+  val myAssociationItem: KNode = contentSection.child { hasTestTag("MyAssociationItem") }
   val followedAssociationSectionTitle: KNode =
       contentSection.child { hasTestTag("FollowedAssociationSectionTitle") }
   val followedAssociationItem: KNode = child { hasTestTag("FollowedAssociationItem") }
