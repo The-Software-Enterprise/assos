@@ -45,6 +45,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -86,6 +88,7 @@ fun Explorer(navigationActions: NavigationActions) {
                     style =
                         TextStyle(
                             fontSize = 30.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                             fontWeight = FontWeight.Bold,
                         ),
                     modifier = Modifier.padding(start = 20.dp))
@@ -135,11 +138,16 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
         Text(
             text = asso.acronym,
             fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            //fontWeight = FontWeight(600),
+            fontWeight = FontWeight.Bold,
             color = Color.Black)
       },
       supportingContent = {
-        Text(text = asso.fullname, fontSize = 12.sp, fontWeight = FontWeight.Light)
+        Text(text = asso.fullname,
+            fontSize = 12.sp,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Light)
       },
       leadingContent = {
         Image(
