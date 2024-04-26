@@ -58,12 +58,13 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(Color.White),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.padding(0.dp)
+          Modifier.testTag("NewsItem")
+              .padding(0.dp)
               .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
         Column(
             // modifier = Modifier.fillMaxWidth()
             modifier =
-                Modifier.testTag("NewsItem").width(200.dp).padding(vertical = 0.dp).clickable {
+                Modifier.width(200.dp).padding(vertical = 0.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
         ) {
