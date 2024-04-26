@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -84,15 +85,16 @@ constructor(
   ): List<News> {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return emptyList()
-    val followedAssociations: List<Association> = snapshot.get("following") as List<Association>
-    val associationsTheUserBelongsTo: List<Association> =
-        snapshot.get("associations") as List<Association>
+    val followedAssociations: List<String> = (snapshot.get("following") ?: emptyList<String>()) as List<String>
+      Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $followedAssociations")
+    val associationsTheUserBelongsTo: List<String> =
+        (snapshot.get("associations") ?: emptyList<String>()) as List<String>
+        Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $associationsTheUserBelongsTo")
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
-          news.associationId in followedAssociations.map { association -> association.id } ||
-              news.associationId in
-                  associationsTheUserBelongsTo.map { association -> association.id }
+          news.associationId in followedAssociations || news.associationId in associationsTheUserBelongsTo
         }
+      Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $news")
     return news
   }
 
