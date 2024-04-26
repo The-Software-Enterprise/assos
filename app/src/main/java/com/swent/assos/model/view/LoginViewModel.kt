@@ -38,16 +38,15 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String, callback: () -> Unit) {
+  fun signIn(email: String, password: String, callback: (Boolean) -> Unit) {
     if (email.isEmpty() || password.isEmpty()) {
       errorMessage.value = "Please fill in all fields"
       userNotFound.value = true
-      return
+      callback(userNotFound.value)
     }
     accountService.signIn(email, password).addOnCompleteListener {
       if (it.isSuccessful) {
         Log.d("LoginViewModel", "User signed in")
-        callback()
       } else {
         errorMessage.value = it.exception?.message ?: "User not found, please sign up"
         userNotFound.value = true
