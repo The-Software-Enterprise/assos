@@ -66,7 +66,11 @@ fun NavigationGraph() {
               assoId = backStackEntry.arguments?.getString("assoId").toString(),
               navigationActions = navigationActions)
         }
-        composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
+        composable(Destinations.SETTINGS.route) {
+          Settings(
+              navigationActions = navigationActions,
+          )
+        }
       }
 }
 

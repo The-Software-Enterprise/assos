@@ -34,7 +34,6 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.SignoutButton
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -52,8 +51,6 @@ fun Profile(navigationActions: NavigationActions) {
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
       topBar = {
-        SignoutButton({ viewModel.signOut() }, navigationActions = navigationActions)
-
         TopAppBar(
             modifier = Modifier.testTag("TopBar"),
             title = { Text(text = completeName, modifier = Modifier.testTag("Name")) },
