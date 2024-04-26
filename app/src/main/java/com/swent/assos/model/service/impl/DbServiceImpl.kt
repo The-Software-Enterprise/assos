@@ -85,16 +85,18 @@ constructor(
   ): List<News> {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return emptyList()
-    val followedAssociations: List<String> = (snapshot.get("following") ?: emptyList<String>()) as List<String>
-      Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $followedAssociations")
+    val followedAssociations: List<String> =
+        (snapshot.get("following") ?: emptyList<String>()) as List<String>
+    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $followedAssociations")
     val associationsTheUserBelongsTo: List<String> =
         (snapshot.get("associations") ?: emptyList<String>()) as List<String>
-        Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $associationsTheUserBelongsTo")
+    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $associationsTheUserBelongsTo")
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
-          news.associationId in followedAssociations || news.associationId in associationsTheUserBelongsTo
+          news.associationId in followedAssociations ||
+              news.associationId in associationsTheUserBelongsTo
         }
-      Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $news")
+    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $news")
     return news
   }
 
