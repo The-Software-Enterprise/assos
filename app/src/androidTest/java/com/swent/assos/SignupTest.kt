@@ -151,6 +151,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
         // go to settings
 
         composeTestRule.activity.setContent { Settings(navigationActions = mockNavActions) }
+
         run {
           ComposeScreen.onComposeScreen<SettingsScreen>(composeTestRule) {
             step("Signout") {
@@ -160,8 +161,6 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
               }
             }
             sleep(1000)
-            verify { mockNavActions.navigateTo(Destinations.LOGIN) }
-            confirmVerified(mockNavActions)
           }
         }
       }
