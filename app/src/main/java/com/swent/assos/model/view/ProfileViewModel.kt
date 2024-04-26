@@ -39,6 +39,7 @@ constructor(
 
   fun signOut() {
     try {
+      DataCache.signOut()
       authService.signOut()
     } catch (e: Exception) {
       println("Error while signing out")

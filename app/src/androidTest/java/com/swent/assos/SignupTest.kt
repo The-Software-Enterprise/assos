@@ -3,13 +3,14 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.auth.FirebaseAuth
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.LoginViewModel
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
@@ -44,13 +45,15 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
   @Before
   fun setup() {
     hiltRule.inject()
-    val firebaseAuth = FirebaseAuth.getInstance()
-    firebaseAuth.signOut()
   }
 
   @Test
   fun navigateSignup() {
-    composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
+    composeTestRule.activity.setContent {
+      val loginViewModel: LoginViewModel = hiltViewModel()
+      loginViewModel.signOut()
+      LoginScreen(navigationActions = mockNavActions)
+    }
 
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
