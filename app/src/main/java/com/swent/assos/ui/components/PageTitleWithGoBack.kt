@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
   Column {
@@ -38,7 +37,7 @@ fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
               imageVector = Icons.Default.ArrowBack,
               contentDescription = "goBack",
               modifier =
-                  Modifier.width(24.dp).height(24.dp).clickable { navigationActions.goBack() })
+                  Modifier.width(24.dp).height(24.dp).clickable { navigationActions.goBack() }.testTag("GoBackButton"))
           Text(
               text = title,
               style =
@@ -48,7 +47,7 @@ fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(600),
                       color = Color.Black),
-              modifier = Modifier.padding(10.dp))
+              modifier = Modifier.padding(10.dp).testTag("PageTitle"))
         }
   }
 }

@@ -134,6 +134,9 @@ dependencies {
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
+
+  //Images
+  implementation ("io.coil-kt:coil-compose:2.1.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

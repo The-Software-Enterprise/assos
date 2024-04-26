@@ -25,7 +25,7 @@ fun Settings(navigationActions: NavigationActions) {
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("SettingsScreen"),
       topBar = { PageTitleWithGoBack(title = "Settings", navigationActions) },
   ) { paddingValues ->
-    Column(modifier = Modifier.padding(paddingValues).fillMaxWidth()) {
+    Column(modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
       BasicButtonWithIcon(
           "Notification settings",
           { navigationActions.navigateTo(Destinations.NOTIFICATION_SETTINGS) },

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -25,7 +26,7 @@ import com.swent.assos.R
 @Composable
 fun BasicButtonWithIcon(buttonName: String, callback: () -> Unit, icon: ImageVector) {
   Row(
-      modifier = Modifier.fillMaxWidth().height(56.dp).clickable { callback() },
+      modifier = Modifier.fillMaxWidth().height(56.dp).clickable { callback() }.testTag(buttonName+"Button"),
       horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
       verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(16.dp))
