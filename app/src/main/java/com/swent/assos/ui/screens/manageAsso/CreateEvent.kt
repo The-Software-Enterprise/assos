@@ -45,7 +45,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -105,8 +104,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
     AlertDialogFields(
         onDismissRequest = { openAlertDialogFields = false },
         onConfirmation = { openAlertDialogFields = false },
-        listFields = listFields
-    )
+        listFields = listFields)
   }
 
   Scaffold(
@@ -118,9 +116,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                   imageVector = Icons.Default.ArrowBack,
                   contentDescription = null,
                   modifier =
-                  Modifier
-                    .testTag("GoBackButton")
-                    .clickable { navigationActions.goBack() })
+                      Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
             },
             colors =
                 TopAppBarDefaults.mediumTopAppBarColors(
@@ -130,14 +126,13 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       },
       floatingActionButton = {
         FloatingActionButton(
-            onClick = { openAlertDialogAddFields = true }, shape = RoundedCornerShape(size = 16.dp)) {
+            onClick = { openAlertDialogAddFields = true },
+            shape = RoundedCornerShape(size = 16.dp)) {
               Image(imageVector = Icons.Default.Add, contentDescription = null)
             }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-              .padding(paddingValues)
-              .fillMaxWidth(),
+            modifier = Modifier.padding(paddingValues).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
               if (listFields.isNotEmpty()) {
                 item {
@@ -152,9 +147,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                 associationId = assoId,
                                 image = "",
                                 description = "",
-                                date = "",
-                                startTime = LocalDateTime.now(),
-                                endTime = LocalDateTime.now()
+                                date = ""
                                 /*TODO*/
                                 )
                         viewModel.createEvent(
@@ -193,9 +186,7 @@ fun AlertDialogAddFields(
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier
-          .width(400.dp)
-          .height(350.dp),
+        modifier = Modifier.width(400.dp).height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
@@ -220,17 +211,15 @@ fun AlertDialogAddFields(
                       }
                     },
                     modifier =
-                    Modifier
-                      .border(
-                        width = 1.dp,
-                        color =
-                        when (currentFieldType) {
-                          EventFieldType.IMAGE -> Color(0xFFBA1A1A)
-                          EventFieldType.TEXT -> Color(0xFFFB9905)
-                        },
-                        shape = RoundedCornerShape(size = 8.dp)
-                      )
-                      .height(32.dp),
+                        Modifier.border(
+                                width = 1.dp,
+                                color =
+                                    when (currentFieldType) {
+                                      EventFieldType.IMAGE -> Color(0xFFBA1A1A)
+                                      EventFieldType.TEXT -> Color(0xFFFB9905)
+                                    },
+                                shape = RoundedCornerShape(size = 8.dp))
+                            .height(32.dp),
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
@@ -295,89 +284,83 @@ fun AlertDialogFields(
 
   val lazyListState = rememberLazyListState()
   val reorderableLazyColumnState =
-    rememberReorderableLazyColumnState(lazyListState) { from, to ->
-      Log.d("CreateEvent", "from: ${from.index}, to: ${to.index}")
-      listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
-    }
+      rememberReorderableLazyColumnState(lazyListState) { from, to ->
+        Log.d("CreateEvent", "from: ${from.index}, to: ${to.index}")
+        listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
+      }
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier
-          .width(400.dp)
-          .height(350.dp),
+        modifier = Modifier.width(400.dp).height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           LazyColumn(
               modifier = Modifier.fillMaxSize(),
-            state = lazyListState,
+              state = lazyListState,
               horizontalAlignment = Alignment.CenterHorizontally) {
+                item {
+                  Spacer(modifier = Modifier.height(16.dp))
+                  Text("Move fields", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                  Spacer(modifier = Modifier.height(16.dp))
+                }
 
-            item {
-              Spacer(modifier = Modifier.height(16.dp))
-              Text("Move fields", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-              Spacer(modifier = Modifier.height(16.dp))
-            }
+                itemsIndexed(listFields, key = { _, item -> item.hashCode() }) { index, field ->
+                  ReorderableItem(reorderableLazyColumnState, key = field.hashCode()) {
+                    val interactionSource = remember { MutableInteractionSource() }
 
-            itemsIndexed(listFields, key = { _, item -> item.hashCode() }) { index, field ->
-              ReorderableItem(reorderableLazyColumnState, key = field.hashCode()) {
-                val interactionSource = remember { MutableInteractionSource() }
-
-                Card(
-                  onClick = {},
-                  modifier =
-                  Modifier
-                    .semantics {
-                      customActions =
-                        listOf(
-                          CustomAccessibilityAction(
-                            label = "Move Up",
-                            action = {
-                              Log.d("CreateEvent", "Move up")
-                              if (index > 0) {
-                                listFields.apply { add(index - 1, removeAt(index)) }
-                                true
-                              } else {
-                                false
-                              }
-                            }),
-                          CustomAccessibilityAction(
-                            label = "Move Down",
-                            action = {
-                              Log.d("CreateEvent", "Move down")
-                              if (index < listFields.size - 1) {
-                                listFields.apply { add(index + 1, removeAt(index)) }
-                                true
-                              } else {
-                                false
-                              }
-                            }),
-                        )
-                    },
-                  interactionSource = interactionSource,
-                ) {
-                  Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = field.title, Modifier.padding(horizontal = 8.dp))
-                    IconButton(
-                      modifier =
-                      Modifier
-                        .draggableHandle(interactionSource = interactionSource)
-                        .clearAndSetSemantics {},
-                      onClick = {}) {
-                      Icon(
-                        painterResource(id = R.drawable.menu),
-                        contentDescription = null)
+                    Card(
+                        onClick = {},
+                        modifier =
+                            Modifier.semantics {
+                              customActions =
+                                  listOf(
+                                      CustomAccessibilityAction(
+                                          label = "Move Up",
+                                          action = {
+                                            Log.d("CreateEvent", "Move up")
+                                            if (index > 0) {
+                                              listFields.apply { add(index - 1, removeAt(index)) }
+                                              true
+                                            } else {
+                                              false
+                                            }
+                                          }),
+                                      CustomAccessibilityAction(
+                                          label = "Move Down",
+                                          action = {
+                                            Log.d("CreateEvent", "Move down")
+                                            if (index < listFields.size - 1) {
+                                              listFields.apply { add(index + 1, removeAt(index)) }
+                                              true
+                                            } else {
+                                              false
+                                            }
+                                          }),
+                                  )
+                            },
+                        interactionSource = interactionSource,
+                    ) {
+                      Row(
+                          modifier = Modifier.fillMaxWidth(),
+                          horizontalArrangement = Arrangement.SpaceBetween,
+                          verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = field.title, Modifier.padding(horizontal = 8.dp))
+                            IconButton(
+                                modifier =
+                                    Modifier.draggableHandle(interactionSource = interactionSource)
+                                        .clearAndSetSemantics {},
+                                onClick = {}) {
+                                  Icon(
+                                      painterResource(id = R.drawable.menu),
+                                      contentDescription = null)
+                                }
+                          }
                     }
                   }
                 }
-              }
-            }
 
-            if (listFields.isEmpty()) {
-              item { Text(text = "No fields yet, click add button to add some") }
-
-            }
+                if (listFields.isEmpty()) {
+                  item { Text(text = "No fields yet, click add button to add some") }
+                }
                 item {
                   Row {
                     Button(onClick = { onDismissRequest() }) { Text("Cancel") }
