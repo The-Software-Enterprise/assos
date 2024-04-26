@@ -53,10 +53,10 @@ fun BasicEvent(
         )
 
         Text(
-          text = event.description,
-          maxLines = 1,
-          overflow = TextOverflow.Ellipsis,
-          )
+            text = event.description,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
       }
 }
 

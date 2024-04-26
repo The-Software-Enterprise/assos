@@ -134,6 +134,8 @@ dependencies {
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
+
+  implementation("sh.calvin.reorderable:reorderable:1.5.2")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

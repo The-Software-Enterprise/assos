@@ -85,14 +85,14 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                                 MaterialTheme.colorScheme.onBackground
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 /*3 ->
-                    Icon(
-                        painterResource(id = R.drawable.qrcode),
-                        contentDescription = "QR",
-                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))*/
+                Icon(
+                    painterResource(id = R.drawable.qrcode),
+                    contentDescription = "QR",
+                    modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
+                    tint =
+                        if (pagerState.currentPage == index)
+                            MaterialTheme.colorScheme.onBackground
+                        else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))*/
                 3 ->
                     Icon(
                         painterResource(id = R.drawable.profil),
