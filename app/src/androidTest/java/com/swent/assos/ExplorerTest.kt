@@ -1,15 +1,15 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.screens.OverviewScreen
-import com.swent.assos.ui.screens.Overview
+import com.swent.assos.screens.ExplorerScreen
+import com.swent.assos.ui.screens.Explorer
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -24,7 +24,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
+class ExplorerTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupport()) {
 
   @get:Rule(order = 1) var hiltRule = HiltAndroidRule(this)
 
@@ -39,16 +39,15 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
   @Before
   fun setup() {
     hiltRule.inject()
-    composeTestRule.activity.setContent { Overview(navigationActions = mockNavActions) }
+    composeTestRule.activity.setContent { Explorer(navigationActions = mockNavActions) }
   }
 
   @Test
   fun searchAssoFilterList() = run {
-    ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
+    ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -69,11 +68,10 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
   @Test
   fun navigateToAssoDigestScreen() = run {
-    ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
+    ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
       step("Open Search Bar") {
         searchAsso {
           assertIsDisplayed()
-
           performClick()
         }
       }
@@ -88,23 +86,13 @@ class OverviewTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
       assoListItems {
         assertIsDisplayed()
-
         performClick()
       }
     }
 
-    verify {
-      mockNavActions.navigateTo(
-          "AssociationPage/jMWo6NgngIS2hCq054TF/180°C/Association to promote cooking amongst students/https%3A%2F%2Fwww.180c.ch%2Fassociation%2F")
-    }
-    confirmVerified(mockNavActions)
-  }
+    // get the id of the association
 
-  @Test
-  fun titleHasTheRightContent() = run {
-    ComposeScreen.onComposeScreen<OverviewScreen>(composeTestRule) {
-      appTitle1 { assertTextContains("Student") }
-      appTitle2 { assertTextContains("Sphere") }
-    }
+    verify { mockNavActions.navigateTo("${Destinations.ASSO_DETAILS.route}/jMWo6NgngIS2hCq054TF") }
+    confirmVerified(mockNavActions)
   }
 }

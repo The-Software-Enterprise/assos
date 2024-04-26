@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens.manageAssos
+package com.swent.assos.ui.screens.manageAsso
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,11 +34,7 @@ import com.swent.assos.model.view.CreateNewsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateNews(
-    navigationActions: NavigationActions,
-    associationId: String,
-    isEdit: Boolean = false
-) {
+fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boolean = false) {
   val viewModel: CreateNewsViewModel = hiltViewModel()
 
   val news by viewModel.news.collectAsState()
@@ -105,7 +101,7 @@ fun CreateNews(
       }
       item {
         FilledIconButton(
-            onClick = { viewModel.createNews(associationId, navigationActions) },
+            onClick = { viewModel.createNews(assoId, navigationActions) },
             modifier =
                 Modifier.fillMaxWidth()
                     .padding(top = 10.dp, bottom = if (isEdit) 0.dp else 40.dp)

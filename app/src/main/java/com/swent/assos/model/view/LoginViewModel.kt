@@ -1,11 +1,10 @@
 package com.swent.assos.model.view
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.swent.assos.model.data.User
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,30 +20,11 @@ constructor(private val storageService: DbService, private val accountService: A
 
   val firestoreInstance = Firebase.firestore
 
-  var user = User("", "", "", "", emptyList(), emptyList())
-
-  fun updateUserInfo() {
-
-    val cuser = Firebase.auth.currentUser
-    cuser?.let {
-      val docRef = firestoreInstance.collection("users").document(it.uid)
-      docRef
-          .get()
-          .addOnSuccessListener { document ->
-            if (document != null) {
-              user =
-                  User(
-                      document.id as String,
-                      (document.data?.get("firstname") ?: "") as String,
-                      (document.data?.get("name") ?: "") as String,
-                      (document.data?.get("email") ?: "") as String,
-                      (document.data?.get("associations") ?: emptyList<String>()) as List<String>,
-                      (document.data?.get("following") ?: emptyList<String>()) as List<String>)
-            }
-          }
-          .addOnFailureListener { exception -> println("Error getting documents: $exception") }
-    }
-  }
+  var errorMessage = mutableStateOf("")
+  var userNotFound = mutableStateOf(false)
+  var badCredentials = mutableStateOf(false)
+  var responseError = mutableStateOf("")
+  var firebaseError = mutableStateOf(false)
 
   fun hashEmail(email: String): Int {
     val bytes = email.toByteArray()
@@ -57,23 +37,45 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String) {
+  fun signIn(email: String, password: String, callback: () -> Unit) {
+    if (email.isEmpty() || password.isEmpty()) {
+      errorMessage.value = "Please fill in all fields"
+      userNotFound.value = true
+      return
+    }
     accountService.signIn(email, password).addOnCompleteListener {
       if (it.isSuccessful) {
-        updateUserInfo()
+        Log.d("LoginViewModel", "User signed in")
+        callback()
       } else {
+        errorMessage.value = it.exception?.message ?: "User not found, please sign up"
+        userNotFound.value = true
         Log.e("LoginViewModel", "Error signing in")
       }
     }
   }
 
-  fun signUp(email: String, password: String) {
-    accountService.signUp(email, password).addOnCompleteListener {
-      if (it.isSuccessful) {
-        updateUserInfo()
-      } else {
-        Log.e("LoginViewModel", "Error signing up")
+  fun signUp(
+      email: String,
+      password: String,
+      confirmPassword: String,
+      callback: (Boolean) -> Unit
+  ) {
+    if (password == confirmPassword && password.length >= 6 && email.isNotEmpty()) {
+      accountService.signUp(email, password).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
+          Log.d("LoginViewModel", "User signed up")
+          responseError.value = ""
+          callback(true)
+        } else {
+          Log.e("LoginViewModel", "Error signing up: ${task.exception}")
+          firebaseError.value = true
+          responseError.value = task.exception?.message ?: "Error signing up"
+          callback(false)
+        }
       }
+    } else {
+      badCredentials.value = true
     }
   }
 }
