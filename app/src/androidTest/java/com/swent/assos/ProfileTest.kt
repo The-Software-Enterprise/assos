@@ -20,6 +20,8 @@ class ProfileTest : SuperTest() {
   override fun setup() {
     super.setup()
     composeTestRule.activity.setContent { Profile(navigationActions = mockNavActions) }
+    // signup
+
   }
 
   @Test
@@ -41,7 +43,18 @@ class ProfileTest : SuperTest() {
   }
 
   @Test
+  fun signoutButtonTriggersNavigation() {
+
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Click on signout button") { signoutButton { assertIsDisplayed() } }
+      }
+    }
+  }
+
+  @Test
   fun myAssociationsSectionTitleHasRightContent() {
+
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
         step("Check if my associations section title contains text") {

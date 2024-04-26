@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.di.IoDispatcher
+import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class ProfileViewModel
 @Inject
 constructor(
     private val dbService: DbService,
+    private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
   /* TODO: Link to dataBase the membership,
@@ -31,6 +33,14 @@ constructor(
   val memberAssociations = _memberAssociations.asStateFlow()
 
   private var _loading = false
+
+  fun signOut() {
+    try {
+      authService.signOut()
+    } catch (e: Exception) {
+      println("Error while signing out")
+    }
+  }
 
   init {
     viewModelScope.launch(ioDispatcher) {

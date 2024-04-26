@@ -1,6 +1,5 @@
 package com.swent.assos.model.view
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -33,23 +32,20 @@ constructor(private val storageService: DbService, private val accountService: A
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
 
-  fun signIn(email: String, password: String) {
+  fun signIn(email: String, password: String, callback: (Boolean) -> Unit) {
     accountService.signIn(email, password).addOnCompleteListener {
       if (it.isSuccessful) {
-        Log.d("LoginViewModel", "User signed in")
-      } else {
-        Log.e("LoginViewModel", "Error signing in")
+        accountService
       }
+      callback(it.isSuccessful)
     }
   }
 
   fun signUp(email: String, password: String, callback: (Boolean) -> Unit) {
-    accountService.signUp(email, password).addOnCompleteListener { task ->
-      if (task.isSuccessful) {
-        callback(true)
-      } else {
-        Log.e("LoginViewModel", "Error signing up")
-      }
-    }
+    accountService.signUp(email, password).addOnCompleteListener { callback(it.isSuccessful) }
+  }
+
+  fun signOut() {
+    accountService.signOut()
   }
 }

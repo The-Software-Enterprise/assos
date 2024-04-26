@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -45,7 +44,6 @@ fun LoginScreen(navigationActions: NavigationActions) {
         var password by remember { mutableStateOf("") }
         val loginViewModel: LoginViewModel = hiltViewModel()
         var userNotFound by remember { mutableStateOf(false) }
-
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = "Logo",
@@ -66,11 +64,12 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
         Button(
             onClick = {
-              loginViewModel.signIn(email, password)
-              if (loginViewModel.user != User("", "", "", "", emptyList(), mutableListOf())) {
-                navigationActions.navigateTo(Destinations.HOME.route)
-              } else {
-                userNotFound = true
+              loginViewModel.signIn(email, password) {
+                if (it) {
+                  navigationActions.navigateTo(Destinations.HOME)
+                } else {
+                  userNotFound = true
+                }
               }
             },
         ) {
