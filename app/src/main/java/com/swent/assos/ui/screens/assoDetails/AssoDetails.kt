@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,23 +16,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -56,9 +49,7 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
@@ -68,7 +59,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
-import java.net.ContentHandler
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -109,9 +99,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("AssoDetailsScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
       topBar = {
         TopAssoBar(
             assoId = assoId,
@@ -121,26 +109,23 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             viewModel = viewModel)
       }) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(10.dp)
-                    .height(200.dp)
-                    .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-                    //.border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
-                contentScale = ContentScale.Crop,
-            alignment = Alignment.Center)
+          Image(
+              painter = painterResource(id = R.drawable.ic_launcher_foreground),
+              contentDescription = null,
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .align(Alignment.CenterHorizontally)
+                      .padding(10.dp)
+                      .height(200.dp)
+                      .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+              // .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
+              contentScale = ContentScale.Crop,
+              alignment = Alignment.Center)
 
           Text(
               text = association.description,
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 16.dp, vertical = 0.dp))
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
 
           Text(
               text = "Upcoming Events",
@@ -188,9 +173,8 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
           }
-            Spacer(modifier = Modifier.height(20.dp))
-            CustomFAB(onClick = {})
-
+          Spacer(modifier = Modifier.height(20.dp))
+          CustomFAB(onClick = {})
         }
       }
 }
@@ -212,78 +196,75 @@ fun TopAssoBar(
         Image(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier
-                .testTag("GoBackButton")
-                .clickable { navigationActions.goBack() })
+            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {
-          /*Button(
-              modifier = Modifier.testTag("FollowButton"),
-              onClick = {
-                  if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
-                  else viewModel.followAssociation(assoId)
-              },
-              colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-              Text(
-                  modifier = Modifier.testTag("TextFollowButton"),
-                  text = if (currentUser.following.contains(assoId)) "Unfollow" else "Follow",
-                  color = Color.White)
-          }*/
-          AssistChip(
-              colors = if (currentUser.following.contains(assoId))
-                  AssistChipDefaults.assistChipColors(containerColor = Color(0xFFD9D9D9))
-              else AssistChipDefaults.assistChipColors(containerColor = Color(0xFF4285F4)),
-              border = AssistChipDefaults.assistChipBorder(
-                  borderWidth = 1.dp,
-                  borderColor = Color(0xFF4285F4)),
-
-              modifier = Modifier
-                  .testTag("FollowButton")
-                  .padding(5.dp),
-                  ////.shadow(elevation = 3.dp, spotColor = Color(0x26000000), ambientColor = Color(0x26000000))
-                  //.shadow(elevation = 2.dp, spotColor = Color(0x4D000000), ambientColor = Color(0x4D000000)),
-              onClick = {
+        /*Button(
+            modifier = Modifier.testTag("FollowButton"),
+            onClick = {
                 if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
-                else viewModel.followAssociation(assoId) },
-              label = {
+                else viewModel.followAssociation(assoId)
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+            Text(
+                modifier = Modifier.testTag("TextFollowButton"),
+                text = if (currentUser.following.contains(assoId)) "Unfollow" else "Follow",
+                color = Color.White)
+        }*/
+        AssistChip(
+            colors =
+                if (currentUser.following.contains(assoId))
+                    AssistChipDefaults.assistChipColors(containerColor = Color(0xFFD9D9D9))
+                else AssistChipDefaults.assistChipColors(containerColor = Color(0xFF4285F4)),
+            border = null,
+            modifier = Modifier.testTag("FollowButton").padding(5.dp),
+            onClick = {
+              if (currentUser.following.contains(assoId))
+                  currentUser.following += assoId /*viewModel.unfollowAssociation(assoId)*/
+              else currentUser.following -= assoId /*viewModel.followAssociation(assoId)*/
+            },
+            label = {
+              if (currentUser.following.contains(assoId)) {
                 Text(
-                  modifier = Modifier.testTag("TextFollowButton"),
-                  text = if (currentUser.following.contains(assoId)) "Unfollow" else "Follow",
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  fontWeight = FontWeight.Medium,
-                  color = Color.White)
-              },
-         )
+                    text = "Following",
+                    color = Color.Black,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.Medium,
+                )
+              } else {
+                Text(
+                    text = "Follow",
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.Medium,
+                )
+              }
+            },
+        )
       })
 }
 
 @Composable
 fun CustomFAB(onClick: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        FloatingActionButton(
-            onClick = onClick,
-            modifier = Modifier
-                .shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
+  Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.Center,
+  ) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier =
+            Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
                 .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
                 .width(92.dp)
                 .height(42.dp),
-            containerColor = Color(0xFF5465FF),
-
-            ) {
-            Text(
-                text = "Join us",
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.SemiBold,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        containerColor = Color(0xFF5465FF),
+    ) {
+      Text(
+          text = "Join us",
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.SemiBold,
+          color = Color.White,
+          style = MaterialTheme.typography.bodyMedium)
     }
+  }
 }
-
-
-
-

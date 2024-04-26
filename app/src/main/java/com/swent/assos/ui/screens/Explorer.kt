@@ -139,12 +139,13 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
             text = asso.acronym,
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-            //fontWeight = FontWeight(600),
+            // fontWeight = FontWeight(600),
             fontWeight = FontWeight.Bold,
             color = Color.Black)
       },
       supportingContent = {
-        Text(text = asso.fullname,
+        Text(
+            text = asso.fullname,
             fontSize = 12.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
             fontWeight = FontWeight.Light)

@@ -12,23 +12,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.model.data.News
@@ -60,36 +54,36 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       Spacer(modifier = Modifier.height(8.dp))
     }
   }*/
-    Card(
-        colors = CardDefaults.cardColors(Color.White),
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.padding(0.dp).border(width = 0.5.dp,
-            color = Color.LightGray,
-            shape = RoundedCornerShape(12.dp))
-    ) {
+  Card(
+      colors = CardDefaults.cardColors(Color.White),
+      shape = RoundedCornerShape(12.dp),
+      modifier =
+          Modifier.padding(0.dp)
+              .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
         Column(
-            //modifier = Modifier.fillMaxWidth()
-            modifier = Modifier.testTag("NewsItem").width(200.dp).padding(vertical = 0.dp).clickable {
-                navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
-            },
+            // modifier = Modifier.fillMaxWidth()
+            modifier =
+                Modifier.testTag("NewsItem").width(200.dp).padding(vertical = 0.dp).clickable {
+                  navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
+                },
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(84.dp)
-                    .background(Color.Gray)
+          Image(
+              painter = painterResource(id = R.drawable.ic_launcher_foreground),
+              contentDescription = null,
+              contentScale = ContentScale.FillHeight,
+              modifier = Modifier.fillMaxWidth().height(84.dp).background(Color.Gray))
 
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = news.title, style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = news.description, style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-            Spacer(modifier = Modifier.height(5.dp))
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+              text = news.title,
+              style = MaterialTheme.typography.titleMedium,
+              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
+          Spacer(modifier = Modifier.height(8.dp))
+          Text(
+              text = news.description,
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
+          Spacer(modifier = Modifier.height(5.dp))
         }
-    }
+      }
 }
