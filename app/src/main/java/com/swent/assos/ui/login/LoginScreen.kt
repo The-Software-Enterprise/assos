@@ -74,9 +74,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
             modifier = Modifier.testTag("LoginButton"),
             onClick = {
               loginViewModel.signIn(email, password) {
-                if (!it) {
-                  navigationActions.navigateTo(Destinations.HOME)
-                }
+                navigationActions.navigateTo(Destinations.HOME.route)
               }
             },
         ) {
