@@ -46,7 +46,6 @@ import com.swent.assos.ui.theme.Purple80
 fun News() {
   val viewModel: NewsViewModel = hiltViewModel()
   val news by viewModel.news.collectAsState()
-
   val listState = rememberLazyListState()
 
   LaunchedEffect(listState) {
@@ -88,64 +87,56 @@ fun News() {
               }
         }
       }) { paddingValues ->
-        if (news.isEmpty()) {
-          Text(
-              modifier = Modifier.padding(paddingValues),
-              text = "No news from followed associations or from the associations you are part of.",
-              style = TextStyle(fontSize = 20.sp))
-        } else {
-          LazyColumn(
-              modifier = Modifier.padding(paddingValues).testTag("NewsList"),
-              userScrollEnabled = true,
-              state = listState) {
-                items(news) {
-                  Box(
-                      modifier =
-                          Modifier.padding(16.dp)
-                              .shadow(
-                                  elevation = 10.dp,
-                                  spotColor = Color.Gray,
-                                  ambientColor = Color.Gray)
-                              .fillMaxSize()
-                              .background(
-                                  color = Color(0xFFFFFFFF),
-                                  shape = RoundedCornerShape(size = 15.dp))
-                              .testTag("NewsListItem")) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                          var association by remember {
-                            mutableStateOf(
-                                Association(
-                                    id = "",
-                                    acronym = "",
-                                    fullname = "",
-                                    description = "",
-                                    logo = ""))
-                          }
-                          viewModel.getNewsAssociation(it.associationId) { association = it }
-                          Text(
-                              modifier = Modifier.testTag("ItemsTitle"),
-                              fontSize = 20.sp,
-                              text = it.title,
-                          )
-                          Text(
-                              modifier = Modifier.testTag("ItemsDescription"),
-                              text = it.description,
-                          )
-                          Text(
-                              modifier = Modifier.testTag("ItemsDate"),
-                              text = it.date.toString(),
-                          )
-                          Text(
-                              modifier = Modifier.testTag("ItemsAssociation"),
-                              text = association.fullname,
-                          )
-                          Text(
-                              text = it.eventId,
-                          )
+        LazyColumn(
+            modifier = Modifier.padding(paddingValues).testTag("NewsList"),
+            userScrollEnabled = true,
+            state = listState) {
+              items(news) {
+                Box(
+                    modifier =
+                        Modifier.padding(16.dp)
+                            .shadow(
+                                elevation = 10.dp,
+                                spotColor = Color.Gray,
+                                ambientColor = Color.Gray)
+                            .fillMaxSize()
+                            .background(
+                                color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
+                            .testTag("NewsListItem")) {
+                      Column(modifier = Modifier.padding(16.dp)) {
+                        var association by remember {
+                          mutableStateOf(
+                              Association(
+                                  id = "",
+                                  acronym = "",
+                                  fullname = "",
+                                  description = "",
+                                  logo = ""))
                         }
+                        viewModel.getNewsAssociation(it.associationId) { association = it }
+                        Text(
+                            modifier = Modifier.testTag("ItemsTitle"),
+                            fontSize = 20.sp,
+                            text = it.title,
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsDescription"),
+                            text = it.description,
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsDate"),
+                            text = it.date.toString(),
+                        )
+                        Text(
+                            modifier = Modifier.testTag("ItemsAssociation"),
+                            text = association.fullname,
+                        )
+                        Text(
+                            text = it.eventId,
+                        )
                       }
-                }
+                    }
               }
-        }
+            }
       }
 }

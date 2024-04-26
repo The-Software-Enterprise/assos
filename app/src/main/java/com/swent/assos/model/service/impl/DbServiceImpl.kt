@@ -1,6 +1,5 @@
 package com.swent.assos.model.service.impl
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -109,16 +108,16 @@ constructor(
     val snapshot = query.get().await() ?: return emptyList()
     val followedAssociations: List<String> =
         (snapshot.get("following") ?: emptyList<String>()) as List<String>
-    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $followedAssociations")
     val associationsTheUserBelongsTo: List<String> =
         (snapshot.get("associations") ?: emptyList<String>()) as List<String>
-    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $associationsTheUserBelongsTo")
+    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
+      return getAllNews(lastDocumentSnapshot)
+    }
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
           news.associationId in followedAssociations ||
               news.associationId in associationsTheUserBelongsTo
         }
-    Log.d("DbServiceImpl", "filterNewsBasedOnAssociations: $news")
     return news
   }
 
