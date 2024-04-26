@@ -23,8 +23,8 @@ fun Calendar(
     dayHeader: @Composable (day: LocalDate) -> Unit = { WeekDayHeader(day = it) },
     eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
 ) {
-    val calendarViewModel: CalendarViewModel = hiltViewModel()
-    val events = calendarViewModel.events.collectAsState()
+  val calendarViewModel: CalendarViewModel = hiltViewModel()
+  val events = calendarViewModel.events.collectAsState()
   val dataSource = CalendarDataSource()
   var data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
   val verticalScrollState = rememberScrollState()
@@ -33,9 +33,7 @@ fun Calendar(
   val dayWidth = 256.dp
   val hourHeight = 64.dp
 
-  Column(modifier = Modifier
-      .padding(16.dp)
-      .fillMaxSize()) {
+  Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
     ChangeWeek(
         data = data,
         onPrevClickListener = { startDate ->
@@ -55,19 +53,16 @@ fun Calendar(
         data = data,
         dayWidth = dayWidth,
         modifier =
-        Modifier
-            .padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
-            .horizontalScroll(horizontalScrollState),
+            Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
+                .horizontalScroll(horizontalScrollState),
         dayHeader)
 
     Row {
       TimeSidebar(
           hourHeight = 64.dp,
           modifier =
-          Modifier
-              .verticalScroll(verticalScrollState)
-              .onGloballyPositioned {
-                  sidebarWidth = it.size.width
+              Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
+                sidebarWidth = it.size.width
               })
 
       Event(
@@ -77,10 +72,9 @@ fun Calendar(
           hourHeight = hourHeight,
           data = data,
           modifier =
-          Modifier
-              .weight(1f)
-              .verticalScroll(verticalScrollState)
-              .horizontalScroll(horizontalScrollState))
+              Modifier.weight(1f)
+                  .verticalScroll(verticalScrollState)
+                  .horizontalScroll(horizontalScrollState))
     }
   }
 }
