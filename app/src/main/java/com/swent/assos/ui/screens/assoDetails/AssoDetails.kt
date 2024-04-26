@@ -219,8 +219,7 @@ fun TopAssoBar(
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {
-              if (currentUser.following.contains(assoId))
-                  viewModel.unfollowAssociation(assoId)
+              if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
               else viewModel.followAssociation(assoId)
             },
             label = {
