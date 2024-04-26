@@ -24,13 +24,14 @@ fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
   val appViewModel: AppViewModel = hiltViewModel()
-    val user by appViewModel.getAuthUser().collectAsState()
+  val user by appViewModel.getAuthUser().collectAsState()
 
-    val startDestinations = if (user.id == "") {
+  val startDestinations =
+      if (user.id == "") {
         Destinations.LOGIN.route
-    } else {
+      } else {
         Destinations.HOME.route
-    }
+      }
 
   NavHost(navController = navController, startDestination = startDestinations) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
