@@ -1,6 +1,6 @@
 package com.swent.assos.model.service.impl
 
-import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -9,22 +9,17 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
-import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 class DbServiceImpl
 @Inject
 constructor(
     private val firestore: FirebaseFirestore,
-    private val auth: AuthService,
+    private val auth: FirebaseAuth,
 ) : DbService {
 
   override suspend fun getUser(userId: String): User {
@@ -32,7 +27,7 @@ constructor(
     val snapshot = query.get().await() ?: return User()
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "",
+        firstName = snapshot.getString("firstName") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
         following =
@@ -42,20 +37,6 @@ constructor(
                   .toMutableList()
             } else {
               mutableListOf()
-            },
-        associations =
-            if (snapshot.get("associations") is List<*>) {
-              (snapshot.get("associations") as List<*>)
-                  .filterIsInstance<Map<String, Any>>()
-                  .map {
-                    Triple(
-                        it["assoId"] as String,
-                        it["position"] as String,
-                        (it["rank"] as Long).toInt())
-                  }
-                  .toList()
-            } else {
-              emptyList()
             })
   }
 
@@ -188,61 +169,9 @@ constructor(
     }
   }
 
-  override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("date", Query.Direction.ASCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map {
-      Event(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          date = it.getString("date") ?: "",
-          associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
-          documentSnapshot = it)
-    }
-  }
-
-  override suspend fun getAllEventsFromAnAssociation(
-      associationId: String,
-      lastDocumentSnapshot: DocumentSnapshot?
-  ): List<Event> {
-    val query =
-        firestore
-            .collection("events")
-            .whereEqualTo("associationId", associationId)
-            .orderBy("date", Query.Direction.ASCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map {
-      Event(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          date = it.getString("date") ?: "",
-          associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
-          documentSnapshot = it)
-    }
+  override suspend fun getAllEvents(): List<Event> {
+    // TODO: Implement this method
+    return emptyList()
   }
 
   override suspend fun getEvents(
@@ -272,31 +201,8 @@ constructor(
           date = it.getString("date") ?: "",
           associationId = it.getString("associationId") ?: "",
           image = it.getString("image") ?: "",
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           documentSnapshot = it)
     }
-  }
-
-  override suspend fun createEvent(
-      associationId: String,
-      event: Event,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    firestore
-        .collection("events")
-        .add(
-            mapOf(
-                "title" to event.title,
-                "description" to event.description,
-                "date" to event.date,
-                "associationId" to associationId,
-                "image" to event.image,
-                "startTime" to event.startTime,
-                "endTime" to event.endTime))
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Error") }
   }
 
   override suspend fun followAssociation(
@@ -304,13 +210,15 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser.first()
-    firestore
-        .collection("users")
-        .document(user.uid)
-        .update("following", FieldValue.arrayUnion(associationId))
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Error") }
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayUnion(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
   }
 
   override suspend fun unfollowAssociation(
@@ -318,17 +226,14 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser.first()
-    firestore
-        .collection("users")
-        .document(user.uid)
-        .update("following", FieldValue.arrayRemove(associationId))
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Unfollow Error") }
-  }
-
-  private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
-    return LocalDateTime.ofInstant(
-        Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayRemove(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Unfollow Error") }
+    }
   }
 }
