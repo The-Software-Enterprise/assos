@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,7 +36,10 @@ fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
               imageVector = Icons.Default.ArrowBack,
               contentDescription = "goBack",
               modifier =
-                  Modifier.width(24.dp).height(24.dp).clickable { navigationActions.goBack() }.testTag("GoBackButton"))
+                  Modifier.width(24.dp)
+                      .height(24.dp)
+                      .clickable { navigationActions.goBack() }
+                      .testTag("GoBackButton"))
           Text(
               text = title,
               style =

@@ -1,8 +1,6 @@
 package com.swent.assos.ui.screens.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -27,25 +25,27 @@ import com.swent.assos.ui.components.PageTitleWithGoBack
 @Composable
 fun Following(navigationActions: NavigationActions) {
 
-    val viewModel: ProfileViewModel = hiltViewModel()
-    val followedAssociationsList by viewModel.followedAssociations.collectAsState()
+  val viewModel: ProfileViewModel = hiltViewModel()
+  val followedAssociationsList by viewModel.followedAssociations.collectAsState()
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("FollowingScreen"),
       topBar = { PageTitleWithGoBack(title = "Following", navigationActions) },
   ) { paddingValues ->
-      LazyColumn(
-          contentPadding = paddingValues, modifier =
-          Modifier
-              .testTag("ContentSection")
-              .background(MaterialTheme.colorScheme.background)
-              .padding(16.dp)
-      ) {
+    LazyColumn(
+        contentPadding = paddingValues,
+        modifier =
+            Modifier.testTag("ContentSection")
+                .background(MaterialTheme.colorScheme.background)
+                .padding(16.dp)) {
           items(followedAssociationsList.size) { k ->
-              AssociationCard(association = followedAssociationsList[k], callback = {
-                  navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${followedAssociationsList[k].id}")
-              })
+            AssociationCard(
+                association = followedAssociationsList[k],
+                callback = {
+                  navigationActions.navigateTo(
+                      Destinations.ASSO_DETAILS.route + "/${followedAssociationsList[k].id}")
+                })
           }
-      }
+        }
   }
 }

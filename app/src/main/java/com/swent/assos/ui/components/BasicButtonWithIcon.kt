@@ -26,7 +26,11 @@ import com.swent.assos.R
 @Composable
 fun BasicButtonWithIcon(buttonName: String, callback: () -> Unit, icon: ImageVector) {
   Row(
-      modifier = Modifier.fillMaxWidth().height(56.dp).clickable { callback() }.testTag(buttonName+"Button"),
+      modifier =
+          Modifier.fillMaxWidth()
+              .height(56.dp)
+              .clickable { callback() }
+              .testTag(buttonName + "Button"),
       horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
       verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(16.dp))

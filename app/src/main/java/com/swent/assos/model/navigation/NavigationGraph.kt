@@ -2,10 +2,8 @@ package com.swent.assos.model.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
@@ -68,18 +66,15 @@ fun NavigationGraph() {
 
     composable(Destinations.FOLLOWING.route) { Following(navigationActions = navigationActions) }
 
-        composable(Destinations.NOTIFICATION_SETTINGS.route) {
-          NotificationSettings(navigationActions = navigationActions)
-        }
-        composable(Destinations.APPEARANCE.route) { Appearance(navigationActions = navigationActions) }
-        composable(Destinations.MY_ASSOCIATIONS.route) {
-          MyAssociations(
-              navigationActions = navigationActions)
-        }
-
+    composable(Destinations.NOTIFICATION_SETTINGS.route) {
+      NotificationSettings(navigationActions = navigationActions)
+    }
+    composable(Destinations.APPEARANCE.route) { Appearance(navigationActions = navigationActions) }
+    composable(Destinations.MY_ASSOCIATIONS.route) {
+      MyAssociations(navigationActions = navigationActions)
+    }
   }
 }
-
 
 enum class Destinations(val route: String) {
   LOGIN("Login"),

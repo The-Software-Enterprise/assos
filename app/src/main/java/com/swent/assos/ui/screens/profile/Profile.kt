@@ -62,28 +62,29 @@ fun Profile(navigationActions: NavigationActions) {
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
       topBar = { PageTitle(title = "Profile") }) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
-          UserNameDisplay(completeName)
-          BasicButtonWithIcon(
-              "My Associations",
-              { navigationActions.navigateTo(Destinations.MY_ASSOCIATIONS) },
-              Icons.Default.Home)
-          BasicButtonWithIcon(
-              "Following Associations",
-              { navigationActions.navigateTo(Destinations.FOLLOWING) },
-              Icons.Default.Add)
-          BasicButtonWithIcon(
-              "Settings",
-              { navigationActions.navigateTo(Destinations.SETTINGS) },
-              Icons.Default.Settings)
-          BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
+        Column(
+            modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
+              UserNameDisplay(completeName)
+              BasicButtonWithIcon(
+                  "My Associations",
+                  { navigationActions.navigateTo(Destinations.MY_ASSOCIATIONS) },
+                  Icons.Default.Home)
+              BasicButtonWithIcon(
+                  "Following Associations",
+                  { navigationActions.navigateTo(Destinations.FOLLOWING) },
+                  Icons.Default.Add)
+              BasicButtonWithIcon(
+                  "Settings",
+                  { navigationActions.navigateTo(Destinations.SETTINGS) },
+                  Icons.Default.Settings)
+              BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
 
-            if (showLogOut) {
-                Logout(onConfirm = { /* Handle confirm action */}, onDismiss = { showLogOut = false })
+              if (showLogOut) {
+                Logout(
+                    onConfirm = { /* Handle confirm action */}, onDismiss = { showLogOut = false })
+              }
             }
-        }
       }
-
 }
 
 @Composable
@@ -112,13 +113,13 @@ fun UserNameDisplay(name: String) {
 
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Text(
-                text = "Log out",
-                modifier = Modifier.testTag("LogoutTitle"),
-                style =
+  AlertDialog(
+      onDismissRequest = onDismiss,
+      title = {
+        Text(
+            text = "Log out",
+            modifier = Modifier.testTag("LogoutTitle"),
+            style =
                 TextStyle(
                     fontSize = 24.sp,
                     lineHeight = 32.sp,
@@ -126,13 +127,13 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     fontWeight = FontWeight(400),
                     color = Color(0xFF1D1B20),
                 ))
-        },
-        containerColor = Color.White,
-        text = {
-            Text(
-                modifier = Modifier.testTag("LogoutText"),
-                text = "You will be returned to the login screen",
-                style =
+      },
+      containerColor = Color.White,
+      text = {
+        Text(
+            modifier = Modifier.testTag("LogoutText"),
+            text = "You will be returned to the login screen",
+            style =
                 TextStyle(
                     fontSize = 14.sp,
                     lineHeight = 20.sp,
@@ -141,37 +142,37 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     color = Color(0xFF49454F),
                     letterSpacing = 0.25.sp,
                 ))
-        },
-        confirmButton = {
-            TextButton(onClick = onConfirm, modifier = Modifier.testTag("LogoutConfirmButton")) {
-                Text(
-                    text = "Log out",
-                    style =
-                    TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight(500),
-                        color = Color(0xFF6750A4),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp,
-                    ))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss, modifier = Modifier.testTag("LogoutCancelButton")) {
-                Text(
-                    text = "Cancel",
-                    style =
-                    TextStyle(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight(600),
-                        color = Color(0xFF6750A4),
-                        textAlign = TextAlign.Center,
-                        letterSpacing = 0.1.sp,
-                    ))
-            }
-        })
+      },
+      confirmButton = {
+        TextButton(onClick = onConfirm, modifier = Modifier.testTag("LogoutConfirmButton")) {
+          Text(
+              text = "Log out",
+              style =
+                  TextStyle(
+                      fontSize = 14.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(500),
+                      color = Color(0xFF6750A4),
+                      textAlign = TextAlign.Center,
+                      letterSpacing = 0.1.sp,
+                  ))
+        }
+      },
+      dismissButton = {
+        TextButton(onClick = onDismiss, modifier = Modifier.testTag("LogoutCancelButton")) {
+          Text(
+              text = "Cancel",
+              style =
+                  TextStyle(
+                      fontSize = 14.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight(600),
+                      color = Color(0xFF6750A4),
+                      textAlign = TextAlign.Center,
+                      letterSpacing = 0.1.sp,
+                  ))
+        }
+      })
 }

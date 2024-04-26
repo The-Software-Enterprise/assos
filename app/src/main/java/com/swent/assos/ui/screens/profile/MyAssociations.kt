@@ -1,8 +1,6 @@
 package com.swent.assos.ui.screens.profile
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -17,7 +15,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
@@ -28,27 +25,27 @@ import com.swent.assos.ui.components.PageTitleWithGoBack
 @Composable
 fun MyAssociations(navigationActions: NavigationActions) {
 
-    val viewModel: ProfileViewModel = hiltViewModel()
-    val myAssociations by viewModel.memberAssociations.collectAsState()
+  val viewModel: ProfileViewModel = hiltViewModel()
+  val myAssociations by viewModel.memberAssociations.collectAsState()
 
-    Scaffold(
-        modifier = Modifier
-            .semantics { testTagsAsResourceId = true }
-            .testTag("MyAssociationsScreen"),
-        topBar = { PageTitleWithGoBack(title = "My Associations", navigationActions) },
-    ) { paddingValues ->
-        LazyColumn(
-            contentPadding = paddingValues, modifier =
-            Modifier
-                .testTag("ContentSection")
+  Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyAssociationsScreen"),
+      topBar = { PageTitleWithGoBack(title = "My Associations", navigationActions) },
+  ) { paddingValues ->
+    LazyColumn(
+        contentPadding = paddingValues,
+        modifier =
+            Modifier.testTag("ContentSection")
                 .background(MaterialTheme.colorScheme.background)
-                .padding(16.dp)
-        ) {
-            items(myAssociations.size) { k ->
-                AssociationCard(association = myAssociations[k], callback = {
-                    navigationActions.navigateTo(Destinations.ASSO_MODIFY_PAGE.route + "/${myAssociations[k].id}")
+                .padding(16.dp)) {
+          items(myAssociations.size) { k ->
+            AssociationCard(
+                association = myAssociations[k],
+                callback = {
+                  navigationActions.navigateTo(
+                      Destinations.ASSO_MODIFY_PAGE.route + "/${myAssociations[k].id}")
                 })
-            }
+          }
         }
-    }
+  }
 }

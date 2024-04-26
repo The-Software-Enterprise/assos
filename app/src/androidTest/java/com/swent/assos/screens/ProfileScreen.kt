@@ -10,19 +10,19 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         viewBuilderAction = { hasTestTag("ProfileScreen") }) {
 
   val topBar: KNode = child { hasTestTag("TopBar") }
-    val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
+  val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
 
-    val contentSection: KNode = child { hasTestTag("ContentSection") }
+  val contentSection: KNode = child { hasTestTag("ContentSection") }
 
-    val name: KNode = contentSection.child { hasTestTag("Name") }
-    val myAssociationsButton: KNode = contentSection.child { hasTestTag("My AssociationsButton") }
-    val followingAssociationsButton: KNode = contentSection.child { hasTestTag("Following AssociationsButton") }
-    val settingsButton: KNode = contentSection.child { hasTestTag("SettingsButton") }
-    val logoutButton: KNode = contentSection.child { hasTestTag("Log OutButton") }
+  val name: KNode = contentSection.child { hasTestTag("Name") }
+  val myAssociationsButton: KNode = contentSection.child { hasTestTag("My AssociationsButton") }
+  val followingAssociationsButton: KNode =
+      contentSection.child { hasTestTag("Following AssociationsButton") }
+  val settingsButton: KNode = contentSection.child { hasTestTag("SettingsButton") }
+  val logoutButton: KNode = contentSection.child { hasTestTag("Log OutButton") }
 
-    val logoutTitle: KNode = child  { hasTestTag("LogoutTitle") }
-    val logoutText: KNode = child  { hasTestTag("LogoutText") }
-    val logoutConfirmButton: KNode = child  { hasTestTag("LogoutConfirmButton") }
-    val logoutCancelButton: KNode = child  { hasTestTag("LogoutCancelButton") }
-
+  val logoutTitle: KNode = child { hasTestTag("LogoutTitle") }
+  val logoutText: KNode = child { hasTestTag("LogoutText") }
+  val logoutConfirmButton: KNode = child { hasTestTag("LogoutConfirmButton") }
+  val logoutCancelButton: KNode = child { hasTestTag("LogoutCancelButton") }
 }
