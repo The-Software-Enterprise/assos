@@ -1,6 +1,7 @@
 package com.swent.assos.model.service.impl
 
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,8 +26,8 @@ import kotlinx.coroutines.tasks.await
 class DbServiceImpl
 @Inject
 constructor(
-    private val firestore: FirebaseFirestore,
-    private val auth: AuthService,
+  private val firestore: FirebaseFirestore,
+  private val auth: FirebaseAuth,
 ) : DbService {
 
   override suspend fun getUser(userId: String): User {
@@ -315,13 +316,15 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser.first()
-    firestore
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
         .collection("users")
         .document(user.uid)
         .update("following", FieldValue.arrayUnion(associationId))
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError("Error") }
+    }
   }
 
   override suspend fun unfollowAssociation(
@@ -329,13 +332,15 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser.first()
-    firestore
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
         .collection("users")
         .document(user.uid)
         .update("following", FieldValue.arrayRemove(associationId))
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError("Unfollow Error") }
+    }
   }
 
   private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
