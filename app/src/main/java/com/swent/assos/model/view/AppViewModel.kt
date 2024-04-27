@@ -27,4 +27,6 @@ constructor(
       }
     }
   }
+
+  fun getAuthUser() = DataCache.currentUser
 }
