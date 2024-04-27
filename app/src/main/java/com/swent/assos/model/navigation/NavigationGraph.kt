@@ -22,7 +22,7 @@ fun NavigationGraph() {
   val navigationActions = NavigationActions(navController = navController)
   val appViewModel: AppViewModel = hiltViewModel()
 
-  NavHost(navController = navController, startDestination = Destinations.HOME.route) {
+  NavHost(navController = navController, startDestination = Destinations.LOGIN.route) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }

@@ -33,7 +33,9 @@ fun EventItem(event: Event, navigationActions: NavigationActions) {
       Spacer(modifier = Modifier.height(8.dp))
       Text(text = event.description)
       Spacer(modifier = Modifier.height(8.dp))
-      Text(text = formatDateTime(event.date), style = MaterialTheme.typography.bodySmall)
+      Text(text = formatDateTime(event.startTime), style = MaterialTheme.typography.bodySmall)
+      Spacer(modifier = Modifier.height(8.dp))
+      Text(text = formatDateTime(event.endTime), style = MaterialTheme.typography.bodySmall)
       Spacer(modifier = Modifier.height(8.dp))
     }
   }

@@ -1,6 +1,5 @@
 package com.swent.assos.ui.screens.manageAsso
 
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -59,19 +58,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
+import com.maxkeppeler.sheets.date_time.DateTimeDialog
+import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
 import com.swent.assos.R
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.EventField
 import com.swent.assos.model.data.EventFieldImage
 import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
+import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
@@ -81,10 +86,38 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var openAlertDialogAddFields by remember { mutableStateOf(false) }
   var openAlertDialogFields by remember { mutableStateOf(false) }
   var currentFieldType: EventFieldType by remember { mutableStateOf(EventFieldType.TEXT) }
-  /*TODO: */
+
   var titleEvent by remember { mutableStateOf("") }
-  /*TODO : Implemnt Date Picker*/
-  var date by remember { mutableStateOf("") }
+  var description by remember { mutableStateOf("") }
+  var imageURL by remember { mutableStateOf("") }
+  var showTimePickerStart by remember { mutableStateOf(false) }
+  var showTimePickerEnd by remember { mutableStateOf(false) }
+  var startTime by remember { mutableStateOf<LocalDateTime?>(null) }
+  var endTime by remember { mutableStateOf<LocalDateTime?>(null) }
+
+  if (showTimePickerStart) {
+    DateTimeDialog(
+        state =
+            rememberUseCaseState(visible = true, onCloseRequest = { showTimePickerStart = false }),
+        selection =
+            DateTimeSelection.DateTime(selectedDate = startTime?.toLocalDate()) {
+              if (it.isBefore(LocalDateTime.now()) || endTime == null || it.isBefore(endTime)) {
+                startTime = it
+              }
+            })
+  }
+
+  if (showTimePickerEnd) {
+    DateTimeDialog(
+        state =
+            rememberUseCaseState(visible = true, onCloseRequest = { showTimePickerEnd = false }),
+        selection =
+            DateTimeSelection.DateTime(selectedDate = endTime?.toLocalDate()) {
+              if (it.isBefore(LocalDateTime.now()) || startTime == null || it.isAfter(startTime)) {
+                endTime = it
+              }
+            })
+  }
 
   if (openAlertDialogAddFields) {
     AlertDialogAddFields(
@@ -101,10 +134,12 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   }
 
   if (openAlertDialogFields) {
+    /* TODO : Make a deep copy of the list */
     AlertDialogFields(
         onDismissRequest = { openAlertDialogFields = false },
         onConfirmation = { openAlertDialogFields = false },
-        listFields = listFields)
+        listFields = listFields,
+        fieldsSnapshot = listFields.toList())
   }
 
   Scaffold(
@@ -134,30 +169,37 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         LazyColumn(
             modifier = Modifier.padding(paddingValues).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
-              if (listFields.isNotEmpty()) {
-                item {
-                  Spacer(modifier = Modifier.height(16.dp))
-                  Button(
-                      onClick = {
-                        val event =
-                            Event(
-                                /*TODO*/
-                                id = "",
-                                title = titleEvent,
-                                associationId = assoId,
-                                image = "",
-                                description = "",
-                                date = ""
-                                /*TODO*/
-                                )
-                        viewModel.createEvent(
-                            associationId = assoId,
-                            event = event,
-                            onSuccess = { navigationActions.goBack() })
-                      }) {
-                        Text("Validate event")
-                      }
+              item {
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = titleEvent,
+                    onValueChange = { titleEvent = it },
+                    label = { Text("Event Title") })
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = description,
+                    onValueChange = { description = it },
+                    label = { Text("Description") })
+                Spacer(modifier = Modifier.height(16.dp))
+                OutlinedTextField(
+                    value = imageURL,
+                    onValueChange = { imageURL = it },
+                    label = { Text("Event Image") })
+                Spacer(modifier = Modifier.height(16.dp))
+              }
+              item {
+                Button(onClick = { showTimePickerStart = true }) {
+                  Text(
+                      startTime?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                          ?: "Pick start Time")
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { showTimePickerEnd = true }) {
+                  Text(
+                      endTime?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                          ?: "Pick end Time")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
               }
               item {
                 Button(onClick = { openAlertDialogFields = true }) {
@@ -166,6 +208,35 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       contentDescription = null,
                       colorFilter = ColorFilter.tint(Color.White))
                 }
+              }
+              item {
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    enabled =
+                        description.isNotEmpty() &&
+                            imageURL.isNotEmpty() &&
+                            titleEvent.isNotEmpty() &&
+                            startTime != null &&
+                            endTime != null &&
+                            listFields.isNotEmpty(),
+                    onClick = {
+                      val event =
+                          Event(
+                              id = generateUniqueID(),
+                              title = titleEvent,
+                              associationId = assoId,
+                              image = imageURL,
+                              description = description,
+                              startTime = startTime!!,
+                              endTime = endTime!!,
+                              fields = listFields.toList())
+                      viewModel.createEvent(
+                          associationId = assoId,
+                          event = event,
+                          onSuccess = { navigationActions.goBack() })
+                    }) {
+                      Text("Validate event")
+                    }
               }
             }
       }
@@ -279,13 +350,13 @@ fun AlertDialogAddFields(
 fun AlertDialogFields(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    listFields: MutableList<EventField>
+    listFields: MutableList<EventField>,
+    fieldsSnapshot: List<EventField>
 ) {
-
+  /*TODO: Cancel does not remember the ordering*/
   val lazyListState = rememberLazyListState()
   val reorderableLazyColumnState =
       rememberReorderableLazyColumnState(lazyListState) { from, to ->
-        Log.d("CreateEvent", "from: ${from.index}, to: ${to.index}")
         listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
       }
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
@@ -316,7 +387,6 @@ fun AlertDialogFields(
                                       CustomAccessibilityAction(
                                           label = "Move Up",
                                           action = {
-                                            Log.d("CreateEvent", "Move up")
                                             if (index > 0) {
                                               listFields.apply { add(index - 1, removeAt(index)) }
                                               true
@@ -327,7 +397,6 @@ fun AlertDialogFields(
                                       CustomAccessibilityAction(
                                           label = "Move Down",
                                           action = {
-                                            Log.d("CreateEvent", "Move down")
                                             if (index < listFields.size - 1) {
                                               listFields.apply { add(index + 1, removeAt(index)) }
                                               true
@@ -363,7 +432,14 @@ fun AlertDialogFields(
                 }
                 item {
                   Row {
-                    Button(onClick = { onDismissRequest() }) { Text("Cancel") }
+                    Button(
+                        onClick = {
+                          listFields.clear()
+                          listFields.addAll(fieldsSnapshot)
+                          onDismissRequest()
+                        }) {
+                          Text("Cancel")
+                        }
                     Spacer(modifier = Modifier.width(16.dp))
                     Button(onClick = { onConfirmation() }) { Text("Confirm") }
                   }
