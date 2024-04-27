@@ -27,10 +27,10 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
   init {
     viewModelScope.launch(ioDispatcher) {
       for (association in user.value.following) {
-        dbService.getAllEventsFromAnAssociation(association, null).let { _events.value += it }
+        dbService.getEvents(association, null).let { _events.value += it }
       }
       for (association in user.value.associations) {
-        dbService.getAllEventsFromAnAssociation(association.first, null).let { _events.value += it }
+        dbService.getEvents(association.first, null).let { _events.value += it }
       }
     }
   }

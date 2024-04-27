@@ -15,7 +15,6 @@ import com.swent.assos.model.data.User
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import java.time.Instant
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
@@ -192,52 +191,7 @@ constructor(
   }
 
   override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("date", Query.Direction.ASCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map {
-      Event(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
-          fields =
-              if (it.get("fields") is List<*>) {
-                (it.get("fields") as List<*>).filterIsInstance<Map<String, String>>().map { map ->
-                  when (map["type"]) {
-                    EventFieldType.IMAGE.toString() ->
-                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                    EventFieldType.TEXT.toString() ->
-                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                    else -> EventFieldText("", "")
-                  }
-                }
-              } else {
-                emptyList()
-              },
-          documentSnapshot = it)
-    }
-  }
-
-  override suspend fun getAllEventsFromAnAssociation(
-      associationId: String,
-      lastDocumentSnapshot: DocumentSnapshot?
-  ): List<Event> {
-    val query =
-        firestore
-            .collection("events")
-            .whereEqualTo("associationId", associationId)
-            .orderBy("date", Query.Direction.ASCENDING)
+    val query = firestore.collection("events").orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -282,8 +236,8 @@ constructor(
         firestore
             .collection("events")
             .whereEqualTo("associationId", associationId)
-            .whereGreaterThan("date", LocalDate.now())
-            .orderBy("date", Query.Direction.ASCENDING)
+            .whereGreaterThan("startTime", Timestamp.now())
+            .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()

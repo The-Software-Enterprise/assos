@@ -58,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
 import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
@@ -71,6 +72,7 @@ import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
@@ -82,7 +84,8 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   val viewModel: AssoViewModel = hiltViewModel()
 
-  val listFields = remember { mutableStateListOf<EventField>() }
+  val listFieldsReordered = remember { mutableStateListOf<EventField>() }
+  val listFieldsOriginal = remember { mutableStateListOf<EventField>() }
   var openAlertDialogAddFields by remember { mutableStateOf(false) }
   var openAlertDialogFields by remember { mutableStateOf(false) }
   var currentFieldType: EventFieldType by remember { mutableStateOf(EventFieldType.TEXT) }
@@ -93,18 +96,31 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
   var startTime by remember { mutableStateOf<LocalDateTime?>(null) }
+  var startHourFormat by remember { mutableStateOf(HourFormat.AM) }
   var endTime by remember { mutableStateOf<LocalDateTime?>(null) }
+  var endHourFormat by remember { mutableStateOf(HourFormat.AM) }
 
   if (showTimePickerStart) {
     DateTimeDialog(
         state =
             rememberUseCaseState(visible = true, onCloseRequest = { showTimePickerStart = false }),
         selection =
-            DateTimeSelection.DateTime(selectedDate = startTime?.toLocalDate()) {
-              if (it.isBefore(LocalDateTime.now()) || endTime == null || it.isBefore(endTime)) {
-                startTime = it
-              }
-            })
+            DateTimeSelection.DateTime(
+                selectedDate = startTime?.toLocalDate(),
+                extraButton = SelectionButton(startHourFormat.name),
+                onExtraButtonClick = {
+                  startHourFormat =
+                      when (startHourFormat) {
+                        HourFormat.AM -> HourFormat.PM
+                        HourFormat.PM -> HourFormat.AM
+                      }
+                }) {
+                  if (endTime == null) {
+                    startTime = convertTo24from(it, startHourFormat)
+                  } else if (it.isBefore(endTime)) {
+                    startTime = convertTo24from(it, startHourFormat)
+                  }
+                })
   }
 
   if (showTimePickerEnd) {
@@ -112,18 +128,32 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         state =
             rememberUseCaseState(visible = true, onCloseRequest = { showTimePickerEnd = false }),
         selection =
-            DateTimeSelection.DateTime(selectedDate = endTime?.toLocalDate()) {
-              if (it.isBefore(LocalDateTime.now()) || startTime == null || it.isAfter(startTime)) {
-                endTime = it
-              }
-            })
+            DateTimeSelection.DateTime(
+                selectedDate = endTime?.toLocalDate(),
+                extraButton = SelectionButton(endHourFormat.name),
+                onExtraButtonClick = {
+                  endHourFormat =
+                      when (endHourFormat) {
+                        HourFormat.AM -> HourFormat.PM
+                        HourFormat.PM -> HourFormat.AM
+                      }
+                }) {
+                  if (it.isAfter(LocalDateTime.now())) {
+                    if (startTime == null) {
+                      endTime = convertTo24from(it, endHourFormat)
+                    } else if (it.isAfter(startTime)) {
+                      endTime = convertTo24from(it, endHourFormat)
+                    }
+                  }
+                })
   }
 
   if (openAlertDialogAddFields) {
     AlertDialogAddFields(
         onDismissRequest = { openAlertDialogAddFields = false },
         onConfirmation = {
-          listFields += it
+          listFieldsOriginal += it
+          listFieldsReordered += it
           openAlertDialogAddFields = false
         },
         onChipClick = {
@@ -134,12 +164,18 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   }
 
   if (openAlertDialogFields) {
-    /* TODO : Make a deep copy of the list */
     AlertDialogFields(
-        onDismissRequest = { openAlertDialogFields = false },
-        onConfirmation = { openAlertDialogFields = false },
-        listFields = listFields,
-        fieldsSnapshot = listFields.toList())
+        onDismissRequest = {
+          listFieldsReordered.clear()
+          listFieldsReordered.addAll(listFieldsOriginal)
+          openAlertDialogFields = false
+        },
+        onConfirmation = {
+          listFieldsOriginal.clear()
+          listFieldsOriginal.addAll(listFieldsReordered)
+          openAlertDialogFields = false
+        },
+        listFields = listFieldsReordered)
   }
 
   Scaffold(
@@ -218,7 +254,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             titleEvent.isNotEmpty() &&
                             startTime != null &&
                             endTime != null &&
-                            listFields.isNotEmpty(),
+                            listFieldsOriginal.isNotEmpty(),
                     onClick = {
                       val event =
                           Event(
@@ -229,7 +265,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                               description = description,
                               startTime = startTime!!,
                               endTime = endTime!!,
-                              fields = listFields.toList())
+                              fields = listFieldsOriginal.toList())
                       viewModel.createEvent(
                           associationId = assoId,
                           event = event,
@@ -350,10 +386,9 @@ fun AlertDialogAddFields(
 fun AlertDialogFields(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
-    listFields: MutableList<EventField>,
-    fieldsSnapshot: List<EventField>
+    listFields: MutableList<EventField>
 ) {
-  /*TODO: Cancel does not remember the ordering*/
+
   val lazyListState = rememberLazyListState()
   val reorderableLazyColumnState =
       rememberReorderableLazyColumnState(lazyListState) { from, to ->
@@ -432,14 +467,7 @@ fun AlertDialogFields(
                 }
                 item {
                   Row {
-                    Button(
-                        onClick = {
-                          listFields.clear()
-                          listFields.addAll(fieldsSnapshot)
-                          onDismissRequest()
-                        }) {
-                          Text("Cancel")
-                        }
+                    Button(onClick = { onDismissRequest() }) { Text("Cancel") }
                     Spacer(modifier = Modifier.width(16.dp))
                     Button(onClick = { onConfirmation() }) { Text("Confirm") }
                   }
@@ -448,3 +476,17 @@ fun AlertDialogFields(
         }
   }
 }
+
+enum class HourFormat {
+  AM,
+  PM
+}
+
+private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): LocalDateTime =
+    when (format) {
+      HourFormat.AM ->
+          LocalDateTime.of(
+              localTime.toLocalDate(), LocalTime.of(localTime.hour - 12, localTime.minute))
+      HourFormat.PM ->
+          LocalDateTime.of(localTime.toLocalDate(), LocalTime.of(localTime.hour, localTime.minute))
+    }
