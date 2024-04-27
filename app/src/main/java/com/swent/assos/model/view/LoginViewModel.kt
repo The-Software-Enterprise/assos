@@ -5,10 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.security.MessageDigest
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,14 +25,6 @@ constructor(private val storageService: DbService, private val accountService: A
   var badCredentials = mutableStateOf(false)
   var responseError = mutableStateOf("")
   var firebaseError = mutableStateOf(false)
-
-  fun hashEmail(email: String): Int {
-    val bytes = email.toByteArray()
-    val md = MessageDigest.getInstance("SHA-256")
-    val digest = md.digest(bytes)
-    // get the integer value
-    return digest.fold(0) { acc, byte -> acc * 256 + byte.toInt() }
-  }
 
   // fun goToSignUp() = navController.navigate("SignUp")
   // fun goToSignIn() = navController.navigate("Login")
@@ -77,5 +69,10 @@ constructor(private val storageService: DbService, private val accountService: A
     } else {
       badCredentials.value = true
     }
+  }
+
+  fun signOut() {
+    DataCache.signOut()
+    accountService.signOut()
   }
 }

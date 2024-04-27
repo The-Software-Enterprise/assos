@@ -1,7 +1,10 @@
 package com.swent.assos.model.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,8 +24,16 @@ fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
   val appViewModel: AppViewModel = hiltViewModel()
+  val user by appViewModel.getAuthUser().collectAsState()
 
-  NavHost(navController = navController, startDestination = Destinations.LOGIN.route) {
+  val startDestinations =
+      if (user.id == "") {
+        Destinations.LOGIN.route
+      } else {
+        Destinations.HOME.route
+      }
+
+  NavHost(navController = navController, startDestination = startDestinations) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
