@@ -13,21 +13,19 @@ import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
-import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
 import javax.inject.Inject
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 
 class DbServiceImpl
 @Inject
 constructor(
-  private val firestore: FirebaseFirestore,
-  private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
+    private val auth: FirebaseAuth,
 ) : DbService {
 
   override suspend fun getUser(userId: String): User {
@@ -319,11 +317,11 @@ constructor(
     val user = auth.currentUser
     if (user != null) {
       firestore
-        .collection("users")
-        .document(user.uid)
-        .update("following", FieldValue.arrayUnion(associationId))
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Error") }
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayUnion(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
     }
   }
 
@@ -335,11 +333,11 @@ constructor(
     val user = auth.currentUser
     if (user != null) {
       firestore
-        .collection("users")
-        .document(user.uid)
-        .update("following", FieldValue.arrayRemove(associationId))
-        .addOnSuccessListener { onSuccess() }
-        .addOnFailureListener { onError("Unfollow Error") }
+          .collection("users")
+          .document(user.uid)
+          .update("following", FieldValue.arrayRemove(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Unfollow Error") }
     }
   }
 
