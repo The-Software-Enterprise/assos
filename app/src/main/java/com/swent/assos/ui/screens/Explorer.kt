@@ -58,6 +58,8 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.theme.PurpleGrey40
+import com.swent.assos.ui.theme.backgroundColorExplorePage
+import com.swent.assos.ui.theme.backgroundColorTopBar
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -100,7 +102,7 @@ fun Explorer(navigationActions: NavigationActions) {
             modifier =
                 Modifier.padding(paddingValues)
                     .testTag("AssoList")
-                    .background(color = Color(0x0F979797)),
+                    .background(color = backgroundColorExplorePage),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
@@ -123,7 +125,7 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(5.dp)
-              .background(color = Color(0xFFFFFFFF), shape = RoundedCornerShape(size = 15.dp))
+              .background(color = Color.White, shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable {
                 val dest =
@@ -139,7 +141,6 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
             text = asso.acronym,
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-            // fontWeight = FontWeight(600),
             fontWeight = FontWeight.Bold,
             color = Color.Black)
       },
@@ -177,7 +178,7 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(10.dp)
-              .background(color = Color(0xFFD9D9D9), shape = RoundedCornerShape(size = 28.dp)),
+              .background(color = backgroundColorTopBar, shape = RoundedCornerShape(size = 28.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),

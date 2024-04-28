@@ -59,6 +59,8 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
+import com.swent.assos.ui.theme.ColorFollowButton
+import com.swent.assos.ui.theme.ColorUnfollowButton
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -118,7 +120,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
                       .padding(10.dp)
                       .height(200.dp)
                       .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-              // .border(width = 1.dp, color = Color.LightGray, shape = RoundedCornerShape(20.dp)),
               contentScale = ContentScale.Crop,
               alignment = Alignment.Center)
 
@@ -199,23 +200,11 @@ fun TopAssoBar(
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {
-        /*Button(
-            modifier = Modifier.testTag("FollowButton"),
-            onClick = {
-                if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
-                else viewModel.followAssociation(assoId)
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-            Text(
-                modifier = Modifier.testTag("TextFollowButton"),
-                text = if (currentUser.following.contains(assoId)) "Unfollow" else "Follow",
-                color = Color.White)
-        }*/
         AssistChip(
             colors =
                 if (currentUser.following.contains(assoId))
-                    AssistChipDefaults.assistChipColors(containerColor = Color(0xFFD9D9D9))
-                else AssistChipDefaults.assistChipColors(containerColor = Color(0xFF4285F4)),
+                    AssistChipDefaults.assistChipColors(containerColor = ColorUnfollowButton)
+                else AssistChipDefaults.assistChipColors(containerColor = ColorFollowButton),
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {

@@ -31,29 +31,6 @@ import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
 fun NewsItem(news: News, navigationActions: NavigationActions) {
-  /*Surface(
-      modifier =
-          Modifier.testTag("NewsItem").width(200.dp).padding(vertical = 4.dp).clickable {
-            navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
-          },
-      //color = Color(0xFFE0E0E0),
-      color = Color.White,
-
-  ) {
-    Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-        Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth().height(50.dp).background(Color.White),
-            contentScale = ContentScale.Crop)
-
-
-      Text(text = news.title, style = MaterialTheme.typography.titleMedium)
-      Spacer(modifier = Modifier.height(8.dp))
-      Text(text = news.description)
-      Spacer(modifier = Modifier.height(8.dp))
-    }
-  }*/
   Card(
       colors = CardDefaults.cardColors(Color.White),
       shape = RoundedCornerShape(12.dp),
@@ -62,7 +39,6 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
               .padding(0.dp)
               .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
         Column(
-            // modifier = Modifier.fillMaxWidth()
             modifier =
                 Modifier.width(200.dp).padding(vertical = 0.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
