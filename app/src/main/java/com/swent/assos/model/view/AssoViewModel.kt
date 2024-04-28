@@ -76,6 +76,8 @@ constructor(
   }
 
   fun addPost(post: Post) {
-    /*TODO : add this post to the DB*/
+    viewModelScope.launch(ioDispatcher) {
+      dbService.addPost(post, {}, {})
+    }
   }
 }

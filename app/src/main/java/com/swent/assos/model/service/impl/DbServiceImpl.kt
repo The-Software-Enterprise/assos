@@ -8,6 +8,7 @@ import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.Post
 import com.swent.assos.model.data.User
 import com.swent.assos.model.service.DbService
 import java.time.LocalDate
@@ -236,4 +237,16 @@ constructor(
           .addOnFailureListener { onError("Unfollow Error") }
     }
   }
+
+    override fun addPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
+        firestore.collection("posts").add(
+            mapOf(
+                "title" to post.title,
+                "description" to post.description,
+                "date" to Date(),
+                "image" to post.image,
+            )
+        ).addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onError(it.message ?: "Error") }
+    }
 }
