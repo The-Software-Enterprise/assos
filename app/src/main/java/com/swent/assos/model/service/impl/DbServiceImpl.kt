@@ -12,6 +12,7 @@ import com.swent.assos.model.data.EventFieldImage
 import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.Post
 import com.swent.assos.model.data.User
 import com.swent.assos.model.service.DbService
 import java.time.Instant
@@ -349,5 +350,17 @@ constructor(
 
   private fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
     return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
+  }
+
+  override fun addPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    firestore.collection("posts").add(
+      mapOf(
+        "title" to post.title,
+        "description" to post.description,
+        "date" to Date(),
+        "image" to post.image,
+      )
+    ).addOnSuccessListener { onSuccess() }
+      .addOnFailureListener { onError(it.message ?: "Error") }
   }
 }

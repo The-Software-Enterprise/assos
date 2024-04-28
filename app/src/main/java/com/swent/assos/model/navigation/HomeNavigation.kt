@@ -53,7 +53,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
         containerColor = Color.Transparent,
     ) {
-      repeat(5) { index ->
+      repeat(4) { index ->
         NavigationBarItem(
             icon = {
               when (index) {

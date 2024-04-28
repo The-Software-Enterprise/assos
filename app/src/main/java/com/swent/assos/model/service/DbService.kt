@@ -48,5 +48,5 @@ interface DbService {
 
   // POSTS
 
-  fun addPost(post: Post, onSucess: () -> Unit, onError: (String) -> Unit)
+  fun addPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
 }
