@@ -65,12 +65,10 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
 import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
 import com.swent.assos.R
-import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.EventField
 import com.swent.assos.model.data.EventFieldImage
 import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
-import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.HourFormat
@@ -98,9 +96,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
 
-  LaunchedEffect(key1 = Unit) {
-    event.associationId = assoId
-  }
+  LaunchedEffect(key1 = Unit) { event.associationId = assoId }
 
   if (showTimePickerStart) {
     DateTimeDialog(
@@ -110,9 +106,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             DateTimeSelection.DateTime(
                 selectedDate = event.startTime?.toLocalDate(),
                 extraButton = SelectionButton(hourFormat.name),
-                onExtraButtonClick = {
-                  viewModel.switchHourFormat()
-                }) {
+                onExtraButtonClick = { viewModel.switchHourFormat() }) {
                   if (event.endTime == null) {
                     event.startTime = convertTo24from(it, hourFormat)
                   } else if (it.isBefore(event.endTime)) {
@@ -129,9 +123,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             DateTimeSelection.DateTime(
                 selectedDate = event.endTime?.toLocalDate(),
                 extraButton = SelectionButton(hourFormat.name),
-                onExtraButtonClick = {
-                  viewModel.switchHourFormat()
-                }) {
+                onExtraButtonClick = { viewModel.switchHourFormat() }) {
                   if (it.isAfter(LocalDateTime.now())) {
                     if (event.startTime == null) {
                       event.endTime = convertTo24from(it, hourFormat)
@@ -150,9 +142,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
           listFieldsReordered += it
           openAlertDialogAddFields = false
         },
-        onChipClick = {
-          viewModel.switchFieldType()
-        },
+        onChipClick = { viewModel.switchFieldType() },
         currentFieldType = currentFieldType)
   }
 
@@ -180,9 +170,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                   imageVector = Icons.Default.ArrowBack,
                   contentDescription = null,
                   modifier =
-                  Modifier
-                    .testTag("GoBackButton")
-                    .clickable { navigationActions.goBack() })
+                      Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
             },
             colors =
                 TopAppBarDefaults.mediumTopAppBarColors(
@@ -192,15 +180,16 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       },
       floatingActionButton = {
         FloatingActionButton(
-            onClick = { viewModel.resetFieldType(); openAlertDialogAddFields = true },
+            onClick = {
+              viewModel.resetFieldType()
+              openAlertDialogAddFields = true
+            },
             shape = RoundedCornerShape(size = 16.dp)) {
               Image(imageVector = Icons.Default.Add, contentDescription = null)
             }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-              .padding(paddingValues)
-              .fillMaxWidth(),
+            modifier = Modifier.padding(paddingValues).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -221,17 +210,27 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Spacer(modifier = Modifier.height(16.dp))
               }
               item {
-                Button(onClick = { viewModel.resetHourFormat(); showTimePickerStart = true }) {
-                  Text(
-                      event.startTime?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                          ?: "Pick start Time")
-                }
+                Button(
+                    onClick = {
+                      viewModel.resetHourFormat()
+                      showTimePickerStart = true
+                    }) {
+                      Text(
+                          event.startTime?.format(
+                              DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                              ?: "Pick start Time")
+                    }
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = { viewModel.resetHourFormat(); showTimePickerEnd = true }) {
-                  Text(
-                      event.endTime?.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                          ?: "Pick end Time")
-                }
+                Button(
+                    onClick = {
+                      viewModel.resetHourFormat()
+                      showTimePickerEnd = true
+                    }) {
+                      Text(
+                          event.endTime?.format(
+                              DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                              ?: "Pick end Time")
+                    }
                 Spacer(modifier = Modifier.height(16.dp))
               }
               item {
@@ -254,8 +253,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             event.fields.isNotEmpty(),
                     onClick = {
                       viewModel.createEvent(
-                          event = event,
-                          onSuccess = { navigationActions.goBack() })
+                          event = event, onSuccess = { navigationActions.goBack() })
                     }) {
                       Text("Validate event")
                     }
@@ -279,9 +277,7 @@ fun AlertDialogAddFields(
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier
-          .width(400.dp)
-          .height(350.dp),
+        modifier = Modifier.width(400.dp).height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
@@ -306,17 +302,15 @@ fun AlertDialogAddFields(
                       }
                     },
                     modifier =
-                    Modifier
-                      .border(
-                        width = 1.dp,
-                        color =
-                        when (currentFieldType) {
-                          EventFieldType.IMAGE -> Color(0xFFBA1A1A)
-                          EventFieldType.TEXT -> Color(0xFFFB9905)
-                        },
-                        shape = RoundedCornerShape(size = 8.dp)
-                      )
-                      .height(32.dp),
+                        Modifier.border(
+                                width = 1.dp,
+                                color =
+                                    when (currentFieldType) {
+                                      EventFieldType.IMAGE -> Color(0xFFBA1A1A)
+                                      EventFieldType.TEXT -> Color(0xFFFB9905)
+                                    },
+                                shape = RoundedCornerShape(size = 8.dp))
+                            .height(32.dp),
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
@@ -386,9 +380,7 @@ fun AlertDialogFields(
       }
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier
-          .width(400.dp)
-          .height(350.dp),
+        modifier = Modifier.width(400.dp).height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           LazyColumn(
@@ -442,9 +434,8 @@ fun AlertDialogFields(
                             Text(text = field.title, Modifier.padding(horizontal = 8.dp))
                             IconButton(
                                 modifier =
-                                Modifier
-                                  .draggableHandle(interactionSource = interactionSource)
-                                  .clearAndSetSemantics {},
+                                    Modifier.draggableHandle(interactionSource = interactionSource)
+                                        .clearAndSetSemantics {},
                                 onClick = {}) {
                                   Icon(
                                       painterResource(id = R.drawable.menu),
@@ -469,8 +460,6 @@ fun AlertDialogFields(
         }
   }
 }
-
-
 
 private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): LocalDateTime =
     when (format) {

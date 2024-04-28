@@ -1,11 +1,8 @@
 package com.swent.assos.model.view
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.EventField
 import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
@@ -21,8 +18,8 @@ import kotlinx.coroutines.launch
 class EventViewModel
 @Inject
 constructor(
-  private val dbService: DbService,
-  @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val dbService: DbService,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
   private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
@@ -34,19 +31,16 @@ constructor(
   private val _hourFormat = MutableStateFlow(HourFormat.AM)
   val hourFormat = _hourFormat.asStateFlow()
 
-  private val _listFieldsReordered = MutableStateFlow(mutableListOf<EventField>())//MutableStateFlow(mutableStateListOf<EventField>())
-  val listFieldsReordered = _listFieldsReordered.asStateFlow()
-
   init {
-    viewModelScope.launch(ioDispatcher) {  }
+    viewModelScope.launch(ioDispatcher) {}
   }
 
   fun switchHourFormat() {
     _hourFormat.value =
-      when (_hourFormat.value) {
-        HourFormat.AM -> HourFormat.PM
-        HourFormat.PM -> HourFormat.AM
-      }
+        when (_hourFormat.value) {
+          HourFormat.AM -> HourFormat.PM
+          HourFormat.PM -> HourFormat.AM
+        }
   }
 
   fun resetHourFormat() {
@@ -55,7 +49,7 @@ constructor(
 
   fun switchFieldType() {
     _fieldType.value =
-      EventFieldType.entries[(_fieldType.value.ordinal + 1) % EventFieldType.entries.size]
+        EventFieldType.entries[(_fieldType.value.ordinal + 1) % EventFieldType.entries.size]
   }
 
   fun resetFieldType() {

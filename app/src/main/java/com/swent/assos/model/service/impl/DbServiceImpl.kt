@@ -211,15 +211,18 @@ constructor(
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
               if (it.get("fields") is List<*>) {
-                (it.get("fields") as List<*>).filterIsInstance<Map<String, String>>().map { map ->
-                  when (map["type"]) {
-                    EventFieldType.IMAGE.toString() ->
-                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                    EventFieldType.TEXT.toString() ->
-                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                    else -> EventFieldText("", "")
-                  }
-                }.toMutableList()
+                (it.get("fields") as List<*>)
+                    .filterIsInstance<Map<String, String>>()
+                    .map { map ->
+                      when (map["type"]) {
+                        EventFieldType.IMAGE.toString() ->
+                            EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
+                        EventFieldType.TEXT.toString() ->
+                            EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
+                        else -> EventFieldText("", "")
+                      }
+                    }
+                    .toMutableList()
               } else {
                 mutableListOf()
               },
@@ -257,15 +260,18 @@ constructor(
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
               if (it.get("fields") is List<*>) {
-                (it.get("fields") as List<*>).filterIsInstance<Map<String, String>>().map { map ->
-                  when (map["type"]) {
-                    EventFieldType.IMAGE.toString() ->
-                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                    EventFieldType.TEXT.toString() ->
-                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                    else -> EventFieldText("", "")
-                  }
-                }.toMutableList()
+                (it.get("fields") as List<*>)
+                    .filterIsInstance<Map<String, String>>()
+                    .map { map ->
+                      when (map["type"]) {
+                        EventFieldType.IMAGE.toString() ->
+                            EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
+                        EventFieldType.TEXT.toString() ->
+                            EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
+                        else -> EventFieldText("", "")
+                      }
+                    }
+                    .toMutableList()
               } else {
                 mutableListOf()
               },
@@ -273,11 +279,7 @@ constructor(
     }
   }
 
-  override suspend fun createEvent(
-      event: Event,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
+  override suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("events")
         .document(event.id)
@@ -287,8 +289,8 @@ constructor(
                 "description" to event.description,
                 "associationId" to event.associationId,
                 "image" to event.image,
-                "startTime" to localDateTimeToTimestamp(event.startTime?: LocalDateTime.now()),
-                "endTime" to localDateTimeToTimestamp(event.endTime?: LocalDateTime.now()),
+                "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
+                "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
                 "fields" to
                     event.fields.map {
                       when (it.type) {
