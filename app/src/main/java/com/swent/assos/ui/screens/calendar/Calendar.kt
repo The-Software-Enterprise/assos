@@ -7,23 +7,24 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.CalendarDataSource
-import com.swent.assos.model.data.CalendarEvent
+import com.swent.assos.model.data.Event
+import com.swent.assos.model.view.CalendarViewModel
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Preview(showSystemUi = true)
 @Composable
 fun Calendar(
     dayHeader: @Composable (day: LocalDate) -> Unit = { WeekDayHeader(day = it) },
-    eventContent: @Composable (event: CalendarEvent) -> Unit = { BasicEvent(event = it) },
+    eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
 ) {
-
+  val calendarViewModel: CalendarViewModel = hiltViewModel()
+  val events = calendarViewModel.events.collectAsState()
   val dataSource = CalendarDataSource()
   var data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
   val verticalScrollState = rememberScrollState()
@@ -65,7 +66,7 @@ fun Calendar(
               })
 
       Event(
-          events = sampleEvents,
+          events = events.value,
           eventContent = eventContent,
           dayWidth = dayWidth,
           hourHeight = hourHeight,
@@ -77,28 +78,3 @@ fun Calendar(
     }
   }
 }
-
-private val sampleEvents =
-    listOf(
-        CalendarEvent(
-            name = "Sprint 3 Meeting",
-            color = Color(0xFFAFBBF2),
-            startTime = LocalDateTime.parse("2024-04-12T11:00:00"),
-            endTime = LocalDateTime.parse("2024-04-12T13:00:00"),
-            description = "Discuss the progress of the current sprint and plan the next sprint.",
-        ),
-        CalendarEvent(
-            name = "Sprint 4 Meeting",
-            color = Color(0xFFAFBBF2),
-            startTime = LocalDateTime.parse("2024-04-19T11:00:00"),
-            endTime = LocalDateTime.parse("2024-04-19T13:00:00"),
-            description = "Discuss the progress of the current sprint and plan the next sprint.",
-        ),
-        CalendarEvent(
-            name = "Swent App Progress Meeting",
-            color = Color(0xFF1B998B),
-            startTime = LocalDateTime.parse("2024-04-11T09:00:00"),
-            endTime = LocalDateTime.parse("2024-04-11T12:00:00"),
-            description = "Discuss the progress of the Swent app and plan the next steps.",
-        ),
-    )
