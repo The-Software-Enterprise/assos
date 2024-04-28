@@ -61,6 +61,18 @@ constructor(
       dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
     }
   }
+
+  fun setTitle(title: String) {
+    _event.value = _event.value.copy(title = title)
+  }
+
+  fun setDescription(description: String) {
+    _event.value = _event.value.copy(description = description)
+  }
+
+  fun setImage(image: String) {
+    _event.value = _event.value.copy(image = image)
+  }
 }
 
 enum class HourFormat {

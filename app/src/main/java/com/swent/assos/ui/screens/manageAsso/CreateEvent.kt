@@ -195,17 +195,17 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = event.title,
-                    onValueChange = { event.title = it },
+                    onValueChange = { viewModel.setTitle(it) },
                     label = { Text("Event Title") })
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = event.description,
-                    onValueChange = { event.description = it },
+                    onValueChange = { viewModel.setDescription(it) },
                     label = { Text("Description") })
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = event.image,
-                    onValueChange = { event.image = it },
+                    onValueChange = { viewModel.setImage(it) },
                     label = { Text("Event Image") })
                 Spacer(modifier = Modifier.height(16.dp))
               }
