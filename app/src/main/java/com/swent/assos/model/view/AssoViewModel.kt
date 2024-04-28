@@ -73,11 +73,4 @@ constructor(
       _events.value += dbService.getEvents(associationId, lastDocumentSnapshot)
     }
   }
-
-  fun createEvent(associationId: String, event: Event, onSuccess: () -> Unit) {
-    viewModelScope.launch(ioDispatcher) {
-      dbService.createEvent(
-          associationId = associationId, event = event, onSuccess = onSuccess, onError = {})
-    }
-  }
 }

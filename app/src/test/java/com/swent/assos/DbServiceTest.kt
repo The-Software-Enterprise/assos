@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.swent.assos.model.data.News
 import com.swent.assos.model.service.impl.DbServiceImpl
@@ -40,6 +41,8 @@ class DbServiceTest {
         Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).delete() } returns
         Tasks.forResult(null)
+    coEvery { mockFirestore.collection(any()).orderBy(any<String>(), Query.Direction.ASCENDING).limit(any()).get()} returns
+            Tasks.forResult(mockQuerySnapshot)
 
     val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()

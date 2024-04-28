@@ -219,9 +219,9 @@ constructor(
                         EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
                     else -> EventFieldText("", "")
                   }
-                }
+                }.toMutableList()
               } else {
-                emptyList()
+                mutableListOf()
               },
           documentSnapshot = it)
     }
@@ -265,16 +265,15 @@ constructor(
                         EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
                     else -> EventFieldText("", "")
                   }
-                }
+                }.toMutableList()
               } else {
-                emptyList()
+                mutableListOf()
               },
           documentSnapshot = it)
     }
   }
 
   override suspend fun createEvent(
-      associationId: String,
       event: Event,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
@@ -286,10 +285,10 @@ constructor(
             mapOf(
                 "title" to event.title,
                 "description" to event.description,
-                "associationId" to associationId,
+                "associationId" to event.associationId,
                 "image" to event.image,
-                "startTime" to localDateTimeToTimestamp(event.startTime),
-                "endTime" to localDateTimeToTimestamp(event.endTime),
+                "startTime" to localDateTimeToTimestamp(event.startTime?: LocalDateTime.now()),
+                "endTime" to localDateTimeToTimestamp(event.endTime?: LocalDateTime.now()),
                 "fields" to
                     event.fields.map {
                       when (it.type) {

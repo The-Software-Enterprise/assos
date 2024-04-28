@@ -18,6 +18,7 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.formatDateTime
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import java.time.LocalDateTime
 
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions) {
@@ -33,9 +34,9 @@ fun EventItem(event: Event, navigationActions: NavigationActions) {
       Spacer(modifier = Modifier.height(8.dp))
       Text(text = event.description)
       Spacer(modifier = Modifier.height(8.dp))
-      Text(text = formatDateTime(event.startTime), style = MaterialTheme.typography.bodySmall)
+      Text(text = formatDateTime(event.startTime?: LocalDateTime.now()), style = MaterialTheme.typography.bodySmall)
       Spacer(modifier = Modifier.height(8.dp))
-      Text(text = formatDateTime(event.endTime), style = MaterialTheme.typography.bodySmall)
+      Text(text = formatDateTime(event.endTime?: LocalDateTime.now()), style = MaterialTheme.typography.bodySmall)
       Spacer(modifier = Modifier.height(8.dp))
     }
   }
