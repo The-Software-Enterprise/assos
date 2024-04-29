@@ -5,12 +5,12 @@ import java.time.LocalDateTime
 
 data class Event(
     val id: String,
-    val title: String,
-    val associationId: String,
-    val image: String,
-    val description: String,
-    val date: String,
-    val startTime: LocalDateTime,
-    val endTime: LocalDateTime,
+    val title: String = "",
+    var associationId: String = "",
+    val image: String = "",
+    val description: String = "",
+    var startTime: LocalDateTime? = null,
+    var endTime: LocalDateTime? = null,
+    val fields: MutableList<EventField> = mutableListOf(),
     val documentSnapshot: DocumentSnapshot? = null,
 )

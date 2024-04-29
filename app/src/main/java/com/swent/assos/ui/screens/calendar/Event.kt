@@ -42,7 +42,7 @@ fun BasicEvent(
               .padding(4.dp)) {
         Text(
             text =
-                "${event.startTime.format(EventTimeFormatter)} - ${event.endTime.format(
+                "${event.startTime?.format(EventTimeFormatter)} - ${event.endTime?.format(
                 EventTimeFormatter
             )}",
         )
@@ -113,11 +113,11 @@ fun Event(
         layout(width, height) {
           placeablesWithEvents.forEach { (placeable, event) ->
             val eventOffsetMinutes =
-                ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime.toLocalTime())
+                ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime?.toLocalTime())
             val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
 
             val eventOffsetDays =
-                ChronoUnit.DAYS.between(data.startDate.date, event.startTime.toLocalDate()).toInt()
+                ChronoUnit.DAYS.between(data.startDate.date, event.startTime?.toLocalDate()).toInt()
             val eventX = eventOffsetDays * dayWidth.roundToPx()
 
             placeable.place(eventX, eventY)
