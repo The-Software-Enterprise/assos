@@ -32,9 +32,8 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val saveImage: KNode = addImageDialog.child { hasTestTag("SaveImage") }
   val cancelImage: KNode = addImageDialog.child { hasTestTag("CancelImage") }
   val inputImage: KNode =
-    addImageDialog.child {
-      hasTestTag("InputImage")
-      hasSetTextAction()
-    }
-
+      addImageDialog.child {
+        hasTestTag("InputImage")
+        hasSetTextAction()
+      }
 }

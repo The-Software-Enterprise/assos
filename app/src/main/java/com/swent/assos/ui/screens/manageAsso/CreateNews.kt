@@ -92,8 +92,9 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
       },
       floatingActionButton = {
         FloatingActionButton(
-          modifier = Modifier.testTag("AddImages"),
-            onClick = { showAddImages = true }, shape = RoundedCornerShape(size = 16.dp)) {
+            modifier = Modifier.testTag("AddImages"),
+            onClick = { showAddImages = true },
+            shape = RoundedCornerShape(size = 16.dp)) {
               Image(imageVector = Icons.Default.Add, contentDescription = null)
             }
       }) { paddingValues ->
@@ -179,10 +180,7 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
 
   var url by remember { mutableStateOf("") }
 
-  AlertDialog(
-    onDismissRequest = { onDismissRequest() }
-  )
-  {
+  AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
         modifier = Modifier.width(400.dp).height(250.dp),
         color = MaterialTheme.colorScheme.background,
@@ -195,23 +193,23 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
-                  modifier = Modifier.testTag("InputImage"),
+                    modifier = Modifier.testTag("InputImage"),
                     value = url,
-                  onValueChange = { url = it },
-                  label = { Text("Image URL") }
-                )
+                    onValueChange = { url = it },
+                    label = { Text("Image URL") })
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row {
                   Button(
-                    onClick = { onDismissRequest() },
-                    modifier = Modifier.testTag("CancelImage")
-                  ) { Text("Cancel") }
+                      onClick = { onDismissRequest() },
+                      modifier = Modifier.testTag("CancelImage")) {
+                        Text("Cancel")
+                      }
                   Spacer(modifier = Modifier.width(16.dp))
                   Button(
-                    onClick = { onConfirmation(url) },
-                    modifier = Modifier.testTag("SaveImage")
-                  ) { Text("Confirm") }
+                      onClick = { onConfirmation(url) }, modifier = Modifier.testTag("SaveImage")) {
+                        Text("Confirm")
+                      }
                 }
               }
         }
@@ -231,7 +229,7 @@ fun ShowImages(images: List<String>, onDismissRequest: () -> Unit) {
               Card(
                   modifier =
                       Modifier.testTag("ImageShown")
-                        .padding(8.dp)
+                          .padding(8.dp)
                           .height(100.dp)
                           .width(100.dp)
                           .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),

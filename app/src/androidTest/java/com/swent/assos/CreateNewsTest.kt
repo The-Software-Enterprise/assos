@@ -11,13 +11,13 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
+import java.lang.Thread.sleep
 import kotlin.random.Random
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -135,15 +135,15 @@ class CreateNewsTest : SuperTest() {
     runBlocking {
       delay(2000)
       val newsId =
-        Firebase.firestore
-          .collection("news")
-          .whereEqualTo("title", newsTitle)
-          .whereEqualTo("description", newsDescription)
-          .whereEqualTo("images", listOf(imageURL))
-          .get()
-          .await()
-          .documents[0]
-          .id
+          Firebase.firestore
+              .collection("news")
+              .whereEqualTo("title", newsTitle)
+              .whereEqualTo("description", newsDescription)
+              .whereEqualTo("images", listOf(imageURL))
+              .get()
+              .await()
+              .documents[0]
+              .id
       assert(newsId.isNotEmpty())
       Firebase.firestore.collection("news").document(newsId).delete().await()
       Firebase.auth.signOut()
