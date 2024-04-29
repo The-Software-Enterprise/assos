@@ -59,8 +59,8 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Test
   fun createNewsAndVerifyCreation() {
 
-    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
     run {
+      composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Signup") {
           emailField {
@@ -84,9 +84,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
         verify { mockNavActions.navigateTo(Destinations.HOME) }
         confirmVerified(mockNavActions)
       }
-    }
-    composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
-    run {
+      composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
         step("Signin with good credentials") {
           emailField {
@@ -102,45 +100,41 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
             performClick()
           }
         }
-      }
-      Thread.sleep(1000)
-      verify { mockNavActions.navigateTo(Destinations.HOME.route) }
-      confirmVerified(mockNavActions)
-    }
-
-    composeTestRule.activity.setContent {
-      CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
-    }
-
-    run {
-      ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
-        step("Create a news") {
-          form { assertIsDisplayed() }
-          inputTitle {
-            assertIsDisplayed()
-            performClick()
-            performTextInput(newsTitle)
+        Thread.sleep(1000)
+        verify { mockNavActions.navigateTo(Destinations.HOME.route) }
+        confirmVerified(mockNavActions)
+        composeTestRule.activity.setContent {
+          CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
+        }
+        ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
+          step("Create a news") {
+            form { assertIsDisplayed() }
+            inputTitle {
+              assertIsDisplayed()
+              performClick()
+              performTextInput(newsTitle)
+            }
+            inputDescription {
+              assertIsDisplayed()
+              performClick()
+              performTextInput(newsDescription)
+            }
+            buttonSave { performClick() }
           }
-          inputDescription {
-            assertIsDisplayed()
-            performClick()
-            performTextInput(newsDescription)
-          }
-          buttonSave { performClick() }
         }
       }
-    }
 
-    composeTestRule.activity.setContent { News() }
+      composeTestRule.activity.setContent { News() }
 
-    run {
-      ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
-        step("Check if the news is displayed") {
-          newsList { assertIsDisplayed() }
-          newsListItems { assertIsDisplayed() }
-          itemsTitle { assertTextContains(newsTitle) }
-          itemsDescription { assertTextContains(newsDescription) }
-          itemsAssociation { assertTextContains("Association to promote cooking amongst students") }
+      run {
+        ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
+          step("Check if the news is displayed") {
+            newsList { assertIsDisplayed() }
+            newsListItems { assertIsDisplayed() }
+            itemsTitle { assertTextContains(newsTitle) }
+            itemsDescription { assertTextContains(newsDescription) }
+            itemsAssociation { assertTextContains("Association to promote cooking amongst students") }
+          }
         }
       }
     }
