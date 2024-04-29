@@ -7,7 +7,7 @@ data class News(
     val id: String = "",
     val title: String = "",
     val associationId: String = "",
-    val image: String = "",
+    val imageUrl: String = "",
     val description: String = "",
     val date: Date = Date(),
     val eventId: String = "",

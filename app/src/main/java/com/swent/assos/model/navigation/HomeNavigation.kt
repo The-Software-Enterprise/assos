@@ -43,7 +43,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         modifier = Modifier.fillMaxSize().weight(1f),
     ) { page ->
       when (page) {
-        0 -> News()
+        0 -> News(navigationActions = navigationActions)
         1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
         3 -> QrCode()

@@ -95,7 +95,7 @@ constructor(
           description = it.getString("description") ?: "",
           date = it.getDate("date") ?: Date(),
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          imageUrl = it.getString("image") ?: "",
           eventId = it.getString("eventId") ?: "")
     }
   }
@@ -109,7 +109,7 @@ constructor(
                 "description" to news.description,
                 "date" to Date(),
                 "associationId" to news.associationId,
-                "image" to news.image,
+                "image" to news.imageUrl,
                 "eventId" to news.eventId))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
@@ -123,7 +123,7 @@ constructor(
             mapOf(
                 "title" to news.title,
                 "description" to news.description,
-                "image" to news.image,
+                "image" to news.imageUrl,
             ))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
@@ -163,7 +163,7 @@ constructor(
           description = it.getString("description") ?: "",
           date = it.getDate("date") ?: Date(),
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          imageUrl = it.getString("image") ?: "",
           eventId = it.getString("eventId") ?: "",
           documentSnapshot = it)
     }

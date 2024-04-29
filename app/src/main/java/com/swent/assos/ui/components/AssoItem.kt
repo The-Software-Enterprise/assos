@@ -31,30 +31,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.ui.theme.Typography
 
 @Composable
-fun NewsItem(news: News, navigationActions: NavigationActions) {
+fun AssoItem(asso: Association, navigationActions: NavigationActions) {
     Box(
         modifier = Modifier
+            .width(327.dp)
+            .height(108.dp)
             .background(Color.White)
-            .fillMaxWidth()
     ) {
         Row(
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.Top,
             modifier = Modifier.fillMaxSize()
         ) {
             AsyncImage(
-                model = news.imageUrl,
-                contentDescription = "news image",
-                contentScale = ContentScale.Fit,
+                model = asso.logo,
+                contentDescription = "asso image",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .width(114.dp)
-                    .height(108.dp)
+                    .height(64.dp)
             )
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -64,7 +66,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     .align(Alignment.CenterVertically)
             ) {
                 Text(
-                    text = news.title,
+                    text = asso.acronym,
                     style = Typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold, // Adjust the weight as needed
                         fontSize = 16.sp,
@@ -75,7 +77,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                         .height(24.dp)
                 )
                 Text(
-                    text = news.description,
+                    text = asso.description,
                     style = Typography.bodyLarge.copy(
                         fontSize = 14.sp,
                         lineHeight = 20.sp,

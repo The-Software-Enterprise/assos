@@ -103,6 +103,9 @@ dependencies {
   implementation("androidx.compose.material:material-icons-extended:1.2.0")
   //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
 
+  //Images
+  implementation ("io.coil-kt:coil-compose:2.1.0")
+
   androidTestImplementation("com.kaspersky.android-components:kaspresso:1.4.3")
   // Allure support
   androidTestImplementation("com.kaspersky.android-components:kaspresso-allure-support:1.4.3")

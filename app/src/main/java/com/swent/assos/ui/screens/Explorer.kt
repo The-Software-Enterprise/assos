@@ -52,6 +52,7 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ExplorerViewModel
+import com.swent.assos.ui.components.AssoItem
 import com.swent.assos.ui.theme.PurpleGrey40
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -100,7 +101,7 @@ fun Explorer(navigationActions: NavigationActions) {
                 }
               } else {
                 items(items = associations, key = { it.id }) {
-                  ListItemAsso(asso = it, navigationActions = navigationActions)
+                  AssoItem(asso = it, navigationActions = navigationActions)
                   Divider(
                       modifier = Modifier.padding(horizontal = 20.dp),
                       color = MaterialTheme.colorScheme.surface)
@@ -108,50 +109,6 @@ fun Explorer(navigationActions: NavigationActions) {
               }
             }
       }
-}
-
-@Composable
-fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
-  ListItem(
-      modifier =
-          Modifier.fillMaxWidth()
-              .testTag("AssoListItem")
-              .clickable {
-                val dest = Destinations.ASSO_DETAILS.route + "/${asso.id
-                      }"
-                navigationActions.navigateTo(dest)
-              }
-              .padding(start = 20.dp, top = 5.dp, bottom = 5.dp, end = 5.dp),
-      headlineContent = {
-        Text(
-            text = asso.acronym,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Black)
-      },
-      supportingContent = {
-        Text(text = asso.fullname, fontSize = 12.sp, fontWeight = FontWeight.Light)
-      },
-      leadingContent = {
-        Image(
-            modifier = Modifier.size(40.dp),
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
-            contentDescription = null)
-      },
-      trailingContent = {
-        Image(
-            modifier = Modifier.size(24.dp),
-            painter = painterResource(id = R.drawable.baseline_arrow_right_24),
-            contentDescription = null)
-      },
-      colors =
-          ListItemDefaults.colors(
-              headlineColor = PurpleGrey40,
-              overlineColor = PurpleGrey40,
-              supportingColor = PurpleGrey40,
-              trailingIconColor = PurpleGrey40,
-              containerColor = Color.Transparent),
-  )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
