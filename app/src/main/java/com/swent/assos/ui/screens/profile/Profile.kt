@@ -115,6 +115,7 @@ fun UserNameDisplay(name: String) {
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
       onDismissRequest = onDismiss,
+      modifier = Modifier.testTag("LogoutDialog"),
       title = {
         Text(
             text = "Log out",

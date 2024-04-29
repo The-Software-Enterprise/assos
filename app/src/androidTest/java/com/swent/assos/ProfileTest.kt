@@ -123,7 +123,26 @@ class ProfileTest : SuperTest() {
   fun logoutButtonIsDisplayed() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Click on logout button") { logoutButton { assertIsDisplayed() } }
+        step("Logout button is displayed") { logoutButton { assertIsDisplayed() } }
+      }
+    }
+  }
+
+  @Test
+  fun popUpDisplays() {
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Popup is displayed") {
+          logoutButton {
+            performClick()
+        }
+
+        }
+        step ("Check if popup is displayed") {
+          logoutDialog {
+            assertIsDisplayed()
+          }
+        }
       }
     }
   }
