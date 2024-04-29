@@ -21,8 +21,11 @@ fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
   return bitmap.asImageBitmap()
 }
 
-fun formatDateTime(dateString: String): String {
-  val formatter = DateTimeFormatter.ISO_DATE_TIME
-  val dateTime = LocalDateTime.parse(dateString, formatter)
-  return dateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
+fun formatDateTime(date: LocalDateTime): String {
+  return date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+}
+
+fun generateUniqueID(): String {
+  val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+  return (1..20).map { chars.random() }.joinToString("")
 }

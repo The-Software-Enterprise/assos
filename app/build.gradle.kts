@@ -92,6 +92,7 @@ dependencies {
   implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
   implementation("com.google.firebase:firebase-firestore-ktx")
   implementation("com.google.firebase:firebase-auth-ktx")
+  implementation("com.google.firebase:firebase-storage-ktx")
 
   // Hilt
   implementation("com.google.dagger:hilt-android:2.49")
@@ -134,6 +135,10 @@ dependencies {
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
+
+  implementation("sh.calvin.reorderable:reorderable:1.5.2")
+  implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.1.1")
+  implementation("com.maxkeppeler.sheets-compose-dialogs:date-time:1.1.1")
 
   //Images
   implementation ("io.coil-kt:coil-compose:2.1.0")
