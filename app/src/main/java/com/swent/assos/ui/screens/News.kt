@@ -2,6 +2,7 @@ package com.swent.assos.ui.screens
 
 import com.swent.assos.ui.components.NewsItem
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,8 +46,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
+import com.swent.assos.ui.components.HomeItem
 import com.swent.assos.ui.theme.Purple40
 import com.swent.assos.ui.theme.Purple80
 import com.swent.assos.ui.theme.Typography
@@ -80,15 +83,30 @@ fun News(navigationActions: NavigationActions) {
                 .padding(paddingValues)
                 .background(Color(0xFFF0F0F0)) // Light gray background
                 .padding(horizontal = 15.dp)
+                .padding(top = 5.dp)
                 .testTag("NewsList"),
             userScrollEnabled = true,
             state = listState) {
                 items(news) { newsItem ->
-                  NewsItem(news = newsItem, navigationActions)
+                    HomeItemWrapper(newsItem, navigationActions)
                     Spacer(modifier = Modifier.height(15.dp))
               }
             }
       }
+}
+
+@Composable
+fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
+    // Clickable modifier to handle user interactions
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                navigationActions.navigateTo("")
+            }
+    ) {
+        HomeItem(news = news, navigationActions)
+    }
 }
 
 @Composable
@@ -113,7 +131,6 @@ fun HomePageTitle() {
                 ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            // Add any other child views if needed
         }
     }
 }
