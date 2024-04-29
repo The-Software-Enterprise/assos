@@ -2,17 +2,20 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.auth.FirebaseAuth
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.LoginViewModel
 import com.swent.assos.screens.LoginScreen
+import com.swent.assos.screens.SettingsScreen
 import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
+import com.swent.assos.ui.screens.Settings
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -43,13 +46,15 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
   @Before
   fun setup() {
     hiltRule.inject()
-    val firebaseAuth = FirebaseAuth.getInstance()
-    firebaseAuth.signOut()
   }
 
   @Test
   fun navigateSignup() {
-    composeTestRule.activity.setContent { LoginScreen(navigationActions = mockNavActions) }
+    composeTestRule.activity.setContent {
+      val loginViewModel: LoginViewModel = hiltViewModel()
+      loginViewModel.signOut()
+      LoginScreen(navigationActions = mockNavActions)
+    }
 
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
@@ -111,6 +116,52 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
         sleep(1000)
         verify { mockNavActions.navigateTo(Destinations.HOME) }
         confirmVerified(mockNavActions)
+      }
+    }
+  }
+
+  @Test
+  fun signout() {
+    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
+    run {
+      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+        step("Signup") {
+          emailField { performTextInput("tosignout@epfl.ch") }
+          step("password") {
+            passwordField {
+              assertIsDisplayed()
+              performTextInput("123456")
+            }
+          }
+          step("confirm password") {
+            confirmPasswordField {
+              assertIsDisplayed()
+              performTextInput("123456")
+            }
+          }
+          step("nav") {
+            signUpButton {
+              assertIsDisplayed()
+              performClick()
+            }
+          }
+        }
+        sleep(1000)
+        // go to settings
+
+        composeTestRule.activity.setContent { Settings(navigationActions = mockNavActions) }
+
+        run {
+          ComposeScreen.onComposeScreen<SettingsScreen>(composeTestRule) {
+            step("Signout") {
+              logoutButton {
+                assertIsDisplayed()
+                performClick()
+              }
+            }
+            sleep(1000)
+          }
+        }
       }
     }
   }

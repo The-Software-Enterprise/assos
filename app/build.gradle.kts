@@ -138,6 +138,10 @@ dependencies {
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
+
+  implementation("sh.calvin.reorderable:reorderable:1.5.2")
+  implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.1.1")
+  implementation("com.maxkeppeler.sheets-compose-dialogs:date-time:1.1.1")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

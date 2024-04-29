@@ -35,6 +35,8 @@ class ProfileTest : SuperTest() {
             semester = "GM-BA6")
     super.setup()
     composeTestRule.activity.setContent { Profile(navigationActions = mockNavActions) }
+    // signup
+
   }
 
   @Test
@@ -57,6 +59,7 @@ class ProfileTest : SuperTest() {
 
   @Test
   fun myAssociationsSectionTitleHasRightContent() {
+
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
         step("Check if my associations section title contains text") {
