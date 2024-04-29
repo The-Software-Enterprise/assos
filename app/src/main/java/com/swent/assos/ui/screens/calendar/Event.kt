@@ -19,8 +19,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.swent.assos.model.data.CalendarEvent
 import com.swent.assos.model.data.CalendarUiModel
+import com.swent.assos.model.data.Event
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -30,7 +30,7 @@ private val EventTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
 
 @Composable
 fun BasicEvent(
-    event: CalendarEvent,
+    event: Event,
     modifier: Modifier = Modifier,
 ) {
   Column(
@@ -38,35 +38,33 @@ fun BasicEvent(
           modifier
               .fillMaxSize()
               .padding(end = 2.dp, bottom = 2.dp)
-              .background(event.color, shape = RoundedCornerShape(4.dp))
+              .background(Color.Blue, shape = RoundedCornerShape(4.dp))
               .padding(4.dp)) {
         Text(
             text =
-                "${event.startTime.format(EventTimeFormatter)} - ${event.endTime.format(
+                "${event.startTime?.format(EventTimeFormatter)} - ${event.endTime?.format(
                 EventTimeFormatter
             )}",
         )
 
         Text(
-            text = event.name,
+            text = event.title,
             fontWeight = FontWeight.Bold,
         )
 
-        if (event.description != null) {
-          Text(
-              text = event.description,
-              maxLines = 1,
-              overflow = TextOverflow.Ellipsis,
-          )
-        }
+        Text(
+            text = event.description,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
       }
 }
 
 @Composable
 fun Event(
-    events: List<CalendarEvent>,
+    events: List<Event>,
     modifier: Modifier = Modifier,
-    eventContent: @Composable (event: CalendarEvent) -> Unit = { BasicEvent(event = it) },
+    eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
     dayWidth: Dp,
     hourHeight: Dp,
     data: CalendarUiModel,
@@ -75,7 +73,7 @@ fun Event(
   val dividerColor = Color.LightGray
   Layout(
       content = {
-        events.sortedBy(CalendarEvent::startTime).forEach { event ->
+        events.sortedBy(Event::startTime).forEach { event ->
           Box(modifier = Modifier.eventData(event)) { eventContent(event) }
         }
       },
@@ -100,7 +98,7 @@ fun Event(
         val width = dayWidth.roundToPx() * numDays
         val placeablesWithEvents =
             measureables.map { measurable ->
-              val event = measurable.parentData as CalendarEvent
+              val event = measurable.parentData as Event
               val eventDurationMinutes = ChronoUnit.MINUTES.between(event.startTime, event.endTime)
               val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
               val placeable =
@@ -115,11 +113,11 @@ fun Event(
         layout(width, height) {
           placeablesWithEvents.forEach { (placeable, event) ->
             val eventOffsetMinutes =
-                ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime.toLocalTime())
+                ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime?.toLocalTime())
             val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
 
             val eventOffsetDays =
-                ChronoUnit.DAYS.between(data.startDate.date, event.startTime.toLocalDate()).toInt()
+                ChronoUnit.DAYS.between(data.startDate.date, event.startTime?.toLocalDate()).toInt()
             val eventX = eventOffsetDays * dayWidth.roundToPx()
 
             placeable.place(eventX, eventY)
@@ -128,10 +126,10 @@ fun Event(
       }
 }
 
-private fun Modifier.eventData(event: CalendarEvent) = this.then(CalendarEventDataModifier(event))
+private fun Modifier.eventData(event: Event) = this.then(CalendarEventDataModifier(event))
 
 private class CalendarEventDataModifier(
-    val event: CalendarEvent,
+    val event: Event,
 ) : ParentDataModifier {
   override fun Density.modifyParentData(parentData: Any?) = event
 }
