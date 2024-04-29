@@ -80,8 +80,7 @@ fun Profile(navigationActions: NavigationActions) {
               BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
 
               if (showLogOut) {
-                Logout(
-                    onConfirm = { /* Handle confirm action */}, onDismiss = { showLogOut = false })
+                Logout(onConfirm = { viewModel.signOut() }, onDismiss = { showLogOut = false })
               }
             }
       }
@@ -114,8 +113,8 @@ fun UserNameDisplay(name: String) {
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
-      onDismissRequest = onDismiss,
       modifier = Modifier.testTag("LogoutDialog"),
+      onDismissRequest = onDismiss,
       title = {
         Text(
             text = "Log out",
