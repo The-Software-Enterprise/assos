@@ -133,7 +133,9 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
             newsListItems { assertIsDisplayed() }
             itemsTitle { assertTextContains(newsTitle) }
             itemsDescription { assertTextContains(newsDescription) }
-            itemsAssociation { assertTextContains("Association to promote cooking amongst students") }
+            itemsAssociation {
+              assertTextContains("Association to promote cooking amongst students")
+            }
           }
         }
       }
