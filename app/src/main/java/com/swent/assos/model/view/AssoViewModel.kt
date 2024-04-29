@@ -6,7 +6,6 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
-import com.swent.assos.model.data.Post
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -72,12 +71,6 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val lastDocumentSnapshot = _events.value.lastOrNull()?.documentSnapshot
       _events.value += dbService.getEvents(associationId, lastDocumentSnapshot)
-    }
-  }
-
-  fun addPost(post: Post) {
-    viewModelScope.launch(ioDispatcher) {
-      dbService.addPost(post, {}, {})
     }
   }
 }

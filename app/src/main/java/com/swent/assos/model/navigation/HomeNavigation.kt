@@ -13,7 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -84,15 +84,6 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
-                /*3 ->
-                Icon(
-                    painterResource(id = R.drawable.qrcode),
-                    contentDescription = "QR",
-                    modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
-                    tint =
-                        if (pagerState.currentPage == index)
-                            MaterialTheme.colorScheme.onBackground
-                        else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))*/
                 3 ->
                     Icon(
                         painterResource(id = R.drawable.profil),
@@ -106,11 +97,16 @@ fun HomeNavigation(navigationActions: NavigationActions) {
             },
             selected = pagerState.currentPage == index,
             onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-            colors =
-                NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.background,
-                ),
-        )
+            label = {
+              val label =
+                  when (index) {
+                    0 -> "Home"
+                    1 -> "Explorer"
+                    2 -> "Calendar"
+                    else -> "Profile"
+                  }
+              Text(text = label)
+            })
       }
     }
   }

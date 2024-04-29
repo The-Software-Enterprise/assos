@@ -4,7 +4,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
-import com.swent.assos.model.data.Post
 import com.swent.assos.model.data.User
 
 interface DbService {
@@ -45,8 +44,4 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
-
-  // POSTS
-
-  fun addPost(post: Post, onSuccess: () -> Unit, onError: (String) -> Unit)
 }
