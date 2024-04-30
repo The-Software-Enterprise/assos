@@ -16,16 +16,32 @@ private val DarkColorScheme =
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = RedEpfl,
-        secondary = GroseilleEpfl,
-        tertiary = White,
-        background = White,
-        surface = Gray,
-        onPrimary = White,
-        onSecondary = White,
-        onTertiary = Black,
-        onBackground = Black,
-        onSurface = Black,
+        primary = NeonBlue,
+        onPrimary = MrWhite,
+        primaryContainer = MrWhite,
+        inversePrimary = JordyBlue,
+        secondary = CornflowerBlue,
+        onSecondary = MrWhite,
+        secondaryContainer = MrWhite,
+        tertiary = JordyBlue,
+        onTertiary = MrWhite,
+        tertiaryContainer = MrWhite,
+        onTertiaryContainer = JordyBlue,
+        background = MrWhite,
+        onBackground = MrBlack,
+        surface = LightCyan,
+        onSurface = MrBlack,
+        surfaceVariant = GreySpector,
+        onSurfaceVariant = MrBlack,
+        surfaceTint = Periwinkle,
+        inverseSurface = MrBlack,
+        inverseOnSurface = MrBlack,
+        error = ErrorRed,
+        onError = MrWhite,
+        errorContainer = ErrorBackround,
+        onErrorContainer = MrBlack,
+        outline = GraySeparator,
+        outlineVariant = Periwinkle
     )
 
 @Composable
