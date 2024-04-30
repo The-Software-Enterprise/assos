@@ -3,13 +3,14 @@ package com.swent.assos.ui.screens.manageAsso
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -83,48 +84,52 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ManageAssoScreen"),
       topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }) {
           paddingValues ->
-        Column(
+        LazyColumn(
             modifier = Modifier.padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally) {
-              Text(
-                  text = association.fullname,
-                  style = MaterialTheme.typography.bodyMedium,
-                  modifier =
-                      Modifier.testTag("DescriptionField")
-                          .fillMaxWidth()
-                          .padding(horizontal = 16.dp, vertical = 8.dp))
-              Button(
-                  modifier = Modifier.testTag("EditDescriptionButton"),
-                  onClick = { /* TODO */},
-                  colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                    Text("Edit description", color = Color.White)
-                  }
-              HeaderWithButton(
-                  header = "Upcoming Events",
-                  buttonText = "Add Event",
-                  onButtonClick = {
-                    navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
-                  },
-                  modifierButton = Modifier.testTag("AddEventButton"))
+              item {
+                Text(
+                    text = association.fullname,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier =
+                        Modifier.testTag("DescriptionField")
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp))
+                Button(
+                    modifier = Modifier.testTag("EditDescriptionButton"),
+                    onClick = { /* TODO */},
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
+                      Text("Edit description", color = Color.White)
+                    }
+                HeaderWithButton(
+                    header = "Upcoming Events",
+                    buttonText = "Add Event",
+                    onButtonClick = {
+                      navigationActions.navigateTo(Destinations.CREATE_EVENT.route + "/${assoId}")
+                    },
+                    modifierButton = Modifier.testTag("AddEventButton"))
 
-              LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(events) {
-                  EventItem(it, navigationActions)
-                  Spacer(modifier = Modifier.width(8.dp))
+                LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                  items(events) {
+                    EventItem(it, navigationActions)
+                    Spacer(modifier = Modifier.width(8.dp))
+                  }
                 }
-              }
-              HeaderWithButton(
-                  header = "Latest Posts",
-                  buttonText = "Add Post",
-                  onButtonClick = {
-                    navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
-                  },
-                  modifierButton = Modifier.testTag("AddPostButton"))
-              LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(news) {
-                  NewsItem(it, navigationActions)
-                  Spacer(modifier = Modifier.width(8.dp))
+                HeaderWithButton(
+                    header = "Latest Posts",
+                    buttonText = "Add Post",
+                    onButtonClick = {
+                      navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
+                    },
+                    modifierButton = Modifier.testTag("AddPostButton"))
+                LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                  items(news) {
+                    NewsItem(it, navigationActions)
+                    Spacer(modifier = Modifier.width(8.dp))
+                  }
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
               }
             }
       }
