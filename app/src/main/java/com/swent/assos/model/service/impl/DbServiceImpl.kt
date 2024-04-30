@@ -143,9 +143,9 @@ constructor(
         (snapshot.get("following") ?: emptyList<String>()) as List<String>
     val associationsTheUserBelongsTo: List<String> =
         (snapshot.get("associations") ?: emptyList<String>()) as List<String>
-      if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
-          return getAllNews(lastDocumentSnapshot)
-      }
+    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
+      return getAllNews(lastDocumentSnapshot)
+    }
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
           news.associationId in followedAssociations ||
