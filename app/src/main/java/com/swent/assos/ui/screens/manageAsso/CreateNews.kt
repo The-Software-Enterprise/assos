@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -76,7 +77,9 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
     ShowImages(images = news.images, onDismissRequest = { showImages = false })
   }
   Scaffold(
-      modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
+      modifier = Modifier
+          .fillMaxSize()
+          .testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create a news", navigationActions = navigationActions)
       },
@@ -84,15 +87,19 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
       ) { paddingValues ->
         LazyColumn(
             modifier =
-                Modifier.padding(paddingValues)
-                    .fillMaxWidth()
-                    .testTag("Form"),
+            Modifier
+                .padding(paddingValues)
+                .fillMaxWidth()
+                .testTag("Form"),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             item {
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).testTag("InputTitle"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .testTag("InputTitle"),
                     value = news.title,
                     onValueChange = { viewModel.setTitle(it) },
                     textStyle =
@@ -105,7 +112,11 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
                         cursorColor = MaterialTheme.colorScheme.secondary))
 
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).height(150.dp).testTag("InputTitle"),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .height(150.dp)
+                        .testTag("InputTitle"),
                     value = news.description,
                     onValueChange = { viewModel.setDescription(it) },
                     textStyle =
@@ -133,7 +144,9 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
                     }
                     Spacer(modifier = Modifier.width(32.dp))
                     FloatingActionButton(
-                        modifier = Modifier.testTag("AddImages").width(130.dp),
+                        modifier = Modifier
+                            .testTag("AddImages")
+                            .width(130.dp),
                         onClick = { showAddImages = true },
                         containerColor = MaterialTheme.colorScheme.secondary){
                         Text("Show Images", color = MaterialTheme.colorScheme.onSecondary, fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
@@ -142,28 +155,18 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
             }
 
 
-          item {
-            FilledIconButton(
-                onClick = { viewModel.createNews(assoId, navigationActions) },
-                modifier =
-                    Modifier.width(90.dp)
-                        .padding(top = 10.dp, bottom = if (isEdit) 0.dp else 40.dp)
-                        .height(40.dp)
-                        .testTag("ButtonSave"),
-                shape = RoundedCornerShape(10.dp),
-                enabled = news.title.isNotEmpty() && news.description.isNotEmpty(),
-                colors =
-                    IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        disabledContainerColor =
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))) {
-                Text(
-                    text = "Create",
-                    fontSize = 20.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    color = MaterialTheme.colorScheme.onPrimary)
+            item {
+                Spacer(modifier =Modifier.height(250.dp))
+                Button(
+                    enabled = news.title.isNotEmpty() && news.description.isNotEmpty(),
+                    onClick = { viewModel.createNews(assoId, navigationActions) },) {
+                    Text(
+                        text = "Create",
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                 }
-          }
+            }
+
         }
       }
 }
@@ -176,11 +179,15 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier.width(400.dp).height(250.dp),
+        modifier = Modifier
+            .width(400.dp)
+            .height(250.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
-              modifier = Modifier.fillMaxSize().testTag("AddImageDialog"),
+              modifier = Modifier
+                  .fillMaxSize()
+                  .testTag("AddImageDialog"),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("Add Image", fontSize = 30.sp, fontWeight = FontWeight.Bold)
@@ -215,18 +222,21 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
 fun ShowImages(images: List<String>, onDismissRequest: () -> Unit) {
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
+        modifier = Modifier
+            .width(400.dp)
+            .height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           LazyColumn(modifier = Modifier.testTag("ShowImagesDialog")) {
             items(images) { image ->
               Card(
                   modifier =
-                      Modifier.testTag("ImageShown")
-                          .padding(8.dp)
-                          .height(100.dp)
-                          .width(100.dp)
-                          .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
+                  Modifier
+                      .testTag("ImageShown")
+                      .padding(8.dp)
+                      .height(100.dp)
+                      .width(100.dp)
+                      .border(1.dp, Color.Black, RoundedCornerShape(8.dp)),
                   shape = RoundedCornerShape(8.dp)) {
                     Text(text = image)
                   }
