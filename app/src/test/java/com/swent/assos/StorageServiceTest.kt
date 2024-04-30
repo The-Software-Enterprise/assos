@@ -51,18 +51,24 @@ class StorageServiceTest {
           downloadUrlTask
         }
     every { downloadUrlTask.addOnFailureListener(any()) } returns downloadUrlTask
-    every { mockUri.toString() } returns "https://test.com/file"
+    every { mockUri.toString() } returns "https://test.com/file.jpg"
   }
 
   @Test
   fun uploadFilesTest() = runTest {
-    val uri1 = Uri.parse("file://dummy/path1")
-    val uri2 = Uri.parse("file://dummy/path2")
+    val uri1 = Uri.parse("file://dummy/path1.jpg")
+    val uri2 = Uri.parse("file://dummy/path2.jpg")
     val ref = "testRef"
 
     storageService = StorageServiceImpl(firebaseStorage)
-    val result = storageService.uploadFiles(listOf(uri1, uri2), ref)
-
-    assertEquals(listOf("https://test.com/file", "https://test.com/file"), result)
+    storageService.uploadFiles(
+        listOf(uri1, uri2),
+        ref,
+        {
+          assertEquals(2, it.size)
+          assertEquals("https://test.com/file.jpg", it[0].toString())
+          assertEquals("https://test.com/file.jpg", it[1].toString())
+        },
+        { fail("Should not fail") })
   }
 }
