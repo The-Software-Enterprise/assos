@@ -110,7 +110,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             currentUser = currentUser,
             viewModel = viewModel)
       }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
             Image(
                 painter = painterResource(id = R.drawable.ic_launcher_foreground),

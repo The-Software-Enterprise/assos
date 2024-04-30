@@ -43,6 +43,9 @@ constructor(private val dbService: DbService, private val authService: AuthServi
           it.acronym.contains(query, ignoreCase = true) ||
               it.fullname.contains(query, ignoreCase = true)
         }
+    if (_filteredAssociations.value.size < 8) {
+      loadMoreAssociations()
+    }
   }
 
   fun loadMoreAssociations() {

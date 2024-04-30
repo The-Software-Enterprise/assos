@@ -85,7 +85,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
       topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }) {
           paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues),
+            modifier = Modifier.padding(paddingValues).testTag("Content"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
                 Text(
