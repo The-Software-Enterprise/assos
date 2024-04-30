@@ -351,9 +351,7 @@ constructor(
     return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
   }
 
-    override suspend fun getNewsById(newsId: String): News {
-        TODO("Not yet implemented")
-    }
-
-
+  override suspend fun getNewsById(newsId: String): News {
+    TODO("Not yet implemented")
+  }
 }

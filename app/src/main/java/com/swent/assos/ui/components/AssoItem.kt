@@ -43,10 +43,8 @@ fun AssoItem(asso: Association, navigationActions: NavigationActions) {
               horizontalAlignment = Alignment.Start,
               modifier =
                   Modifier.padding(
-                          start =
-                              16
-                                  .dp) // Assuming there's some spacing between the image and the
-                                       // texts
+                          start = 16.dp) // Assuming there's some spacing between the image and the
+                      // texts
                       .align(Alignment.CenterVertically)) {
                 Text(
                     text = asso.acronym,

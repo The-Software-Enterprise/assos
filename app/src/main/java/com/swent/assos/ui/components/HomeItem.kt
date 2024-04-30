@@ -46,10 +46,8 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               horizontalAlignment = Alignment.Start,
               modifier =
                   Modifier.padding(
-                          start =
-                              16
-                                  .dp) // Assuming there's some spacing between the image and the
-                                       // texts
+                          start = 16.dp) // Assuming there's some spacing between the image and the
+                      // texts
                       .align(Alignment.CenterVertically)) {
                 Text(
                     text = news.title,
@@ -62,12 +60,12 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                 Text(
                     text = news.description,
                     style =
-                    Typography.bodyLarge.copy(
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        letterSpacing = 0.25.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light),
+                        Typography.bodyLarge.copy(
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
+                            letterSpacing = 0.25.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.Light),
                     modifier = Modifier.width(173.dp).height(60.dp))
               }
         }

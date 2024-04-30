@@ -36,10 +36,8 @@ constructor(
     viewModelScope.launch(ioDispatcher) { callback(dbService.getAssociationById(associationId)) }
   }
 
-  fun getNews (newsId : String) {
-    viewModelScope.launch(ioDispatcher) {
-      _news.value = dbService.getNewsById(newsId)
-    }
+  fun getNews(newsId: String) {
+    viewModelScope.launch(ioDispatcher) { _news.value = dbService.getNewsById(newsId) }
   }
 
   fun loadMoreAssociations() {

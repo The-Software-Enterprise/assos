@@ -76,9 +76,13 @@ fun News(navigationActions: NavigationActions) {
 @Composable
 fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
   // Clickable modifier to handle user interactions
-  Box(modifier = Modifier.fillMaxWidth().clickable { navigationActions.navigateTo("\"newsDetails/${news.id}\"") }) {
-    HomeItem(news = news, navigationActions)
-  }
+  Box(
+      modifier =
+          Modifier.fillMaxWidth().clickable {
+            navigationActions.navigateTo("\"newsDetails/${news.id}\"")
+          }) {
+        HomeItem(news = news, navigationActions)
+      }
 }
 
 @Composable
