@@ -176,7 +176,9 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(10.dp)
-              .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(size = 28.dp)),
+              .background(
+                  color = MaterialTheme.colorScheme.background,
+                  shape = RoundedCornerShape(size = 28.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),

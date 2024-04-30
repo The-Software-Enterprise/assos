@@ -201,8 +201,11 @@ fun TopAssoBar(
         AssistChip(
             colors =
                 if (currentUser.following.contains(assoId))
-                    AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.primary)
-                else AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.tertiary),
+                    AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.primary)
+                else
+                    AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary),
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {
