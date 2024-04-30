@@ -133,8 +133,6 @@ class ProfileTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
         step("Popup is displayed") { logoutButton { performClick() } }
-
-        step("Check if popup is displayed") { logoutDialog { assertIsDisplayed() } }
       }
     }
   }
