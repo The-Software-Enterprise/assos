@@ -139,6 +139,9 @@ dependencies {
   implementation("sh.calvin.reorderable:reorderable:1.5.2")
   implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.1.1")
   implementation("com.maxkeppeler.sheets-compose-dialogs:date-time:1.1.1")
+
+  //Images
+  implementation ("io.coil-kt:coil-compose:2.1.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
