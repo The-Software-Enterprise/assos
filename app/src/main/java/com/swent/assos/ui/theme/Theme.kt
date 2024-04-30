@@ -16,8 +16,8 @@ private val DarkColorScheme =
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = RedEpfl,
-        secondary = GroseilleEpfl,
+        primary = blue,
+        secondary = blue,
         tertiary = White,
         background = White,
         surface = Gray,

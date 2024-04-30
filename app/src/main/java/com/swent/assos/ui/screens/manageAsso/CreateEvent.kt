@@ -32,6 +32,7 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -220,12 +221,15 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
                       OutlinedButton(
+                          colors = ButtonDefaults.outlinedButtonColors(
+                              containerColor = Color.Blue,
+                              disabledContainerColor = Color.Gray
+                          ),
                           shape = RoundedCornerShape(8.dp),
                           onClick = {
                             viewModel.resetHourFormat()
                             showTimePickerStart = true
-                          },
-                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent),
+                          }
                       ) {
                         Text(
                             event.startTime?.format(
