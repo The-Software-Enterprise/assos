@@ -125,15 +125,17 @@ fun News() {
                         )
                         Text(
                             modifier = Modifier.testTag("ItemsDate"),
-                            text = it.date.toString(),
+                            text = it.createdAt.toString(),
                         )
                         Text(
                             modifier = Modifier.testTag("ItemsAssociation"),
                             text = association.fullname,
                         )
-                        Text(
-                            text = it.eventId,
-                        )
+                        it.eventIds.forEach {
+                          Text(
+                              text = it,
+                          )
+                        }
                       }
                     }
               }

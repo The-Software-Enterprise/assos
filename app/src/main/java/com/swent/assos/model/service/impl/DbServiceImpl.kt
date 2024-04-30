@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -98,7 +99,7 @@ constructor(
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
-    val query = firestore.collection("news").orderBy("date", Query.Direction.DESCENDING)
+    val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -108,15 +109,27 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
+    Log.d("DbServiceImpl", "getAllNews: ${snapshot.documents.map { it.get("createdAt") }}")
     return snapshot.documents.map {
       News(
           id = it.id,
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
-          date = it.getDate("date") ?: Date(),
+          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
-          eventId = it.getString("eventId") ?: "")
+          images =
+              if (it.get("images") is List<*>) {
+                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          eventIds =
+              if (it.get("eventIds") is List<*>) {
+                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          documentSnapshot = it)
     }
   }
 
@@ -148,10 +161,10 @@ constructor(
             mapOf(
                 "title" to news.title,
                 "description" to news.description,
-                "date" to Date(),
+                "createdAt" to localDateTimeToTimestamp(news.createdAt),
                 "associationId" to news.associationId,
-                "image" to news.image,
-                "eventId" to news.eventId))
+                "images" to news.images,
+                "eventIds" to news.eventIds))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -164,7 +177,7 @@ constructor(
             mapOf(
                 "title" to news.title,
                 "description" to news.description,
-                "image" to news.image,
+                "images" to news.images,
             ))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
@@ -187,7 +200,7 @@ constructor(
         firestore
             .collection("news")
             .whereEqualTo("associationId", associationId)
-            .orderBy("date", Query.Direction.DESCENDING)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -202,10 +215,20 @@ constructor(
           id = it.id,
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
-          date = it.getDate("date") ?: Date(),
+          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
-          eventId = it.getString("eventId") ?: "",
+          images =
+              if (it.get("images") is List<*>) {
+                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          eventIds =
+              if (it.get("eventIds") is List<*>) {
+                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
           documentSnapshot = it)
     }
   }
