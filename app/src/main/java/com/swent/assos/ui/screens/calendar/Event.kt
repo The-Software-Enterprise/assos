@@ -101,7 +101,8 @@ fun Event(
             measureables.map { measurable ->
               val event = measurable.parentData as Event
               val eventDurationMinutes = ChronoUnit.MINUTES.between(event.startTime, event.endTime)
-              val eventHeight = max(0, ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt())
+              val eventHeight =
+                  max(0, ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt())
               val placeable =
                   measurable.measure(
                       constraints.copy(
