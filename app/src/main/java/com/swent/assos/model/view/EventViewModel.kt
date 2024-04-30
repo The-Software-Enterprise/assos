@@ -59,7 +59,8 @@ constructor(
     _fieldType.value = EventFieldType.TEXT
   }
 
-  fun createEvent(event: Event, onSuccess: () -> Unit) {
+  fun createEvent(onSuccess: () -> Unit) {
+    val event = _event.value
     viewModelScope.launch(ioDispatcher) {
       storageService.uploadFile(
           event.image,
