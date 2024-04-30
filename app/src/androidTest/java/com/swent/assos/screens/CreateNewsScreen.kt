@@ -21,5 +21,19 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         hasTestTag("InputDescription")
         hasSetTextAction()
       }
+  val showImages: KNode = form.child { hasTestTag("ShowImages") }
   val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
+  val addImages: KNode = onNode { hasTestTag("AddImages") }
+
+  val showImagesDialog: KNode = onNode { hasTestTag("ShowImagesDialog") }
+  val imageShown: KNode = showImagesDialog.child { hasTestTag("ImageShown") }
+
+  val addImageDialog: KNode = onNode { hasTestTag("AddImageDialog") }
+  val saveImage: KNode = addImageDialog.child { hasTestTag("SaveImage") }
+  val cancelImage: KNode = addImageDialog.child { hasTestTag("CancelImage") }
+  val inputImage: KNode =
+      addImageDialog.child {
+        hasTestTag("InputImage")
+        hasSetTextAction()
+      }
 }

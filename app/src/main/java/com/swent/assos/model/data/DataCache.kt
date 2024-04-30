@@ -4,4 +4,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 object DataCache {
   val currentUser: MutableStateFlow<User> = MutableStateFlow(User())
+
+  fun signOut() {
+    currentUser.value = User()
+  }
 }
