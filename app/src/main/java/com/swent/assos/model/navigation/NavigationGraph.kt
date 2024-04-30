@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
-import com.swent.assos.ui.screens.Settings
+import com.swent.assos.ui.screens.profile.Settings
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
@@ -22,7 +22,6 @@ import com.swent.assos.ui.screens.profile.Appearance
 import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
-import com.swent.assos.ui.screens.profile.Settings
 
 @Composable
 fun NavigationGraph() {
