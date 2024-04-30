@@ -100,7 +100,7 @@ fun Explorer(navigationActions: NavigationActions) {
             modifier =
                 Modifier.padding(paddingValues)
                     .testTag("AssoList")
-                    .background(color = MaterialTheme.colorScheme.surface),
+                    .background(color = MaterialTheme.colorScheme.background),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
