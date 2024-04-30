@@ -41,10 +41,10 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   fun setup() {
     hiltRule.inject()
     FirebaseAuth.AuthStateListener { auth ->
-      auth.createUserWithEmailAndPassword("test@epfl.ch", "test12")
+      auth.createUserWithEmailAndPassword("test@gmail.com", "test12")
     }
     FirebaseAuth.AuthStateListener { auth ->
-      auth.signInWithEmailAndPassword("test@epfl.ch", "test12")
+      auth.signInWithEmailAndPassword("test@gmail.com", "test12")
     }
   }
 
