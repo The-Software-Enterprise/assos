@@ -11,9 +11,6 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme =
-    darkColorScheme(primary = Purple80, secondary = PurpleGrey80, tertiary = Pink80)
-
 private val LightColorScheme =
     lightColorScheme(
         primary = NeonBlue,
@@ -42,6 +39,36 @@ private val LightColorScheme =
         onErrorContainer = MrBlack,
         outline = GraySeparator,
         outlineVariant = Periwinkle
+    )
+
+private val DarkColorScheme =
+    darkColorScheme(
+        primary = JordyBlue,
+        onPrimary = MrBlack,
+        primaryContainer = MrBlack,
+        inversePrimary = NeonBlue,
+        secondary = CornflowerBlue,
+        onSecondary = MrBlack,
+        secondaryContainer = MrBlack,
+        tertiary = NeonBlue,
+        onTertiary = MrBlack,
+        tertiaryContainer = MrBlack,
+        onTertiaryContainer = JordyBlue,
+        background = MrBlack,
+        onBackground = MrWhite,
+        surface = GreySpector,
+        onSurface = MrBlack,
+        surfaceVariant = LightCyan,
+        onSurfaceVariant = MrBlack,
+        surfaceTint = CornflowerBlue,
+        inverseSurface = MrWhite,
+        inverseOnSurface = MrBlack,
+        error = ErrorRed,
+        onError = MrWhite,
+        errorContainer = ErrorBackround,
+        onErrorContainer = MrBlack,
+        outline = GreySpector,
+        outlineVariant = LightCyan
     )
 
 @Composable
