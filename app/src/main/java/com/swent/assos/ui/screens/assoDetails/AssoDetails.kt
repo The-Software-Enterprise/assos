@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -59,8 +59,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
-import com.swent.assos.ui.theme.ColorFollowButton
-import com.swent.assos.ui.theme.ColorUnfollowButton
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -110,72 +108,72 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             currentUser = currentUser,
             viewModel = viewModel)
       }) { paddingValues ->
-        Column(modifier = Modifier.padding(paddingValues)) {
-          Image(
-              painter = painterResource(id = R.drawable.ic_launcher_foreground),
-              contentDescription = null,
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .align(Alignment.CenterHorizontally)
-                      .padding(10.dp)
-                      .height(200.dp)
-                      .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-              contentScale = ContentScale.Crop,
-              alignment = Alignment.Center)
+        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
+          item {
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(10.dp)
+                        .height(200.dp)
+                        .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center)
 
-          Text(
-              text = association.description,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
-
-          Text(
-              text = "Upcoming Events",
-              style = MaterialTheme.typography.headlineMedium,
-              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              fontWeight = FontWeight.Bold,
-              modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp))
-
-          if (events.isNotEmpty()) {
-            LazyRow(
-                state = listStateEvents,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                  items(events) {
-                    EventItem(it, navigationActions)
-                    Spacer(modifier = Modifier.width(8.dp))
-                  }
-                }
-          } else {
             Text(
-                text = "No upcoming events",
+                text = association.description,
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
+
+            Text(
+                text = "Upcoming Events",
+                style = MaterialTheme.typography.headlineMedium,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-          }
-          Text(
-              text = "Latest Posts",
-              style = MaterialTheme.typography.headlineMedium,
-              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              fontWeight = FontWeight.Bold,
-              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp))
 
-          if (news.isNotEmpty()) {
-            LazyRow(
-                state = listStateNews,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                  items(news) {
-                    NewsItem(it, navigationActions)
-                    Spacer(modifier = Modifier.width(8.dp))
+            if (events.isNotEmpty()) {
+              LazyRow(
+                  state = listStateEvents,
+                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                    items(events) {
+                      EventItem(it, navigationActions)
+                      Spacer(modifier = Modifier.width(8.dp))
+                    }
                   }
-                }
-          } else {
+            } else {
+              Text(
+                  text = "No upcoming events",
+                  style = MaterialTheme.typography.bodyMedium,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                  fontWeight = FontWeight.Medium,
+                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+            }
             Text(
-                text = "No latest posts",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "Latest Posts",
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+
+            if (news.isNotEmpty()) {
+              LazyRow(
+                  state = listStateNews,
+                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                    items(news) {
+                      NewsItem(it, navigationActions)
+                      Spacer(modifier = Modifier.width(8.dp))
+                    }
+                  }
+            } else {
+              Text(
+                  text = "No latest posts",
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+            }
+            Spacer(modifier = Modifier.height(20.dp))
           }
-          Spacer(modifier = Modifier.height(20.dp))
-          CustomFAB(onClick = {})
         }
       }
 }
@@ -203,8 +201,11 @@ fun TopAssoBar(
         AssistChip(
             colors =
                 if (currentUser.following.contains(assoId))
-                    AssistChipDefaults.assistChipColors(containerColor = ColorUnfollowButton)
-                else AssistChipDefaults.assistChipColors(containerColor = ColorFollowButton),
+                    AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.primary)
+                else
+                    AssistChipDefaults.assistChipColors(
+                        containerColor = MaterialTheme.colorScheme.tertiary),
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {

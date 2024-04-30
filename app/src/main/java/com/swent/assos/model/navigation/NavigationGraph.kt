@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHost
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -66,10 +65,14 @@ fun NavigationGraph() {
           navigationActions = navigationActions,
           assoId = backStackEntry.arguments?.getString("assoId") ?: "")
     }
-
+    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+      CreateNews(
+          navigationActions = navigationActions,
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
     composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
       ManageAssociation(
-          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "",
           navigationActions = navigationActions)
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }
