@@ -1,7 +1,13 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -13,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -60,6 +67,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
@@ -82,7 +90,6 @@ import sh.calvin.reorderable.rememberReorderableLazyColumnState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
-
   val viewModel: EventViewModel = hiltViewModel()
 
   val event by viewModel.event.collectAsState()
@@ -95,6 +102,14 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
+
+  val launcher =
+      rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
+        ->
+        if (result.resultCode == Activity.RESULT_OK) {
+          viewModel.setImage(result.data?.data)
+        }
+      }
 
   LaunchedEffect(key1 = Unit) { event.associationId = assoId }
 
@@ -203,10 +218,17 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     onValueChange = { viewModel.setDescription(it) },
                     label = { Text("Description") })
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = event.image,
-                    onValueChange = { viewModel.setImage(it) },
-                    label = { Text("Event Image") })
+                Image(
+                    painter = rememberAsyncImagePainter(event.image),
+                    contentDescription = "image",
+                    modifier =
+                        Modifier.size(100.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .clickable {
+                              val pickImageIntent = Intent(Intent.ACTION_PICK)
+                              pickImageIntent.type = "image/*"
+                              launcher.launch(pickImageIntent)
+                            })
                 Spacer(modifier = Modifier.height(16.dp))
               }
               item {
@@ -246,11 +268,10 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Button(
                     enabled =
                         event.description.isNotEmpty() &&
-                            event.image.isNotEmpty() &&
+                            event.image != Uri.EMPTY &&
                             event.title.isNotEmpty() &&
                             event.startTime != null &&
-                            event.endTime != null &&
-                            event.fields.isNotEmpty(),
+                            event.endTime != null,
                     onClick = {
                       viewModel.createEvent(
                           event = event, onSuccess = { navigationActions.goBack() })

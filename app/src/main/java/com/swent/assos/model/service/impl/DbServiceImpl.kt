@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -166,7 +167,7 @@ constructor(
         firestore
             .collection("news")
             .whereEqualTo("associationId", associationId)
-            .orderBy("date", Query.Direction.DESCENDING)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -206,7 +207,7 @@ constructor(
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          image = Uri.parse(it.getString("image") ?: ""),
           startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
@@ -255,7 +256,7 @@ constructor(
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          image = Uri.parse(it.getString("image") ?: ""),
           startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
@@ -288,7 +289,7 @@ constructor(
                 "title" to event.title,
                 "description" to event.description,
                 "associationId" to event.associationId,
-                "image" to event.image,
+                "image" to event.image.toString(),
                 "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
                 "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
                 "fields" to

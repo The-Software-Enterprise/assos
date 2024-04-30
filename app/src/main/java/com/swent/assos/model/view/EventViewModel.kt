@@ -1,5 +1,6 @@
 package com.swent.assos.model.view
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
@@ -7,6 +8,7 @@ import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.DbService
+import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -19,6 +21,7 @@ class EventViewModel
 @Inject
 constructor(
     private val dbService: DbService,
+    private val storageService: StorageService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -58,7 +61,16 @@ constructor(
 
   fun createEvent(event: Event, onSuccess: () -> Unit) {
     viewModelScope.launch(ioDispatcher) {
-      dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
+      storageService.uploadFile(
+          event.image,
+          "events/${event.id}",
+          onSuccess = {
+            event.image = it
+            viewModelScope.launch(ioDispatcher) {
+              dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
+            }
+          },
+          onError = {})
     }
   }
 
@@ -70,8 +82,10 @@ constructor(
     _event.value = _event.value.copy(description = description)
   }
 
-  fun setImage(image: String) {
-    _event.value = _event.value.copy(image = image)
+  fun setImage(uri: Uri?) {
+    if (uri != null) {
+      _event.value = _event.value.copy(image = uri)
+    }
   }
 }
 
