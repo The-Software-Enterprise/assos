@@ -3,7 +3,6 @@ package com.swent.assos.ui.screens.manageAsso
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,7 +19,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.AlertDialog
@@ -36,8 +34,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -186,25 +182,18 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         LazyColumn(
             modifier = Modifier
                 .padding(paddingValues)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .testTag("ContentSection"),
             horizontalAlignment = Alignment.CenterHorizontally) {
+
               item {
+
                 Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = event.title,
-                    onValueChange = { viewModel.setTitle(it) },
-                    label = { Text(text = "Event Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = event.description,
-                    onValueChange = { viewModel.setDescription(it) },
-                    label = { Text(text = "Description", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedTextField(
-                    value = event.image,
-                    onValueChange = { viewModel.setImage(it) },
-                    label = { Text(text = "Event Image" , fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
-                Spacer(modifier = Modifier.height(16.dp))
+
+                  AddContent(event.title, { viewModel.setTitle(it) }, "Event Title")
+                  AddContent(event.description, { viewModel.setDescription(it) }, "Description")
+                  AddContent(event.image, { viewModel.setImage(it) }, "Event Image")
+
               }
               item {
                 Button(
@@ -257,6 +246,16 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
             }
       }
+}
+
+@Composable
+fun AddContent(value: String, onValueChange: (String) -> Unit, title: String){
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(text = title, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
+
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
