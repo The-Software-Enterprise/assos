@@ -252,14 +252,63 @@ constructor(
     }
   }
 
-  override suspend fun getEvents(
-      associationId: String,
+    override suspend fun getEventsFromAnAssociation(
+        associationId: String,
+        lastDocumentSnapshot: DocumentSnapshot?
+    ): List<Event> {
+        val query = firestore
+            .collection("events")
+            .whereEqualTo("associationId", associationId)
+            .whereGreaterThan("startTime", Timestamp.now())
+            .orderBy("startTime", Query.Direction.ASCENDING)
+        val snapshot =
+            if (lastDocumentSnapshot == null) {
+            query.limit(10).get().await()
+        } else {
+            query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+        if (snapshot.isEmpty) {
+            return emptyList()
+        }
+
+        return snapshot.documents.map {
+            Event(
+                id = it.id,
+                title = it.getString("title") ?: "",
+                description = it.getString("description") ?: "",
+                associationId = it.getString("associationId") ?: "",
+                image = Uri.parse(it.getString("image") ?: ""),
+                startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
+                endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
+                fields =
+                if (it.get("fields") is List<*>) {
+                    (it.get("fields") as List<*>)
+                        .filterIsInstance<Map<String, String>>()
+                        .map { map ->
+                            when (map["type"]) {
+                                EventFieldType.IMAGE.toString() ->
+                                    EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
+                                EventFieldType.TEXT.toString() ->
+                                    EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
+                                else -> EventFieldText("", "")
+                            }
+                        }
+                        .toMutableList()
+                } else {
+                    mutableListOf()
+                },
+                documentSnapshot = it)
+        }
+    }
+
+  override suspend fun getEventsFromAssociations(
+      associationIds: List<String>,
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Event> {
     val query =
         firestore
             .collection("events")
-            .whereEqualTo("associationId", associationId)
+            .whereIn("associationId", associationIds)
             .whereGreaterThan("startTime", Timestamp.now())
             .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =

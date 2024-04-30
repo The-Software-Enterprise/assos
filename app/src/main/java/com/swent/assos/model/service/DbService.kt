@@ -29,7 +29,9 @@ interface DbService {
   // Events -------------------------------------------------------------------
   suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event>
 
-  suspend fun getEvents(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Event>
+  suspend fun getEventsFromAnAssociation(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Event>
+
+  suspend fun getEventsFromAssociations(associationIds: List<String>, lastDocumentSnapshot: DocumentSnapshot?): List<Event>
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
