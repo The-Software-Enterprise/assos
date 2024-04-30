@@ -1,6 +1,5 @@
 package com.swent.assos.ui.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
@@ -34,7 +32,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -44,10 +41,7 @@ import com.swent.assos.model.view.LoginViewModel
 fun LoginScreen(navigationActions: NavigationActions) {
   Column(
       modifier =
-      Modifier
-          .fillMaxWidth()
-          .semantics { testTagsAsResourceId = true }
-          .testTag("LoginScreen"),
+          Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true }.testTag("LoginScreen"),
       verticalArrangement = Arrangement.Center,
       horizontalAlignment = Alignment.CenterHorizontally) {
         var email by remember { mutableStateOf("") }
@@ -56,13 +50,14 @@ fun LoginScreen(navigationActions: NavigationActions) {
         val userNotFound by remember { loginViewModel.userNotFound }
         val errorMessage by remember { loginViewModel.errorMessage }
 
-      Text(text = "Sign In",
-          style = TextStyle(
-              fontSize = 24.sp,
-              lineHeight = 32.sp,
-              color = Color(0xFF1D1B20),
-              )
-          )
+        Text(
+            text = "Sign In",
+            style =
+                TextStyle(
+                    fontSize = 24.sp,
+                    lineHeight = 32.sp,
+                    color = Color(0xFF1D1B20),
+                ))
 
         OutlinedTextField(
             value = email,
@@ -71,13 +66,14 @@ fun LoginScreen(navigationActions: NavigationActions) {
               loginViewModel.userNotFound.value = false
             },
             label = { Text("Email") },
-            modifier = Modifier.padding(0.dp)
-                .width(210.dp)
-                .height(56.dp)
-                .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                .fillMaxWidth()
-                .padding(16.dp)
-                .testTag("EmailField"))
+            modifier =
+                Modifier.padding(0.dp)
+                    .width(210.dp)
+                    .height(56.dp)
+                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .testTag("EmailField"))
 
         OutlinedTextField(
             value = password,
@@ -86,24 +82,32 @@ fun LoginScreen(navigationActions: NavigationActions) {
               loginViewModel.userNotFound.value = false
             },
             label = { Text("Password") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .testTag("PasswordField").padding(0.dp)
-                .width(210.dp)
-                .height(56.dp)
-                .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(16.dp)
+                    .testTag("PasswordField")
+                    .padding(0.dp)
+                    .width(210.dp)
+                    .height(56.dp)
+                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
             visualTransformation = PasswordVisualTransformation())
 
         Button(
-            modifier = Modifier.testTag("LoginButton").shadow(elevation = 3.dp, spotColor = Color(0x4D000000), ambientColor = Color(0x4D000000))
-
-                .shadow(elevation = 8.dp, spotColor = Color(0x26000000), ambientColor = Color(0x26000000))
-
-                .padding(0.dp)
-                .width(90.dp)
-                .height(42.dp)
-                .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
+            modifier =
+                Modifier.testTag("LoginButton")
+                    .shadow(
+                        elevation = 3.dp,
+                        spotColor = Color(0x4D000000),
+                        ambientColor = Color(0x4D000000))
+                    .shadow(
+                        elevation = 8.dp,
+                        spotColor = Color(0x26000000),
+                        ambientColor = Color(0x26000000))
+                    .padding(0.dp)
+                    .width(90.dp)
+                    .height(42.dp)
+                    .background(
+                        color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
             onClick = {
               loginViewModel.signIn(email, password) {
                 navigationActions.navigateTo(Destinations.HOME.route)
@@ -120,12 +124,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Text(
             // if clicked, go to sign up page using hilt navigation
             modifier =
-            Modifier
-                .clickable {
-                    loginViewModel.userNotFound.value = false
-                    navigationActions.navigateTo(Destinations.SIGN_UP)
-                }
-                .testTag("SignUpNavButton"),
+                Modifier.clickable {
+                      loginViewModel.userNotFound.value = false
+                      navigationActions.navigateTo(Destinations.SIGN_UP)
+                    }
+                    .testTag("SignUpNavButton"),
             color = Color.Blue,
             textDecoration = TextDecoration.Underline,
             text = "Don't have an account? Sign up")

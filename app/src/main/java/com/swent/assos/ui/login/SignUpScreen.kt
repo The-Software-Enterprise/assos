@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.LeadingIconTab
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,16 +27,12 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
-import com.swent.assos.R
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -58,28 +52,26 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
   Column(
       modifier =
-      Modifier
-          .width(360.dp)
-          .height(116.dp)
-          .background(color = Color(0xFFFFFFFF))
-          .padding(bottom = 24.dp)
-          .fillMaxWidth()
-          .padding(40.dp)
-          .testTag("SignUpScreen")
-          .semantics {
-              testTagsAsResourceId = true
-          },
+          Modifier.width(360.dp)
+              .height(116.dp)
+              .background(color = Color(0xFFFFFFFF))
+              .padding(bottom = 24.dp)
+              .fillMaxWidth()
+              .padding(40.dp)
+              .testTag("SignUpScreen")
+              .semantics { testTagsAsResourceId = true },
       horizontalAlignment = Alignment.CenterHorizontally,
       verticalArrangement = Arrangement.Center,
   ) {
-      Text(text = "Sign Up", style = TextStyle(
-          fontSize = 24.sp,
-          lineHeight = 32.sp,
-          color = Color(0xFF1D1B20),
-          )
-      )
+    Text(
+        text = "Sign Up",
+        style =
+            TextStyle(
+                fontSize = 24.sp,
+                lineHeight = 32.sp,
+                color = Color(0xFF1D1B20),
+            ))
     OutlinedTextField(
-
         value = email,
         onValueChange = {
           email = it
@@ -87,10 +79,12 @@ fun SignUpScreen(navigationActions: NavigationActions) {
           loginViewModel.firebaseError.value = false
         },
         label = { Text("Email") },
-        modifier = Modifier.padding(0.dp)
-            .width(210.dp)
-            .height(56.dp)
-            .padding(start = 16.dp, top = 4.dp, bottom = 4.dp).testTag("EmailField"))
+        modifier =
+            Modifier.padding(0.dp)
+                .width(210.dp)
+                .height(56.dp)
+                .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                .testTag("EmailField"))
     OutlinedTextField(
         value = password,
         onValueChange = {
@@ -100,10 +94,12 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         },
         label = { Text("Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.padding(0.dp)
-            .width(210.dp)
-            .height(56.dp)
-            .padding(start = 16.dp, top = 4.dp, bottom = 4.dp).testTag("PasswordField"))
+        modifier =
+            Modifier.padding(0.dp)
+                .width(210.dp)
+                .height(56.dp)
+                .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                .testTag("PasswordField"))
     OutlinedTextField(
         value = confirmPassword,
         onValueChange = {
@@ -113,10 +109,12 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         },
         label = { Text("Confirm Password") },
         visualTransformation = PasswordVisualTransformation(),
-        modifier = Modifier.padding(0.dp)
-            .width(210.dp)
-            .height(56.dp)
-            .padding(start = 16.dp, top = 4.dp, bottom = 4.dp).testTag("ConfirmPasswordField"))
+        modifier =
+            Modifier.padding(0.dp)
+                .width(210.dp)
+                .height(56.dp)
+                .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                .testTag("ConfirmPasswordField"))
     if (password != confirmPassword) {
       Text("Passwords do not match", color = Color.Red)
     }
@@ -147,12 +145,20 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             }
           }
         },
-        modifier = Modifier.shadow(elevation = 3.dp, spotColor = Color(0x4D000000), ambientColor = Color(0x4D000000))
-            .shadow(elevation = 8.dp, spotColor = Color(0x26000000), ambientColor = Color(0x26000000))
-            .padding(0.dp)
-            .width(90.dp)
-            .height(42.dp)
-            .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)).testTag("SignUpButton")) {
+        modifier =
+            Modifier.shadow(
+                    elevation = 3.dp,
+                    spotColor = Color(0x4D000000),
+                    ambientColor = Color(0x4D000000))
+                .shadow(
+                    elevation = 8.dp,
+                    spotColor = Color(0x26000000),
+                    ambientColor = Color(0x26000000))
+                .padding(0.dp)
+                .width(90.dp)
+                .height(42.dp)
+                .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
+                .testTag("SignUpButton")) {
           Text("Sign Up")
         }
     if (firebaseError) {
@@ -164,12 +170,10 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     Text(
         "Already have an account?",
         modifier =
-        Modifier
-            .testTag("LoginNavButton")
-            .clickable {
-                loginViewModel.firebaseError.value = false
-                loginViewModel.badCredentials.value = false
-                navigationActions.navigateTo(Destinations.LOGIN)
+            Modifier.testTag("LoginNavButton").clickable {
+              loginViewModel.firebaseError.value = false
+              loginViewModel.badCredentials.value = false
+              navigationActions.navigateTo(Destinations.LOGIN)
             })
   }
 }
