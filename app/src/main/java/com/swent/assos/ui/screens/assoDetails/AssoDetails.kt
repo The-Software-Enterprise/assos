@@ -59,8 +59,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
-import com.swent.assos.ui.theme.ColorFollowButton
-import com.swent.assos.ui.theme.ColorUnfollowButton
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -203,8 +201,8 @@ fun TopAssoBar(
         AssistChip(
             colors =
                 if (currentUser.following.contains(assoId))
-                    AssistChipDefaults.assistChipColors(containerColor = ColorUnfollowButton)
-                else AssistChipDefaults.assistChipColors(containerColor = ColorFollowButton),
+                    AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.primary)
+                else AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.tertiary),
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {

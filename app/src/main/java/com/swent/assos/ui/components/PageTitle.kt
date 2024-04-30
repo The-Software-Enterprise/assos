@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,8 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.*
-import com.swent.assos.ui.theme.Purple40
-import com.swent.assos.ui.theme.Purple80
 
 @Composable
 fun StudentSphereTitle() {
@@ -31,7 +30,7 @@ fun StudentSphereTitle() {
                       fontSize = 35.sp,
                       fontFamily = FontFamily(Font(R.font.impact)),
                       fontWeight = FontWeight(400),
-                      color = Purple80))
+                      color = MaterialTheme.colorScheme.primary))
           Text(
               text = "Sphere",
               style =
@@ -39,7 +38,7 @@ fun StudentSphereTitle() {
                       fontSize = 35.sp,
                       fontFamily = FontFamily(Font(R.font.impact)),
                       fontWeight = FontWeight(400),
-                      color = Purple40))
+                      color = MaterialTheme.colorScheme.secondary))
         }
   }
 }

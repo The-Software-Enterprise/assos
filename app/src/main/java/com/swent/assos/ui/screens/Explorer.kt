@@ -23,6 +23,7 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
@@ -57,9 +58,6 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ExplorerViewModel
-import com.swent.assos.ui.theme.PurpleGrey40
-import com.swent.assos.ui.theme.backgroundColorExplorePage
-import com.swent.assos.ui.theme.backgroundColorTopBar
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -102,7 +100,7 @@ fun Explorer(navigationActions: NavigationActions) {
             modifier =
                 Modifier.padding(paddingValues)
                     .testTag("AssoList")
-                    .background(color = backgroundColorExplorePage),
+                    .background(color = MaterialTheme.colorScheme.surface),
             userScrollEnabled = true,
             state = listState) {
               if (associations.isEmpty()) {
@@ -159,10 +157,10 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
       },
       colors =
           ListItemDefaults.colors(
-              headlineColor = PurpleGrey40,
-              overlineColor = PurpleGrey40,
-              supportingColor = PurpleGrey40,
-              trailingIconColor = PurpleGrey40,
+              headlineColor = MaterialTheme.colorScheme.secondary,
+              overlineColor = MaterialTheme.colorScheme.secondary,
+              supportingColor = MaterialTheme.colorScheme.secondary,
+              trailingIconColor = MaterialTheme.colorScheme.secondary,
               containerColor = Color.Transparent),
   )
 }
@@ -178,7 +176,7 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(10.dp)
-              .background(color = backgroundColorTopBar, shape = RoundedCornerShape(size = 28.dp)),
+              .background(color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(size = 28.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
