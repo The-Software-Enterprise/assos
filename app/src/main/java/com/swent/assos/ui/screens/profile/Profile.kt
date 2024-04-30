@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
@@ -106,7 +105,7 @@ fun UserNameDisplay(name: String) {
                     color = Color(0xFF49454F),
                     letterSpacing = 0.1.sp,
                 ),
-            modifier = Modifier.width(106.dp).height(20.dp).testTag("Name"))
+            modifier = Modifier.height(20.dp).testTag("Name"))
       }
 }
 

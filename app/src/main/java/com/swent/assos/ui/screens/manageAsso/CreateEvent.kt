@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,6 +41,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,9 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -88,14 +86,13 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.HourFormat
 import com.swent.assos.ui.components.PageTitleWithGoBack
+import com.swent.assos.ui.theme.blue
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
-
-import com.swent.assos.ui.theme.blue
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -191,7 +188,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
           .semantics { testTagsAsResourceId = true }
           .testTag("CreateEventScreen"),
       topBar = {
-          PageTitleWithGoBack(title = "Create an event", navigationActions = navigationActions)
+        PageTitleWithGoBack(title = "Create an event", navigationActions = navigationActions)
       }) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -199,87 +196,91 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 .fillMaxWidth()
                 .testTag("ContentSection"),
             horizontalAlignment = Alignment.CenterHorizontally) {
-
               item {
+                AddContent(event.title, { viewModel.setTitle(it) }, "Title")
+                AddContent(event.description, { viewModel.setDescription(it) }, "Description")
 
-                  AddContent(event.title, { viewModel.setTitle(it) }, "Title")
-                  AddContent(event.description, { viewModel.setDescription(it) }, "Description")
-
-                  Image(
-                      painter = rememberAsyncImagePainter(event.image),
-                      contentDescription = "image",
-                      modifier =
-                      Modifier.size(100.dp)
-                          .background(MaterialTheme.colorScheme.surface)
-                          .clickable {
-                              val pickImageIntent = Intent(Intent.ACTION_PICK)
-                              pickImageIntent.type = "image/*"
-                              launcher.launch(pickImageIntent)
-                          })
-
+                Image(
+                    painter = rememberAsyncImagePainter(event.image),
+                    contentDescription = "image",
+                    modifier =
+                    Modifier
+                        .size(100.dp)
+                        .background(MaterialTheme.colorScheme.surface)
+                        .clickable {
+                            val pickImageIntent = Intent(Intent.ACTION_PICK)
+                            pickImageIntent.type = "image/*"
+                            launcher.launch(pickImageIntent)
+                        })
               }
 
-
-            item {
+              item {
                 Row(
-                    modifier = Modifier
-                        .padding(horizontal = 32.dp, vertical = 16.dp),
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    OutlinedButton(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = {
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = {
                             viewModel.resetHourFormat()
                             showTimePickerStart = true
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(Color.Transparent),
-
-                    ) {
+                          },
+                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent),
+                      ) {
                         Text(
                             event.startTime?.format(
                                 DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                                ?: "Start Time", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)), color = Color.Black)
-                    }
-                    Spacer(modifier = Modifier.width(32.dp))
-                    OutlinedButton(
-                        shape = RoundedCornerShape(8.dp),
-                        onClick = {
+                                ?: "Start Time",
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            color = Color.Black)
+                      }
+                      Spacer(modifier = Modifier.width(32.dp))
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = {
                             viewModel.resetHourFormat()
                             showTimePickerEnd = true
-                        },
-                        colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
-                        Text(
-                            event.endTime?.format(
-                                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                                ?: "End Time", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)), color = Color.Black)
+                          },
+                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
+                            Text(
+                                event.endTime?.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                    ?: "End Time",
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                color = Color.Black)
+                          }
                     }
-                }
-            }
+              }
 
-            item {
-                Row (modifier = Modifier
-                    .padding(horizontal = 32.dp, vertical = 16.dp),
+              item {
+                Row(
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    FloatingActionButton(
-                        onClick = {
+                      FloatingActionButton(
+                          onClick = {
                             viewModel.resetFieldType()
                             openAlertDialogAddFields = true
-                        },
-                        containerColor = blue,
-                        shape = RoundedCornerShape(size = 16.dp)) {
-                        Image(imageVector = Icons.Default.Add, contentDescription = null, colorFilter = ColorFilter.tint(Color.White))
-                    }
-                    Spacer(modifier = Modifier.width(32.dp))
-                    FloatingActionButton(onClick = { openAlertDialogFields = true }, containerColor = blue,) {
+                          },
+                          containerColor = blue,
+                          shape = RoundedCornerShape(size = 16.dp)) {
+                            Image(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(Color.White))
+                          }
+                      Spacer(modifier = Modifier.width(32.dp))
+                      FloatingActionButton(
+                          onClick = { openAlertDialogFields = true },
+                          containerColor = blue,
+                      ) {
                         Image(
                             painter = painterResource(id = R.drawable.rounded_stacks_24),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(Color.White))
+                      }
                     }
-
-                }
-            }
+              }
 
               item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -293,7 +294,9 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     onClick = {
                       viewModel.createEvent(onSuccess = { navigationActions.goBack() })
                     }) {
-                      Text(text = "Create", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                      Text(
+                          text = "Create",
+                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                     }
               }
             }
@@ -301,26 +304,23 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 }
 
 @Composable
-fun AddContent(value: String, onValueChange: (String) -> Unit, title: String){
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 32.dp, vertical = 8.dp),
-        value = value,
-        onValueChange = onValueChange,
-        textStyle = TextStyle(
-            fontSize = 16.sp,
-            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
-        label = { Text(text = title) })
+fun AddContent(value: String, onValueChange: (String) -> Unit, title: String) {
+  OutlinedTextField(
+      modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 32.dp, vertical = 8.dp),
+      value = value,
+      onValueChange = onValueChange,
+      textStyle =
+          TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+      label = { Text(text = title) },
+    colors = OutlinedTextFieldDefaults.colors(
+        focusedBorderColor = blue,
+        focusedLabelColor = blue,
+        cursorColor = blue
+    )
+  )
 }
-
-
-
-
-
-
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
