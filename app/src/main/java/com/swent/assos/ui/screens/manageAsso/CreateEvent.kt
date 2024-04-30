@@ -273,7 +273,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             event.startTime != null &&
                             event.endTime != null,
                     onClick = {
-                      viewModel.createEvent( onSuccess = { navigationActions.goBack() })
+                      viewModel.createEvent(onSuccess = { navigationActions.goBack() })
                     }) {
                       Text("Validate event")
                     }
