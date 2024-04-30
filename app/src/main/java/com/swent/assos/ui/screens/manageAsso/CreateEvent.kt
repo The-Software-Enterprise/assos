@@ -1,8 +1,10 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,12 +26,14 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -47,6 +51,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -54,6 +59,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -178,6 +184,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             shape = RoundedCornerShape(size = 16.dp)) {
               Image(imageVector = Icons.Default.Add, contentDescription = null)
             }
+
       }) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -188,37 +195,68 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
               item {
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                  AddContent(event.title, { viewModel.setTitle(it) }, "Event Title")
+                  AddContent(event.title, { viewModel.setTitle(it) }, "Title")
                   AddContent(event.description, { viewModel.setDescription(it) }, "Description")
-                  AddContent(event.image, { viewModel.setImage(it) }, "Event Image")
+                  AddContent(event.image, { viewModel.setImage(it) }, "Image")
 
               }
-              item {
-                Button(
-                    onClick = {
-                      viewModel.resetHourFormat()
-                      showTimePickerStart = true
-                    }) {
-                      Text(
-                          event.startTime?.format(
-                              DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                              ?: "Pick start Time")
+
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 32.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    OutlinedButton(
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = {
+                            viewModel.resetHourFormat()
+                            showTimePickerStart = true
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(Color.Transparent),
+
+                    ) {
+                        Text(
+                            event.startTime?.format(
+                                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                ?: "Start Time", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)), color = Color.Black)
                     }
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                      viewModel.resetHourFormat()
-                      showTimePickerEnd = true
-                    }) {
-                      Text(
-                          event.endTime?.format(
-                              DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                              ?: "Pick end Time")
+                    Spacer(modifier = Modifier.width(32.dp))
+                    OutlinedButton(
+                        shape = RoundedCornerShape(8.dp),
+                        onClick = {
+                            viewModel.resetHourFormat()
+                            showTimePickerEnd = true
+                        },
+                        colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
+                        Text(
+                            event.endTime?.format(
+                                DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                ?: "End Time", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)), color = Color.Black)
                     }
-                Spacer(modifier = Modifier.height(16.dp))
-              }
+                }
+            }
+
+            item {
+                Row (modifier = Modifier
+                    .padding(horizontal = 32.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    Button(onClick = { openAlertDialogFields = true }) {
+                        Image(
+                            painter = painterResource(id = R.drawable.rounded_stacks_24),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(Color.White))
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+
+                }
+            }
+
+
               item {
                 Button(onClick = { openAlertDialogFields = true }) {
                   Image(
@@ -227,6 +265,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       colorFilter = ColorFilter.tint(Color.White))
                 }
               }
+
               item {
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
@@ -251,12 +290,24 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 @Composable
 fun AddContent(value: String, onValueChange: (String) -> Unit, title: String){
     OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 32.dp, vertical = 8.dp),
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = title, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
-
-    Spacer(modifier = Modifier.height(16.dp))
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+        label = { Text(text = title) })
 }
+
+
+
+
+
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
