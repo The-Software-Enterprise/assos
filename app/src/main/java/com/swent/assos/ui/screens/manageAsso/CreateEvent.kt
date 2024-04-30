@@ -47,6 +47,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -56,6 +57,7 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,6 +74,7 @@ import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.HourFormat
+import com.swent.assos.ui.components.PageTitleWithGoBack
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -79,7 +82,7 @@ import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
@@ -162,21 +165,11 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
+      modifier = Modifier
+          .semantics { testTagsAsResourceId = true }
+          .testTag("CreateEventScreen"),
       topBar = {
-        TopAppBar(
-            title = { Text("Create an event") },
-            navigationIcon = {
-              Image(
-                  imageVector = Icons.Default.ArrowBack,
-                  contentDescription = null,
-                  modifier =
-                      Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
-            },
-            colors =
-                TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                ),
-        )
+          PageTitleWithGoBack(title = "Create an event", navigationActions = navigationActions)
       },
       floatingActionButton = {
         FloatingActionButton(
@@ -189,7 +182,9 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -277,7 +272,9 @@ fun AlertDialogAddFields(
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
+        modifier = Modifier
+            .width(400.dp)
+            .height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
@@ -302,15 +299,17 @@ fun AlertDialogAddFields(
                       }
                     },
                     modifier =
-                        Modifier.border(
-                                width = 1.dp,
-                                color =
-                                    when (currentFieldType) {
-                                      EventFieldType.IMAGE -> Color(0xFFBA1A1A)
-                                      EventFieldType.TEXT -> Color(0xFFFB9905)
-                                    },
-                                shape = RoundedCornerShape(size = 8.dp))
-                            .height(32.dp),
+                    Modifier
+                        .border(
+                            width = 1.dp,
+                            color =
+                            when (currentFieldType) {
+                                EventFieldType.IMAGE -> Color(0xFFBA1A1A)
+                                EventFieldType.TEXT -> Color(0xFFFB9905)
+                            },
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .height(32.dp),
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
@@ -380,7 +379,9 @@ fun AlertDialogFields(
       }
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
+        modifier = Modifier
+            .width(400.dp)
+            .height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           LazyColumn(
@@ -434,8 +435,9 @@ fun AlertDialogFields(
                             Text(text = field.title, Modifier.padding(horizontal = 8.dp))
                             IconButton(
                                 modifier =
-                                    Modifier.draggableHandle(interactionSource = interactionSource)
-                                        .clearAndSetSemantics {},
+                                Modifier
+                                    .draggableHandle(interactionSource = interactionSource)
+                                    .clearAndSetSemantics {},
                                 onClick = {}) {
                                   Icon(
                                       painterResource(id = R.drawable.menu),
