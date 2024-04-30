@@ -25,6 +25,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,11 +39,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.CreateNewsViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
@@ -68,76 +75,78 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
   if (showImages) {
     ShowImages(images = news.images, onDismissRequest = { showImages = false })
   }
-
   Scaffold(
       modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create a news", navigationActions = navigationActions)
       },
-      floatingActionButton = {
-        FloatingActionButton(
-            modifier = Modifier.testTag("AddImages"),
-            onClick = { showAddImages = true },
-            shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.Add, contentDescription = null)
-            }
-      }) { paddingValues ->
+
+      ) { paddingValues ->
         LazyColumn(
             modifier =
-                Modifier.padding(top = 10.dp, start = 26.dp, end = 26.dp)
-                    .fillMaxSize()
+                Modifier.padding(paddingValues)
+                    .fillMaxWidth()
                     .testTag("Form"),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = paddingValues,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-          item {
-            OutlinedTextField(
-                value = news.title,
-                onValueChange = { viewModel.setTitle(it) },
-                modifier = Modifier.fillMaxWidth().height(64.dp).testTag("InputTitle"),
-                label = { Text(text = "Title") },
-                placeholder = { Text(text = "Title of the news") },
-                textStyle = MaterialTheme.typography.bodyLarge,
-                colors =
-                    TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    ),
-                singleLine = true,
-            )
-          }
-          item {
-            OutlinedTextField(
-                value = news.description,
-                onValueChange = { viewModel.setDescription(it) },
-                modifier = Modifier.fillMaxWidth().height(150.dp).testTag("InputDescription"),
-                label = { Text(text = "Description") },
-                placeholder = { Text(text = "Description of the news") },
-                singleLine = false,
-                textStyle = MaterialTheme.typography.bodyLarge,
-                colors =
-                    TextFieldDefaults.colors(
-                        unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface,
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                    ),
-            )
-          }
-          item {
-            FilledIconButton(
-                onClick = { showImages = true },
-                modifier = Modifier.testTag("ShowImages").width(200.dp)) {
-                  Text("Show Images")
+
+            item {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).testTag("InputTitle"),
+                    value = news.title,
+                    onValueChange = { viewModel.setTitle(it) },
+                    textStyle =
+                    TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    label = { Text(text = "Title") },
+                    colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                        cursorColor = MaterialTheme.colorScheme.secondary))
+
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).height(150.dp).testTag("InputTitle"),
+                    value = news.description,
+                    onValueChange = { viewModel.setDescription(it) },
+                    textStyle =
+                    TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    label = { Text(text = "Description") },
+                    singleLine = false,
+                    colors =
+                    OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                        cursorColor = MaterialTheme.colorScheme.secondary))
+            }
+
+            item {
+                Row(
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    FloatingActionButton(
+                        modifier = Modifier.testTag("AddImages"),
+                        onClick = { showAddImages = true },
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(size = 16.dp)) {
+                        Image(imageVector = Icons.Default.Add, contentDescription = null, colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary))
+                    }
+                    Spacer(modifier = Modifier.width(32.dp))
+                    FloatingActionButton(
+                        modifier = Modifier.testTag("AddImages").width(130.dp),
+                        onClick = { showAddImages = true },
+                        containerColor = MaterialTheme.colorScheme.secondary){
+                        Text("Show Images", color = MaterialTheme.colorScheme.onSecondary, fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                    }
                 }
-          }
+            }
+
 
           item {
             FilledIconButton(
                 onClick = { viewModel.createNews(assoId, navigationActions) },
                 modifier =
-                    Modifier.fillMaxWidth()
+                    Modifier.width(90.dp)
                         .padding(top = 10.dp, bottom = if (isEdit) 0.dp else 40.dp)
                         .height(40.dp)
                         .testTag("ButtonSave"),
@@ -148,10 +157,11 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
                         containerColor = MaterialTheme.colorScheme.primary,
                         disabledContainerColor =
                             MaterialTheme.colorScheme.primary.copy(alpha = 0.5f))) {
-                  Text(
-                      text = if (isEdit) "Save" else "Create",
-                      style = MaterialTheme.typography.labelLarge,
-                      color = MaterialTheme.colorScheme.onPrimary)
+                Text(
+                    text = "Create",
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    color = MaterialTheme.colorScheme.onPrimary)
                 }
           }
         }

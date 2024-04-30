@@ -194,12 +194,38 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
-                AddContent(event.title, { viewModel.setTitle(it) }, "Title")
-                AddContent(event.description, { viewModel.setDescription(it) }, "Description")
+
+                  OutlinedTextField(
+                      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
+                      value = event.title,
+                      onValueChange = { viewModel.setTitle(it) },
+                      textStyle =
+                      TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                      label = { Text(text = "Title") },
+                      colors =
+                      OutlinedTextFieldDefaults.colors(
+                          focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                          focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                          cursorColor = MaterialTheme.colorScheme.secondary))
+
+                  OutlinedTextField(
+                      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).height(150.dp),
+                      value = event.description,
+                      onValueChange = { viewModel.setDescription(it) },
+                      singleLine = false,
+                      textStyle =
+                      TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                      label = { Text(text = "Description") },
+                      colors =
+                      OutlinedTextFieldDefaults.colors(
+                          focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                          focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                          cursorColor = MaterialTheme.colorScheme.secondary))
+
 
                 Box(
                     modifier =
-                        Modifier.padding(horizontal = 32.dp, vertical = 16.dp)
+                        Modifier.padding(16.dp)
                             .width(120.dp)
                             .height(150.dp)
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)).clickable {val pickImageIntent = Intent(Intent.ACTION_PICK)
@@ -228,7 +254,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
               item {
                 Row(
-                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 0.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
                       OutlinedButton(
