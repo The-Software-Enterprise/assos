@@ -14,4 +14,6 @@ class AssoDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val title: KNode = header.child { hasTestTag("Title") }
   val followButton: KNode = header.child { hasTestTag("FollowButton") }
   val textFollowButton: KNode = followButton.child { hasTestTag("TextFollowButton") }
+
+  val content: KNode = onNode { hasTestTag("Content") }
 }
