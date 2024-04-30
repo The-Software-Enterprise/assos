@@ -1,6 +1,8 @@
 package com.swent.assos.model.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,8 +23,16 @@ fun NavigationGraph() {
   val navController = rememberNavController()
   val navigationActions = NavigationActions(navController = navController)
   val appViewModel: AppViewModel = hiltViewModel()
+  val user by appViewModel.getAuthUser().collectAsState()
 
-  NavHost(navController = navController, startDestination = Destinations.HOME.route) {
+  val startDestinations =
+      if (user.id == "") {
+        Destinations.LOGIN.route
+      } else {
+        Destinations.HOME.route
+      }
+
+  NavHost(navController = navController, startDestination = startDestinations) {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
@@ -51,9 +61,14 @@ fun NavigationGraph() {
           navigationActions = navigationActions,
           assoId = backStackEntry.arguments?.getString("assoId") ?: "")
     }
+    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
+      CreateNews(
+          navigationActions = navigationActions,
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "")
+    }
     composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
       ManageAssociation(
-          assoId = backStackEntry.arguments?.getString("assoId").toString(),
+          assoId = backStackEntry.arguments?.getString("assoId") ?: "",
           navigationActions = navigationActions)
     }
     composable(Destinations.SETTINGS.route) { Settings(navigationActions = navigationActions) }

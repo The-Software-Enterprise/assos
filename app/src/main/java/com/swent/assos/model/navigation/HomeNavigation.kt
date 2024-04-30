@@ -13,7 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -24,7 +24,6 @@ import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Profile
-import com.swent.assos.ui.screens.QrCode
 import com.swent.assos.ui.screens.calendar.Calendar
 import kotlinx.coroutines.launch
 
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
-  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
+  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
 
   Column(
       modifier = Modifier.fillMaxSize(),
@@ -46,8 +45,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         0 -> News()
         1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
-        3 -> QrCode()
-        4 -> Profile(navigationActions = navigationActions)
+        3 -> Profile(navigationActions = navigationActions)
       }
     }
 
@@ -55,7 +53,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
         containerColor = Color.Transparent,
     ) {
-      repeat(5) { index ->
+      repeat(4) { index ->
         NavigationBarItem(
             icon = {
               when (index) {
@@ -88,15 +86,6 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 3 ->
                     Icon(
-                        painterResource(id = R.drawable.qrcode),
-                        contentDescription = "QR",
-                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
-                4 ->
-                    Icon(
                         painterResource(id = R.drawable.profil),
                         contentDescription = "Profil",
                         modifier = Modifier.size(28.dp).padding((2.5).dp),
@@ -108,11 +97,16 @@ fun HomeNavigation(navigationActions: NavigationActions) {
             },
             selected = pagerState.currentPage == index,
             onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
-            colors =
-                NavigationBarItemDefaults.colors(
-                    indicatorColor = MaterialTheme.colorScheme.background,
-                ),
-        )
+            label = {
+              val label =
+                  when (index) {
+                    0 -> "Home"
+                    1 -> "Explorer"
+                    2 -> "Calendar"
+                    else -> "Profile"
+                  }
+              Text(text = label)
+            })
       }
     }
   }
