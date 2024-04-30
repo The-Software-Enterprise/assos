@@ -40,12 +40,6 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   @Before
   fun setup() {
     hiltRule.inject()
-    FirebaseAuth.AuthStateListener { auth ->
-      auth.createUserWithEmailAndPassword("reza.machraoui@epfl.ch", "test12")
-    }
-    FirebaseAuth.AuthStateListener { auth ->
-      auth.signInWithEmailAndPassword("reza.machraoui@epfl.ch", "test12")
-    }
   }
 
   private val randomInt = Random.nextInt()

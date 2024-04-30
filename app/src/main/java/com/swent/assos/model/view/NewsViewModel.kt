@@ -1,5 +1,6 @@
 package com.swent.assos.model.view
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
@@ -32,9 +33,12 @@ constructor(
 
   init {
     viewModelScope.launch(ioDispatcher) {
-      dbService.getAllNews(null).let { _allNews.value = it }
-      dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
-        _news.value = it
+      if (DataCache.currentUser.value.id.isNotEmpty()) {
+        dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
+          _news.value = it
+        }
+      } else {
+        dbService.getAllNews(null).let { _news.value = it }
       }
     }
   }
