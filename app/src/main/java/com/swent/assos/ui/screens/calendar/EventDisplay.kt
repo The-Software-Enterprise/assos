@@ -15,53 +15,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.CalendarUiModel
 import com.swent.assos.model.data.Event
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import kotlin.math.roundToInt
 
-private val EventTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
+private const val NUMBER_OF_HOURS = 24
 
 @Composable
-fun BasicEvent(
-    event: Event,
-    modifier: Modifier = Modifier,
-) {
+fun BasicEvent(event: Event) {
   Column(
       modifier =
-          modifier
-              .fillMaxSize()
+          Modifier.fillMaxSize()
               .padding(end = 2.dp, bottom = 2.dp)
-              .background(Color.Blue, shape = RoundedCornerShape(4.dp))
+              .background(Color(0xFFDE496E), shape = RoundedCornerShape(14.dp))
               .padding(4.dp)) {
-        Text(
-            text =
-                "${event.startTime?.format(EventTimeFormatter)} - ${event.endTime?.format(
-                EventTimeFormatter
-            )}",
-        )
-
-        Text(
-            text = event.title,
-            fontWeight = FontWeight.Bold,
-        )
-
-        Text(
-            text = event.description,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Text(text = event.title, fontWeight = FontWeight.SemiBold, color = Color.White)
       }
 }
 
 @Composable
-fun Event(
+fun Schedule(
     events: List<Event>,
     modifier: Modifier = Modifier,
     eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
@@ -69,8 +47,8 @@ fun Event(
     hourHeight: Dp,
     data: CalendarUiModel,
 ) {
-  val numDays = 7
   val dividerColor = Color.LightGray
+  val offsetYHour = 25f
   Layout(
       content = {
         events.sortedBy(Event::startTime).forEach { event ->
@@ -79,23 +57,16 @@ fun Event(
       },
       modifier =
           modifier.drawBehind {
-            repeat(23) {
+            repeat(NUMBER_OF_HOURS - 1) {
               drawLine(
                   dividerColor,
-                  start = Offset(0f, (it + 1) * hourHeight.toPx()),
-                  end = Offset(size.width, (it + 1) * hourHeight.toPx()),
-                  strokeWidth = 1.dp.toPx())
-            }
-            repeat(numDays - 1) {
-              drawLine(
-                  dividerColor,
-                  start = Offset((it + 1) * dayWidth.toPx(), 0f),
-                  end = Offset((it + 1) * dayWidth.toPx(), size.height),
+                  start = Offset(0f, offsetYHour + (it + 1) * hourHeight.toPx()),
+                  end = Offset(size.width, offsetYHour + (it + 1) * hourHeight.toPx()),
                   strokeWidth = 1.dp.toPx())
             }
           }) { measureables, constraints ->
         val height = hourHeight.roundToPx() * 24
-        val width = dayWidth.roundToPx() * numDays
+        val width = dayWidth.roundToPx()
         val placeablesWithEvents =
             measureables.map { measurable ->
               val event = measurable.parentData as Event
