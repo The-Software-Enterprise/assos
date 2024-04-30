@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,98 +41,99 @@ import com.swent.assos.model.view.LoginViewModel
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(navigationActions: NavigationActions) {
+
   Column(
       modifier =
           Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true }.testTag("LoginScreen"),
-      verticalArrangement = Arrangement.Center,
-      horizontalAlignment = Alignment.CenterHorizontally) {
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        val loginViewModel: LoginViewModel = hiltViewModel()
-        val userNotFound by remember { loginViewModel.userNotFound }
-        val errorMessage by remember { loginViewModel.errorMessage }
+  ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val loginViewModel: LoginViewModel = hiltViewModel()
+    val userNotFound by remember { loginViewModel.userNotFound }
+    val errorMessage by remember { loginViewModel.errorMessage }
 
-        Text(
-            text = "Sign In",
-            style =
-                TextStyle(
-                    fontSize = 24.sp,
-                    lineHeight = 32.sp,
-                    color = Color(0xFF1D1B20),
-                ))
-
-        OutlinedTextField(
-            value = email,
-            onValueChange = {
-              email = it
-              loginViewModel.userNotFound.value = false
-            },
-            label = { Text("Email") },
-            modifier =
-                Modifier.padding(0.dp)
-                    .width(210.dp)
-                    .height(56.dp)
-                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .testTag("EmailField"))
-
-        OutlinedTextField(
-            value = password,
-            onValueChange = {
-              password = it
-              loginViewModel.userNotFound.value = false
-            },
-            label = { Text("Password") },
-            modifier =
-                Modifier.fillMaxWidth()
-                    .padding(16.dp)
-                    .testTag("PasswordField")
-                    .padding(0.dp)
-                    .width(210.dp)
-                    .height(56.dp)
-                    .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
-            visualTransformation = PasswordVisualTransformation())
-
-        Button(
-            modifier =
-                Modifier.testTag("LoginButton")
-                    .shadow(
-                        elevation = 3.dp,
-                        spotColor = Color(0x4D000000),
-                        ambientColor = Color(0x4D000000))
-                    .shadow(
-                        elevation = 8.dp,
-                        spotColor = Color(0x26000000),
-                        ambientColor = Color(0x26000000))
-                    .padding(0.dp)
-                    .width(90.dp)
-                    .height(42.dp)
-                    .background(
-                        color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
-            onClick = {
-              loginViewModel.signIn(email, password) {
-                navigationActions.navigateTo(Destinations.HOME.route)
-              }
-            },
-        ) {
-          Text("Sign In")
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier.padding(5.dp, 10.dp, 0.dp, 16.dp)) {
+          Text(
+              text = "Sign In",
+              style =
+                  TextStyle(
+                      fontSize = 24.sp,
+                      lineHeight = 32.sp,
+                      color = Color(0xFF1D1B20),
+                  ))
         }
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+      OutlinedTextField(
+          value = email,
+          onValueChange = {
+            email = it
+            loginViewModel.userNotFound.value = false
+          },
+          label = { Text("Email") },
+          modifier =
+              Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
+                  .fillMaxWidth()
+                  .padding(16.dp)
+                  .testTag("EmailField"))
 
-        if (userNotFound) {
-          Text(modifier = Modifier.testTag("ErrorMessage"), text = errorMessage, color = Color.Red)
-        }
+      OutlinedTextField(
+          value = password,
+          onValueChange = {
+            password = it
+            loginViewModel.userNotFound.value = false
+          },
+          label = { Text("Password") },
+          modifier =
+              Modifier.fillMaxWidth()
+                  .padding(16.dp)
+                  .testTag("PasswordField")
+                  .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+          visualTransformation = PasswordVisualTransformation(),
+      )
 
-        Text(
-            // if clicked, go to sign up page using hilt navigation
-            modifier =
-                Modifier.clickable {
-                      loginViewModel.userNotFound.value = false
-                      navigationActions.navigateTo(Destinations.SIGN_UP)
-                    }
-                    .testTag("SignUpNavButton"),
-            color = Color.Blue,
-            textDecoration = TextDecoration.Underline,
-            text = "Don't have an account? Sign up")
+      Button(
+          modifier =
+              Modifier.testTag("LoginButton")
+                  .shadow(
+                      elevation = 3.dp,
+                      spotColor = Color(0x4D000000),
+                      ambientColor = Color(0x4D000000))
+                  .width(100.dp)
+                  .height(42.dp)
+                  .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
+          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5465FF)),
+          // allow the child composable to be full sized
+
+          onClick = {
+            loginViewModel.signIn(email, password) {
+              navigationActions.navigateTo(Destinations.HOME.route)
+            }
+          },
+      ) {
+        Text("Sign In", color = Color.White, modifier = Modifier.fillMaxWidth())
       }
+
+      if (userNotFound) {
+        Text(modifier = Modifier.testTag("ErrorMessage"), text = errorMessage, color = Color.Red)
+      }
+
+      Text(
+          // if clicked, go to sign up page using hilt navigation
+          modifier =
+              Modifier.clickable {
+                    loginViewModel.userNotFound.value = false
+                    navigationActions.navigateTo(Destinations.SIGN_UP)
+                  }
+                  .testTag("SignUpNavButton"),
+          color = Color.Blue,
+          textDecoration = TextDecoration.Underline,
+          text = "Don't have an account? Sign up")
+    }
+  }
 }
