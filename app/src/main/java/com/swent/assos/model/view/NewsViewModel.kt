@@ -23,6 +23,8 @@ constructor(
 ) : ViewModel() {
   private val _allNews = MutableStateFlow(emptyList<News>())
   val allNews = _allNews.asStateFlow()
+  private val _news = MutableStateFlow(News())
+  val news = _news.asStateFlow()
 
   private var _loading = false
 
@@ -32,6 +34,12 @@ constructor(
 
   fun getNewsAssociation(associationId: String, callback: (Association) -> Unit) {
     viewModelScope.launch(ioDispatcher) { callback(dbService.getAssociationById(associationId)) }
+  }
+
+  fun getNews (newsId : String) {
+    viewModelScope.launch(ioDispatcher) {
+      _news.value = dbService.getNewsById(newsId)
+    }
   }
 
   fun loadMoreAssociations() {

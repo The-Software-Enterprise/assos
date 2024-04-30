@@ -18,10 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.ui.theme.Typography
@@ -59,11 +62,12 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                 Text(
                     text = news.description,
                     style =
-                        Typography.bodyLarge.copy(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            color = Color(0xFF49454F),
-                            letterSpacing = 0.25.sp),
+                    Typography.bodyLarge.copy(
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        letterSpacing = 0.25.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        fontWeight = FontWeight.Light),
                     modifier = Modifier.width(173.dp).height(60.dp))
               }
         }

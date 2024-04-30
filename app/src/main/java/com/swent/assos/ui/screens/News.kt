@@ -59,7 +59,7 @@ fun News(navigationActions: NavigationActions) {
         LazyColumn(
             modifier =
                 Modifier.padding(paddingValues)
-                    .background(Color(0xFFF0F0F0)) // Light gray background
+                    .background(Color.Gray) // Light gray background
                     .padding(horizontal = 15.dp)
                     .padding(top = 5.dp)
                     .testTag("NewsList"),
@@ -76,7 +76,7 @@ fun News(navigationActions: NavigationActions) {
 @Composable
 fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
   // Clickable modifier to handle user interactions
-  Box(modifier = Modifier.fillMaxWidth().clickable { navigationActions.navigateTo("") }) {
+  Box(modifier = Modifier.fillMaxWidth().clickable { navigationActions.navigateTo("\"newsDetails/${news.id}\"") }) {
     HomeItem(news = news, navigationActions)
   }
 }
@@ -96,7 +96,7 @@ fun HomePageTitle() {
                   Typography.bodyLarge.copy(
                       fontWeight = FontWeight.Bold, // Adjust the weight as needed
                       fontSize = 30.sp,
-                      color = Color(0xFF1D1B20)),
+                      color = Color.Black),
               modifier = Modifier.align(Alignment.CenterHorizontally))
         }
   }
