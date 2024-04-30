@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
@@ -85,6 +86,8 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
+
+import com.swent.assos.ui.theme.blue
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -174,17 +177,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
           .testTag("CreateEventScreen"),
       topBar = {
           PageTitleWithGoBack(title = "Create an event", navigationActions = navigationActions)
-      },
-      floatingActionButton = {
-        FloatingActionButton(
-            onClick = {
-              viewModel.resetFieldType()
-              openAlertDialogAddFields = true
-            },
-            shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.Add, contentDescription = null)
-            }
-
       }) { paddingValues ->
         LazyColumn(
             modifier = Modifier
@@ -243,28 +235,25 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     .padding(horizontal = 32.dp, vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
-                    Button(onClick = { openAlertDialogFields = true }) {
+                    FloatingActionButton(
+                        onClick = {
+                            viewModel.resetFieldType()
+                            openAlertDialogAddFields = true
+                        },
+                        containerColor = blue,
+                        shape = RoundedCornerShape(size = 16.dp)) {
+                        Image(imageVector = Icons.Default.Add, contentDescription = null, colorFilter = ColorFilter.tint(Color.White))
+                    }
+                    Spacer(modifier = Modifier.width(32.dp))
+                    FloatingActionButton(onClick = { openAlertDialogFields = true }, containerColor = blue,) {
                         Image(
                             painter = painterResource(id = R.drawable.rounded_stacks_24),
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(Color.White))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-
-
 
                 }
             }
-
-
-              item {
-                Button(onClick = { openAlertDialogFields = true }) {
-                  Image(
-                      painter = painterResource(id = R.drawable.rounded_stacks_24),
-                      contentDescription = null,
-                      colorFilter = ColorFilter.tint(Color.White))
-                }
-              }
 
               item {
                 Spacer(modifier = Modifier.height(16.dp))
@@ -280,7 +269,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       viewModel.createEvent(
                           event = event, onSuccess = { navigationActions.goBack() })
                     }) {
-                      Text(text = "Validate event", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                      Text(text = "Create", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                     }
               }
             }

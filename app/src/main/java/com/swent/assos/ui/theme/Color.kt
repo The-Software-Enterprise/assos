@@ -21,3 +21,5 @@ val backgroundColorExplorePage = Color(0x0F979797)
 val backgroundColorTopBar = Color(0xFFD9D9D9)
 val ColorFollowButton = Color(0xFF4285F4)
 val ColorUnfollowButton = Color(0xFFD9D9D9)
+
+val blue = Color(0xFF5465FF)
