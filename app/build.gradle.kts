@@ -70,7 +70,6 @@ android {
 }
 
 dependencies {
-
   implementation("androidx.core:core-ktx:1.12.0")
   implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
   implementation("androidx.activity:activity-compose:1.8.2")
@@ -140,8 +139,9 @@ dependencies {
   implementation("com.maxkeppeler.sheets-compose-dialogs:core:1.1.1")
   implementation("com.maxkeppeler.sheets-compose-dialogs:date-time:1.1.1")
 
-  //Images
-  implementation ("io.coil-kt:coil-compose:2.1.0")
+  // Coil
+  implementation("io.coil-kt:coil-compose:2.1.0")
+  implementation(kotlin("reflect"))
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

@@ -1,8 +1,14 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -14,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -67,6 +74,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
@@ -92,7 +100,6 @@ import com.swent.assos.ui.theme.blue
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
-
   val viewModel: EventViewModel = hiltViewModel()
 
   val event by viewModel.event.collectAsState()
@@ -105,6 +112,14 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
+
+  val launcher =
+      rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
+        ->
+        if (result.resultCode == Activity.RESULT_OK) {
+          viewModel.setImage(result.data?.data)
+        }
+      }
 
   LaunchedEffect(key1 = Unit) { event.associationId = assoId }
 
@@ -189,7 +204,18 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
                   AddContent(event.title, { viewModel.setTitle(it) }, "Title")
                   AddContent(event.description, { viewModel.setDescription(it) }, "Description")
-                  AddContent(event.image, { viewModel.setImage(it) }, "Image")
+
+                  Image(
+                      painter = rememberAsyncImagePainter(event.image),
+                      contentDescription = "image",
+                      modifier =
+                      Modifier.size(100.dp)
+                          .background(MaterialTheme.colorScheme.surface)
+                          .clickable {
+                              val pickImageIntent = Intent(Intent.ACTION_PICK)
+                              pickImageIntent.type = "image/*"
+                              launcher.launch(pickImageIntent)
+                          })
 
               }
 
@@ -260,14 +286,12 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Button(
                     enabled =
                         event.description.isNotEmpty() &&
-                            event.image.isNotEmpty() &&
+                            event.image != Uri.EMPTY &&
                             event.title.isNotEmpty() &&
                             event.startTime != null &&
-                            event.endTime != null &&
-                            event.fields.isNotEmpty(),
+                            event.endTime != null,
                     onClick = {
-                      viewModel.createEvent(
-                          event = event, onSuccess = { navigationActions.goBack() })
+                      viewModel.createEvent(onSuccess = { navigationActions.goBack() })
                     }) {
                       Text(text = "Create", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                     }
