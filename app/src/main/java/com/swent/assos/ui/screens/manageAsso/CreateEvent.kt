@@ -58,6 +58,8 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -191,17 +193,17 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 OutlinedTextField(
                     value = event.title,
                     onValueChange = { viewModel.setTitle(it) },
-                    label = { Text("Event Title") })
+                    label = { Text(text = "Event Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = event.description,
                     onValueChange = { viewModel.setDescription(it) },
-                    label = { Text("Description") })
+                    label = { Text(text = "Description", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = event.image,
                     onValueChange = { viewModel.setImage(it) },
-                    label = { Text("Event Image") })
+                    label = { Text(text = "Event Image" , fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
                 Spacer(modifier = Modifier.height(16.dp))
               }
               item {
@@ -250,7 +252,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       viewModel.createEvent(
                           event = event, onSuccess = { navigationActions.goBack() })
                     }) {
-                      Text("Validate event")
+                      Text(text = "Validate event", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                     }
               }
             }
