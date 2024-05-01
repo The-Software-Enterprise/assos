@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
@@ -10,6 +11,7 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.HomeNavigation
 import com.swent.assos.screens.HomeScreen
 import com.swent.assos.screens.LoginScreen
+import com.swent.assos.screens.ProfileScreen
 import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
@@ -29,7 +31,7 @@ class EndToEnd : SuperTest() {
   }
 
   @Test
-  fun signupAndCheckProfileInf() {
+  fun signupAndLogout() {
     run {
       ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
         step("Click on signup") {
@@ -51,7 +53,7 @@ class EndToEnd : SuperTest() {
         step("Fill the form") {
           emailField {
             assertIsDisplayed()
-            performTextInput("emma.poggiolini@epfl.ch")
+            performTextInput("marc.pitteloud@epfl.ch")
           }
           passwordField {
             assertIsDisplayed()
@@ -89,9 +91,40 @@ class EndToEnd : SuperTest() {
           }
           composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
           // check if we are on the profile screen
-          profileScreen {
-            assertIsDisplayed()
-            // check if the email is correct
+          profileScreen { assertIsDisplayed() }
+        }
+        ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+          step("Click on logout") {
+            logoutButton {
+              assertIsDisplayed()
+              performClick()
+            }
+          }
+
+          composeTestRule.waitForIdle()
+
+          // check if we are on the logout dialog
+          step("is alert out ?") {
+            composeTestRule.onNodeWithTag("LogoutDialog").assertIsDisplayed()
+          }
+          step("cancel") { composeTestRule.onNodeWithTag("LogoutCancelButton").performClick() }
+
+          step("Click on logout") {
+            logoutButton {
+              assertIsDisplayed()
+              performClick()
+            }
+          }
+
+          step("confirm") {
+            logoutConfirmButton {
+              composeTestRule.onNodeWithTag("LogoutConfirmButton").performClick()
+            }
+          }
+
+          step("confirm nav") {
+            verify { mockNavActions.navigateTo(Destinations.LOGIN) }
+            confirmVerified(mockNavActions)
           }
         }
       }

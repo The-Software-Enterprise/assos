@@ -60,7 +60,10 @@ fun Profile(navigationActions: NavigationActions) {
   val completeName = "$firstName $lastName"
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
+      modifier =
+          Modifier.semantics { testTagsAsResourceId = true }
+              .testTag("ProfileScreen")
+              .semantics { testTagsAsResourceId = true },
       topBar = { PageTitle(title = "Profile") }) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
@@ -77,10 +80,19 @@ fun Profile(navigationActions: NavigationActions) {
                   "Settings",
                   { navigationActions.navigateTo(Destinations.SETTINGS) },
                   Icons.Default.Settings)
-              BasicButtonWithIcon("Log Out", { showLogOut = true }, Icons.Default.Logout)
+              BasicButtonWithIcon(
+                  "Log Out",
+                  { showLogOut = true },
+                  Icons.Default.Logout,
+              )
 
               if (showLogOut) {
-                Logout(onConfirm = { viewModel.signOut() }, onDismiss = { showLogOut = false })
+                Logout(
+                    onConfirm = {
+                      viewModel.signOut()
+                      navigationActions.navigateTo(Destinations.LOGIN)
+                    },
+                    onDismiss = { showLogOut = false })
               }
             }
       }
@@ -92,7 +104,8 @@ fun UserNameDisplay(name: String) {
       modifier =
           Modifier.fillMaxWidth()
               .height(56.dp)
-              .padding(start = 28.dp, top = 18.dp, end = 28.dp, bottom = 18.dp),
+              .padding(start = 28.dp, top = 18.dp, end = 28.dp, bottom = 18.dp)
+              .testTag("UserName"),
       horizontalArrangement = Arrangement.Start,
       verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -110,10 +123,11 @@ fun UserNameDisplay(name: String) {
       }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
-      modifier = Modifier.testTag("LogoutDialog"),
+      modifier = Modifier.testTag("LogoutDialog").semantics { testTagsAsResourceId = true },
       onDismissRequest = onDismiss,
       title = {
         Text(
