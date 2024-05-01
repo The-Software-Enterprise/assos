@@ -35,6 +35,7 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -74,6 +75,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.maxkeppeker.sheets.core.models.base.ButtonStyle
 import com.maxkeppeker.sheets.core.models.base.SelectionButton
 import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
@@ -127,7 +129,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         selection =
             DateTimeSelection.DateTime(
                 selectedDate = event.startTime?.toLocalDate(),
-                extraButton = SelectionButton(hourFormat.name),
+                extraButton = SelectionButton(hourFormat.name, type = ButtonStyle.FILLED),
                 onExtraButtonClick = { viewModel.switchHourFormat() }) {
                   if (event.endTime == null) {
                     event.startTime = convertTo24from(it, hourFormat)
@@ -184,16 +186,23 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CreateEventScreen"),
+      modifier = Modifier
+          .semantics { testTagsAsResourceId = true }
+          .testTag("CreateEventScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create an event", navigationActions = navigationActions)
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection"),
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxWidth()
+                .testTag("ContentSection"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp),
                     value = event.title,
                     onValueChange = { viewModel.setTitle(it) },
                     textStyle =
@@ -209,9 +218,10 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
                 OutlinedTextField(
                     modifier =
-                        Modifier.fillMaxWidth()
-                            .padding(horizontal = 32.dp, vertical = 8.dp)
-                            .height(150.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 32.dp, vertical = 8.dp)
+                        .height(150.dp),
                     value = event.description,
                     onValueChange = { viewModel.setDescription(it) },
                     singleLine = false,
@@ -228,15 +238,16 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
                 Box(
                     modifier =
-                        Modifier.padding(16.dp)
-                            .width(120.dp)
-                            .height(150.dp)
-                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
-                            .clickable {
-                              val pickImageIntent = Intent(Intent.ACTION_PICK)
-                              pickImageIntent.type = "image/*"
-                              launcher.launch(pickImageIntent)
-                            },
+                    Modifier
+                        .padding(16.dp)
+                        .width(120.dp)
+                        .height(150.dp)
+                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                        .clickable {
+                            val pickImageIntent = Intent(Intent.ACTION_PICK)
+                            pickImageIntent.type = "image/*"
+                            launcher.launch(pickImageIntent)
+                        },
                     contentAlignment = Alignment.Center) {
                       if (event.image == Uri.EMPTY) {
                         Text(text = "Image", modifier = Modifier.align(Alignment.Center))
@@ -245,13 +256,14 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             painter = rememberAsyncImagePainter(event.image),
                             contentDescription = "image",
                             modifier =
-                                Modifier.size(150.dp)
-                                    .background(MaterialTheme.colorScheme.surface)
-                                    .clickable {
-                                      val pickImageIntent = Intent(Intent.ACTION_PICK)
-                                      pickImageIntent.type = "image/*"
-                                      launcher.launch(pickImageIntent)
-                                    })
+                            Modifier
+                                .size(150.dp)
+                                .background(MaterialTheme.colorScheme.surface)
+                                .clickable {
+                                    val pickImageIntent = Intent(Intent.ACTION_PICK)
+                                    pickImageIntent.type = "image/*"
+                                    launcher.launch(pickImageIntent)
+                                })
                       }
                     }
               }
@@ -344,22 +356,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       }
 }
 
-@Composable
-fun AddContent(value: String, onValueChange: (String) -> Unit, title: String) {
-  OutlinedTextField(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
-      value = value,
-      onValueChange = onValueChange,
-      textStyle =
-          TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
-      label = { Text(text = title) },
-      colors =
-          OutlinedTextFieldDefaults.colors(
-              focusedBorderColor = MaterialTheme.colorScheme.secondary,
-              focusedLabelColor = MaterialTheme.colorScheme.secondary,
-              cursorColor = MaterialTheme.colorScheme.secondary))
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlertDialogAddFields(
@@ -375,7 +371,9 @@ fun AlertDialogAddFields(
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
+        modifier = Modifier
+            .width(400.dp)
+            .height(350.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
@@ -404,11 +402,13 @@ fun AlertDialogAddFields(
                       }
                     },
                     modifier =
-                        Modifier.border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                shape = RoundedCornerShape(size = 8.dp))
-                            .height(32.dp),
+                    Modifier
+                        .border(
+                            width = 1.dp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            shape = RoundedCornerShape(size = 8.dp)
+                        )
+                        .height(32.dp),
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
@@ -476,6 +476,8 @@ fun AlertDialogAddFields(
   }
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun AlertDialogFields(
@@ -484,105 +486,107 @@ fun AlertDialogFields(
     listFields: MutableList<EventField>
 ) {
 
-  val lazyListState = rememberLazyListState()
-  val reorderableLazyColumnState =
-      rememberReorderableLazyColumnState(lazyListState) { from, to ->
-        listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
-      }
-  AlertDialog(onDismissRequest = { onDismissRequest() }) {
-      if (listFields.isEmpty()) {
-          Surface(modifier = Modifier.width(100.dp)
-              .height(100.dp),
-              color = MaterialTheme.colorScheme.background,
-              shape = RoundedCornerShape(size = 8.dp)) {
-              Text(
-                  modifier = Modifier.padding(horizontal = 98.dp, vertical = 34.dp),
-                  text = "No fields",
-                  fontSize = 20.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-          }
-      } else {
-    Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
-        color = MaterialTheme.colorScheme.background,
-        shape = RoundedCornerShape(size = 8.dp)) {
-          LazyColumn(
-              modifier = Modifier.fillMaxSize(),
-              state = lazyListState,
-              horizontalAlignment = Alignment.CenterHorizontally) {
+    val lazyListState = rememberLazyListState()
+    val reorderableLazyColumnState =
+        rememberReorderableLazyColumnState(lazyListState) { from, to ->
+            listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
+        }
+    AlertDialog(onDismissRequest = { onDismissRequest() }) {
+        if (listFields.isEmpty()) {
+            Surface(
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp),
+                color = MaterialTheme.colorScheme.background,
+                shape = RoundedCornerShape(size = 8.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 98.dp, vertical = 34.dp),
+                    text = "No fields",
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))
+                )
+            }
+        } else {
+        Surface(
+            modifier = Modifier.width(400.dp).height(350.dp),
+            color = MaterialTheme.colorScheme.background,
+            shape = RoundedCornerShape(size = 8.dp)) {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                state = lazyListState,
+                horizontalAlignment = Alignment.CenterHorizontally) {
                 item {
-                  Spacer(modifier = Modifier.height(16.dp))
-                  Text("Move fields", fontSize = 30.sp, fontWeight = FontWeight.Bold)
-                  Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("Move fields", fontSize = 30.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                    Spacer(modifier = Modifier.height(16.dp))
                 }
 
                 itemsIndexed(listFields, key = { _, item -> item.hashCode() }) { index, field ->
-                  ReorderableItem(reorderableLazyColumnState, key = field.hashCode()) {
-                    val interactionSource = remember { MutableInteractionSource() }
+                    ReorderableItem(reorderableLazyColumnState, key = field.hashCode()) {
+                        val interactionSource = remember { MutableInteractionSource() }
 
-                    Card(
-                        onClick = {},
-                        modifier =
-                            Modifier.semantics {
-                              customActions =
-                                  listOf(
-                                      CustomAccessibilityAction(
-                                          label = "Move Up",
-                                          action = {
-                                            if (index > 0) {
-                                              listFields.apply { add(index - 1, removeAt(index)) }
-                                              true
-                                            } else {
-                                              false
-                                            }
-                                          }),
-                                      CustomAccessibilityAction(
-                                          label = "Move Down",
-                                          action = {
-                                            if (index < listFields.size - 1) {
-                                              listFields.apply { add(index + 1, removeAt(index)) }
-                                              true
-                                            } else {
-                                              false
-                                            }
-                                          }),
-                                  )
+                        Card(
+                            onClick = {},
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp).
+                            semantics {
+                                customActions =
+                                    listOf(
+                                        CustomAccessibilityAction(
+                                            label = "Move Up",
+                                            action = {
+                                                if (index > 0) {
+                                                    listFields.apply { add(index - 1, removeAt(index)) }
+                                                    true
+                                                } else {
+                                                    false
+                                                }
+                                            }),
+                                        CustomAccessibilityAction(
+                                            label = "Move Down",
+                                            action = {
+                                                if (index < listFields.size - 1) {
+                                                    listFields.apply { add(index + 1, removeAt(index)) }
+                                                    true
+                                                } else {
+                                                    false
+                                                }
+                                            }),
+                                    )
                             },
-                        interactionSource = interactionSource,
-                    ) {
-                      Row(
-                          modifier = Modifier.fillMaxWidth(),
-                          horizontalArrangement = Arrangement.SpaceBetween,
-                          verticalAlignment = Alignment.CenterVertically) {
-                            Text(text = field.title, Modifier.padding(horizontal = 8.dp))
-                            IconButton(
-                                modifier =
+                            interactionSource = interactionSource,
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically) {
+                                Text(text = field.title, Modifier.padding(horizontal = 16.dp), fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                                IconButton(
+                                    modifier =
                                     Modifier.draggableHandle(interactionSource = interactionSource)
                                         .clearAndSetSemantics {},
-                                onClick = {}) {
-                                  Icon(
-                                      painterResource(id = R.drawable.menu),
-                                      contentDescription = null)
+                                    onClick = {}) {
+                                    Icon(
+                                        painterResource(id = R.drawable.menu),
+                                        contentDescription = null)
                                 }
-                          }
+                            }
+                        }
                     }
-                  }
                 }
 
-                if (listFields.isEmpty()) {
-                  item { Text(text = "No fields yet, click add button to add some") }
-                }
                 item {
-                  Row {
-                    Button(onClick = { onDismissRequest() }) { Text("Cancel") }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Button(onClick = { onConfirmation() }) { Text("Confirm") }
-                  }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row {
+                        Button(onClick = { onDismissRequest() }) { Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Button(onClick = { onConfirmation() }) { Text("Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) }
+                    }
                 }
-              }
+            }
         }
-  }}
-}
+    }
+}}
 
 private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): LocalDateTime =
     when (format) {
