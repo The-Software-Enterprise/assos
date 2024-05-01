@@ -141,15 +141,15 @@ constructor(
     val snapshot = query.get().await() ?: return emptyList()
     val followedAssociations: List<String> =
         if (snapshot.get("following") is List<*>) {
-            (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
+          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
         } else {
-            emptyList()
+          emptyList()
         }
     val associationsTheUserBelongsTo: List<String> =
         if (snapshot.get("associations") is List<*>) {
-            (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
+          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
         } else {
-            emptyList()
+          emptyList()
         }
     if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
       return getAllNews(lastDocumentSnapshot)

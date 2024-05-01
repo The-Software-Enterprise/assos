@@ -50,10 +50,10 @@ class DbServiceTest {
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .orderBy(any<String>(), Query.Direction.DESCENDING)
-        .limit(any())
-        .get()
+          .collection(any())
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .limit(any())
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
 
     val mockAuth = mockk<FirebaseAuth>()
