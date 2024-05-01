@@ -34,10 +34,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -50,7 +53,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.CreateNewsViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boolean = false) {
   val viewModel: CreateNewsViewModel = hiltViewModel()
@@ -72,7 +75,7 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
     ShowImages(images = news.images, onDismissRequest = { showImages = false })
   }
   Scaffold(
-      modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
+      modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create a news", navigationActions = navigationActions)
       },
@@ -104,7 +107,7 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
                     Modifier.fillMaxWidth()
                         .padding(horizontal = 32.dp, vertical = 8.dp)
                         .height(150.dp)
-                        .testTag("InputTitle"),
+                        .testTag("InputDescription"),
                 value = news.description,
                 onValueChange = { viewModel.setDescription(it) },
                 textStyle =
@@ -137,7 +140,7 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
                       }
                   Spacer(modifier = Modifier.width(32.dp))
                   FloatingActionButton(
-                      modifier = Modifier.testTag("AddImages").width(130.dp),
+                      modifier = Modifier.testTag("ShowImages").width(130.dp),
                       onClick = { showImages = true },
                       containerColor = MaterialTheme.colorScheme.secondary) {
                         Text(
@@ -152,6 +155,7 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
           item {
             Spacer(modifier = Modifier.height(250.dp))
             Button(
+                modifier = Modifier.testTag("ButtonSave"),
                 enabled = news.title.isNotEmpty() && news.description.isNotEmpty(),
                 onClick = { viewModel.createNews(assoId, navigationActions) },
             ) {
@@ -225,7 +229,7 @@ fun ShowImages(images: List<String>, onDismissRequest: () -> Unit) {
           color = MaterialTheme.colorScheme.background,
           shape = RoundedCornerShape(size = 8.dp)) {
             Text(
-                modifier = Modifier.padding(horizontal = 86.dp, vertical = 34.dp),
+                modifier = Modifier.padding(horizontal = 86.dp, vertical = 34.dp).testTag("NoImagesDialog"),
                 text = "No images",
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
