@@ -102,7 +102,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
               }
               // change the region of the function to europe-west6
               functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener { throw it }
-              navigationActions.navigateTo(Destinations.HOME.route)
+              navigationActions.navigateTo(Destinations.HOME)
             }
           }
         },
