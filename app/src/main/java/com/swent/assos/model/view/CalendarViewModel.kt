@@ -42,13 +42,8 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
                       Pair(dbService.getAssociationById(event.associationId).acronym, event)
                     }
                     .filter { event ->
-                      Log.d(
-                          "CalendarViewModel",
-                          "event start Time: ${event.second.startTime?.toLocalDate()}")
-                      Log.d("CalendarViewModel", "tomorrow: ${LocalDate.now().plusDays(1)}")
                       event.second.startTime?.toLocalDate() == LocalDate.now().plusDays(1)
                     }
-            Log.d("CalendarViewModel", "tomorrowEvents: ${_tomorrowEvents.value}")
           }
     }
     _loading = false

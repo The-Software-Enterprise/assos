@@ -61,10 +61,13 @@ class DbServiceTest {
     dbService.createNews(News(), {}, {})
     dbService.updateNews(News(), {}, {})
     dbService.deleteNews(News(), {}, {})
+    dbService.getAllNews(null)
     dbService.getAllEvents(null)
     dbService.getAllAssociations(null)
     dbService.getAssociationById("id")
     dbService.followAssociation("id", {}, {})
     dbService.unfollowAssociation("id", {}, {})
+    dbService.getEventsFromAssociations(listOf("id"), null)
+    dbService.getEventsFromAnAssociation("id", null)
   }
 }

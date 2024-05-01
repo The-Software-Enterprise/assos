@@ -418,13 +418,13 @@ constructor(
           .addOnFailureListener { onError("Unfollow Error") }
     }
   }
+}
 
-  private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
-    return LocalDateTime.ofInstant(
-        Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
-  }
+fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
+  return LocalDateTime.ofInstant(
+      Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
+}
 
-  private fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
-    return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-  }
+fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
+  return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
 }
