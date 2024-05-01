@@ -38,7 +38,10 @@ fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
   val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
   Column(
-      modifier = Modifier.fillMaxSize().testTag("HomeNavigation").semantics { testTagsAsResourceId = true },
+      modifier =
+          Modifier.fillMaxSize().testTag("HomeNavigation").semantics {
+            testTagsAsResourceId = true
+          },
   ) {
     HorizontalPager(
         state = pagerState,
@@ -53,12 +56,19 @@ fun HomeNavigation(navigationActions: NavigationActions) {
       }
     }
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background).testTag("NavigationBar").semantics { testTagsAsResourceId = true},
+        modifier =
+            Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+                .testTag("NavigationBar")
+                .semantics { testTagsAsResourceId = true },
         containerColor = Color.Transparent,
     ) {
       repeat(4) { index ->
         NavigationBarItem(
-            modifier = Modifier.testTag("NavigationBarItem$index"),
+            modifier =
+                Modifier.testTag("NavigationBarItem$index").semantics {
+                  testTagsAsResourceId = true
+                },
             icon = {
               when (index) {
                 0 ->
@@ -92,7 +102,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.profil),
                         contentDescription = "Profil",
-                        modifier = Modifier.size(28.dp).padding((2.5).dp),
+                        modifier = Modifier.size(28.dp).padding((2.5).dp).testTag("ProfileIcon"),
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
