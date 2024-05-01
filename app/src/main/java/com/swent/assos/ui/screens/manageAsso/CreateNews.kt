@@ -179,9 +179,7 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
 
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
     Surface(
-        modifier = Modifier
-            .width(400.dp)
-            .height(250.dp),
+        modifier = Modifier.width(400.dp).height(230.dp),
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(size = 8.dp)) {
           Column(
@@ -190,26 +188,26 @@ fun AddImage(onDismissRequest: () -> Unit, onConfirmation: (String) -> Unit) {
                   .testTag("AddImageDialog"),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Add Image", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text("Add Image", fontSize = 30.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedTextField(
                     modifier = Modifier.testTag("InputImage"),
                     value = url,
                     onValueChange = { url = it },
-                    label = { Text("Image URL") })
+                    label = { Text("Image URL", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Row {
                   Button(
                       onClick = { onDismissRequest() },
                       modifier = Modifier.testTag("CancelImage")) {
-                        Text("Cancel")
+                        Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                       }
                   Spacer(modifier = Modifier.width(16.dp))
                   Button(
                       onClick = { onConfirmation(url) }, modifier = Modifier.testTag("SaveImage")) {
-                        Text("Confirm")
+                        Text("Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                       }
                 }
               }
