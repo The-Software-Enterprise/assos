@@ -27,7 +27,6 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
     userID = req.auth.uid
     try:
         profile = epflpeople.find(email)
-      
     except:
         profile = None
         

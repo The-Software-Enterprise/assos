@@ -32,6 +32,9 @@ constructor(
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
+    if (!snapshot.exists()) {
+      return User()
+    }
     return User(
         id = snapshot.id,
         firstName = snapshot.getString("firstname") ?: "",
