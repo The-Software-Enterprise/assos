@@ -490,6 +490,18 @@ fun AlertDialogFields(
         listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
       }
   AlertDialog(onDismissRequest = { onDismissRequest() }) {
+      if (listFields.isEmpty()) {
+          Surface(modifier = Modifier.width(100.dp)
+              .height(100.dp),
+              color = MaterialTheme.colorScheme.background,
+              shape = RoundedCornerShape(size = 8.dp)) {
+              Text(
+                  modifier = Modifier.padding(horizontal = 98.dp, vertical = 34.dp),
+                  text = "No fields",
+                  fontSize = 20.sp,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+          }
+      } else {
     Surface(
         modifier = Modifier.width(400.dp).height(350.dp),
         color = MaterialTheme.colorScheme.background,
@@ -569,7 +581,7 @@ fun AlertDialogFields(
                 }
               }
         }
-  }
+  }}
 }
 
 private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): LocalDateTime =
