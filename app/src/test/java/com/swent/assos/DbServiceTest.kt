@@ -48,6 +48,13 @@ class DbServiceTest {
           .limit(any())
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+        .collection(any())
+        .orderBy(any<String>(), Query.Direction.DESCENDING)
+        .limit(any())
+        .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
 
     val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()
@@ -66,5 +73,8 @@ class DbServiceTest {
     dbService.getAssociationById("id")
     dbService.followAssociation("id", {}, {})
     dbService.unfollowAssociation("id", {}, {})
+    dbService.filterNewsBasedOnAssociations(null, "id")
+
+    return@runBlocking
   }
 }
