@@ -183,6 +183,7 @@ class SigninTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
           passwordField {
             assertIsDisplayed()
             performTextInput("test1234")
+
           }
           loginButton {
             assertIsDisplayed()
