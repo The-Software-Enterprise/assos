@@ -1,15 +1,15 @@
 package com.swent.assos.model.data
 
 import com.google.firebase.firestore.DocumentSnapshot
-import java.util.Date
+import java.time.LocalDateTime
 
 data class News(
     val id: String = "",
     val title: String = "",
     val associationId: String = "",
-    val imageUrl: String = "",
+    val images: MutableList<String> = mutableListOf(),
     val description: String = "",
-    val date: Date = Date(),
-    val eventId: String = "",
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val eventIds: MutableList<String> = mutableListOf(),
     val documentSnapshot: DocumentSnapshot? = null
 )

@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -98,7 +99,7 @@ constructor(
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
-    val query = firestore.collection("news").orderBy("date", Query.Direction.DESCENDING)
+    val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -113,10 +114,21 @@ constructor(
           id = it.id,
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
-          date = it.getDate("date") ?: Date(),
+          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
           associationId = it.getString("associationId") ?: "",
-          imageUrl = it.getString("image") ?: "",
-          eventId = it.getString("eventId") ?: "")
+          images =
+              if (it.get("images") is List<*>) {
+                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          eventIds =
+              if (it.get("eventIds") is List<*>) {
+                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          documentSnapshot = it)
     }
   }
 
@@ -127,10 +139,10 @@ constructor(
             mapOf(
                 "title" to news.title,
                 "description" to news.description,
-                "date" to Date(),
+                "createdAt" to localDateTimeToTimestamp(news.createdAt),
                 "associationId" to news.associationId,
-                "image" to news.imageUrl,
-                "eventId" to news.eventId))
+                "images" to news.images,
+                "eventIds" to news.eventIds))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -143,7 +155,7 @@ constructor(
             mapOf(
                 "title" to news.title,
                 "description" to news.description,
-                "image" to news.imageUrl,
+                "images" to news.images,
             ))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
@@ -166,7 +178,7 @@ constructor(
         firestore
             .collection("news")
             .whereEqualTo("associationId", associationId)
-            .orderBy("date", Query.Direction.DESCENDING)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
           query.limit(10).get().await()
@@ -181,10 +193,20 @@ constructor(
           id = it.id,
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
-          date = it.getDate("date") ?: Date(),
+          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
           associationId = it.getString("associationId") ?: "",
-          imageUrl = it.getString("image") ?: "",
-          eventId = it.getString("eventId") ?: "",
+          images =
+              if (it.get("images") is List<*>) {
+                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
+          eventIds =
+              if (it.get("eventIds") is List<*>) {
+                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+              } else {
+                mutableListOf()
+              },
           documentSnapshot = it)
     }
   }
@@ -206,7 +228,7 @@ constructor(
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          image = Uri.parse(it.getString("image") ?: ""),
           startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
@@ -255,7 +277,7 @@ constructor(
           title = it.getString("title") ?: "",
           description = it.getString("description") ?: "",
           associationId = it.getString("associationId") ?: "",
-          image = it.getString("image") ?: "",
+          image = Uri.parse(it.getString("image") ?: ""),
           startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
           endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
           fields =
@@ -288,7 +310,7 @@ constructor(
                 "title" to event.title,
                 "description" to event.description,
                 "associationId" to event.associationId,
-                "image" to event.image,
+                "image" to event.image.toString(),
                 "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
                 "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
                 "fields" to
@@ -342,6 +364,30 @@ constructor(
     }
   }
 
+  override suspend fun getNewsById(newsId: String): News {
+    val query = firestore.collection("news").document(newsId)
+    val snapshot = query.get().await()
+    return News(
+        id = snapshot.id,
+        title = snapshot.getString("title") ?: "",
+        description = snapshot.getString("description") ?: "",
+        createdAt = timestampToLocalDateTime(snapshot.getTimestamp("createdAt")),
+        associationId = snapshot.getString("associationId") ?: "",
+        images =
+            if (snapshot.get("images") is List<*>) {
+              (snapshot.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+            } else {
+              mutableListOf()
+            },
+        eventIds =
+            if (snapshot.get("eventIds") is List<*>) {
+              (snapshot.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+            } else {
+              mutableListOf()
+            },
+        documentSnapshot = snapshot)
+  }
+
   private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
     return LocalDateTime.ofInstant(
         Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
@@ -349,9 +395,5 @@ constructor(
 
   private fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
     return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
-  }
-
-  override suspend fun getNewsById(newsId: String): News {
-    TODO("Not yet implemented")
   }
 }
