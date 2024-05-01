@@ -23,9 +23,9 @@ import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
-import com.swent.assos.ui.screens.Profile
 import com.swent.assos.ui.screens.calendar.Calendar
 import java.util.Calendar
+import com.swent.assos.ui.screens.profile.Profile
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
