@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.swent.assos.model.data.CalendarUiModel
 import com.swent.assos.model.data.Event
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
@@ -35,24 +35,27 @@ fun BasicEvent(event: Event) {
               .padding(end = 2.dp, bottom = 2.dp)
               .background(Color(0xFFDE496E), shape = RoundedCornerShape(14.dp))
               .padding(4.dp)) {
-        Text(text = event.title, fontWeight = FontWeight.SemiBold, color = Color.White)
+        Text(
+            text = event.title,
+            fontWeight = FontWeight.SemiBold,
+            color = Color.White,
+            modifier = Modifier.padding(4.dp))
       }
 }
 
 @Composable
 fun Schedule(
-    events: List<Event>,
+    events: State<List<Event>>,
     modifier: Modifier = Modifier,
     eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
     dayWidth: Dp,
-    hourHeight: Dp,
-    data: CalendarUiModel,
+    hourHeight: Dp
 ) {
   val dividerColor = Color.LightGray
   val offsetYHour = 25f
   Layout(
       content = {
-        events.sortedBy(Event::startTime).forEach { event ->
+        events.value.sortedBy(Event::startTime).forEach { event ->
           Box(modifier = Modifier.eventData(event)) { eventContent(event) }
         }
       },
@@ -89,11 +92,11 @@ fun Schedule(
                 ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime?.toLocalTime())
             val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
 
-            val eventOffsetDays =
+            /*val eventOffsetDays =
                 ChronoUnit.DAYS.between(data.startDate.date, event.startTime?.toLocalDate()).toInt()
-            val eventX = eventOffsetDays * dayWidth.roundToPx()
+            val eventX = eventOffsetDays * dayWidth.roundToPx()*/
 
-            placeable.place(eventX, eventY)
+            placeable.place(0 /*eventX*/, offsetYHour.toInt() + eventY)
           }
         }
       }

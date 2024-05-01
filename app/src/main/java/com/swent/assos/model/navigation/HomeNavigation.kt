@@ -25,7 +25,6 @@ import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
-import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -78,7 +77,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 2 ->
                     Icon(
-                        painterResource(id = R.drawable.calendar),
+                        painterResource(id = R.drawable.baseline_calendar_today_24),
                         contentDescription = "Cal",
                         modifier = Modifier.size(28.dp),
                         tint =

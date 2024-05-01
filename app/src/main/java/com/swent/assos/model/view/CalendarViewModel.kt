@@ -1,6 +1,5 @@
 package com.swent.assos.model.view
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.DataCache
@@ -23,8 +22,16 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
 
   private val _events = MutableStateFlow(emptyList<Event>())
   val events = _events.asStateFlow()
+
   private val _tomorrowEvents = MutableStateFlow(emptyList<Pair<String, Event>>())
   val tomorrowEvents = _tomorrowEvents.asStateFlow()
+
+  private val _selectedDate = MutableStateFlow(LocalDate.now())
+  val selectedDate = _selectedDate.asStateFlow()
+
+  private val _selectedEvents = MutableStateFlow(emptyList<Event>())
+  val selectedEvents = _selectedEvents.asStateFlow()
+
   private var _loading = false
 
   private val user = DataCache.currentUser
@@ -42,13 +49,8 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
                       Pair(dbService.getAssociationById(event.associationId).acronym, event)
                     }
                     .filter { event ->
-                      Log.d(
-                          "CalendarViewModel",
-                          "event start Time: ${event.second.startTime?.toLocalDate()}")
-                      Log.d("CalendarViewModel", "tomorrow: ${LocalDate.now().plusDays(1)}")
                       event.second.startTime?.toLocalDate() == LocalDate.now().plusDays(1)
                     }
-            Log.d("CalendarViewModel", "tomorrowEvents: ${_tomorrowEvents.value}")
           }
     }
     _loading = false
@@ -68,9 +70,6 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
               _events.value = _events.value.distinct()
               _tomorrowEvents.value +=
                   it.map { event ->
-                        Log.d(
-                            "CalendarViewModel",
-                            "association Acronym: ${dbService.getAssociationById(event.associationId).acronym}")
                         Pair(dbService.getAssociationById(event.associationId).acronym, event)
                       }
                       .filter { event ->
@@ -82,5 +81,21 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
             }
       }
     }
+  }
+
+  fun updateSelectedDate(date: LocalDate) {
+    _selectedDate.value = date
+  }
+
+  fun filterEvents() {
+    _selectedEvents.value =
+        _events.value.filter {
+          if (it.startTime == null || it.endTime == null) {
+            false
+          } else {
+            it.startTime!!.isAfter(selectedDate.value.atStartOfDay()) &&
+                it.endTime!!.isBefore(selectedDate.value.atStartOfDay().plusDays(1))
+          }
+        }
   }
 }

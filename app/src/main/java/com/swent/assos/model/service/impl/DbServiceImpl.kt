@@ -1,7 +1,6 @@
 package com.swent.assos.model.service.impl
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -261,7 +260,8 @@ constructor(
         firestore
             .collection("events")
             .whereEqualTo("associationId", associationId)
-            .whereGreaterThan("startTime", Timestamp.now())
+            .whereGreaterThan(
+                "startTime", localDateTimeToTimestamp(LocalDateTime.now().minusDays(3L)))
             .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
@@ -307,7 +307,6 @@ constructor(
       associationIds: List<String>,
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Event> {
-    Log.d("DbServiceImpl", "associationIds: $associationIds")
     if (associationIds.isEmpty()) {
       return emptyList()
     }
@@ -315,7 +314,8 @@ constructor(
         firestore
             .collection("events")
             .whereIn("associationId", associationIds)
-            .whereGreaterThan("startTime", Timestamp.now())
+            .whereGreaterThan(
+                "startTime", localDateTimeToTimestamp(LocalDateTime.now().minusDays(3L)))
             .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {

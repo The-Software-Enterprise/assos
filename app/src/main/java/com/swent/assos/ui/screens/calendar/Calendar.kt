@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -22,15 +23,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.model.data.CalendarDataSource
-import com.swent.assos.model.data.CalendarUiModel
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.view.CalendarViewModel
+import com.swent.assos.ui.components.PageTitle
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 private val dayWidth = 256.dp
 private val hourHeight = 64.dp
+private val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu")
 
 @Preview(showSystemUi = true)
 @Composable
@@ -39,77 +41,94 @@ fun Calendar(
 ) {
   val calendarViewModel: CalendarViewModel = hiltViewModel()
   val events = calendarViewModel.events.collectAsState()
-  val dataSource = CalendarDataSource()
-  val data by remember { mutableStateOf(dataSource.getData(lastSelectedDate = dataSource.today)) }
+  val selectedEvents = calendarViewModel.selectedEvents.collectAsState()
+  val selectedDate = calendarViewModel.selectedDate.collectAsState()
+
   val verticalScrollState = rememberScrollState(1350)
-  var selectedDate by remember { mutableStateOf(LocalDate.now()) }
 
-  Column(modifier = Modifier.padding(16.dp).fillMaxSize()) {
-    Spacer(modifier = Modifier.height(16.dp))
-    InfiniteScrollableDaysList(selectedDate = selectedDate, onDateSelected = { selectedDate = it })
+  LaunchedEffect(key1 = Unit) { calendarViewModel.updateEvents() }
 
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(
-        text =
-            if (selectedDate == LocalDate.now()) {
-              "Schedule Today"
-            } else {
-              "Daily Schedule"
+  LaunchedEffect(events.value, selectedDate.value) { calendarViewModel.filterEvents() }
+
+  Scaffold(
+      topBar = { PageTitle(title = "Calendar - ${selectedDate.value.format(dateFormatter)}") }) {
+        Column(modifier = Modifier.padding(16.dp).padding(it).fillMaxSize()) {
+          InfiniteScrollableDaysList(
+              selectedDate = selectedDate,
+              onDateSelected = { newDate -> calendarViewModel.updateSelectedDate(newDate) })
+
+          Spacer(modifier = Modifier.height(16.dp))
+          Text(
+              text =
+                  if (selectedDate.value == LocalDate.now()) {
+                    "Schedule Today"
+                  } else {
+                    "Daily Schedule"
+                  },
+              fontSize = 16.sp,
+              fontWeight = FontWeight.SemiBold,
+              color = Color(0xFF1E293B))
+
+          Spacer(modifier = Modifier.height(32.dp))
+          DailySchedule(
+              events = selectedEvents,
+              verticalScrollState = verticalScrollState,
+              eventContent = eventContent)
+          Spacer(modifier = Modifier.height(32.dp))
+
+          Reminder(calendarViewModel = calendarViewModel)
+        }
+
+        /*ChangeWeek(
+            data = data,
+            onPrevClickListener = { startDate ->
+              val finalStartDate = startDate.minusDays(1)
+              data =
+                  dataSource.getData(
+                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
             },
-        fontSize = 16.sp,
-        fontWeight = FontWeight.SemiBold,
-        color = Color(0xFF1E293B))
+            onNextClickListener = { endDate ->
+              val finalStartDate = endDate.plusDays(2)
+              data =
+                  dataSource.getData(
+                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
+            })
 
-    Spacer(modifier = Modifier.height(32.dp))
-    DailySchedule(selectedDate, verticalScrollState, data, eventContent)
+        WeekHeader(
+            data = data,
+            dayWidth = dayWidth,
+            modifier =
+                Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
+                    .horizontalScroll(horizontalScrollState),
+            dayHeader)
 
-    /*ChangeWeek(
-        data = data,
-        onPrevClickListener = { startDate ->
-          val finalStartDate = startDate.minusDays(1)
-          data =
-              dataSource.getData(
-                  startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-        },
-        onNextClickListener = { endDate ->
-          val finalStartDate = endDate.plusDays(2)
-          data =
-              dataSource.getData(
-                  startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-        })
+        Row {
+          TimeSidebar(
+              hourHeight = 64.dp,
+              modifier =
+                  Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
+                    sidebarWidth = it.size.width
+                  })
 
-    WeekHeader(
-        data = data,
-        dayWidth = dayWidth,
-        modifier =
-            Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
-                .horizontalScroll(horizontalScrollState),
-        dayHeader)
-
-    Row {
-      TimeSidebar(
-          hourHeight = 64.dp,
-          modifier =
-              Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
-                sidebarWidth = it.size.width
-              })
-
-      Event(
-          events = events.value,
-          eventContent = eventContent,
-          dayWidth = dayWidth,
-          hourHeight = hourHeight,
-          data = data,
-          modifier =
-              Modifier.weight(1f)
-                  .verticalScroll(verticalScrollState)
-                  .horizontalScroll(horizontalScrollState))
-    }*/
-  }
+          Event(
+              events = events.value,
+              eventContent = eventContent,
+              dayWidth = dayWidth,
+              hourHeight = hourHeight,
+              data = data,
+              modifier =
+                  Modifier.weight(1f)
+                      .verticalScroll(verticalScrollState)
+                      .horizontalScroll(horizontalScrollState))
+        }*/
+      }
 }
 
 @Composable
-fun InfiniteScrollableDaysList(selectedDate: LocalDate, onDateSelected: (LocalDate) -> Unit) {
+fun InfiniteScrollableDaysList(
+    selectedDate: State<LocalDate>,
+    onDateSelected: (LocalDate) -> Unit
+) {
   val startDate = LocalDate.now().minusDays(3L) // Start from 3 days ago
 
   // Generate a list of LocalDate objects representing days
@@ -122,8 +141,9 @@ fun InfiniteScrollableDaysList(selectedDate: LocalDate, onDateSelected: (LocalDa
   LazyRow {
     // Loop through the list of days infinitely
     itemsIndexed(daysList) { index, day ->
-      DayItem(date = day, selected = day == selectedDate, onDateSelected)
-      if (day == selectedDate || index < daysList.size - 1 && daysList[index + 1] == selectedDate) {
+      DayItem(date = day, selected = day == selectedDate.value, onDateSelected)
+      if (day == selectedDate.value ||
+          index < daysList.size - 1 && daysList[index + 1] == selectedDate.value) {
         // Adjust spacing between the selected data
         Spacer(modifier = Modifier.width(14.5.dp))
       } else {
@@ -212,13 +232,11 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
 
 @Composable
 fun DailySchedule(
-    date: LocalDate,
+    events: State<List<Event>>,
     verticalScrollState: ScrollState,
-    data: CalendarUiModel,
     eventContent: @Composable (event: Event) -> Unit
 ) {
   /*TODO : get events for the selected date*/
-  val events = emptyList<Event>()
   Row(modifier = Modifier.height(208.dp)) {
     TimeSidebar(hourHeight = hourHeight, modifier = Modifier.verticalScroll(verticalScrollState))
 
@@ -227,7 +245,6 @@ fun DailySchedule(
         eventContent = eventContent,
         dayWidth = dayWidth,
         hourHeight = hourHeight,
-        data = data,
         modifier = Modifier.weight(1f).verticalScroll(verticalScrollState))
   }
 }
