@@ -159,6 +159,7 @@ fun Reminder() {
                       }
                     }
                   }
+              Spacer(Modifier.height(14.dp))
             }
           }
         }
