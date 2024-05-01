@@ -15,8 +15,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.robolectric.interceptors.AndroidInterceptors.LocaleAdjustLanguageCodeInterceptor
-import java.time.LocalDateTime
 
 @RunWith(RobolectricTestRunner::class)
 class DbServiceTest {
@@ -52,59 +50,59 @@ class DbServiceTest {
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .orderBy(any<String>(), Query.Direction.DESCENDING)
-        .limit(any())
-        .get()
+          .collection(any())
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .limit(any())
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereIn(any<String>(), any())
-        .whereGreaterThan(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .get()
+          .collection(any())
+          .whereIn(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereIn(any<String>(), any())
-        .whereGreaterThan(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .limit(any())
-        .get()
+          .collection(any())
+          .whereIn(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereEqualTo(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .get()
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereEqualTo(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .limit(any())
-        .get()
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereEqualTo(any<String>(), any())
-        .whereGreaterThan(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .get()
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
-        .collection(any())
-        .whereEqualTo(any<String>(), any())
-        .whereGreaterThan(any<String>(), any())
-        .orderBy(any<String>(), Query.Direction.ASCENDING)
-        .limit(any())
-        .get()
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
     } returns Tasks.forResult(mockQuerySnapshot)
 
     val mockAuth = mockk<FirebaseAuth>()
