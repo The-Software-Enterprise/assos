@@ -25,7 +25,7 @@ import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.Profile
 import com.swent.assos.ui.screens.calendar.Calendar
-import com.swent.assos.ui.screens.calendar.Reminder
+import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,7 +45,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
       when (page) {
         0 -> News()
         1 -> Explorer(navigationActions = navigationActions)
-        2 -> Reminder()
+        2 -> Calendar()
         3 -> Profile(navigationActions = navigationActions)
       }
     }

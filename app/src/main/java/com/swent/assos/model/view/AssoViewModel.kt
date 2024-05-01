@@ -63,7 +63,8 @@ constructor(
 
   fun getEvents(associationId: String) {
     viewModelScope.launch(ioDispatcher) {
-      _events.value = dbService.getEventsFromAnAssociation(associationId, lastDocumentSnapshot = null)
+      _events.value =
+          dbService.getEventsFromAnAssociation(associationId, lastDocumentSnapshot = null)
     }
   }
 
