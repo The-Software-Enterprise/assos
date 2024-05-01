@@ -3,7 +3,9 @@ package com.swent.assos.ui.screens.manageAsso
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -35,8 +37,10 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -378,7 +382,7 @@ fun AlertDialogAddFields(
               modifier = Modifier.fillMaxSize(),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("New field", fontSize = 30.sp, fontWeight = FontWeight.Bold)
+                Text("New field", fontSize = 30.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                 Spacer(modifier = Modifier.height(16.dp))
                 AssistChip(
                     leadingIcon = {
@@ -387,29 +391,25 @@ fun AlertDialogAddFields(
                             Image(
                                 imageVector = Icons.Outlined.Image,
                                 contentDescription = null,
-                                colorFilter = ColorFilter.tint(Color(0xFFBA1A1A)))
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary))
                         EventFieldType.TEXT ->
                             Image(
                                 imageVector = Icons.Default.TextFields,
                                 contentDescription = null,
-                                colorFilter = ColorFilter.tint(Color(0xFFFB9905)))
+                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary))
                       }
                     },
                     modifier =
                         Modifier.border(
                                 width = 1.dp,
-                                color =
-                                    when (currentFieldType) {
-                                      EventFieldType.IMAGE -> Color(0xFFBA1A1A)
-                                      EventFieldType.TEXT -> Color(0xFFFB9905)
-                                    },
+                                color = MaterialTheme.colorScheme.tertiary,
                                 shape = RoundedCornerShape(size = 8.dp))
                             .height(32.dp),
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
-                        EventFieldType.IMAGE -> Text(text = "Image", color = Color(0xFFBA1A1A))
-                        EventFieldType.TEXT -> Text(text = "Text", color = Color(0xFFFB9905))
+                        EventFieldType.IMAGE -> Text(text = "Image", color = MaterialTheme.colorScheme.primary)
+                        EventFieldType.TEXT -> Text(text = "Text", color = MaterialTheme.colorScheme.primary)
                       }
                     })
 
@@ -418,26 +418,27 @@ fun AlertDialogAddFields(
                 OutlinedTextField(
                     value = titleSection,
                     onValueChange = { titleSection = it },
-                    label = { Text("Title") })
+                    label = { Text("Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
 
                 when (currentFieldType) {
                   EventFieldType.IMAGE -> {
                     OutlinedTextField(
                         value = imageUrlValue,
                         onValueChange = { imageUrlValue = it },
-                        label = { Text("Image URL") },
+                        label = { Text("Image URL", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) },
                         modifier = Modifier.padding(16.dp))
                   }
                   EventFieldType.TEXT -> {
                     OutlinedTextField(
                         value = textValue,
                         onValueChange = { textValue = it },
-                        label = { Text("Text") },
+                        label = { Text("Text", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) },
                         modifier = Modifier.padding(16.dp))
                   }
                 }
                 Row {
-                  Button(onClick = { onDismissRequest() }) { Text("Cancel") }
+                  Button(onClick = { onDismissRequest() } )
+                  { Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) }
                   Spacer(modifier = Modifier.width(16.dp))
                   Button(
                       onClick = {
@@ -451,7 +452,7 @@ fun AlertDialogAddFields(
                           }
                         }
                       }) {
-                        Text("Confirm")
+                        Text("Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                       }
                 }
               }
