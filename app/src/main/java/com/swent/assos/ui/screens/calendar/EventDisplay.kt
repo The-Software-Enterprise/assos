@@ -22,6 +22,7 @@ import com.swent.assos.model.data.CalendarUiModel
 import com.swent.assos.model.data.Event
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
+import kotlin.math.max
 import kotlin.math.roundToInt
 
 private const val NUMBER_OF_HOURS = 24
@@ -71,7 +72,8 @@ fun Schedule(
             measureables.map { measurable ->
               val event = measurable.parentData as Event
               val eventDurationMinutes = ChronoUnit.MINUTES.between(event.startTime, event.endTime)
-              val eventHeight = ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt()
+              val eventHeight =
+                  max(0, ((eventDurationMinutes / 60f) * hourHeight.toPx()).roundToInt())
               val placeable =
                   measurable.measure(
                       constraints.copy(

@@ -2,6 +2,7 @@ package com.swent.assos.model.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swent.assos.model.MIN_LOADED_ITEMS
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
@@ -43,6 +44,9 @@ constructor(private val dbService: DbService, private val authService: AuthServi
           it.acronym.contains(query, ignoreCase = true) ||
               it.fullname.contains(query, ignoreCase = true)
         }
+    if (_filteredAssociations.value.size < MIN_LOADED_ITEMS) {
+      loadMoreAssociations()
+    }
   }
 
   fun loadMoreAssociations() {

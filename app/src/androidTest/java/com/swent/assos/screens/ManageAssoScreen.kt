@@ -9,11 +9,13 @@ class ManageAssoScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("ManageAssoScreen") }) {
 
-  val description: KNode = child { hasTestTag("DescriptionField") }
-  val editDescriptionButton: KNode = child { hasTestTag("EditDescriptionButton") }
-  val addEventButton: KNode = child { hasTestTag("AddEventButton") }
-  val addPostButton: KNode = child { hasTestTag("AddPostButton") }
-  val newsItem: KNode = child { hasTestTag("NewsItem") }
+  val content: KNode = child { hasTestTag("Content") }
+  val description: KNode = content.child { hasTestTag("DescriptionField") }
+  val editDescriptionButton: KNode = content.child { hasTestTag("EditDescriptionButton") }
+  val addEventButton: KNode = content.child { hasTestTag("AddEventButton") }
+  val addPostButton: KNode = content.child { hasTestTag("AddPostButton") }
+  val newsItem: KNode = content.child { hasTestTag("NewsItem") }
+
   val topBar: KNode = child { hasTestTag("Header") }
   val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }
 }
