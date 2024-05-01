@@ -142,6 +142,9 @@ dependencies {
   // Coil
   implementation("io.coil-kt:coil-compose:2.1.0")
   implementation(kotlin("reflect"))
+
+  //Images
+  implementation ("io.coil-kt:coil-compose:2.1.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
