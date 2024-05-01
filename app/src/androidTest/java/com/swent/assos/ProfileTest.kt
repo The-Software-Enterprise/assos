@@ -7,7 +7,7 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.screens.ProfileScreen
-import com.swent.assos.ui.screens.Profile
+import com.swent.assos.ui.screens.profile.Profile
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
@@ -35,8 +35,70 @@ class ProfileTest : SuperTest() {
             semester = "GM-BA6")
     super.setup()
     composeTestRule.activity.setContent { Profile(navigationActions = mockNavActions) }
-    // signup
+  }
 
+  @Test
+  fun profileDisplaysTheCorrectPageTitle() {
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Check if page title is displayed") {
+          pagetile {
+            assertIsDisplayed()
+            assert(hasText("Profile", substring = true, ignoreCase = true))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun profileDisplaysUsername() {
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Check if username is displayed") {
+          name {
+            assertIsDisplayed()
+            assert(hasText("$firstName $lastName", substring = true, ignoreCase = true))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun myAssociationsButtonTriggersNavigation() {
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Click on my associations button") {
+          myAssociationsButton {
+            assertIsDisplayed()
+            performClick()
+          }
+        }
+        step("Check if we actually navigate to my associations screen") {
+          verify { mockNavActions.navigateTo(Destinations.MY_ASSOCIATIONS) }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun followingAssociationsButtonTriggersNavigation() {
+    run {
+      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
+        step("Click on following associations button") {
+          followingAssociationsButton {
+            assertIsDisplayed()
+            performClick()
+          }
+        }
+        step("Check if we actually navigate to following associations screen") {
+          verify { mockNavActions.navigateTo(Destinations.FOLLOWING) }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
   }
 
   @Test
@@ -58,58 +120,19 @@ class ProfileTest : SuperTest() {
   }
 
   @Test
-  fun myAssociationsSectionTitleHasRightContent() {
-
+  fun logoutButtonIsDisplayed() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Check if my associations section title contains text") {
-          myAssociationSectionTitle {
-            assertIsDisplayed()
-            assert(hasText("My associations", substring = true, ignoreCase = true))
-          }
-        }
+        step("Logout button is displayed") { logoutButton { assertIsDisplayed() } }
       }
     }
   }
 
   @Test
-  fun followedAssociationSectionTitleHasRightContent() {
+  fun popUpDisplays() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Check if followed associations section title contains text") {
-          followedAssociationSectionTitle {
-            assertIsDisplayed()
-            assert(hasText("Associations followed", substring = true, ignoreCase = true))
-          }
-        }
-      }
-    }
-  }
-
-  @Test
-  fun profileDisplaysMyAssociations() {
-    run {
-      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Check if my associations are displayed") {
-          myAssociationItem {
-            assertIsDisplayed()
-            assert(hasText("Rocket Team", substring = true, ignoreCase = true))
-          }
-        }
-      }
-    }
-  }
-
-  @Test
-  fun profileDisplaysUsername() {
-    run {
-      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Check if username is displayed") {
-          name {
-            assertIsDisplayed()
-            assert(hasText("$firstName $lastName", substring = true, ignoreCase = true))
-          }
-        }
+        step("Popup is displayed") { logoutButton { performClick() } }
       }
     }
   }

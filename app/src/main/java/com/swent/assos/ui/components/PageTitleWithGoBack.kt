@@ -1,11 +1,16 @@
 package com.swent.assos.ui.components
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,14 +24,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
-import com.swent.assos.ui.screens.*
+import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
-fun PageTitle(title: String) {
+fun PageTitleWithGoBack(title: String, navigationActions: NavigationActions) {
   Column {
     Row(
-        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(8.dp).testTag("TopBar"),
+        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(20.dp).testTag("TopBar"),
         verticalAlignment = Alignment.CenterVertically) {
+          Image(
+              imageVector = Icons.Default.ArrowBack,
+              contentDescription = "goBack",
+              modifier =
+                  Modifier.width(24.dp)
+                      .height(24.dp)
+                      .clickable { navigationActions.goBack() }
+                      .testTag("GoBackButton"))
           Text(
               text = title,
               style =
@@ -36,7 +49,7 @@ fun PageTitle(title: String) {
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(600),
                       color = Color.Black),
-              modifier = Modifier.padding(20.dp).testTag("PageTitle"))
+              modifier = Modifier.padding(10.dp).testTag("PageTitle"))
         }
   }
 }
