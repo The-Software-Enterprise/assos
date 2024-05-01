@@ -34,6 +34,7 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
+import com.swent.assos.ui.theme.LightGray
 import com.swent.assos.ui.theme.Typography
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -59,7 +60,7 @@ fun News(navigationActions: NavigationActions) {
         LazyColumn(
             modifier =
                 Modifier.padding(paddingValues)
-                    .background(Color.Gray) // Light gray background
+                    .background(LightGray) // Light gray background
                     .padding(horizontal = 15.dp)
                     .padding(top = 5.dp)
                     .testTag("NewsList"),
@@ -95,7 +96,7 @@ fun HomePageTitle() {
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
         horizontalAlignment = Alignment.Start) {
           Text(
-              text = "HOME",
+              text = "Home",
               style =
                   Typography.bodyLarge.copy(
                       fontWeight = FontWeight.Bold, // Adjust the weight as needed
