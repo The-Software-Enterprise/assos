@@ -3,9 +3,7 @@ package com.swent.assos.ui.screens.manageAsso
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -15,9 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,10 +33,8 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -198,48 +192,54 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
             modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
+                    value = event.title,
+                    onValueChange = { viewModel.setTitle(it) },
+                    textStyle =
+                        TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    label = { Text(text = "Title") },
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                            cursorColor = MaterialTheme.colorScheme.secondary))
 
-                  OutlinedTextField(
-                      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp),
-                      value = event.title,
-                      onValueChange = { viewModel.setTitle(it) },
-                      textStyle =
-                      TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
-                      label = { Text(text = "Title") },
-                      colors =
-                      OutlinedTextFieldDefaults.colors(
-                          focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                          focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                          cursorColor = MaterialTheme.colorScheme.secondary))
-
-                  OutlinedTextField(
-                      modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp, vertical = 8.dp).height(150.dp),
-                      value = event.description,
-                      onValueChange = { viewModel.setDescription(it) },
-                      singleLine = false,
-                      textStyle =
-                      TextStyle(fontSize = 16.sp, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
-                      label = { Text(text = "Description") },
-                      colors =
-                      OutlinedTextFieldDefaults.colors(
-                          focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                          focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                          cursorColor = MaterialTheme.colorScheme.secondary))
-
+                OutlinedTextField(
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(horizontal = 32.dp, vertical = 8.dp)
+                            .height(150.dp),
+                    value = event.description,
+                    onValueChange = { viewModel.setDescription(it) },
+                    singleLine = false,
+                    textStyle =
+                        TextStyle(
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    label = { Text(text = "Description") },
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                            focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                            cursorColor = MaterialTheme.colorScheme.secondary))
 
                 Box(
                     modifier =
                         Modifier.padding(16.dp)
                             .width(120.dp)
                             .height(150.dp)
-                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp)).clickable {val pickImageIntent = Intent(Intent.ACTION_PICK)
-                                pickImageIntent.type = "image/*"
-                                launcher.launch(pickImageIntent)  },
+                            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                            .clickable {
+                              val pickImageIntent = Intent(Intent.ACTION_PICK)
+                              pickImageIntent.type = "image/*"
+                              launcher.launch(pickImageIntent)
+                            },
                     contentAlignment = Alignment.Center) {
                       if (event.image == Uri.EMPTY) {
-                        Text(
-                            text = "Image",
-                            modifier = Modifier.align(Alignment.Center))
+                        Text(text = "Image", modifier = Modifier.align(Alignment.Center))
                       } else {
                         Image(
                             painter = rememberAsyncImagePainter(event.image),
@@ -254,7 +254,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                     })
                       }
                     }
-                }
+              }
 
               item {
                 Row(
@@ -382,7 +382,11 @@ fun AlertDialogAddFields(
               modifier = Modifier.fillMaxSize(),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("New field", fontSize = 30.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                Text(
+                    "New field",
+                    fontSize = 30.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                 Spacer(modifier = Modifier.height(16.dp))
                 AssistChip(
                     leadingIcon = {
@@ -408,8 +412,10 @@ fun AlertDialogAddFields(
                     onClick = { onChipClick() },
                     label = {
                       when (currentFieldType) {
-                        EventFieldType.IMAGE -> Text(text = "Image", color = MaterialTheme.colorScheme.primary)
-                        EventFieldType.TEXT -> Text(text = "Text", color = MaterialTheme.colorScheme.primary)
+                        EventFieldType.IMAGE ->
+                            Text(text = "Image", color = MaterialTheme.colorScheme.primary)
+                        EventFieldType.TEXT ->
+                            Text(text = "Text", color = MaterialTheme.colorScheme.primary)
                       }
                     })
 
@@ -418,27 +424,36 @@ fun AlertDialogAddFields(
                 OutlinedTextField(
                     value = titleSection,
                     onValueChange = { titleSection = it },
-                    label = { Text("Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) })
+                    label = {
+                      Text("Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                    })
 
                 when (currentFieldType) {
                   EventFieldType.IMAGE -> {
                     OutlinedTextField(
                         value = imageUrlValue,
                         onValueChange = { imageUrlValue = it },
-                        label = { Text("Image URL", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) },
+                        label = {
+                          Text(
+                              "Image URL",
+                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                        },
                         modifier = Modifier.padding(16.dp))
                   }
                   EventFieldType.TEXT -> {
                     OutlinedTextField(
                         value = textValue,
                         onValueChange = { textValue = it },
-                        label = { Text("Text", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) },
+                        label = {
+                          Text("Text", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                        },
                         modifier = Modifier.padding(16.dp))
                   }
                 }
                 Row {
-                  Button(onClick = { onDismissRequest() } )
-                  { Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))) }
+                  Button(onClick = { onDismissRequest() }) {
+                    Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                  }
                   Spacer(modifier = Modifier.width(16.dp))
                   Button(
                       onClick = {
@@ -452,7 +467,8 @@ fun AlertDialogAddFields(
                           }
                         }
                       }) {
-                        Text("Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                        Text(
+                            "Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
                       }
                 }
               }
