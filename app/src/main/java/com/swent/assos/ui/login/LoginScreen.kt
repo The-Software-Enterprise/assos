@@ -5,14 +5,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -44,7 +44,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
 
   Column(
       modifier =
-          Modifier.fillMaxWidth().semantics { testTagsAsResourceId = true }.testTag("LoginScreen"),
+          Modifier.fillMaxWidth()
+              .semantics { testTagsAsResourceId = true }
+              .testTag("LoginScreen")
+              .background(color = MaterialTheme.colorScheme.primaryContainer)
+              .fillMaxHeight(),
   ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -62,8 +66,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                   TextStyle(
                       fontSize = 24.sp,
                       lineHeight = 32.sp,
-                      color = Color(0xFF1D1B20),
-                  ))
+                      color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -102,12 +105,14 @@ fun LoginScreen(navigationActions: NavigationActions) {
               Modifier.testTag("LoginButton")
                   .shadow(
                       elevation = 3.dp,
-                      spotColor = Color(0x4D000000),
-                      ambientColor = Color(0x4D000000))
+                      spotColor = MaterialTheme.colorScheme.onSurface,
+                      ambientColor = MaterialTheme.colorScheme.onSurface)
                   .width(100.dp)
                   .height(42.dp)
-                  .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
-          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5465FF)),
+                  .background(
+                      color = MaterialTheme.colorScheme.primary,
+                      shape = MaterialTheme.shapes.small),
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
 
           onClick = {
@@ -120,7 +125,10 @@ fun LoginScreen(navigationActions: NavigationActions) {
       }
 
       if (userNotFound) {
-        Text(modifier = Modifier.testTag("ErrorMessage"), text = errorMessage, color = Color.Red)
+        Text(
+            modifier = Modifier.testTag("ErrorMessage"),
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error)
       }
 
       Text(

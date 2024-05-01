@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -54,8 +56,9 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
   Column(
       modifier =
-          Modifier.background(color = Color(0xFFFFFFFF))
+          Modifier.background(color = MaterialTheme.colorScheme.primaryContainer)
               .padding(bottom = 24.dp)
+              .fillMaxHeight()
               .fillMaxWidth()
               .testTag("SignUpScreen")
               .semantics { testTagsAsResourceId = true },
@@ -70,8 +73,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   TextStyle(
                       fontSize = 24.sp,
                       lineHeight = 32.sp,
-                      color = Color(0xFF1D1B20),
-                  ))
+                      color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -154,21 +156,23 @@ fun SignUpScreen(navigationActions: NavigationActions) {
               Modifier.testTag("SignUpButton")
                   .shadow(
                       elevation = 3.dp,
-                      spotColor = Color(0x4D000000),
-                      ambientColor = Color(0x4D000000))
+                      spotColor = MaterialTheme.colorScheme.onSurface,
+                      ambientColor = MaterialTheme.colorScheme.onSurface)
                   .width(100.dp)
                   .height(42.dp)
                   .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
-          colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5465FF)),
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
       ) {
         Text("Sign Up")
       }
       if (firebaseError) {
-        Text(text = responseError, color = Color.Red)
+        Text(text = responseError, color = MaterialTheme.colorScheme.error)
       }
       if (badCredentials) {
-        Text("Password must be at least 6 characters and email must be filled", color = Color.Red)
+        Text(
+            "Password must be at least 6 characters and email must be filled",
+            color = MaterialTheme.colorScheme.error)
       }
       Text(
           "Already have an account?",
