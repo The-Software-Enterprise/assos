@@ -75,7 +75,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
       }
     }
 
-    composeTestRule.activity.setContent { News() }
+    composeTestRule.activity.setContent { News(mockNavActions) }
 
     run {
       ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {

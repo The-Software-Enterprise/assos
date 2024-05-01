@@ -90,7 +90,7 @@ fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
 fun HomePageTitle() {
   Box(
       modifier =
-          Modifier.width(360.dp).height(116.dp).background(Color.White).padding(bottom = 24.dp),
+          Modifier.width(361.dp).height(116.dp).background(Color.White).padding(bottom = 24.dp),
   ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
