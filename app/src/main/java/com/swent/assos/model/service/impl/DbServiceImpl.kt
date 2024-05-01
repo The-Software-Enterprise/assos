@@ -1,7 +1,6 @@
 package com.swent.assos.model.service.impl
 
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -307,7 +306,6 @@ constructor(
       associationIds: List<String>,
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Event> {
-    Log.d("DbServiceImpl", "associationIds: $associationIds")
     if (associationIds.isEmpty()) {
       return emptyList()
     }
