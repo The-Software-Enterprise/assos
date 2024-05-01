@@ -2,10 +2,12 @@ package com.swent.assos
 
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
+import com.swent.assos.model.view.CalendarViewModel
 import com.swent.assos.screens.ReminderScreen
 import com.swent.assos.ui.screens.calendar.Reminder
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -52,7 +54,10 @@ class ReminderTest : SuperTest() {
       Log.d("TEST", "Event added")
     }
 
-    composeTestRule.activity.setContent { Reminder() }
+    composeTestRule.activity.setContent {
+      val calendarViewModel: CalendarViewModel = hiltViewModel()
+      Reminder(calendarViewModel)
+    }
 
     run {
       ComposeScreen.onComposeScreen<ReminderScreen>(composeTestRule) {

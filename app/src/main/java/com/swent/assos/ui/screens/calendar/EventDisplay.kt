@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
@@ -34,7 +35,8 @@ fun BasicEvent(event: Event) {
           Modifier.fillMaxSize()
               .padding(end = 2.dp, bottom = 2.dp)
               .background(Color(0xFFDE496E), shape = RoundedCornerShape(14.dp))
-              .padding(4.dp)) {
+              .padding(4.dp)
+              .testTag("EventItem")) {
         Text(
             text = event.title,
             fontWeight = FontWeight.SemiBold,

@@ -15,9 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +38,7 @@ private val dayWidth = 256.dp
 private val hourHeight = 64.dp
 private val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu")
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Preview(showSystemUi = true)
 @Composable
 fun Calendar(
@@ -51,6 +56,7 @@ fun Calendar(
   LaunchedEffect(events.value, selectedDate.value) { calendarViewModel.filterEvents() }
 
   Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CalendarScreen"),
       topBar = { PageTitle(title = "Calendar - ${selectedDate.value.format(dateFormatter)}") }) {
         Column(modifier = Modifier.padding(16.dp).padding(it).fillMaxSize()) {
           InfiniteScrollableDaysList(
@@ -78,49 +84,6 @@ fun Calendar(
 
           Reminder(calendarViewModel = calendarViewModel)
         }
-
-        /*ChangeWeek(
-            data = data,
-            onPrevClickListener = { startDate ->
-              val finalStartDate = startDate.minusDays(1)
-              data =
-                  dataSource.getData(
-                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-            },
-            onNextClickListener = { endDate ->
-              val finalStartDate = endDate.plusDays(2)
-              data =
-                  dataSource.getData(
-                      startDate = finalStartDate, lastSelectedDate = data.selectedDate.date)
-            })
-
-        WeekHeader(
-            data = data,
-            dayWidth = dayWidth,
-            modifier =
-                Modifier.padding(start = with(LocalDensity.current) { sidebarWidth.toDp() })
-                    .horizontalScroll(horizontalScrollState),
-            dayHeader)
-
-        Row {
-          TimeSidebar(
-              hourHeight = 64.dp,
-              modifier =
-                  Modifier.verticalScroll(verticalScrollState).onGloballyPositioned {
-                    sidebarWidth = it.size.width
-                  })
-
-          Event(
-              events = events.value,
-              eventContent = eventContent,
-              dayWidth = dayWidth,
-              hourHeight = hourHeight,
-              data = data,
-              modifier =
-                  Modifier.weight(1f)
-                      .verticalScroll(verticalScrollState)
-                      .horizontalScroll(horizontalScrollState))
-        }*/
       }
 }
 
@@ -138,7 +101,7 @@ fun InfiniteScrollableDaysList(
     }
   }
 
-  LazyRow {
+  LazyRow(modifier = Modifier.testTag("DaysList")) {
     // Loop through the list of days infinitely
     itemsIndexed(daysList) { index, day ->
       DayItem(date = day, selected = day == selectedDate.value, onDateSelected)
@@ -159,12 +122,12 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
   Surface(
       modifier =
           if (selected) {
-            Modifier.width(53.dp) // 53
-                .height(79.dp)
+            Modifier.width(53.dp).height(79.dp).testTag("DayItemSelected")
           } else {
-            Modifier.width(32.dp) // 53
+            Modifier.width(32.dp)
                 .height(79.dp)
                 .clickable(onClick = { onDateSelected(date) })
+                .testTag("DayItem")
           },
       color =
           if (selected) {
@@ -178,6 +141,12 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           Text(
+              modifier =
+                  if (selected) {
+                    Modifier.testTag("TitleItemSelected")
+                  } else {
+                    Modifier
+                  },
               text = date.dayOfMonth.toString(),
               fontSize =
                   if (selected) {
@@ -226,8 +195,6 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
           }
         }
       }
-
-  // Your UI for displaying each day item
 }
 
 @Composable
@@ -236,8 +203,7 @@ fun DailySchedule(
     verticalScrollState: ScrollState,
     eventContent: @Composable (event: Event) -> Unit
 ) {
-  /*TODO : get events for the selected date*/
-  Row(modifier = Modifier.height(208.dp)) {
+  Row(modifier = Modifier.testTag("EventUI").height(208.dp)) {
     TimeSidebar(hourHeight = hourHeight, modifier = Modifier.verticalScroll(verticalScrollState))
 
     Schedule(

@@ -1,7 +1,6 @@
 package com.swent.assos.model.service.impl
 
 import android.net.Uri
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -14,11 +13,10 @@ import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
+import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
-import java.time.Instant
+import com.swent.assos.model.timestampToLocalDateTime
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -417,14 +415,5 @@ constructor(
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Unfollow Error") }
     }
-  }
-
-  private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
-    return LocalDateTime.ofInstant(
-        Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
-  }
-
-  private fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
-    return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
   }
 }
