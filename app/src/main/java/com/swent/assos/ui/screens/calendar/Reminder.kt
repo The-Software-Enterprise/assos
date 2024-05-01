@@ -137,11 +137,11 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
                           Text(
                               modifier = Modifier.padding(top = 2.dp),
                               text =
-                                  "${event.second.startTime?.format(DateTimeFormatter.ofPattern("hh"))}" +
+                                  "${event.second.startTime?.format(DateTimeFormatter.ofPattern("HH"))}" +
                                       "." +
                                       "${event.second.startTime?.format(DateTimeFormatter.ofPattern("mm"))}" +
                                       " - " +
-                                      "${event.second.endTime?.format(DateTimeFormatter.ofPattern("hh"))}" +
+                                      "${event.second.endTime?.format(DateTimeFormatter.ofPattern("HH"))}" +
                                       "." +
                                       "${event.second.endTime?.format(DateTimeFormatter.ofPattern("mm"))}",
                               style =

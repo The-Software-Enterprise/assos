@@ -92,11 +92,7 @@ fun Schedule(
                 ChronoUnit.MINUTES.between(LocalTime.MIN, event.startTime?.toLocalTime())
             val eventY = ((eventOffsetMinutes / 60f) * hourHeight.toPx()).roundToInt()
 
-            /*val eventOffsetDays =
-                ChronoUnit.DAYS.between(data.startDate.date, event.startTime?.toLocalDate()).toInt()
-            val eventX = eventOffsetDays * dayWidth.roundToPx()*/
-
-            placeable.place(0 /*eventX*/, offsetYHour.toInt() + eventY)
+            placeable.place(0, offsetYHour.toInt() + eventY)
           }
         }
       }
