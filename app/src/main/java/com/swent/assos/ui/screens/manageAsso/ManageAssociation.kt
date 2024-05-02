@@ -58,7 +58,6 @@ import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
 import com.swent.assos.ui.theme.GraySeparator
-import com.swent.assos.ui.theme.MrWhite
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -117,11 +116,14 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                       alignment = Alignment.Center)
 
                   FloatingActionButton(
-                      onClick = {/* TODO*/},
+                      onClick = { /* TODO*/},
                       modifier = Modifier.align(Alignment.TopEnd).padding(5.dp),
                       containerColor = MaterialTheme.colorScheme.primary,
                   ) {
-                    Icon(Icons.Default.ModeEdit, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+                    Icon(
+                        Icons.Default.ModeEdit,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary)
                   }
                 }
 

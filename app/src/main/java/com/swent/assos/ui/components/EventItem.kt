@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -27,8 +26,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.ui.theme.GraySeparator
-import com.swent.assos.ui.theme.MrWhite
 
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions) {
@@ -38,7 +35,10 @@ fun EventItem(event: Event, navigationActions: NavigationActions) {
       modifier =
           Modifier.testTag("NewsItem")
               .padding(0.dp)
-              .border(width = 0.5.dp, color = MaterialTheme.colorScheme.outline, shape = RoundedCornerShape(12.dp))) {
+              .border(
+                  width = 0.5.dp,
+                  color = MaterialTheme.colorScheme.outline,
+                  shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.width(200.dp).padding(vertical = 0.dp).clickable(false) {
@@ -49,7 +49,10 @@ fun EventItem(event: Event, navigationActions: NavigationActions) {
               painter = rememberAsyncImagePainter(event.image),
               contentDescription = null,
               contentScale = ContentScale.Crop,
-              modifier = Modifier.fillMaxWidth().height(84.dp).background(MaterialTheme.colorScheme.outline))
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .height(84.dp)
+                      .background(MaterialTheme.colorScheme.outline))
 
           Spacer(modifier = Modifier.height(8.dp))
           Text(
