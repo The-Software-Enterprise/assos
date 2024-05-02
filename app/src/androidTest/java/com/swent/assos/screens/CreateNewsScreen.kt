@@ -11,6 +11,8 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
 
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
   val createButton: KNode = onNode { hasTestTag("CreateButton") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+
   val form: KNode = child { hasTestTag("Form") }
   val inputTitle: KNode =
       form.child {

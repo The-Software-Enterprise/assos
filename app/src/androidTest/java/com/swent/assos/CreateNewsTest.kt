@@ -40,7 +40,20 @@ class CreateNewsTest : SuperTest() {
   }
 
   @Test
-  fun createNews() {
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
+        step("Go back") {
+          goBackButton { performClick() }
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun createSimpleNews() {
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
         step("Create News") {
@@ -73,19 +86,6 @@ class CreateNewsTest : SuperTest() {
       assert(newsId.isNotEmpty())
       Firebase.firestore.collection("news").document(newsId).delete().await()
       Firebase.auth.signOut()
-    }
-  }
-
-  @Test
-  fun goBack() {
-    run {
-      ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
-        step("Go back") {
-          goBackButton { performClick() }
-          verify { mockNavActions.goBack() }
-          confirmVerified(mockNavActions)
-        }
-      }
     }
   }
 
