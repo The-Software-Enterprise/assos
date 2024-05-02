@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -111,7 +112,7 @@ fun News() {
                                   acronym = "",
                                   fullname = "",
                                   description = "",
-                                  logo = ""))
+                                  logo = Uri.EMPTY))
                         }
                         viewModel.getNewsAssociation(it.associationId) { association = it }
                         Text(

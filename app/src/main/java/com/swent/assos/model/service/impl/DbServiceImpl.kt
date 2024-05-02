@@ -82,6 +82,7 @@ constructor(
           fullname = it.getString("fullname") ?: "",
           url = it.getString("url") ?: "",
           documentSnapshot = it,
+          logo = it.getString("logo")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
           description = it.getString("description") ?: "")
     }
   }
@@ -95,6 +96,7 @@ constructor(
         fullname = snapshot.getString("fullname") ?: "",
         url = snapshot.getString("url") ?: "",
         documentSnapshot = snapshot,
+        logo = snapshot.getString("logo")?.let { Uri.parse(it) } ?: Uri.EMPTY,
         description = snapshot.getString("description") ?: "")
   }
 
