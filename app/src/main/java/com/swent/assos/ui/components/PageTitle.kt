@@ -1,6 +1,5 @@
 package com.swent.assos.ui.components
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.swent.assos.R
-import com.swent.assos.ui.screens.*
 
 @Composable
 fun PageTitle(title: String) {
@@ -31,12 +29,12 @@ fun PageTitle(title: String) {
               text = title,
               style =
                   TextStyle(
-                      fontSize = 24.sp,
+                      fontSize = 30.sp,
                       lineHeight = 32.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                      fontWeight = FontWeight(600),
+                      fontWeight = FontWeight.SemiBold,
                       color = Color.Black),
-              modifier = Modifier.padding(20.dp).testTag("PageTitle"))
+              modifier = Modifier.padding(start = 16.dp, top = 20.dp).testTag("PageTitle"))
         }
   }
 }

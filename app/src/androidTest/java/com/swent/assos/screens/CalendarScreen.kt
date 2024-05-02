@@ -9,8 +9,7 @@ class CalendarScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("CalendarScreen") }) {
 
-  val topBar: KNode = child { hasTestTag("TopBar") }
-  val topBarTitle: KNode = topBar.child { hasTestTag("PageTitle") }
+  val topBarTitle: KNode = onNode { hasTestTag("PageTitle") }
 
   val daysList: KNode = child { hasTestTag("DaysList") }
   val dayItem: KNode = daysList.child { hasTestTag("DayItem") }
