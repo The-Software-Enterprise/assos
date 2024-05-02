@@ -52,15 +52,10 @@ import com.swent.assos.ui.theme.VeryLightGray
 @Composable
 fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
   val viewModel: NewsViewModel = hiltViewModel()
-  // val assoViewModel: AssoViewModel = hiltViewModel()
 
   val news by viewModel.news.collectAsState()
-  // val asso by assoViewModel.association.collectAsState()
 
-  LaunchedEffect(key1 = Unit) {
-    viewModel.getNews(newsId)
-    // assoViewModel.getAssociation(news.associationId)
-  }
+  LaunchedEffect(key1 = Unit) { viewModel.getNews(newsId) }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
@@ -68,17 +63,6 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
         ->
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
-            /*Text(
-            text = asso.fullname,
-            style =
-                Typography.bodyLarge.copy(
-                    fontSize = 1.sp,
-                    lineHeight = 20.sp,
-                    letterSpacing = 0.25.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Light),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))*/
-
             if (news.images.isNotEmpty()) {
               Image(
                   painter = rememberAsyncImagePainter(model = news.images[0]),
@@ -94,7 +78,7 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
             Box(
                 modifier =
                     Modifier.width(400.dp)
-                        .padding(top = 4.dp, bottom = 3.dp)
+                        .padding(top = 5.dp, bottom = 4.dp)
                         .background(VeryLightGray, shape = RoundedCornerShape(20.dp))) {
                   Text(
                       text = news.description,
