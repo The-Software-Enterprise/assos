@@ -185,7 +185,7 @@ constructor(
         associationId = snapshot.getString("associationId") ?: "",
         images =
             if (snapshot.get("images") is List<*>) {
-              (snapshot.get("images") as List<*>).filterIsInstance<String>().toMutableList()
+              (snapshot.get("images") as List<*>).filterIsInstance<Uri>().toMutableList()
             } else {
               mutableListOf()
             },

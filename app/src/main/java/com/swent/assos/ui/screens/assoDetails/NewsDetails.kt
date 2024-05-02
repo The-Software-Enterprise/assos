@@ -40,7 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
@@ -64,8 +64,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
             if (news.images.isNotEmpty()) {
-              Image(
-                  painter = rememberAsyncImagePainter(model = news.images[0]),
+              AsyncImage(
+                  model = news.images[0],
                   contentDescription = null,
                   modifier =
                       Modifier.fillMaxWidth()
@@ -108,8 +108,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                                   .testTag("subImage"), // Keep your height as it is
                           shape = RoundedCornerShape(20.dp),
                       ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(model = image),
+                        AsyncImage(
+                            model = image,
                             contentDescription = null,
                             modifier = Modifier.fillMaxWidth(),
                             contentScale = ContentScale.Crop,
