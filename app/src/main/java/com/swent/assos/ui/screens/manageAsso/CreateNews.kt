@@ -33,21 +33,17 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -131,13 +127,13 @@ fun CreateNews(
                         .height(64.dp)
                         .testTag("InputTitle"),
                 textStyle =
-                TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
                 label = { Text(text = "Title") },
                 placeholder = { Text(text = "Title of the news") },
                 colors =
-                OutlinedTextFieldDefaults.colors(
+                    OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.background,
                         unfocusedContainerColor = MaterialTheme.colorScheme.background,
                         focusedPlaceholderColor = MaterialTheme.colorScheme.surface,
@@ -146,8 +142,7 @@ fun CreateNews(
                             MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
                         focusedBorderColor = MaterialTheme.colorScheme.secondary,
                         focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                        cursorColor = MaterialTheme.colorScheme.secondary
-                    ),
+                        cursorColor = MaterialTheme.colorScheme.secondary),
                 shape = RoundedCornerShape(8.dp),
                 singleLine = true,
             )
@@ -166,21 +161,20 @@ fun CreateNews(
                 placeholder = { Text(text = "Description of the news") },
                 singleLine = false,
                 textStyle =
-                TextStyle(
-                    fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                    TextStyle(
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
                 colors =
-                OutlinedTextFieldDefaults.colors(
+                    OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.background,
                         unfocusedContainerColor = MaterialTheme.colorScheme.background,
                         focusedPlaceholderColor = MaterialTheme.colorScheme.surface,
                         unfocusedPlaceholderColor = MaterialTheme.colorScheme.surface,
                         unfocusedLabelColor =
                             MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                    focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                    focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                    cursorColor = MaterialTheme.colorScheme.secondary
-              ),
+                        focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                        focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                        cursorColor = MaterialTheme.colorScheme.secondary),
                 shape = RoundedCornerShape(8.dp),
             )
           }
