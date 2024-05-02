@@ -46,7 +46,7 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Check if page title is displayed") {
-          pagetile {
+          pageTitle {
             assertIsDisplayed()
             assert(hasText("Create an event", substring = true, ignoreCase = true))
           }

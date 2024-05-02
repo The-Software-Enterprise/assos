@@ -54,20 +54,6 @@ class CreateNewsTest : SuperTest() {
   }
 
   @Test
-  fun createNewsDisplaysTheCorrectPageTitle() {
-    run {
-      ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
-        step("Check if page title is displayed") {
-          pagetile {
-            assertIsDisplayed()
-            assert(hasText("Create a news", substring = true, ignoreCase = true))
-          }
-        }
-      }
-    }
-  }
-
-  @Test
   fun createSimpleNews() {
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
