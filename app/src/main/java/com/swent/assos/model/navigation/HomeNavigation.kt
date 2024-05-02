@@ -24,12 +24,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
+import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -73,40 +75,25 @@ fun HomeNavigation(navigationActions: NavigationActions) {
               when (index) {
                 0 ->
                     Icon(
-                        painterResource(id = R.drawable.house),
+                        painterResource(id = R.drawable.home),
                         contentDescription = "Home",
-                        modifier = Modifier.size(28.dp).padding(vertical = (2.5).dp),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
                 1 ->
                     Icon(
-                        painterResource(id = R.drawable.language),
-                        contentDescription = "All",
-                        modifier = Modifier.size(28.dp),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+                        painterResource(id = R.drawable.explorer),
+                        contentDescription = "Explorer",
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
                 2 ->
                     Icon(
-                        painterResource(id = R.drawable.baseline_calendar_today_24),
-                        contentDescription = "Cal",
-                        modifier = Modifier.size(28.dp),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+                        painterResource(id = R.drawable.calendar),
+                        contentDescription = "Calendar",
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
                 3 ->
                     Icon(
-                        painterResource(id = R.drawable.profil),
-                        contentDescription = "Profil",
-                        modifier = Modifier.size(28.dp).padding((2.5).dp).testTag("ProfileIcon"),
-                        tint =
-                            if (pagerState.currentPage == index)
-                                MaterialTheme.colorScheme.onBackground
-                            else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+                        painterResource(id = R.drawable.profile),
+                        contentDescription = "Profile",
+                        modifier =
+                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("ProfileIcon"))
               }
             },
             selected = pagerState.currentPage == index,
@@ -119,7 +106,11 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     2 -> "Calendar"
                     else -> "Profile"
                   }
-              Text(text = label)
+              if (pagerState.currentPage == index) {
+                Text(text = label, fontWeight = FontWeight.SemiBold)
+              } else {
+                Text(text = label)
+              }
             })
       }
     }
