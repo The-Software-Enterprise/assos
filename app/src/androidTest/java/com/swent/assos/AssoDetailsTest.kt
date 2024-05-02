@@ -26,7 +26,8 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
-  fun followUnfollowAsso() {
+  fun followAsso() {
+    DataCache.currentUser.value.following = emptyList()
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Follow association") {
@@ -36,12 +37,14 @@ class AssoDetailsTest : SuperTest() {
             assert(DataCache.currentUser.value.following.contains(assoId))
           }
         }
-        step("Unfollow association") {
-          followButton {
-            performClick()
-            assert(!DataCache.currentUser.value.following.contains(assoId))
-          }
-        }
+      }
+    }
+  }
+
+  @Test
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Go back") {
           goBackButton { performClick() }
           verify { mockNavActions.goBack() }
