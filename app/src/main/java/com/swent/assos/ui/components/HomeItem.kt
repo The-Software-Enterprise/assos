@@ -31,43 +31,51 @@ import com.swent.assos.ui.theme.Typography
 
 @Composable
 fun HomeItem(news: News, navigationActions: NavigationActions) {
-  Box(modifier = Modifier.clip(RoundedCornerShape(12.dp)).background(Color.White).fillMaxWidth()) {
-    Row(
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxSize()) {
-          AsyncImage(
-              model = news.images[0],
-              contentDescription = "news image",
-              contentScale = ContentScale.Fit,
-              modifier = Modifier.width(114.dp).height(108.dp))
-          Column(
-              verticalArrangement = Arrangement.spacedBy(10.dp),
-              horizontalAlignment = Alignment.Start,
-              modifier =
-                  Modifier.padding(
-                          start = 16.dp) // Assuming there's some spacing between the image and the
-                      // texts
-                      .align(Alignment.CenterVertically)) {
-                Text(
-                    text = news.title,
-                    style =
-                        Typography.bodyLarge.copy(
-                            fontWeight = FontWeight.Bold, // Adjust the weight as needed
-                            fontSize = 16.sp,
-                            color = Color(0xFF1D1B20)),
-                    modifier = Modifier.width(173.dp).height(24.dp))
-                Text(
-                    text = news.description,
-                    style =
-                        Typography.bodyLarge.copy(
-                            fontSize = 14.sp,
-                            lineHeight = 20.sp,
-                            letterSpacing = 0.25.sp,
-                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                            fontWeight = FontWeight.Light),
-                    modifier = Modifier.width(173.dp).height(60.dp))
+  Box(
+      modifier =
+          Modifier.clip(RoundedCornerShape(12.dp))
+              .background(Color.White)
+              .fillMaxWidth()
+              .height(100.dp)) {
+        Row(
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxSize()) {
+              if (news.images.isNotEmpty()) {
+                AsyncImage(
+                    model = news.images[0],
+                    contentDescription = "news image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.width(80.dp).fillMaxWidth())
               }
-        }
-  }
+              Column(
+                  verticalArrangement = Arrangement.spacedBy(10.dp),
+                  horizontalAlignment = Alignment.Start,
+                  modifier =
+                      Modifier.padding(
+                              start = 16.dp) // Assuming there's some spacing between the image and
+                          // the texts
+                          .align(Alignment.CenterVertically)) {
+                    Text(
+                        text = news.title,
+                        fontSize = 16.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier =
+                            Modifier.width(173.dp)
+                        )
+                    Text(
+                        text = news.description,
+                        fontSize = 12.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        fontWeight = FontWeight.Light,
+                        modifier =
+                            Modifier.width(173.dp)
+                                // Height dynamically adjusts. Optionally, set max height if needed.
+                                .weight(1f) // Use weight to give remaining space to the description
+                        )
+                  }
+            }
+      }
 }

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
@@ -77,7 +78,12 @@ fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
           Modifier.fillMaxWidth().clickable {
-            navigationActions.navigateTo("\"newsDetails/${news.id}\"")
+            val dest =
+                Destinations.NEWS_DETAILS.route +
+                    "/${
+                              news.id
+                          }"
+            navigationActions.navigateTo(dest)
           }) {
         HomeItem(news = news, navigationActions)
       }
