@@ -27,7 +27,7 @@ constructor(
   private val _allNews = MutableStateFlow(emptyList<News>())
   val allNews = _allNews.asStateFlow()
 
-  private val _news = MutableStateFlow(emptyList<News>())
+  private val _news = MutableStateFlow(News())
   val news = _news.asStateFlow()
 
   private var _loading = false
@@ -36,10 +36,10 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       if (DataCache.currentUser.value.id.isNotEmpty()) {
         dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
-          _news.value = it
+          _allNews.value = it
         }
       } else {
-        dbService.getAllNews(null).let { _news.value = it }
+        dbService.getAllNews(null).let { _allNews.value = it }
       }
     }
   }

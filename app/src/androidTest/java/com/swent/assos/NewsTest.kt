@@ -44,6 +44,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   private val randomInt = Random.nextInt()
   private val newsTitle = "Test news $randomInt"
   private val newsDescription = "Test description $randomInt"
+
   @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
