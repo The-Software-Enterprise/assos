@@ -1,7 +1,9 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
@@ -56,10 +58,10 @@ class ProfileTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
         step("Check if username is displayed") {
-          name {
-            assertIsDisplayed()
-            assert(hasText("$firstName $lastName", substring = true, ignoreCase = true))
-          }
+          composeTestRule
+              .onNodeWithTag("Name")
+              .assertExists()
+              .assertTextEquals("$firstName $lastName")
         }
       }
     }
