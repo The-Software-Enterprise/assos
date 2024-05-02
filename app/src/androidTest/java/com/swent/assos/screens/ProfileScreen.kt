@@ -21,7 +21,6 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val logoutButton: KNode = contentSection.child { hasTestTag("Log OutButton") }
 
   val logoutDialog: KNode = contentSection.child { hasTestTag("LogoutDialog") }
-
   val logoutTitle: KNode = child { hasTestTag("LogoutTitle") }
   val logoutText: KNode = child { hasTestTag("LogoutText") }
   val logoutConfirmButton: KNode = logoutDialog.child { hasTestTag("LogoutConfirmButton") }

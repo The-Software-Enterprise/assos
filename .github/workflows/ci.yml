@@ -86,6 +86,10 @@ jobs:
 
       - name : new python venv
         run: |
+          cd functions
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          cd ..
+          sudo apt -y install chromium-browser
          
           python3 -m venv functions/venv
           source functions/venv/bin/activate
@@ -122,6 +126,8 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew connectedCheck --parallel --build-cache --stacktrace"
+      
+
 
 
           
