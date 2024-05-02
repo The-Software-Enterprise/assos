@@ -32,33 +32,28 @@ constructor(
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
+    if (!snapshot.exists()) {
+      return User()
+    }
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "",
+        firstName = snapshot.getString("firstname") ?: "", // Handle nullability explicitly
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following =
-            if (snapshot.get("following") is MutableList<*>) {
-              (snapshot.get("following") as MutableList<*>)
-                  .filterIsInstance<String>()
-                  .toMutableList()
-            } else {
-              mutableListOf()
-            },
+        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
         associations =
-            if (snapshot.get("associations") is List<*>) {
-              (snapshot.get("associations") as List<*>)
-                  .filterIsInstance<Map<String, Any>>()
-                  .map {
-                    Triple(
-                        it["assoId"] as String,
-                        it["position"] as String,
-                        (it["rank"] as Long).toInt())
-                  }
-                  .toList()
-            } else {
-              emptyList()
-            })
+            snapshot.get("associations")?.let { associations ->
+              (associations as? List<Map<String, Any>>)?.mapNotNull {
+                val assoId = it["assoId"] as? String
+                val position = it["position"] as? String
+                val rank = (it["rank"] as? Long)?.toInt()
+                if (assoId != null && position != null && rank != null) {
+                  Triple(assoId, position, rank)
+                } else {
+                  null
+                }
+              } ?: emptyList()
+            } ?: emptyList())
   }
 
   override suspend fun getAllAssociations(
@@ -75,27 +70,13 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
-    return snapshot.documents.map {
-      Association(
-          id = it.id,
-          acronym = it.getString("acronym") ?: "",
-          fullname = it.getString("fullname") ?: "",
-          url = it.getString("url") ?: "",
-          documentSnapshot = it,
-          description = it.getString("description") ?: "")
-    }
+    return snapshot.documents.map { deserializeAssociation(it) }
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
     val query = firestore.collection("associations").document(associationId)
     val snapshot = query.get().await() ?: return Association("", "", "", "", description = "")
-    return Association(
-        id = snapshot.id,
-        acronym = snapshot.getString("acronym") ?: "",
-        fullname = snapshot.getString("fullname") ?: "",
-        url = snapshot.getString("url") ?: "",
-        documentSnapshot = snapshot,
-        description = snapshot.getString("description") ?: "")
+    return deserializeAssociation(snapshot)
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
@@ -109,40 +90,13 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
-    return snapshot.documents.map {
-      News(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
-          associationId = it.getString("associationId") ?: "",
-          images =
-              if (it.get("images") is List<*>) {
-                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
-              } else {
-                mutableListOf()
-              },
-          eventIds =
-              if (it.get("eventIds") is List<*>) {
-                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
-              } else {
-                mutableListOf()
-              },
-          documentSnapshot = it)
-    }
+    return snapshot.documents.map { deserializeNews(it) }
   }
 
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
-        .add(
-            mapOf(
-                "title" to news.title,
-                "description" to news.description,
-                "createdAt" to localDateTimeToTimestamp(news.createdAt),
-                "associationId" to news.associationId,
-                "images" to news.images,
-                "eventIds" to news.eventIds))
+        .add(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -188,27 +142,7 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
-    return snapshot.documents.map {
-      News(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          createdAt = timestampToLocalDateTime(it.getTimestamp("createdAt")),
-          associationId = it.getString("associationId") ?: "",
-          images =
-              if (it.get("images") is List<*>) {
-                (it.get("images") as List<*>).filterIsInstance<String>().toMutableList()
-              } else {
-                mutableListOf()
-              },
-          eventIds =
-              if (it.get("eventIds") is List<*>) {
-                (it.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
-              } else {
-                mutableListOf()
-              },
-          documentSnapshot = it)
-    }
+    return snapshot.documents.map { deserializeNews(it) }
   }
 
   override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
@@ -222,34 +156,7 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
-    return snapshot.documents.map {
-      Event(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          associationId = it.getString("associationId") ?: "",
-          image = Uri.parse(it.getString("image") ?: ""),
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
-          fields =
-              if (it.get("fields") is List<*>) {
-                (it.get("fields") as List<*>)
-                    .filterIsInstance<Map<String, String>>()
-                    .map { map ->
-                      when (map["type"]) {
-                        EventFieldType.IMAGE.toString() ->
-                            EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                        EventFieldType.TEXT.toString() ->
-                            EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                        else -> EventFieldText("", "")
-                      }
-                    }
-                    .toMutableList()
-              } else {
-                mutableListOf()
-              },
-          documentSnapshot = it)
-    }
+    return snapshot.documents.map { deserializeEvent(it) }
   }
 
   override suspend fun getEvents(
@@ -271,63 +178,14 @@ constructor(
     if (snapshot.isEmpty) {
       return emptyList()
     }
-    return snapshot.documents.map {
-      Event(
-          id = it.id,
-          title = it.getString("title") ?: "",
-          description = it.getString("description") ?: "",
-          associationId = it.getString("associationId") ?: "",
-          image = Uri.parse(it.getString("image") ?: ""),
-          startTime = timestampToLocalDateTime(it.getTimestamp("startTime")),
-          endTime = timestampToLocalDateTime(it.getTimestamp("endTime")),
-          fields =
-              if (it.get("fields") is List<*>) {
-                (it.get("fields") as List<*>)
-                    .filterIsInstance<Map<String, String>>()
-                    .map { map ->
-                      when (map["type"]) {
-                        EventFieldType.IMAGE.toString() ->
-                            EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                        EventFieldType.TEXT.toString() ->
-                            EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                        else -> EventFieldText("", "")
-                      }
-                    }
-                    .toMutableList()
-              } else {
-                mutableListOf()
-              },
-          documentSnapshot = it)
-    }
+    return snapshot.documents.map { deserializeEvent(it) }
   }
 
   override suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("events")
         .document(event.id)
-        .set(
-            mapOf(
-                "title" to event.title,
-                "description" to event.description,
-                "associationId" to event.associationId,
-                "image" to event.image.toString(),
-                "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
-                "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-                "fields" to
-                    event.fields.map {
-                      when (it.type) {
-                        EventFieldType.IMAGE ->
-                            mapOf(
-                                "title" to it.title,
-                                "type" to it.type.toString(),
-                                "value" to (it as EventFieldImage).image)
-                        EventFieldType.TEXT ->
-                            mapOf(
-                                "title" to it.title,
-                                "type" to it.type.toString(),
-                                "value" to (it as EventFieldText).text)
-                      }
-                    }))
+        .set(serialize(event))
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError("Error") }
   }
@@ -362,6 +220,102 @@ constructor(
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Unfollow Error") }
     }
+  }
+
+  private fun serialize(event: Event): Map<String, Any> {
+    return mapOf(
+        "title" to event.title,
+        "description" to event.description,
+        "associationId" to event.associationId,
+        "image" to event.image.toString(),
+        "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
+        "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+        "fields" to
+            event.fields.map {
+              when (it.type) {
+                EventFieldType.IMAGE ->
+                    mapOf(
+                        "title" to it.title,
+                        "type" to it.type.toString(),
+                        "value" to (it as EventFieldImage).image)
+                EventFieldType.TEXT ->
+                    mapOf(
+                        "title" to it.title,
+                        "type" to it.type.toString(),
+                        "value" to (it as EventFieldText).text)
+              }
+            })
+  }
+
+  private fun deserializeEvent(doc: DocumentSnapshot): Event {
+    return Event(
+        id = doc.id,
+        title = doc.getString("title") ?: "",
+        description = doc.getString("description") ?: "",
+        associationId = doc.getString("associationId") ?: "",
+        image = Uri.parse(doc.getString("image") ?: ""),
+        startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
+        endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+        fields =
+            if (doc["fields"] is List<*>) {
+              (doc["fields"] as List<*>)
+                  .filterIsInstance<Map<String, String>>()
+                  .map { map ->
+                    when (map["type"]) {
+                      EventFieldType.IMAGE.toString() ->
+                          EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
+                      EventFieldType.TEXT.toString() ->
+                          EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
+                      else -> EventFieldText("", "")
+                    }
+                  }
+                  .toMutableList()
+            } else {
+              mutableListOf()
+            },
+        documentSnapshot = doc)
+  }
+
+  private fun serialize(news: News): Map<String, Any> {
+    return mapOf(
+        "title" to news.title,
+        "description" to news.description,
+        "createdAt" to localDateTimeToTimestamp(news.createdAt),
+        "associationId" to news.associationId,
+        "images" to news.images,
+        "eventIds" to news.eventIds)
+  }
+
+  private fun deserializeNews(doc: DocumentSnapshot): News {
+    return News(
+        id = doc.id,
+        title = doc.getString("title") ?: "",
+        description = doc.getString("description") ?: "",
+        createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
+        associationId = doc.getString("associationId") ?: "",
+        images =
+            if (doc["images"] is List<*>) {
+              (doc["images"] as List<*>).filterIsInstance<String>().toMutableList()
+            } else {
+              mutableListOf()
+            },
+        eventIds =
+            if (doc["eventIds"] is List<*>) {
+              (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
+            } else {
+              mutableListOf()
+            },
+        documentSnapshot = doc)
+  }
+
+  private fun deserializeAssociation(doc: DocumentSnapshot): Association {
+    return Association(
+        id = doc.id,
+        acronym = doc.getString("acronym") ?: "",
+        fullname = doc.getString("fullname") ?: "",
+        url = doc.getString("url") ?: "",
+        description = doc.getString("description") ?: "",
+        documentSnapshot = doc)
   }
 
   private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
