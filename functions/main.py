@@ -28,7 +28,7 @@ from google.cloud import firestore
 initialize_app()
 
 
-    
+firestore_client: google.cloud.firestore.Client = firestore.Client()
 
 def find_original_acronym(fake_acronym):
     # we have an acronym that points us to a webstite that contains the original acronym
@@ -74,7 +74,6 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
 
-    firestore_client: google.cloud.firestore.Client = firestore.Client()
     userID = req.auth.uid
     try:
         profile = epflpeople.find(email)
