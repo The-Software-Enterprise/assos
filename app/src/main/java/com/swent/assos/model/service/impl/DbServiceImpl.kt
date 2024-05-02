@@ -179,6 +179,7 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeEvent(it) }
+  }
 
   override suspend fun getEventsFromAssociations(
       associationIds: List<String>,
@@ -247,106 +248,106 @@ constructor(
   }
 }
 
-  private fun serialize(event: Event): Map<String, Any> {
-    return mapOf(
-        "title" to event.title,
-        "description" to event.description,
-        "associationId" to event.associationId,
-        "image" to event.image.toString(),
-        "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
-        "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-        "fields" to
-            event.fields.map {
-              when (it.type) {
-                EventFieldType.IMAGE ->
-                    mapOf(
-                        "title" to it.title,
-                        "type" to it.type.toString(),
-                        "value" to (it as EventFieldImage).image)
-                EventFieldType.TEXT ->
-                    mapOf(
-                        "title" to it.title,
-                        "type" to it.type.toString(),
-                        "value" to (it as EventFieldText).text)
-              }
-            })
-  }
+private fun serialize(event: Event): Map<String, Any> {
+  return mapOf(
+      "title" to event.title,
+      "description" to event.description,
+      "associationId" to event.associationId,
+      "image" to event.image.toString(),
+      "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
+      "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+      "fields" to
+          event.fields.map {
+            when (it.type) {
+              EventFieldType.IMAGE ->
+                  mapOf(
+                      "title" to it.title,
+                      "type" to it.type.toString(),
+                      "value" to (it as EventFieldImage).image)
+              EventFieldType.TEXT ->
+                  mapOf(
+                      "title" to it.title,
+                      "type" to it.type.toString(),
+                      "value" to (it as EventFieldText).text)
+            }
+          })
+}
 
-  private fun deserializeEvent(doc: DocumentSnapshot): Event {
-    return Event(
-        id = doc.id,
-        title = doc.getString("title") ?: "",
-        description = doc.getString("description") ?: "",
-        associationId = doc.getString("associationId") ?: "",
-        image = Uri.parse(doc.getString("image") ?: ""),
-        startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
-        endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
-        fields =
-            if (doc["fields"] is List<*>) {
-              (doc["fields"] as List<*>)
-                  .filterIsInstance<Map<String, String>>()
-                  .map { map ->
-                    when (map["type"]) {
-                      EventFieldType.IMAGE.toString() ->
-                          EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                      EventFieldType.TEXT.toString() ->
-                          EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                      else -> EventFieldText("", "")
-                    }
+private fun deserializeEvent(doc: DocumentSnapshot): Event {
+  return Event(
+      id = doc.id,
+      title = doc.getString("title") ?: "",
+      description = doc.getString("description") ?: "",
+      associationId = doc.getString("associationId") ?: "",
+      image = Uri.parse(doc.getString("image") ?: ""),
+      startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
+      endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+      fields =
+          if (doc["fields"] is List<*>) {
+            (doc["fields"] as List<*>)
+                .filterIsInstance<Map<String, String>>()
+                .map { map ->
+                  when (map["type"]) {
+                    EventFieldType.IMAGE.toString() ->
+                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
+                    EventFieldType.TEXT.toString() ->
+                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
+                    else -> EventFieldText("", "")
                   }
-                  .toMutableList()
-            } else {
-              mutableListOf()
-            },
-        documentSnapshot = doc)
-  }
+                }
+                .toMutableList()
+          } else {
+            mutableListOf()
+          },
+      documentSnapshot = doc)
+}
 
-  private fun serialize(news: News): Map<String, Any> {
-    return mapOf(
-        "title" to news.title,
-        "description" to news.description,
-        "createdAt" to localDateTimeToTimestamp(news.createdAt),
-        "associationId" to news.associationId,
-        "images" to news.images,
-        "eventIds" to news.eventIds)
-  }
+private fun serialize(news: News): Map<String, Any> {
+  return mapOf(
+      "title" to news.title,
+      "description" to news.description,
+      "createdAt" to localDateTimeToTimestamp(news.createdAt),
+      "associationId" to news.associationId,
+      "images" to news.images,
+      "eventIds" to news.eventIds)
+}
 
-  private fun deserializeNews(doc: DocumentSnapshot): News {
-    return News(
-        id = doc.id,
-        title = doc.getString("title") ?: "",
-        description = doc.getString("description") ?: "",
-        createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
-        associationId = doc.getString("associationId") ?: "",
-        images =
-            if (doc["images"] is List<*>) {
-              (doc["images"] as List<*>).filterIsInstance<String>().toMutableList()
-            } else {
-              mutableListOf()
-            },
-        eventIds =
-            if (doc["eventIds"] is List<*>) {
-              (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
-            } else {
-              mutableListOf()
-            },
-        documentSnapshot = doc)
-  }
+private fun deserializeNews(doc: DocumentSnapshot): News {
+  return News(
+      id = doc.id,
+      title = doc.getString("title") ?: "",
+      description = doc.getString("description") ?: "",
+      createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
+      associationId = doc.getString("associationId") ?: "",
+      images =
+          if (doc["images"] is List<*>) {
+            (doc["images"] as List<*>).filterIsInstance<String>().toMutableList()
+          } else {
+            mutableListOf()
+          },
+      eventIds =
+          if (doc["eventIds"] is List<*>) {
+            (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
+          } else {
+            mutableListOf()
+          },
+      documentSnapshot = doc)
+}
 
-  private fun deserializeAssociation(doc: DocumentSnapshot): Association {
-    return Association(
-        id = doc.id,
-        acronym = doc.getString("acronym") ?: "",
-        fullname = doc.getString("fullname") ?: "",
-        url = doc.getString("url") ?: "",
-        description = doc.getString("description") ?: "",
-        documentSnapshot = doc)
-  }
+private fun deserializeAssociation(doc: DocumentSnapshot): Association {
+  return Association(
+      id = doc.id,
+      acronym = doc.getString("acronym") ?: "",
+      fullname = doc.getString("fullname") ?: "",
+      url = doc.getString("url") ?: "",
+      description = doc.getString("description") ?: "",
+      documentSnapshot = doc)
+}
 
-  private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
-    return LocalDateTime.ofInstant(
-        Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
-  }
+private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
+  return LocalDateTime.ofInstant(
+      Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
+}
 
 fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
   return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
