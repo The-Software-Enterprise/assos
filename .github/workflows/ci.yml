@@ -89,7 +89,8 @@ jobs:
           cd functions
           wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           cd ..
-          apt install -y chromium-browser
+          apt -y install ./google-chrome-stable_current_amd64.deb
+          apt -y install chromium-browser
          
           python3 -m venv functions/venv
           source functions/venv/bin/activate
