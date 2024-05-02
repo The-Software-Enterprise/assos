@@ -60,9 +60,7 @@ fun Profile(navigationActions: NavigationActions) {
   val completeName = "$firstName $lastName"
 
   Scaffold(
-      modifier =
-          Modifier.semantics { testTagsAsResourceId = true }
-              .testTag("ProfileScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ProfileScreen"),
       topBar = { PageTitle(title = "Profile") }) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
