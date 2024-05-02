@@ -71,7 +71,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                       Modifier.fillMaxWidth()
                           .padding(10.dp)
                           .height(200.dp)
-                          .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                          .background(Color.Gray, shape = RoundedCornerShape(20.dp))
+                          .testTag("Main Image"),
                   contentScale = ContentScale.Crop,
                   alignment = Alignment.Center)
             }
@@ -90,28 +91,33 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                               fontWeight = FontWeight.Light),
                       modifier =
-                          Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
+                          Modifier.fillMaxWidth()
+                              .padding(horizontal = 16.dp, vertical = 0.dp)
+                              .testTag("description"))
                 }
             if (news.images.isNotEmpty()) {
-              LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(news.images) { image ->
-                  Card(
-                      modifier =
-                          Modifier.padding(10.dp)
-                              .width(120.dp)
-                              .height(70.dp), // Keep your height as it is
-                      shape = RoundedCornerShape(20.dp),
-                  ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(model = image),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center)
-                    Spacer(modifier = Modifier.width(8.dp))
+              LazyRow(
+                  modifier = Modifier.padding(paddingValues).testTag("subImageList"),
+                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                    items(news.images) { image ->
+                      Card(
+                          modifier =
+                              Modifier.padding(10.dp)
+                                  .width(120.dp)
+                                  .height(70.dp)
+                                  .testTag("subImage"), // Keep your height as it is
+                          shape = RoundedCornerShape(20.dp),
+                      ) {
+                        Image(
+                            painter = rememberAsyncImagePainter(model = image),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth(),
+                            contentScale = ContentScale.Crop,
+                            alignment = Alignment.Center)
+                        Spacer(modifier = Modifier.width(8.dp))
+                      }
+                    }
                   }
-                }
-              }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
