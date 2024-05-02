@@ -184,11 +184,12 @@ class EndToEnd : SuperTest() {
     composeTestRule.activity.setContent { HomeNavigation(navigationActions = mockNavActions) }
 
     run {
+
       ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+        composeTestRule.waitForIdle()
         step("check if associations are displayed") {
-            assoList{
-              assertIsDisplayed()
-            }
+            composeTestRule.onNodeWithTag("AssoList").assertIsDisplayed()
+            //composeTestRule.onNodeWithTag("AssoListItem1").performClick()
         }
       }
     }
