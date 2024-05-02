@@ -1,6 +1,5 @@
 package com.swent.assos
 
-import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
@@ -10,7 +9,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import java.lang.Thread.sleep
 import org.junit.Test
 import org.junit.runner.RunWith
 
