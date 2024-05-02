@@ -6,7 +6,7 @@ data class User(
     val lastName: String = "",
     val email: String = "",
     var associations: List<Triple<String, String, Int>> = emptyList(),
-    var following: MutableList<String> = mutableListOf(),
+    var following: List<String> = mutableListOf(),
     val sciper: String = "000000",
     val semester: String = "",
 )
