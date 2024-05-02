@@ -149,7 +149,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showStartDatePicker) {
     DatePickerDialog(
-        onDismissRequest = { /*TODO*/},
+        onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
@@ -181,7 +181,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showStartTimePicker) {
     TimePickerDialog(
-        onDismissRequest = { /*TODO*/},
+        onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
@@ -218,7 +218,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showEndDatePicker) {
     DatePickerDialog(
-        onDismissRequest = { /*TODO*/},
+        onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
@@ -255,7 +255,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showEndTimePicker) {
     TimePickerDialog(
-        onDismissRequest = { /*TODO*/},
+        onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
