@@ -7,8 +7,10 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.android.play.integrity.internal.c
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.HomeNavigation
+import com.swent.assos.screens.ExplorerScreen
 import com.swent.assos.screens.HomeScreen
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.ProfileScreen
@@ -130,4 +132,67 @@ class EndToEnd : SuperTest() {
       }
     }
   }
+
+  @Test
+  fun followTest() {
+    run {
+      ComposeScreen.onComposeScreen<LoginScreen>(composeTestRule) {
+        step("Click on signup") {
+          signUpButton {
+            assertIsDisplayed()
+            performClick()
+          }
+        }
+
+        // check if we are on the signup screen
+        verify { mockNavActions.navigateTo(Destinations.SIGN_UP) }
+        confirmVerified(mockNavActions)
+      }
+    }
+    composeTestRule.activity.setContent { SignUpScreen(navigationActions = mockNavActions) }
+
+    run {
+      ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
+        step("Fill the form") {
+          emailField {
+            assertIsDisplayed()
+            performTextInput("marc.pitteloud@epfl.ch")
+          }
+          passwordField {
+            assertIsDisplayed()
+            performTextInput("123456")
+          }
+          confirmPasswordField {
+            assertIsDisplayed()
+            performTextInput("123456")
+          }
+        }
+        step("Click on signup") {
+          signUpButton {
+            assertIsDisplayed()
+            performClick()
+          }
+
+          Thread.sleep(2000)
+          // check if we are on the Home screen
+          verify { mockNavActions.navigateTo(Destinations.HOME) }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+
+    composeTestRule.activity.setContent { HomeNavigation(navigationActions = mockNavActions) }
+
+    run {
+      ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+        step("check if associations are displayed") {
+            assoList{
+              assertIsDisplayed()
+            }
+        }
+      }
+    }
+  }
+
+
 }
