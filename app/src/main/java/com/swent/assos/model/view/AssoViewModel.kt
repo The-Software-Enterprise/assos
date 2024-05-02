@@ -13,6 +13,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -26,6 +27,9 @@ constructor(
   private val _association = MutableStateFlow(Association())
   val association = _association.asStateFlow()
 
+  private val _associationFollowed = MutableStateFlow(false)
+  val associationFollowed = _associationFollowed.asStateFlow()
+
   private val _news = MutableStateFlow<List<News>>(emptyList())
   val news = _news.asStateFlow()
 
@@ -35,17 +39,27 @@ constructor(
   fun getAssociation(associationId: String) {
     viewModelScope.launch(ioDispatcher) {
       _association.value = dbService.getAssociationById(associationId)
+      _associationFollowed.update {
+        DataCache.currentUser.value.following.contains(_association.value.id)
+      }
     }
   }
 
   fun followAssociation(associationId: String) {
-    DataCache.currentUser.value.following += associationId
-    viewModelScope.launch(ioDispatcher) { dbService.followAssociation(associationId, {}, {}) }
+    viewModelScope.launch(ioDispatcher) {
+      dbService.followAssociation(
+          associationId, { DataCache.currentUser.value.following += associationId }, {})
+
+      _associationFollowed.update { true }
+    }
   }
 
   fun unfollowAssociation(associationId: String) {
-    DataCache.currentUser.value.following -= associationId
-    viewModelScope.launch(ioDispatcher) { dbService.unfollowAssociation(associationId, {}, {}) }
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unfollowAssociation(
+          associationId, { DataCache.currentUser.value.following -= associationId }, {})
+      _associationFollowed.update { false }
+    }
   }
 
   fun getNews(associationId: String) {

@@ -53,8 +53,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
-import com.swent.assos.model.data.DataCache
-import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
@@ -64,8 +62,6 @@ import com.swent.assos.ui.components.NewsItem
 @Composable
 fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   val viewModel: AssoViewModel = hiltViewModel()
-
-  val currentUser by DataCache.currentUser.collectAsState()
 
   val association by viewModel.association.collectAsState()
   val news by viewModel.news.collectAsState()
@@ -105,7 +101,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             assoId = assoId,
             asso = association,
             navigationActions = navigationActions,
-            currentUser = currentUser,
             viewModel = viewModel)
       }) { paddingValues ->
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
@@ -184,9 +179,9 @@ fun TopAssoBar(
     assoId: String,
     asso: Association,
     navigationActions: NavigationActions,
-    currentUser: User,
     viewModel: AssoViewModel
 ) {
+  val associationFollowed = viewModel.associationFollowed.collectAsState()
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
@@ -200,7 +195,7 @@ fun TopAssoBar(
       actions = {
         AssistChip(
             colors =
-                if (currentUser.following.contains(assoId))
+                if (associationFollowed.value)
                     AssistChipDefaults.assistChipColors(
                         containerColor = MaterialTheme.colorScheme.primary)
                 else
@@ -209,11 +204,14 @@ fun TopAssoBar(
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {
-              if (currentUser.following.contains(assoId)) viewModel.unfollowAssociation(assoId)
-              else viewModel.followAssociation(assoId)
+              if (associationFollowed.value) {
+                viewModel.unfollowAssociation(assoId)
+              } else {
+                viewModel.followAssociation(assoId)
+              }
             },
             label = {
-              if (currentUser.following.contains(assoId)) {
+              if (associationFollowed.value) {
                 Text(
                     text = "Following",
                     color = Color.Black,
