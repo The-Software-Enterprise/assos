@@ -56,7 +56,7 @@ fun News(navigationActions: NavigationActions) {
         LazyColumn(
             modifier =
                 Modifier.padding(paddingValues)
-                    .background(MaterialTheme.colorScheme.outline) // Light gray background
+                    .background(MaterialTheme.colorScheme.surface) // Light gray background
                     .padding(horizontal = 15.dp)
                     .padding(top = 5.dp)
                     .testTag("NewsList"),

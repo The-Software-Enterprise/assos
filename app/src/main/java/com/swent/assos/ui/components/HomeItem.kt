@@ -48,6 +48,12 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = "news image",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.width(80.dp).fillMaxWidth())
+              } else {
+                AsyncImage(
+                    model = R.drawable.ic_launcher_foreground,
+                    contentDescription = "news image",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.width(80.dp).fillMaxWidth())
               }
               Column(
                   verticalArrangement = Arrangement.spacedBy(10.dp),
