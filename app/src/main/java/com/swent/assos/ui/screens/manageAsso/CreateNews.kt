@@ -55,6 +55,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.CreateNewsViewModel
+import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,50 +73,33 @@ fun CreateNews(
   val news by viewModel.news.collectAsState()
 
   Scaffold(
-      modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
+      modifier = Modifier
+          .fillMaxSize()
+          .testTag("CreateNewsScreen"),
       topBar = {
-        TopAppBar(
-            title = { Text(text = "Back", fontSize = 20.sp, fontWeight = FontWeight.Normal) },
-            navigationIcon = {
-              Image(
-                  imageVector = Icons.Default.ArrowBackIos,
-                  contentDescription = null,
-                  modifier =
-                      Modifier.testTag("GoBackButton")
-                          .padding(start = 16.dp)
-                          .clip(RoundedCornerShape(100))
-                          .clickable { navigationActions.goBack() }
-                          .padding(5.dp)
-                          .size(20.dp))
-            },
-            actions = {
-              Box(
-                  modifier =
-                      Modifier.padding(end = 16.dp)
-                          .clip(RoundedCornerShape(20))
-                          .background(
-                              MaterialTheme.colorScheme.primary.copy(
-                                  alpha =
-                                      if (news.title.isBlank() ||
-                                          news.description.isBlank() ||
-                                          news.images.isEmpty())
-                                          0.5f
-                                      else 1f))
-                          .clickable { viewModel.createNews(assoId, navigationActions) }
-                          .padding(vertical = 5.dp, horizontal = 10.dp)
-                          .testTag("CreateButton")) {
-                    Text(
-                        text = "Publish",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onPrimary)
-                  }
-            },
-            colors =
-                TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                ),
-        )
+        PageTitleWithGoBack(title = "Back", navigationActions = navigationActions, actionButton = {
+            Box(
+                modifier =
+                Modifier.padding(end = 16.dp)
+                    .clip(RoundedCornerShape(20))
+                    .background(
+                        MaterialTheme.colorScheme.primary.copy(
+                            alpha =
+                            if (news.title.isBlank() ||
+                                news.description.isBlank() ||
+                                news.images.isEmpty())
+                                0.5f
+                            else 1f))
+                    .clickable { viewModel.createNews(assoId, navigationActions) }
+                    .padding(vertical = 5.dp, horizontal = 10.dp)
+                    .testTag("CreateButton")) {
+                Text(
+                    text = "Publish",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onPrimary)
+            }
+        })
       },
       floatingActionButton = {
         FloatingActionButton(
@@ -136,10 +120,11 @@ fun CreateNews(
                 value = news.title,
                 onValueChange = { viewModel.setTitle(it) },
                 modifier =
-                    Modifier.padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .testTag("InputTitle"),
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth()
+                    .height(64.dp)
+                    .testTag("InputTitle"),
                 label = { Text(text = "Title") },
                 placeholder = { Text(text = "Title of the news") },
                 textStyle = MaterialTheme.typography.bodyLarge,
@@ -164,10 +149,11 @@ fun CreateNews(
                 value = news.description,
                 onValueChange = { viewModel.setDescription(it) },
                 modifier =
-                    Modifier.padding(horizontal = 20.dp)
-                        .fillMaxWidth()
-                        .height(128.dp)
-                        .testTag("InputDescription"),
+                Modifier
+                    .padding(horizontal = 20.dp)
+                    .fillMaxWidth()
+                    .height(128.dp)
+                    .testTag("InputDescription"),
                 label = { Text(text = "Description") },
                 placeholder = { Text(text = "Description of the news") },
                 singleLine = false,
@@ -190,7 +176,9 @@ fun CreateNews(
           item {
             if (news.images.isEmpty()) {
               Column(
-                  modifier = Modifier.fillMaxSize().padding(top = 50.dp),
+                  modifier = Modifier
+                      .fillMaxSize()
+                      .padding(top = 50.dp),
                   horizontalAlignment = Alignment.CenterHorizontally,
               ) {
                 Text(
@@ -202,7 +190,9 @@ fun CreateNews(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Click on the button below to add images.",
-                    modifier = Modifier.testTag("NoImages").width(200.dp),
+                    modifier = Modifier
+                        .testTag("NoImages")
+                        .width(200.dp),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
                     textAlign = TextAlign.Center,
                     fontSize = 15.sp,
@@ -210,35 +200,43 @@ fun CreateNews(
               }
             } else {
               LazyRow(
-                  modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
+                  modifier = Modifier
+                      .fillMaxWidth()
+                      .aspectRatio(1f)
+                      .padding(top = 10.dp),
                   horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     item { Spacer(modifier = Modifier.width(12.dp)) }
                     items(news.images) {
                       Box(
                           modifier =
-                              Modifier.fillMaxHeight(0.9f)
-                                  .aspectRatio(1f)
-                                  .clip(RoundedCornerShape(8.dp))
-                                  .background(Color.Gray),
+                          Modifier
+                              .fillMaxHeight(0.9f)
+                              .aspectRatio(1f)
+                              .clip(RoundedCornerShape(8.dp))
+                              .background(Color.Gray),
                       ) {
                         Image(
                             painter = rememberAsyncImagePainter(it),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize().align(Alignment.Center),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .align(Alignment.Center),
                         )
                         Image(
                             imageVector = Icons.Default.DeleteForever,
                             contentDescription = "Trash",
                             modifier =
-                                Modifier.align(Alignment.TopEnd)
-                                    .padding(6.dp)
-                                    .size(30.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-                                        RoundedCornerShape(5.dp))
-                                    .clickable { viewModel.removeImage(it) }
-                                    .padding(3.dp),
+                            Modifier
+                                .align(Alignment.TopEnd)
+                                .padding(6.dp)
+                                .size(30.dp)
+                                .background(
+                                    MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
+                                    RoundedCornerShape(5.dp)
+                                )
+                                .clickable { viewModel.removeImage(it) }
+                                .padding(3.dp),
                             colorFilter =
                                 ColorFilter.tint(
                                     MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
