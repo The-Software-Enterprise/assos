@@ -46,28 +46,20 @@ constructor(
   }
 
   fun followAssociation(associationId: String) {
-    DataCache.currentUser.value = DataCache.currentUser.value.copy(
-        following = DataCache.currentUser.value.following + associationId)
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            following = DataCache.currentUser.value.following + associationId)
     viewModelScope.launch(ioDispatcher) {
-      dbService.followAssociation(
-          associationId,
-          {
-            _associationFollowed.update { true }
-          },
-          {})
+      dbService.followAssociation(associationId, { _associationFollowed.update { true } }, {})
     }
   }
 
   fun unfollowAssociation(associationId: String) {
-    DataCache.currentUser.value = DataCache.currentUser.value.copy(
-        following = DataCache.currentUser.value.following.filter { it != associationId })
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            following = DataCache.currentUser.value.following.filter { it != associationId })
     viewModelScope.launch(ioDispatcher) {
-      dbService.unfollowAssociation(
-          associationId,
-          {
-            _associationFollowed.update { false }
-          },
-          {})
+      dbService.unfollowAssociation(associationId, { _associationFollowed.update { false } }, {})
     }
   }
 

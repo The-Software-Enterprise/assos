@@ -197,10 +197,10 @@ fun TopAssoBar(
             colors =
                 if (associationFollowed.value)
                     AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.primary)
+                        containerColor = MaterialTheme.colorScheme.surface)
                 else
                     AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.tertiary),
+                        containerColor = MaterialTheme.colorScheme.primary),
             border = null,
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {
@@ -214,14 +214,14 @@ fun TopAssoBar(
               if (associationFollowed.value) {
                 Text(
                     text = "Following",
-                    color = Color.Black,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight.Medium,
                 )
               } else {
                 Text(
                     text = "Follow",
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight.Medium,
                 )
