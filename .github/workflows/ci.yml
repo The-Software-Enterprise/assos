@@ -128,11 +128,7 @@ jobs:
           script: firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew connectedCheck --parallel --build-cache --stacktrace"
       
 
-      - name: Upload Screenshots
-        uses: actions/upload-artifact@v2
-        with:
-          name: screenshots
-          path: /home/runner/work/assos/assos/functions/screenshot.png
+
 
           
 

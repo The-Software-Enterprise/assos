@@ -61,14 +61,11 @@ def find_original_acronym(fake_acronym):
         WebDriverWait(driver, 30).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.loading-spinner")))
         # Extract desired content using Selenium
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
-        driver.save_screenshot('./screenshot.png')
-        #print the folder where the screenshot is saved
 
-        logs = driver.get_log("browser")
-        for log in logs:
-            print(log)
+
+
         for element in elements:
-            print(element.text)
+
             # we want to get the element that contains the acronym
             if fake_acronym in element.text:
                 # we want to get the first element that contains the acronym
@@ -115,11 +112,11 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         associations = list()
 
         for i in range(len(profile[0]["accreds"]) - 1):
-            print(profile[0]["accreds"][i + 1]["acronym"])
+
             acronymList = find_original_acronym(profile[0]["accreds"][i + 1]["acronym"])
-            print(acronymList)
+
             acronym = " ".join(acronymList)
-            print(acronym)
+
             
             #find id of the association in the database 
             association = firestore_client.collection("associations").where("acronym_lower", "==",acronym.lower()).stream()
@@ -128,7 +125,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
                 print("could not find association")
                 continue
             id = association[0].id
-            print(f"id = {id}")
+
 
             temp = {"id": id,
             "position": profile[0]["accreds"][i + 1]["position"],
@@ -147,7 +144,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         }
         
 
-        print(user)
+
         firestore_client.document(f"users/{userID}").set(user)
         # transform profile insto a json format
         
