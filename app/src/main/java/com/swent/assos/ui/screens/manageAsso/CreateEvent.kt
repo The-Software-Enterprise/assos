@@ -68,7 +68,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -100,18 +99,15 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.HourFormat
 import com.swent.assos.ui.components.PageTitleWithGoBack
-
+import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
-import java.time.Instant
-import java.time.LocalDate
-import java.time.ZoneId
-
-
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -139,7 +135,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var endTimePickerState = rememberTimePickerState()
   var showEndTimePicker by remember { mutableStateOf(false) }
 
-
   val launcher =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
         ->
@@ -150,26 +145,33 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   LaunchedEffect(key1 = Unit) { event.associationId = assoId }
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   if (showStartDatePicker) {
     DatePickerDialog(
         onDismissRequest = { /*TODO*/},
-        confirmButton = { TextButton(onClick = {
-            val selectedDate = Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!).atZone(ZoneId.systemDefault()).toLocalDate()
-            val currentDate = LocalDate.now()
-            if (selectedDate.isBefore(currentDate)) {
-                Toast.makeText(
-                    context,
-                    "Selected date should be after today, please select again",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                showStartDatePicker = false
-                showStartTimePicker = true
-            }
-             })
-        { Text("OK") } },
+        confirmButton = {
+          TextButton(
+              onClick = {
+                val selectedDate =
+                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                val currentDate = LocalDate.now()
+                if (selectedDate.isBefore(currentDate)) {
+                  Toast.makeText(
+                          context,
+                          "Selected date should be after today, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
+                } else {
+                  showStartDatePicker = false
+                  showStartTimePicker = true
+                }
+              }) {
+                Text("OK")
+              }
+        },
         dismissButton = {
           TextButton(onClick = { showStartDatePicker = false }) { Text("Cancel") }
         }) {
@@ -180,27 +182,33 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   if (showStartTimePicker) {
     TimePickerDialog(
         onDismissRequest = { /*TODO*/},
-        confirmButton = { TextButton(onClick = {
+        confirmButton = {
+          TextButton(
+              onClick = {
+                val current = LocalDateTime.now()
+                val time = LocalTime.of(startTimePickerState.hour, startTimePickerState.minute)
+                var selectedDate = current
+                startDatePickerState.selectedDateMillis?.let {
+                  selectedDate =
+                      LocalDateTime.of(
+                          Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(),
+                          time)
+                }
 
-            val current = LocalDateTime.now()
-            val time = LocalTime.of(startTimePickerState.hour, startTimePickerState.minute)
-            var selectedDate = current
-            startDatePickerState.selectedDateMillis?.let {
-                selectedDate = LocalDateTime.of(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(), time)
-            }
-
-            if (selectedDate.isBefore(current)) {
-                Toast.makeText(
-                    context,
-                    "Selected time should be after current time, please select again",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                event.startTime = selectedDate
-                showStartTimePicker = false
-            }
-
-             }) { Text("OK") } },
+                if (selectedDate.isBefore(current)) {
+                  Toast.makeText(
+                          context,
+                          "Selected time should be after current time, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
+                } else {
+                  event.startTime = selectedDate
+                  showStartTimePicker = false
+                }
+              }) {
+                Text("OK")
+              }
+        },
         dismissButton = {
           TextButton(onClick = { showStartTimePicker = false }) { Text("Cancel") }
         }) {
@@ -211,21 +219,33 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   if (showEndDatePicker) {
     DatePickerDialog(
         onDismissRequest = { /*TODO*/},
-        confirmButton = { TextButton(onClick = {
+        confirmButton = {
+          TextButton(
+              onClick = {
+                val startDate =
+                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                val selectedEndDate =
+                    Instant.ofEpochMilli(endDatePickerState.selectedDateMillis!!)
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
 
-            val startDate = Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!).atZone(ZoneId.systemDefault()).toLocalDate()
-            val selectedEndDate = Instant.ofEpochMilli(endDatePickerState.selectedDateMillis!!).atZone(ZoneId.systemDefault()).toLocalDate()
+                if (selectedEndDate.isBefore(startDate)) {
+                  Toast.makeText(
+                          context,
+                          "Selected end date should be after start date, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
+                } else {
 
-            if (selectedEndDate.isBefore(startDate)) {
-                Toast.makeText(
-                    context,
-                    "Selected end date should be after start date, please select again",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-
-            showEndDatePicker = false;
-            showEndTimePicker = true }}) { Text("OK") } },
+                  showEndDatePicker = false
+                  showEndTimePicker = true
+                }
+              }) {
+                Text("OK")
+              }
+        },
         dismissButton = {
           TextButton(onClick = { showEndDatePicker = false }) { Text("Cancel") }
         }) {
@@ -236,28 +256,34 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   if (showEndTimePicker) {
     TimePickerDialog(
         onDismissRequest = { /*TODO*/},
-        confirmButton = { TextButton(onClick = {
+        confirmButton = {
+          TextButton(
+              onClick = {
+                val startDate = event.startTime
+                var endDate = startDate
 
-            val startDate = event.startTime
-            var endDate = startDate
+                val time = LocalTime.of(endTimePickerState.hour, endTimePickerState.minute)
+                endDatePickerState.selectedDateMillis?.let {
+                  endDate =
+                      LocalDateTime.of(
+                          Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(),
+                          time)
+                }
 
-            val time = LocalTime.of(endTimePickerState.hour, endTimePickerState.minute)
-            endDatePickerState.selectedDateMillis?.let {
-                 endDate = LocalDateTime.of(Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(), time)
-            }
-
-            if (endDate == null || endDate!!.isBefore(startDate)) {
-                Toast.makeText(
-                    context,
-                    "Selected end time should be after start time, please select again",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                event.endTime = endDate
-                showEndTimePicker = false
-            }
-
-            }) { Text("OK") }},
+                if (endDate == null || endDate!!.isBefore(startDate)) {
+                  Toast.makeText(
+                          context,
+                          "Selected end time should be after start time, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
+                } else {
+                  event.endTime = endDate
+                  showEndTimePicker = false
+                }
+              }) {
+                Text("OK")
+              }
+        },
         dismissButton = {
           TextButton(onClick = { showEndTimePicker = false }) { Text("Cancel") }
         }) {
@@ -424,16 +450,14 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       OutlinedButton(
                           shape = RoundedCornerShape(8.dp),
                           onClick = {
-                              if (event.startTime != null) {
-                                  showEndDatePicker = true
-                              } else {
-                                  Toast.makeText(
-                                      context,
-                                      "Please select start time first",
-                                      Toast.LENGTH_SHORT
-                                  ).show()
-                              }
-                              },
+                            if (event.startTime != null) {
+                              showEndDatePicker = true
+                            } else {
+                              Toast.makeText(
+                                      context, "Please select start time first", Toast.LENGTH_SHORT)
+                                  .show()
+                            }
+                          },
                           colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
                             Text(
                                 event.endTime?.format(
@@ -444,74 +468,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           }
                     }
               }
-
-              /*item {
-                Row(
-                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 0.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically) {
-                      OutlinedButton(
-                          shape = RoundedCornerShape(8.dp),
-                          onClick = { showEndTimePicker = true }) {
-                            Text(
-                                event.startTime?.format(
-                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                                    ?: "End Time Picker",
-                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                                color = Color.Black)
-                          }
-                      Spacer(modifier = Modifier.width(32.dp))
-                      OutlinedButton(
-                          shape = RoundedCornerShape(8.dp),
-                          onClick = { showEndDatePicker = true },
-                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
-                            Text(
-                                event.endTime?.format(
-                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-                                    ?: "End Date Picker",
-                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                                color = Color.Black)
-                          }
-                    }
-              }*/
-
-              /*item {
-                  Row(modifier = Modifier.fillMaxWidth()) {
-                      Column(
-                          modifier = Modifier
-                              .fillMaxSize()
-                              .padding(16.dp),
-                          horizontalAlignment = Alignment.CenterHorizontally,
-                          verticalArrangement = Arrangement.Center,
-                      ) {
-
-                          Text(text = "No Date Selected", modifier = Modifier.padding(bottom = 16.dp))
-
-                          Button(
-                              onClick = {
-                                  showDatePicker = true
-                              },
-                              modifier = Modifier.fillMaxWidth(),
-                          ) {
-                              Text(text = "Date Picker")
-                          }
-
-                          Divider(modifier = Modifier.padding(vertical = 24.dp))
-
-                          Text(text = "No Time Selected", modifier = Modifier.padding(bottom = 16.dp))
-
-                          Button(
-                              onClick = {
-                                  showTimePicker = true
-                              },
-                              modifier = Modifier.fillMaxWidth(),
-                          ) {
-                              Text(text = "Time Picker")
-                          }
-
-                      }
-                  }
-              }   */
 
               item {
                 Row(
@@ -544,7 +500,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
 
               item {
-                // Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     enabled =
                         event.description.isNotEmpty() &&
