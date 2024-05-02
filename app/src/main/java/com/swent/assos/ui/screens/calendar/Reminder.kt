@@ -86,7 +86,8 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         userScrollEnabled = true,
-        state = listState) {
+        state = listState,
+        modifier = Modifier.testTag("ReminderList")) {
           for (event in tomorrowEvents) {
             item {
               Box(
@@ -96,9 +97,7 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
                           .background(
                               color = Color(0xFF8572FF), shape = RoundedCornerShape(size = 10.dp))
                           .testTag("Item")) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
+                    Row(modifier = Modifier.fillMaxWidth()) {
                       Box(
                           modifier =
                               Modifier.padding(start = 10.dp, top = 8.dp)
@@ -114,10 +113,7 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
                           }
                       Column {
                         Text(
-                            modifier =
-                                Modifier.padding(start = 27.dp, top = 8.dp)
-                                    .fillMaxWidth()
-                                    .testTag("Title"),
+                            modifier = Modifier.padding(start = 27.dp, top = 8.dp).fillMaxWidth(),
                             text = "${event.second.title} - ${event.first}",
                             style =
                                 TextStyle(

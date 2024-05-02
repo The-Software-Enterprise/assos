@@ -149,6 +149,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener {
                   throw it
                 }
+                navigationActions.navigateTo(Destinations.HOME)
               }
             }
           },

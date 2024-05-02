@@ -10,6 +10,6 @@ class ReminderScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         viewBuilderAction = { hasTestTag("ReminderScreen") }) {
   val reminder: KNode = child { hasTestTag("Reminder") }
   val description: KNode = child { hasTestTag("Description") }
-  val item: KNode = child { hasTestTag("Item") }
-  val title: KNode = item.child { hasTestTag("Title") }
+  val reminderList: KNode = child { hasTestTag("ReminderList") }
+  val item: KNode = reminderList.child { hasTestTag("Item") }
 }
