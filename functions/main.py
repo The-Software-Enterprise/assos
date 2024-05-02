@@ -56,8 +56,9 @@ def find_original_acronym(fake_acronym):
         driver.get(url)
 
         # Wait for the content to load (adjust timeout and element locator as needed)
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "ul li")))
-
+        # Wait for the content to load using explicit waits
+        WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CSS_SELECTOR, "ul li")))
+        WebDriverWait(driver, 30).until(EC.invisibility_of_element_located((By.CSS_SELECTOR, "div.loading-spinner")))
         # Extract desired content using Selenium
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
         driver.save_screenshot('./screenshot.png')
