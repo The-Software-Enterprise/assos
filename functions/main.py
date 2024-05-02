@@ -57,7 +57,7 @@ def find_original_acronym(fake_acronym):
 
         # Extract desired content using Selenium
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
-        driver.save_screenshot("screenshot.png")
+        driver.save_screenshot('/github/assos/screenshots/screenshot.png')
         logs = driver.get_log("browser")
         for log in logs:
             print(log)

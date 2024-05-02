@@ -126,7 +126,13 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew connectedCheck --parallel --build-cache --stacktrace"
+      
 
+      - name: Upload Screenshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: screenshots
+          path: /github/assos/screenshots
 
           
 
