@@ -19,10 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
@@ -37,7 +35,6 @@ import com.swent.assos.ui.components.HomeItem
 import com.swent.assos.ui.theme.LightGray
 import com.swent.assos.ui.theme.Typography
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun News(navigationActions: NavigationActions) {
   val viewModel: NewsViewModel = hiltViewModel()

@@ -37,7 +37,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxSize()) {
           AsyncImage(
-              model = news.images,
+              model = news.images[0],
               contentDescription = "news image",
               contentScale = ContentScale.Fit,
               modifier = Modifier.width(114.dp).height(108.dp))
