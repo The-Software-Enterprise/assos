@@ -34,9 +34,7 @@ fun PageTitle(title: String) {
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.SemiBold,
                       color = Color.Black),
-              modifier =
-                  Modifier.padding(start = 16.dp, top = 20.dp) /*.padding(20.dp)*/
-                      .testTag("PageTitle"))
+              modifier = Modifier.padding(start = 16.dp, top = 20.dp).testTag("PageTitle"))
         }
   }
 }
