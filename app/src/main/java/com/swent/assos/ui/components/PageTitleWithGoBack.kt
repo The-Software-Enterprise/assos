@@ -31,7 +31,13 @@ fun PageTitleWithGoBack(
     actionButton: @Composable RowScope.() -> Unit = {}
 ) {
   TopAppBar(
-      title = { Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.Normal) },
+      title = {
+        Text(
+            text = title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Normal,
+            modifier = Modifier.testTag("PageTitle"))
+      },
       navigationIcon = {
         Image(
             imageVector = Icons.Default.ArrowBackIos,

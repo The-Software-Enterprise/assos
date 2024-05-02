@@ -9,9 +9,8 @@ class NotificationSettingsScreen(semanticsProvider: SemanticsNodeInteractionsPro
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("NotificationSettingsScreen") }) {
 
-  val topBar: KNode = child { hasTestTag("TopBar") }
-  val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }
-  val pageTitle: KNode = topBar.child { hasTestTag("PageTitle") }
+  val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
 
   val contentSection: KNode = child { hasTestTag("ContentSection") }
 }
