@@ -313,27 +313,27 @@ private fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
-  private fun deserializeNews(doc: DocumentSnapshot): News {
-    return News(
-        id = doc.id,
-        title = doc.getString("title") ?: "",
-        description = doc.getString("description") ?: "",
-        createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
-        associationId = doc.getString("associationId") ?: "",
-        images =
-            if (doc["images"] is List<*>) {
-              (doc["images"] as List<*>).filterIsInstance<String>().toList().map { Uri.parse(it) }
-            } else {
-              listOf()
-            },
-        eventIds =
-            if (doc["eventIds"] is List<*>) {
-              (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
-            } else {
-              mutableListOf()
-            },
-        documentSnapshot = doc)
-  }
+private fun deserializeNews(doc: DocumentSnapshot): News {
+  return News(
+      id = doc.id,
+      title = doc.getString("title") ?: "",
+      description = doc.getString("description") ?: "",
+      createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
+      associationId = doc.getString("associationId") ?: "",
+      images =
+          if (doc["images"] is List<*>) {
+            (doc["images"] as List<*>).filterIsInstance<String>().toList().map { Uri.parse(it) }
+          } else {
+            listOf()
+          },
+      eventIds =
+          if (doc["eventIds"] is List<*>) {
+            (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
+          } else {
+            mutableListOf()
+          },
+      documentSnapshot = doc)
+}
 
 private fun deserializeAssociation(doc: DocumentSnapshot): Association {
   return Association(

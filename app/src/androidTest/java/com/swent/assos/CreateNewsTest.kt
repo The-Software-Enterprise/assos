@@ -3,7 +3,6 @@ package com.swent.assos
 import android.net.Uri
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
