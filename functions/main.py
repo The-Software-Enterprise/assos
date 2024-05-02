@@ -57,6 +57,9 @@ def find_original_acronym(fake_acronym):
 
         # Extract desired content using Selenium
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
+        logs = driver.get_log("browser")
+        for log in logs:
+            print(log)
         for element in elements:
             print(element.text)
             # we want to get the element that contains the acronym
