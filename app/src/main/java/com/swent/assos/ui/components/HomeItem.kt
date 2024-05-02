@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -61,17 +62,13 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier = Modifier.width(173.dp))
+                        modifier = Modifier.width(173.dp).testTag("itemsTitle"))
                     Text(
                         text = news.description,
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Light,
-                        modifier =
-                            Modifier.width(173.dp)
-                                // Height dynamically adjusts. Optionally, set max height if needed.
-                                .weight(1f) // Use weight to give remaining space to the description
-                        )
+                        modifier = Modifier.width(173.dp).weight(1f).testTag("ItemsDescription"))
                   }
             }
       }
