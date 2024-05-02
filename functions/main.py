@@ -42,8 +42,11 @@ def find_original_acronym(fake_acronym):
     # Replace with your Chrome binary location
     chrome_options.add_argument("--headless")  # Run Chrome in headless mode, i.e., without opening a GUI
     chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (necessary in headless mode)
-
-    driver = webdriver.Chrome( options=chrome_options)
+    try:
+        driver = webdriver.Chrome( options=chrome_options)
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return list()
 
     try:
         # Open the webpage
@@ -62,6 +65,7 @@ def find_original_acronym(fake_acronym):
                 return element.text.split(" ")[:-1]
             
     except Exception as e:
+        print(f"An error occurred: {e}")
         return list()
     finally:
         # Close the browser
