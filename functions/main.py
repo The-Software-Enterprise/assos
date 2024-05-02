@@ -62,7 +62,7 @@ def find_original_acronym(fake_acronym):
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
         driver.save_screenshot('./screenshot.png')
         #print the folder where the screenshot is saved
-        print(os.getcwd())
+
         logs = driver.get_log("browser")
         for log in logs:
             print(log)

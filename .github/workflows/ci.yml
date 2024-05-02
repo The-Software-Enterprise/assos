@@ -132,7 +132,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: screenshots
-          path: /github/assos/functions/screenshot.png
+          path: /home/runner/work/assos/assos/functions/screenshot.png
 
           
 
