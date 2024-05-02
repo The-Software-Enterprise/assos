@@ -160,7 +160,9 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                       ambientColor = MaterialTheme.colorScheme.onSurface)
                   .width(100.dp)
                   .height(42.dp)
-                  .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp)),
+                  .background(
+                      color = MaterialTheme.colorScheme.primary,
+                      shape = RoundedCornerShape(size = 16.dp)),
           colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
       ) {
