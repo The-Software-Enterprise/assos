@@ -62,8 +62,7 @@ fun Profile(navigationActions: NavigationActions) {
   Scaffold(
       modifier =
           Modifier.semantics { testTagsAsResourceId = true }
-              .testTag("ProfileScreen")
-              .semantics { testTagsAsResourceId = true },
+              .testTag("ProfileScreen"),
       topBar = { PageTitle(title = "Profile") }) { paddingValues ->
         Column(
             modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("ContentSection")) {
