@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.User
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
@@ -65,6 +66,16 @@ constructor(
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
+      }
+    }
+  }
+
+  fun updateUser() {
+    viewModelScope.launch(ioDispatcher) {
+      authService.currentUser.collect { firebaseUser ->
+        val user: User = dbService.getUser(firebaseUser.uid)
+        _firstName.value = user.firstName
+        _lastName.value = user.lastName
       }
     }
   }
