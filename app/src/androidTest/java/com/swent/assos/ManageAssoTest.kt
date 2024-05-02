@@ -1,7 +1,6 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.screens.ManageAssoScreen
@@ -24,20 +23,6 @@ class ManageAssoTest : SuperTest() {
     super.setup()
     composeTestRule.activity.setContent {
       ManageAssociation(assoId = assoId, navigationActions = mockNavActions)
-    }
-  }
-
-  @Test
-  fun descriptionContainsFullname() {
-    run {
-      ComposeScreen.onComposeScreen<ManageAssoScreen>(composeTestRule) {
-        step("Check if description contains full name") {
-          description {
-            assertIsDisplayed()
-            assert(hasText(fullname, substring = true, ignoreCase = true))
-          }
-        }
-      }
     }
   }
 

@@ -31,15 +31,13 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.view.CalendarViewModel
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun Reminder() {
+fun Reminder(calendarViewModel: CalendarViewModel) {
 
-  val calendarViewModel: CalendarViewModel = hiltViewModel()
   val tomorrowEvents by calendarViewModel.tomorrowEvents.collectAsState()
 
   LaunchedEffect(Unit) { calendarViewModel.updateEvents() }
@@ -135,11 +133,11 @@ fun Reminder() {
                           Text(
                               modifier = Modifier.padding(top = 2.dp),
                               text =
-                                  "${event.second.startTime?.format(DateTimeFormatter.ofPattern("hh"))}" +
+                                  "${event.second.startTime?.format(DateTimeFormatter.ofPattern("HH"))}" +
                                       "." +
                                       "${event.second.startTime?.format(DateTimeFormatter.ofPattern("mm"))}" +
                                       " - " +
-                                      "${event.second.endTime?.format(DateTimeFormatter.ofPattern("hh"))}" +
+                                      "${event.second.endTime?.format(DateTimeFormatter.ofPattern("HH"))}" +
                                       "." +
                                       "${event.second.endTime?.format(DateTimeFormatter.ofPattern("mm"))}",
                               style =

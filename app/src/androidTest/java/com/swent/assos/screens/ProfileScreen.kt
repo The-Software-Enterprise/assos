@@ -9,8 +9,7 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("ProfileScreen") }) {
 
-  val topBar: KNode = child { hasTestTag("TopBar") }
-  val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
+  val pagetile: KNode = onNode { hasTestTag("PageTitle") }
 
   val contentSection: KNode = child { hasTestTag("ContentSection") }
 
