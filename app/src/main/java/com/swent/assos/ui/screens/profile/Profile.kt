@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
@@ -20,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -56,6 +56,8 @@ fun Profile(navigationActions: NavigationActions) {
   val viewModel: ProfileViewModel = hiltViewModel()
   val firstName by viewModel.firstName.collectAsState()
   val lastName by viewModel.lastName.collectAsState()
+
+  LaunchedEffect(key1 = Unit) { viewModel.updateUser() }
 
   val completeName = "$firstName $lastName"
 
@@ -116,7 +118,7 @@ fun UserNameDisplay(name: String) {
                     color = Color(0xFF49454F),
                     letterSpacing = 0.1.sp,
                 ),
-            modifier = Modifier.width(106.dp).height(20.dp).testTag("Name"))
+            modifier = Modifier.height(20.dp).testTag("Name"))
       }
 }
 
