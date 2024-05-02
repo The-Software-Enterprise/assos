@@ -124,7 +124,7 @@ fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
           Modifier.fillMaxWidth()
               .padding(5.dp)
               .background(color = Color.White, shape = RoundedCornerShape(size = 15.dp))
-              .testTag("AssoListItem${asso.id}")
+              .testTag("AssoListItem${asso.acronym}")
               .clickable {
                 val dest =
                     Destinations.ASSO_DETAILS.route +
