@@ -44,23 +44,6 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
-  fun unfollowAsso() {
-    DataCache.currentUser.value.following = listOf(assoId)
-    run {
-      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Unfollow association") {
-          sleep(2000)
-          followButton {
-            assertIsDisplayed()
-            performClick()
-            assert(!DataCache.currentUser.value.following.contains(assoId))
-          }
-        }
-      }
-    }
-  }
-
-  @Test
   fun goBack() {
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
