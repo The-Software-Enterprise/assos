@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,8 +45,7 @@ import com.swent.assos.model.view.NewsViewModel
 @Composable
 fun News() {
   val viewModel: NewsViewModel = hiltViewModel()
-  val news by viewModel.allNews.collectAsState()
-
+  val news by viewModel.news.collectAsState()
   val listState = rememberLazyListState()
 
   LaunchedEffect(listState) {
@@ -111,7 +111,7 @@ fun News() {
                                   acronym = "",
                                   fullname = "",
                                   description = "",
-                                  logo = ""))
+                                  logo = Uri.EMPTY))
                         }
                         viewModel.getNewsAssociation(it.associationId) { association = it }
                         Text(
