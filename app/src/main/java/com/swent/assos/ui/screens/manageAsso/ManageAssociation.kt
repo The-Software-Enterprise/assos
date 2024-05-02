@@ -1,8 +1,11 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,15 +17,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,11 +41,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -88,20 +102,28 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
             modifier = Modifier.padding(paddingValues).testTag("Content"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
-                Text(
-                    text = association.fullname,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier =
-                        Modifier.testTag("DescriptionField")
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp))
-                Button(
-                    modifier = Modifier.testTag("EditDescriptionButton"),
-                    onClick = { /* TODO */},
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-                      Text("Edit description", color = Color.White)
-                    }
-                HeaderWithButton(
+                Box {
+                  Image(
+                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                      contentDescription = null,
+                      modifier =
+                          Modifier.fillMaxWidth()
+                              .padding(10.dp)
+                              .height(200.dp)
+                              .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                      contentScale = ContentScale.Crop,
+                      alignment = Alignment.Center)
+
+                  FloatingActionButton(
+                      onClick = { /**/},
+                      modifier = Modifier.align(Alignment.TopEnd).padding(5.dp),
+                      containerColor = MaterialTheme.colorScheme.primary,
+                  ) {
+                    Icon(Icons.Default.ModeEdit, contentDescription = null, tint = Color.White)
+                  }
+                }
+
+                HeaderWithButtonWithIcon(
                     header = "Upcoming Events",
                     buttonText = "Add Event",
                     onButtonClick = {
@@ -115,9 +137,9 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }
-                HeaderWithButton(
+                HeaderWithButtonWithIcon(
                     header = "Latest Posts",
-                    buttonText = "Add Post",
+                    buttonText = "Add Post ",
                     onButtonClick = {
                       navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
                     },
@@ -136,7 +158,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 }
 
 @Composable
-fun HeaderWithButton(
+fun HeaderWithButtonWithIcon(
     header: String,
     buttonText: String,
     onButtonClick: () -> Unit,
@@ -146,12 +168,16 @@ fun HeaderWithButton(
       modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween) {
-        Text(text = header, style = MaterialTheme.typography.headlineMedium)
+        Text(text = header, style = MaterialTheme.typography.headlineMedium, fontSize = 20.sp)
         Button(
             modifier = modifierButton,
             onClick = onButtonClick,
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
-              Text(buttonText, color = Color.White)
+            colors =
+                ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
+              Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
+                Text(text = buttonText, fontWeight = FontWeight.Medium)
+              }
             }
       }
 }
@@ -160,6 +186,7 @@ fun HeaderWithButton(
 @Composable
 fun TopAssoBar(asso: Association, navigationActions: NavigationActions) {
   MediumTopAppBar(
+      colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
       title = { Text(asso.acronym, modifier = Modifier.testTag("Title")) },
       navigationIcon = {
