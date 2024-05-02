@@ -57,6 +57,4 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
-
-  suspend fun getNewsById(newsId: String): News
 }

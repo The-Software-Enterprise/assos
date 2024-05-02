@@ -36,7 +36,7 @@ constructor(
     }
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "", // Handle nullability explicitly
+        firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
         following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
@@ -172,30 +172,6 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeNews(it) }
-  }
-
-  override suspend fun getNewsById(newsId: String): News {
-    val query = firestore.collection("news").document(newsId)
-    val snapshot = query.get().await()
-    return News(
-        id = snapshot.id,
-        title = snapshot.getString("title") ?: "",
-        description = snapshot.getString("description") ?: "",
-        createdAt = timestampToLocalDateTime(snapshot.getTimestamp("createdAt")),
-        associationId = snapshot.getString("associationId") ?: "",
-        images =
-            if (snapshot.get("images") is List<*>) {
-              (snapshot.get("images") as List<*>).filterIsInstance<Uri>().toMutableList()
-            } else {
-              mutableListOf()
-            },
-        eventIds =
-            if (snapshot.get("eventIds") is List<*>) {
-              (snapshot.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
-            } else {
-              mutableListOf()
-            },
-        documentSnapshot = snapshot)
   }
 
   override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
