@@ -44,8 +44,7 @@ import com.swent.assos.model.view.NewsViewModel
 @Composable
 fun News() {
   val viewModel: NewsViewModel = hiltViewModel()
-  val news by viewModel.allNews.collectAsState()
-
+  val news by viewModel.news.collectAsState()
   val listState = rememberLazyListState()
 
   LaunchedEffect(listState) {

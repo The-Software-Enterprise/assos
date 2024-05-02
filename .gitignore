@@ -24,3 +24,5 @@ functions/.env
 functions/.env.default
 functions/.env.local
 functions/__pycache__/*
+app/google-services.json
+firebase.json
