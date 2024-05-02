@@ -17,6 +17,7 @@ import com.swent.assos.screens.ProfileScreen
 import com.swent.assos.screens.SignupScreen
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
+import com.swent.assos.ui.screens.Explorer
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
@@ -185,13 +186,24 @@ class EndToEnd : SuperTest() {
 
     run {
 
-      ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+      ComposeScreen.onComposeScreen<HomeScreen>(composeTestRule) {
         composeTestRule.waitForIdle()
-        step("check if associations are displayed") {
-            composeTestRule.onNodeWithTag("AssoList").assertIsDisplayed()
-            //composeTestRule.onNodeWithTag("AssoListItem1").performClick()
+
+        step("Check if the profile is correct") {
+          navigationBar {
+            assertIsDisplayed()
+            // check if child exists
+            hasAnyChild(hasTestTag("NavigationBarItem1"))
+            // click on child
+          }
+          composeTestRule.onNodeWithTag("NavigationBarItem1").performClick()
+          // check if we are on the profile screen
         }
       }
+    }
+    composeTestRule.activity.setContent { Explorer(navigationActions = mockNavActions) }
+    run{
+
     }
   }
 
