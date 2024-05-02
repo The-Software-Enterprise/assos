@@ -86,8 +86,7 @@ jobs:
 
       - name : new python venv
         run: |
-          apt-get update
-         
+          
           python3 -m venv functions/venv
           source functions/venv/bin/activate
           pip install -r functions/requirements.txt
