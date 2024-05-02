@@ -1,5 +1,6 @@
 package com.swent.assos
 
+import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
@@ -27,7 +28,8 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
-  fun followUnfollowAsso() {
+  fun followAsso() {
+    DataCache.currentUser.value.following = emptyList()
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Follow association") {
@@ -37,13 +39,31 @@ class AssoDetailsTest : SuperTest() {
             assert(DataCache.currentUser.value.following.contains(assoId))
           }
         }
-        sleep(1000)
+      }
+    }
+  }
+
+  @Test
+  fun unfollowAsso() {
+    DataCache.currentUser.value.following = listOf(assoId)
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Unfollow association") {
+          sleep(2000)
           followButton {
+            assertIsDisplayed()
             performClick()
             assert(!DataCache.currentUser.value.following.contains(assoId))
           }
         }
+      }
+    }
+  }
+
+  @Test
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Go back") {
           goBackButton { performClick() }
           verify { mockNavActions.goBack() }
