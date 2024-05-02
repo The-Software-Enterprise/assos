@@ -66,11 +66,6 @@ fun NavigationGraph() {
           navigationActions = navigationActions,
           assoId = backStackEntry.arguments?.getString("assoId") ?: "")
     }
-    composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
-      CreateNews(
-          navigationActions = navigationActions,
-          assoId = backStackEntry.arguments?.getString("assoId") ?: "")
-    }
     composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
       ManageAssociation(
           assoId = backStackEntry.arguments?.getString("assoId") ?: "",

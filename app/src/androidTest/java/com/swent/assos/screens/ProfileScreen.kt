@@ -9,8 +9,7 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("ProfileScreen") }) {
 
-  val topBar: KNode = child { hasTestTag("TopBar") }
-  val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
+  val pagetile: KNode = onNode { hasTestTag("PageTitle") }
 
   val contentSection: KNode = child { hasTestTag("ContentSection") }
 
@@ -25,6 +24,6 @@ class ProfileScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
 
   val logoutTitle: KNode = child { hasTestTag("LogoutTitle") }
   val logoutText: KNode = child { hasTestTag("LogoutText") }
-  val logoutConfirmButton: KNode = child { hasTestTag("LogoutConfirmButton") }
-  val logoutCancelButton: KNode = child { hasTestTag("LogoutCancelButton") }
+  val logoutConfirmButton: KNode = logoutDialog.child { hasTestTag("LogoutConfirmButton") }
+  val logoutCancelButton: KNode = logoutDialog.child { hasTestTag("LogoutCancelButton") }
 }

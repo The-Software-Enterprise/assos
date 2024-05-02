@@ -9,12 +9,11 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("CreateNewsScreen") }) {
 
-  val topBar: KNode = child { hasTestTag("TopBar") }
+  val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
+  val createButton: KNode = onNode { hasTestTag("CreateButton") }
+    val pagetile: KNode = onNode { hasTestTag("PageTitle") }
 
-  val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }
-  val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
-
-  val form: KNode = child { hasTestTag("Form") }
+    val form: KNode = child { hasTestTag("Form") }
   val inputTitle: KNode =
       form.child {
         hasTestTag("InputTitle")
@@ -25,21 +24,5 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         hasTestTag("InputDescription")
         hasSetTextAction()
       }
-  val showImages: KNode = form.child { hasTestTag("ShowImages") }
-  val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
   val addImages: KNode = onNode { hasTestTag("AddImages") }
-
-  val showImagesDialog: KNode = onNode { hasTestTag("ShowImagesDialog") }
-  val imageShown: KNode = showImagesDialog.child { hasTestTag("ImageShown") }
-
-  val addImageDialog: KNode = onNode { hasTestTag("AddImageDialog") }
-  val saveImage: KNode = addImageDialog.child { hasTestTag("SaveImage") }
-  val cancelImage: KNode = addImageDialog.child { hasTestTag("CancelImage") }
-  val inputImage: KNode =
-      addImageDialog.child {
-        hasTestTag("InputImage")
-        hasSetTextAction()
-      }
-
-  val noImagesDialog: KNode = onNode { hasTestTag("NoImagesDialog") }
 }

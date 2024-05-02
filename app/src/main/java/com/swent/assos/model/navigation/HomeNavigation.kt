@@ -16,9 +16,14 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
@@ -27,19 +32,21 @@ import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
   val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
-
   Column(
-      modifier = Modifier.fillMaxSize(),
+      modifier =
+          Modifier.fillMaxSize().testTag("HomeNavigation").semantics {
+            testTagsAsResourceId = true
+          },
   ) {
     HorizontalPager(
         state = pagerState,
         userScrollEnabled = false,
-        modifier = Modifier.fillMaxSize().weight(1f),
+        modifier = Modifier.fillMaxSize().weight(1f).testTag("HorizontalPager"),
     ) { page ->
       when (page) {
         0 -> News()
@@ -48,13 +55,20 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         3 -> Profile(navigationActions = navigationActions)
       }
     }
-
     NavigationBar(
-        modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.background),
+        modifier =
+            Modifier.fillMaxWidth()
+                .background(MaterialTheme.colorScheme.background)
+                .testTag("NavigationBar")
+                .semantics { testTagsAsResourceId = true },
         containerColor = Color.Transparent,
     ) {
       repeat(4) { index ->
         NavigationBarItem(
+            modifier =
+                Modifier.testTag("NavigationBarItem$index").semantics {
+                  testTagsAsResourceId = true
+                },
             icon = {
               when (index) {
                 0 ->
@@ -77,7 +91,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                             else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f))
                 2 ->
                     Icon(
-                        painterResource(id = R.drawable.calendar),
+                        painterResource(id = R.drawable.baseline_calendar_today_24),
                         contentDescription = "Cal",
                         modifier = Modifier.size(28.dp),
                         tint =
@@ -88,7 +102,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.profil),
                         contentDescription = "Profil",
-                        modifier = Modifier.size(28.dp).padding((2.5).dp),
+                        modifier = Modifier.size(28.dp).padding((2.5).dp).testTag("ProfileIcon"),
                         tint =
                             if (pagerState.currentPage == index)
                                 MaterialTheme.colorScheme.onBackground
