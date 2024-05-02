@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.screens.CreateEventScreen
 import com.swent.assos.ui.screens.manageAsso.CreateEvent
@@ -35,6 +36,41 @@ class CreateEventTest : SuperTest() {
           goBackButton { performClick() }
           verify { mockNavActions.goBack() }
           confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun createEventDisplaysTheCorrectPageTitle() {
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("Check if page title is displayed") {
+          pagetile {
+            assertIsDisplayed()
+            assert(hasText("Create an event", substring = true, ignoreCase = true))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun createSimpleEvent() {
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("Fill the form") {
+          // form { assertIsDisplayed() }
+          inputTitle {
+            assertIsDisplayed()
+            performClick()
+            performTextInput(eventTitle)
+          }
+          inputDescription {
+            assertIsDisplayed()
+            performClick()
+            performTextInput(eventDescription)
+          }
         }
       }
     }

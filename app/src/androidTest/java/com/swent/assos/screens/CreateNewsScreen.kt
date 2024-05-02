@@ -9,10 +9,10 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("CreateNewsScreen") }) {
 
-    val topBar: KNode = child { hasTestTag("TopBar") }
+  val topBar: KNode = child { hasTestTag("TopBar") }
 
   val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }
-    val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
+  val pagetile: KNode = topBar.child { hasTestTag("PageTitle") }
 
   val form: KNode = child { hasTestTag("Form") }
   val inputTitle: KNode =
@@ -41,5 +41,5 @@ class CreateNewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         hasSetTextAction()
       }
 
-    val noImagesDialog: KNode = onNode { hasTestTag("NoImagesDialog") }
+  val noImagesDialog: KNode = onNode { hasTestTag("NoImagesDialog") }
 }

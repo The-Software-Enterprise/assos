@@ -75,7 +75,10 @@ fun CreateNews(navigationActions: NavigationActions, assoId: String, isEdit: Boo
     ShowImages(images = news.images, onDismissRequest = { showImages = false })
   }
   Scaffold(
-      modifier = Modifier.fillMaxSize().semantics { testTagsAsResourceId = true }.testTag("CreateNewsScreen"),
+      modifier =
+          Modifier.fillMaxSize()
+              .semantics { testTagsAsResourceId = true }
+              .testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create a news", navigationActions = navigationActions)
       },
@@ -229,7 +232,9 @@ fun ShowImages(images: List<String>, onDismissRequest: () -> Unit) {
           color = MaterialTheme.colorScheme.background,
           shape = RoundedCornerShape(size = 8.dp)) {
             Text(
-                modifier = Modifier.padding(horizontal = 86.dp, vertical = 34.dp).testTag("NoImagesDialog"),
+                modifier =
+                    Modifier.padding(horizontal = 86.dp, vertical = 34.dp)
+                        .testTag("NoImagesDialog"),
                 text = "No images",
                 fontSize = 20.sp,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))

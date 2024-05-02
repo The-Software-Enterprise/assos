@@ -7,7 +7,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.swent.assos.screens.CreateNewsScreen
-import com.swent.assos.screens.ProfileScreen
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -87,14 +86,14 @@ class CreateNewsTest : SuperTest() {
     runBlocking {
       delay(2000)
       val newsId =
-        Firebase.firestore
-          .collection("news")
-          .whereEqualTo("title", newsTitle)
-          .whereEqualTo("description", newsDescription)
-          .get()
-          .await()
-          .documents[0]
-          .id
+          Firebase.firestore
+              .collection("news")
+              .whereEqualTo("title", newsTitle)
+              .whereEqualTo("description", newsDescription)
+              .get()
+              .await()
+              .documents[0]
+              .id
       assert(newsId.isNotEmpty())
       Firebase.firestore.collection("news").document(newsId).delete().await()
       Firebase.auth.signOut()
@@ -151,15 +150,15 @@ class CreateNewsTest : SuperTest() {
     runBlocking {
       delay(2000)
       val newsId =
-        Firebase.firestore
-          .collection("news")
-          .whereEqualTo("title", newsTitle)
-          .whereEqualTo("description", newsDescription)
-          .whereEqualTo("images", listOf(imageURL))
-          .get()
-          .await()
-          .documents[0]
-          .id
+          Firebase.firestore
+              .collection("news")
+              .whereEqualTo("title", newsTitle)
+              .whereEqualTo("description", newsDescription)
+              .whereEqualTo("images", listOf(imageURL))
+              .get()
+              .await()
+              .documents[0]
+              .id
       assert(newsId.isNotEmpty())
       Firebase.firestore.collection("news").document(newsId).delete().await()
       Firebase.auth.signOut()
@@ -171,12 +170,12 @@ class CreateNewsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
         step("Click on show images") {
-
           form { assertIsDisplayed() }
           showImages { performClick() }
-          noImagesDialog { assertIsDisplayed()
-            assert(hasText("No Images", substring = true, ignoreCase = true))}
-
+          noImagesDialog {
+            assertIsDisplayed()
+            assert(hasText("No Images", substring = true, ignoreCase = true))
+          }
         }
       }
     }
