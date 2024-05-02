@@ -33,8 +33,8 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
-import com.swent.assos.ui.theme.LightGray
 import com.swent.assos.ui.theme.Typography
+import com.swent.assos.ui.theme.VeryLightGray
 
 @Composable
 fun News(navigationActions: NavigationActions) {
@@ -57,7 +57,7 @@ fun News(navigationActions: NavigationActions) {
         LazyColumn(
             modifier =
                 Modifier.padding(paddingValues)
-                    .background(LightGray) // Light gray background
+                    .background(VeryLightGray) // Light gray background
                     .padding(horizontal = 15.dp)
                     .padding(top = 5.dp)
                     .testTag("NewsList"),
