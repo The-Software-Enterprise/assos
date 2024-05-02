@@ -103,7 +103,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         for i in range(len(profile[0]["accreds"]) - 1):
             
             acronymList = find_original_acronym(profile[0]["accreds"][i + 1]["acronym"])
-            
+            print(acronymList)
             acronym = " ".join(acronymList)
             print(acronym)
             
