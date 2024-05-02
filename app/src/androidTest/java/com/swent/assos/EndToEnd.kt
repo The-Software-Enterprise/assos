@@ -203,7 +203,11 @@ class EndToEnd : SuperTest() {
     }
     composeTestRule.activity.setContent { Explorer(navigationActions = mockNavActions) }
     run{
-
+        ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+            step("Click on follow") {
+            composeTestRule.onNodeWithTag("AssoList").performClick()
+            }
+        }
     }
   }
 
