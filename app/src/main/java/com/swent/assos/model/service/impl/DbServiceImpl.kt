@@ -341,6 +341,7 @@ private fun deserializeAssociation(doc: DocumentSnapshot): Association {
       fullname = doc.getString("fullname") ?: "",
       url = doc.getString("url") ?: "",
       description = doc.getString("description") ?: "",
+      logo = doc.getString("logo")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
       documentSnapshot = doc)
 }
 
