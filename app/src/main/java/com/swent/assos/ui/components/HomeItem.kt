@@ -36,6 +36,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
           Modifier.clip(RoundedCornerShape(12.dp))
               .background(Color.White)
               .fillMaxWidth()
+              .testTag("NewsListItem")
               .height(100.dp)) {
         Row(
             horizontalArrangement = Arrangement.Start,

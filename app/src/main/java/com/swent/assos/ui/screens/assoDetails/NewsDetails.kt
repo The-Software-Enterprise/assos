@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,7 +47,6 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.theme.Typography
-import com.swent.assos.ui.theme.VeryLightGray
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -71,7 +71,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                       Modifier.fillMaxWidth()
                           .padding(10.dp)
                           .height(200.dp)
-                          .background(Color.Gray, shape = RoundedCornerShape(20.dp))
+                          .background(
+                              MaterialTheme.colorScheme.outline, shape = RoundedCornerShape(20.dp))
                           .testTag("Main Image"),
                   contentScale = ContentScale.Crop,
                   alignment = Alignment.Center)
@@ -80,7 +81,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                 modifier =
                     Modifier.width(400.dp)
                         .padding(top = 5.dp, bottom = 4.dp)
-                        .background(VeryLightGray, shape = RoundedCornerShape(20.dp))) {
+                        .background(
+                            MaterialTheme.colorScheme.outline, shape = RoundedCornerShape(20.dp))) {
                   Text(
                       text = news.description,
                       style =

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,7 +34,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
 import com.swent.assos.ui.theme.Typography
-import com.swent.assos.ui.theme.VeryLightGray
 
 @Composable
 fun News(navigationActions: NavigationActions) {
@@ -57,7 +56,7 @@ fun News(navigationActions: NavigationActions) {
         LazyColumn(
             modifier =
                 Modifier.padding(paddingValues)
-                    .background(VeryLightGray) // Light gray background
+                    .background(MaterialTheme.colorScheme.outline) // Light gray background
                     .padding(horizontal = 15.dp)
                     .padding(top = 5.dp)
                     .testTag("NewsList"),
@@ -92,7 +91,10 @@ fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
 fun HomePageTitle() {
   Box(
       modifier =
-          Modifier.width(361.dp).height(116.dp).background(Color.White).padding(bottom = 24.dp),
+          Modifier.width(361.dp)
+              .height(116.dp)
+              .background(MaterialTheme.colorScheme.onPrimary)
+              .padding(bottom = 24.dp),
   ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
@@ -103,7 +105,7 @@ fun HomePageTitle() {
                   Typography.bodyLarge.copy(
                       fontWeight = FontWeight.Bold, // Adjust the weight as needed
                       fontSize = 30.sp,
-                      color = Color.Black),
+                      color = MaterialTheme.colorScheme.onBackground),
               modifier = Modifier.align(Alignment.CenterHorizontally))
         }
   }
