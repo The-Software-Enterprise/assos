@@ -22,8 +22,16 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
 
   private val _events = MutableStateFlow(emptyList<Event>())
   val events = _events.asStateFlow()
+
   private val _tomorrowEvents = MutableStateFlow(emptyList<Pair<String, Event>>())
   val tomorrowEvents = _tomorrowEvents.asStateFlow()
+
+  private val _selectedDate = MutableStateFlow(LocalDate.now())
+  val selectedDate = _selectedDate.asStateFlow()
+
+  private val _selectedEvents = MutableStateFlow(emptyList<Event>())
+  val selectedEvents = _selectedEvents.asStateFlow()
+
   private var _loading = false
 
   private val user = DataCache.currentUser
@@ -73,5 +81,21 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
             }
       }
     }
+  }
+
+  fun updateSelectedDate(date: LocalDate) {
+    _selectedDate.value = date
+  }
+
+  fun filterEvents() {
+    _selectedEvents.value =
+        _events.value.filter {
+          if (it.startTime == null || it.endTime == null) {
+            false
+          } else {
+            it.startTime!!.isAfter(selectedDate.value.atStartOfDay()) &&
+                it.endTime!!.isBefore(selectedDate.value.atStartOfDay().plusDays(1))
+          }
+        }
   }
 }
