@@ -4,13 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -61,69 +61,62 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
       topBar = { TopNewsBar(news = news, navigationActions = navigationActions) }) { paddingValues
         ->
-        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-          item {
-            if (news.images.isNotEmpty()) {
-              AsyncImage(
-                  model = news.images[0],
-                  contentDescription = null,
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(10.dp)
-                          .height(200.dp)
-                          .background(
-                              MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))
-                          .testTag("Main Image"),
-                  contentScale = ContentScale.Crop,
-                  alignment = Alignment.Center)
-            }
-            Box(
+        Column(modifier = Modifier.padding(paddingValues).testTag("Content")) {
+          if (news.images.isNotEmpty()) {
+            AsyncImage(
+                model = news.images[0],
+                contentDescription = "main image",
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center,
                 modifier =
-                    Modifier.width(400.dp)
-                        .padding(top = 5.dp, bottom = 4.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))) {
-                  Text(
-                      text = news.description,
-                      style =
-                          Typography.bodyLarge.copy(
-                              fontSize = 14.sp,
-                              lineHeight = 20.sp,
-                              letterSpacing = 0.25.sp,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.Light),
-                      modifier =
-                          Modifier.fillMaxWidth()
-                              .padding(horizontal = 16.dp, vertical = 0.dp)
-                              .testTag("description"))
-                }
-            if (news.images.isNotEmpty()) {
-              LazyRow(
-                  modifier = Modifier.padding(paddingValues).testTag("subImageList"),
-                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                    items(news.images) { image ->
-                      Card(
-                          modifier =
-                              Modifier.padding(10.dp)
-                                  .width(120.dp)
-                                  .height(70.dp)
-                                  .testTag("subImage"), // Keep your height as it is
-                          shape = RoundedCornerShape(20.dp),
-                      ) {
-                        AsyncImage(
-                            model = image,
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth(),
-                            contentScale = ContentScale.Crop,
-                            alignment = Alignment.Center)
-                        Spacer(modifier = Modifier.width(8.dp))
-                      }
-                    }
-                  }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
+                    Modifier.fillMaxWidth().padding(10.dp).height(200.dp).testTag("Main Image"))
           }
+          Box(
+              modifier =
+                  Modifier.width(400.dp)
+                      .padding(top = 5.dp, bottom = 4.dp)
+                      .background(
+                          MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))) {
+                Text(
+                    text = news.description,
+                    style =
+                        Typography.bodyLarge.copy(
+                            fontSize = 14.sp,
+                            lineHeight = 20.sp,
+                            letterSpacing = 0.25.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.Light),
+                    modifier =
+                        Modifier.fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 0.dp)
+                            .testTag("description"))
+              }
+          if (news.images.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier.padding(paddingValues).testTag("subImageList"),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                  items(news.images) { image ->
+                    Card(
+                        modifier =
+                            Modifier.padding(10.dp)
+                                .width(120.dp)
+                                .height(70.dp)
+                                .testTag("subImage"), // Keep your height as it is
+                        shape = RoundedCornerShape(20.dp),
+                    ) {
+                      AsyncImage(
+                          model = image,
+                          contentDescription = null,
+                          modifier = Modifier.fillMaxWidth(),
+                          contentScale = ContentScale.Crop,
+                          alignment = Alignment.Center)
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                  }
+                }
+          }
+
+          Spacer(modifier = Modifier.height(20.dp))
         }
       }
 }

@@ -184,14 +184,16 @@ constructor(
         createdAt = timestampToLocalDateTime(snapshot.getTimestamp("createdAt")),
         associationId = snapshot.getString("associationId") ?: "",
         images =
-            if (snapshot.get("images") is List<*>) {
-              (snapshot.get("images") as List<*>).filterIsInstance<Uri>().toMutableList()
+            if (snapshot["images"] is List<*>) {
+              (snapshot["images"] as List<*>).filterIsInstance<String>().toList().map {
+                Uri.parse(it)
+              }
             } else {
-              mutableListOf()
+              listOf()
             },
         eventIds =
-            if (snapshot.get("eventIds") is List<*>) {
-              (snapshot.get("eventIds") as List<*>).filterIsInstance<String>().toMutableList()
+            if (snapshot["eventIds"] is List<*>) {
+              (snapshot["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
             } else {
               mutableListOf()
             },
