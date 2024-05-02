@@ -28,7 +28,6 @@ from google.cloud import firestore
 initialize_app()
 
 
-firestore_client: google.cloud.firestore.Client = firestore.Client()
 
 def find_original_acronym(fake_acronym):
     # we have an acronym that points us to a webstite that contains the original acronym
@@ -73,6 +72,7 @@ def find_original_acronym(fake_acronym):
 def oncallFind(req: https_fn.Request) -> https_fn.Response:
     # the request body is a JSON object with a single key "email"
     email = req.data["email"]
+    firestore_client: google.cloud.firestore.Client = firestore.Client()
 
     userID = req.auth.uid
     try:
@@ -108,12 +108,12 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
             print(acronym)
             
             #find id of the association in the database 
-            associations = firestore_client.collection("associations").where("acronym", "==",acronym).stream()
-            associations = list(associations)
-            if len(associations) == 0:
+            association = firestore_client.collection("associations").where("acronym_lower", "==",acronym.lower()).stream()
+            association = list(association)
+            if len(association) == 0:
                 print("could not find association")
                 continue
-            id = associations[0].id
+            id = association[0].id
             print(f"id = {id}")
 
             temp = {"id": id,
