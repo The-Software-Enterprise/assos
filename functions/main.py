@@ -2,6 +2,15 @@
 # To get started, simply uncomment the below code or create your own.
 # Deploy with `firebase deploy`
 
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
+
+
 from firebase_functions import https_fn
 from firebase_admin import initialize_app, db
 
@@ -17,6 +26,48 @@ from firebase_functions.firestore_fn import (
 from flask import jsonify
 from google.cloud import firestore
 initialize_app()
+
+
+    
+
+def find_original_acronym(fake_acronym):
+    # we have an acronym that points us to a webstite that contains the original acronym
+    # f"https://search.epfl.ch/?filter=unit&q={acronym}"
+    
+    # Specify the URL of the webpage you want to scrape
+    url = f"https://search.epfl.ch/?filter=unit&q={fake_acronym}"  # Replace with your target URL
+
+    # Configure Chrome options
+    chrome_options = Options()
+    chrome_options.binary_location = "./google-chrome-stable_current_amd64.deb"
+    # Replace with your Chrome binary location
+    chrome_options.add_argument("--headless")  # Run Chrome in headless mode, i.e., without opening a GUI
+    chrome_options.add_argument("--disable-gpu")  # Disable GPU acceleration (necessary in headless mode)
+
+    driver = webdriver.Chrome( options=chrome_options)
+
+    try:
+        # Open the webpage
+        driver.get(url)
+
+        # Wait for the content to load (adjust timeout and element locator as needed)
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, "ul li")))
+
+        # Extract desired content using Selenium
+        elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
+        for element in elements:
+            # we want to get the element that contains the acronym
+            if fake_acronym in element.text:
+                # we want to get the first element that contains the acronym
+                # return the string expect the last string
+                return element.text.split(" ")[:-1]
+            
+    except Exception as e:
+        return list()
+    finally:
+        # Close the browser
+        driver.quit()
+
 
 @https_fn.on_call(region="europe-west6")
 def oncallFind(req: https_fn.Request) -> https_fn.Response:
@@ -51,14 +102,27 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         associations = list()
 
         for i in range(len(profile[0]["accreds"]) - 1):
-            acronym = profile[0]["accreds"][i + 1]["acronym"]
-            temp = {"acronym": profile[0]["accreds"][i + 1]["acronym"],
+            
+            acronymList = find_original_acronym(profile[0]["accreds"][i + 1]["acronym"])
+            
+            acronym = " ".join(acronymList)
+            print(acronym)
+            
+            #find id of the association in the database 
+            associations = firestore_client.collection("associations").where("acronym", "==",acronym).stream()
+            associations = list(associations)
+            if len(associations) == 0:
+                print("could not find association")
+                continue
+            id = associations[0].id
+            print(f"id = {id}")
+
+            temp = {"id": id,
             "position": profile[0]["accreds"][i + 1]["position"],
             "rank": profile[0]["accreds"][i + 1]["rank"]}
                 
             associations.append(temp)
             
-           
         user = {
             "email": profile[0]["email"],
             "name": profile[0]["name"],
@@ -70,7 +134,7 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
         }
         
 
-        
+        print(user)
         firestore_client.document(f"users/{userID}").set(user)
         # transform profile insto a json format
         
@@ -87,7 +151,13 @@ def oncallFind(req: https_fn.Request) -> https_fn.Response:
             "associations" : [],
             "following": []
         }
+
         firestore_client.document(f"users/{userID}").set(user)
         
         
         return {"response":f"could not find: {email}"}
+    
+    
+
+
+

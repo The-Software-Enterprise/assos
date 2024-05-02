@@ -92,7 +92,7 @@ class SignupTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSupp
     run {
       ComposeScreen.onComposeScreen<SignupScreen>(composeTestRule) {
         step("Signup") {
-          emailField { performTextInput("emailtest@epfl.ch") }
+          emailField { performTextInput("antoine.marchand@epfl.ch") }
           step("password") {
             passwordField {
               assertIsDisplayed()
