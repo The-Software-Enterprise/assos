@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.google.firebase.auth.FirebaseAuth
 import com.kaspersky.components.composesupport.config.withComposeSupport
 import com.kaspersky.kaspresso.kaspresso.Kaspresso
 import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
@@ -26,5 +27,7 @@ open class SuperTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompose
   @Before
   open fun setup() {
     hiltRule.inject()
+    val firebaseAuth = FirebaseAuth.getInstance()
+    firebaseAuth.signOut()
   }
 }
