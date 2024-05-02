@@ -8,7 +8,7 @@ data class News(
     val id: String = "",
     val title: String = "",
     val associationId: String = "",
-    val images: List<Uri> = mutableListOf(),
+    var images: List<Uri> = mutableListOf(),
     val description: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val eventIds: MutableList<String> = mutableListOf(),

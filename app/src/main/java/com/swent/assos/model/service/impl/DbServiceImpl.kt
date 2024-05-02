@@ -96,7 +96,8 @@ constructor(
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
-        .add(serialize(news))
+        .document(news.id)
+        .set(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
