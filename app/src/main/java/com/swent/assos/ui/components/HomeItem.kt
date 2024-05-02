@@ -36,7 +36,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
           Modifier.clip(RoundedCornerShape(12.dp))
               .background(Color.White)
               .fillMaxWidth()
-              .testTag("NewsListItem")
+              .testTag("NewsListItem2")
               .height(100.dp)) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -63,7 +63,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier = Modifier.width(173.dp).testTag("itemsTitle"))
+                        modifier = Modifier.width(173.dp).testTag("ItemsTitle"))
                     Text(
                         text = news.description,
                         fontSize = 12.sp,

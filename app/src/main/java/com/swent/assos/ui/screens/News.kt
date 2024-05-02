@@ -75,7 +75,7 @@ fun HomeItemWrapper(news: News, navigationActions: NavigationActions) {
   // Clickable modifier to handle user interactions
   Box(
       modifier =
-          Modifier.fillMaxWidth().testTag("NewsListItem").clickable {
+          Modifier.fillMaxWidth().testTag("NewsListItem1").clickable {
             val dest =
                 Destinations.NEWS_DETAILS.route +
                     "/${

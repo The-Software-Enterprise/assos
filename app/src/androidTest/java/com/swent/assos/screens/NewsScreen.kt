@@ -12,9 +12,8 @@ class NewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val appTitle2: KNode = child { hasTestTag("AppTitle_2") }
 
   val newsList: KNode = child { hasTestTag("NewsList") }
-  val newsListItems: KNode = newsList.child { hasTestTag("NewsListItem") }
-  val itemsTitle: KNode = newsListItems.child { hasTestTag("ItemsTitle") }
-  val itemsDescription: KNode = newsListItems.child { hasTestTag("ItemsDescription") }
-  val itemsDate: KNode = newsListItems.child { hasTestTag("ItemsDate") }
-  val itemsAssociation: KNode = newsListItems.child { hasTestTag("ItemsAssociation") }
+  val newsListItems1: KNode = newsList.child { hasTestTag("NewsListItem1") }
+  val newsListItems2: KNode = newsListItems1.child { hasTestTag("NewsListItem2") }
+  val itemsTitle: KNode = newsListItems2.child { hasTestTag("ItemsTitle") }
+  val itemsDescription: KNode = newsListItems2.child { hasTestTag("ItemsDescription") }
 }

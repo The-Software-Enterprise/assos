@@ -75,7 +75,7 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
       ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
         step("Check if the news is displayed") {
           newsList { assertIsDisplayed() }
-          newsListItems { assertIsDisplayed() }
+          newsListItems2 { assertIsDisplayed() }
           itemsTitle { assertTextContains(newsTitle) }
           itemsDescription { assertTextContains(newsDescription) }
         }
