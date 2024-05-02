@@ -32,33 +32,28 @@ constructor(
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
+    if (!snapshot.exists()) {
+      return User()
+    }
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "",
+        firstName = snapshot.getString("firstname") ?: "", // Handle nullability explicitly
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following =
-            if (snapshot.get("following") is MutableList<*>) {
-              (snapshot.get("following") as MutableList<*>)
-                  .filterIsInstance<String>()
-                  .toMutableList()
-            } else {
-              mutableListOf()
-            },
+        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
         associations =
-            if (snapshot.get("associations") is List<*>) {
-              (snapshot.get("associations") as List<*>)
-                  .filterIsInstance<Map<String, Any>>()
-                  .map {
-                    Triple(
-                        it["assoId"] as String,
-                        it["position"] as String,
-                        (it["rank"] as Long).toInt())
-                  }
-                  .toList()
-            } else {
-              emptyList()
-            })
+            snapshot.get("associations")?.let { associations ->
+              (associations as? List<Map<String, Any>>)?.mapNotNull {
+                val assoId = it["assoId"] as? String
+                val position = it["position"] as? String
+                val rank = (it["rank"] as? Long)?.toInt()
+                if (assoId != null && position != null && rank != null) {
+                  Triple(assoId, position, rank)
+                } else {
+                  null
+                }
+              } ?: emptyList()
+            } ?: emptyList())
   }
 
   override suspend fun getAllAssociations(
