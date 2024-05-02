@@ -14,6 +14,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,6 +36,8 @@ import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -46,6 +49,10 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -72,6 +79,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.maxkeppeker.sheets.core.models.base.ButtonStyle
@@ -95,7 +104,7 @@ import java.time.format.FormatStyle
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyColumnState
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   val viewModel: EventViewModel = hiltViewModel()
@@ -111,6 +120,16 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
 
+  var startDatePickerState = rememberDatePickerState()
+  var showStartDatePicker by remember { mutableStateOf(false) }
+  var startTimePickerState = rememberTimePickerState()
+  var showStartTimePicker by remember { mutableStateOf(false) }
+
+  var endDatePickerState = rememberDatePickerState()
+  var showEndDatePicker by remember { mutableStateOf(false) }
+  var endTimePickerState = rememberTimePickerState()
+  var showEndTimePicker by remember { mutableStateOf(false) }
+
   val launcher =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
         ->
@@ -120,6 +139,50 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       }
 
   LaunchedEffect(key1 = Unit) { event.associationId = assoId }
+
+  if (showStartDatePicker) {
+    DatePickerDialog(
+        onDismissRequest = { /*TODO*/},
+        confirmButton = { TextButton(onClick = { showStartDatePicker = false }) { Text("OK") } },
+        dismissButton = {
+          TextButton(onClick = { showStartDatePicker = false }) { Text("Cancel") }
+        }) {
+          DatePicker(state = startDatePickerState)
+        }
+  }
+
+  if (showStartTimePicker) {
+    TimePickerDialog(
+        onDismissRequest = { /*TODO*/},
+        confirmButton = { TextButton(onClick = { showStartTimePicker = false }) { Text("OK") } },
+        dismissButton = {
+          TextButton(onClick = { showStartTimePicker = false }) { Text("Cancel") }
+        }) {
+          TimePicker(state = startTimePickerState)
+        }
+  }
+
+  if (showEndDatePicker) {
+    DatePickerDialog(
+        onDismissRequest = { /*TODO*/},
+        confirmButton = { TextButton(onClick = { showEndDatePicker = false }) { Text("OK") } },
+        dismissButton = {
+          TextButton(onClick = { showEndDatePicker = false }) { Text("Cancel") }
+        }) {
+          DatePicker(state = endDatePickerState)
+        }
+  }
+
+  if (showEndTimePicker) {
+    TimePickerDialog(
+        onDismissRequest = { /*TODO*/},
+        confirmButton = { TextButton(onClick = { showEndTimePicker = false }) { Text("OK") } },
+        dismissButton = {
+          TextButton(onClick = { showEndTimePicker = false }) { Text("Cancel") }
+        }) {
+          TimePicker(state = endTimePickerState)
+        }
+  }
 
   if (showTimePickerStart) {
     DateTimeDialog(
@@ -233,7 +296,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
                 Box(
                     modifier =
-                        Modifier.padding(16.dp)
+                        Modifier.padding(8.dp)
                             .width(120.dp)
                             .height(150.dp)
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
@@ -261,7 +324,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     }
               }
 
-              item {
+              /*item {
                 Row(
                     modifier = Modifier.padding(horizontal = 32.dp, vertical = 0.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -295,7 +358,105 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                 color = Color.Black)
                           }
                     }
+              }*/
+
+              item {
+                Row(
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = { showStartTimePicker = true }) {
+                            Text(
+                                event.startTime?.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                    ?: "Start Time Picker",
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                color = Color.Black)
+                          }
+                      Spacer(modifier = Modifier.width(32.dp))
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = { showStartDatePicker = true },
+                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
+                            Text(
+                                event.endTime?.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                    ?: "Start Date Picker",
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                color = Color.Black)
+                          }
+                    }
               }
+
+              item {
+                Row(
+                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 0.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = { showEndTimePicker = true }) {
+                            Text(
+                                event.startTime?.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                    ?: "End Time Picker",
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                color = Color.Black)
+                          }
+                      Spacer(modifier = Modifier.width(32.dp))
+                      OutlinedButton(
+                          shape = RoundedCornerShape(8.dp),
+                          onClick = { showEndDatePicker = true },
+                          colors = ButtonDefaults.outlinedButtonColors(Color.Transparent)) {
+                            Text(
+                                event.endTime?.format(
+                                    DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+                                    ?: "End Date Picker",
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                color = Color.Black)
+                          }
+                    }
+              }
+
+              /*item {
+                  Row(modifier = Modifier.fillMaxWidth()) {
+                      Column(
+                          modifier = Modifier
+                              .fillMaxSize()
+                              .padding(16.dp),
+                          horizontalAlignment = Alignment.CenterHorizontally,
+                          verticalArrangement = Arrangement.Center,
+                      ) {
+
+                          Text(text = "No Date Selected", modifier = Modifier.padding(bottom = 16.dp))
+
+                          Button(
+                              onClick = {
+                                  showDatePicker = true
+                              },
+                              modifier = Modifier.fillMaxWidth(),
+                          ) {
+                              Text(text = "Date Picker")
+                          }
+
+                          Divider(modifier = Modifier.padding(vertical = 24.dp))
+
+                          Text(text = "No Time Selected", modifier = Modifier.padding(bottom = 16.dp))
+
+                          Button(
+                              onClick = {
+                                  showTimePicker = true
+                              },
+                              modifier = Modifier.fillMaxWidth(),
+                          ) {
+                              Text(text = "Time Picker")
+                          }
+
+                      }
+                  }
+              }   */
 
               item {
                 Row(
@@ -328,7 +489,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
 
               item {
-                Spacer(modifier = Modifier.height(16.dp))
+                // Spacer(modifier = Modifier.height(8.dp))
                 Button(
                     enabled =
                         event.description.isNotEmpty() &&
@@ -593,3 +754,42 @@ private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): Local
       HourFormat.PM ->
           LocalDateTime.of(localTime.toLocalDate(), LocalTime.of(localTime.hour, localTime.minute))
     }
+
+@Composable
+fun TimePickerDialog(
+    title: String = "Select Time",
+    onDismissRequest: () -> Unit,
+    confirmButton: @Composable (() -> Unit),
+    dismissButton: @Composable (() -> Unit)? = null,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    content: @Composable () -> Unit,
+) {
+  Dialog(
+      onDismissRequest = onDismissRequest,
+      properties = DialogProperties(usePlatformDefaultWidth = false),
+  ) {
+    Surface(
+        shape = MaterialTheme.shapes.extraLarge,
+        tonalElevation = 6.dp,
+        modifier =
+            Modifier.width(IntrinsicSize.Min)
+                .height(IntrinsicSize.Min)
+                .background(shape = MaterialTheme.shapes.extraLarge, color = containerColor),
+        color = containerColor) {
+          Column(
+              modifier = Modifier.padding(24.dp),
+              horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium)
+                content()
+                Row(modifier = Modifier.height(40.dp).fillMaxWidth()) {
+                  Spacer(modifier = Modifier.weight(1f))
+                  dismissButton?.invoke()
+                  confirmButton()
+                }
+              }
+        }
+  }
+}
