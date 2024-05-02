@@ -124,7 +124,8 @@ constructor(
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
-        .add(serialize(news))
+        .document(news.id)
+        .set(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
@@ -349,9 +350,9 @@ private fun deserializeNews(doc: DocumentSnapshot): News {
       associationId = doc.getString("associationId") ?: "",
       images =
           if (doc["images"] is List<*>) {
-            (doc["images"] as List<*>).filterIsInstance<String>().toMutableList()
+            (doc["images"] as List<*>).filterIsInstance<String>().toList().map { Uri.parse(it) }
           } else {
-            mutableListOf()
+            listOf()
           },
       eventIds =
           if (doc["eventIds"] is List<*>) {
