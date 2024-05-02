@@ -67,7 +67,6 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
             performClick()
             performTextInput(newsDescription)
           }
-          buttonSave { performClick() }
         }
       }
     }
