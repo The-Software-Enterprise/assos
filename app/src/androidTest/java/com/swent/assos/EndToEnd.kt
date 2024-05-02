@@ -162,7 +162,7 @@ class EndToEnd : SuperTest() {
         step("Fill the form") {
           emailField {
             assertIsDisplayed()
-            performTextInput("marc.pitteloud@epfl.ch")
+            performTextInput("clemence.kiehl@epfl.ch")
           }
           passwordField {
             assertIsDisplayed()
