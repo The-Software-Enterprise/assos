@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,8 +39,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.view.NewsViewModel
-import com.swent.assos.ui.theme.Purple40
-import com.swent.assos.ui.theme.Purple80
 
 @Preview
 @Composable
@@ -74,7 +73,7 @@ fun News() {
                             fontSize = 35.sp,
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
-                            color = Purple80))
+                            color = MaterialTheme.colorScheme.primary))
                 Text(
                     modifier = Modifier.testTag("AppTitle_2"),
                     text = "Sphere",
@@ -83,7 +82,7 @@ fun News() {
                             fontSize = 35.sp,
                             fontFamily = FontFamily(Font(R.font.impact)),
                             fontWeight = FontWeight(400),
-                            color = Purple40))
+                            color = MaterialTheme.colorScheme.secondary))
               }
         }
       }) { paddingValues ->
