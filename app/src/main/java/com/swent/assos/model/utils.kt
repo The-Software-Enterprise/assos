@@ -3,12 +3,16 @@ package com.swent.assos.model
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.google.firebase.Timestamp
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
 
@@ -30,4 +34,13 @@ fun formatDateTime(date: LocalDateTime): String {
 fun generateUniqueID(): String {
   val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   return (1..20).map { chars.random() }.joinToString("")
+}
+
+fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
+  return LocalDateTime.ofInstant(
+      Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
+}
+
+fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
+  return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
 }

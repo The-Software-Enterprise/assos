@@ -18,6 +18,11 @@ interface DbService {
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
+  suspend fun filterNewsBasedOnAssociations(
+      lastDocumentSnapshot: DocumentSnapshot?,
+      userId: String
+  ): List<News>
+
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
@@ -29,7 +34,15 @@ interface DbService {
   // Events -------------------------------------------------------------------
   suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event>
 
-  suspend fun getEvents(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Event>
+  suspend fun getEventsFromAnAssociation(
+      associationId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<Event>
+
+  suspend fun getEventsFromAssociations(
+      associationIds: List<String>,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<Event>
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
