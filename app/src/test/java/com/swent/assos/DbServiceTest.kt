@@ -55,6 +55,55 @@ class DbServiceTest {
           .limit(any())
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereIn(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereIn(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
 
     val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()
@@ -68,12 +117,15 @@ class DbServiceTest {
     dbService.createNews(News(), {}, {})
     dbService.updateNews(News(), {}, {})
     dbService.deleteNews(News(), {}, {})
+    dbService.getAllNews(null)
     dbService.getAllEvents(null)
     dbService.getAllAssociations(null)
     dbService.getAssociationById("id")
     dbService.followAssociation("id", {}, {})
     dbService.unfollowAssociation("id", {}, {})
     dbService.filterNewsBasedOnAssociations(null, "id")
+    dbService.getEventsFromAssociations(listOf("id"), null)
+    dbService.getEventsFromAnAssociation("id", null)
 
     return@runBlocking
   }
