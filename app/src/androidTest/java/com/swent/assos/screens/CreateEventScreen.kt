@@ -9,7 +9,10 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("CreateEvent") }) {
 
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+
   val form: KNode = child { hasTestTag("Form") }
+
   val inputTitle: KNode =
       form.child {
         hasTestTag("InputTitle")
