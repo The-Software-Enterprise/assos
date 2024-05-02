@@ -92,6 +92,35 @@ constructor(
     return snapshot.documents.map { deserializeNews(it) }
   }
 
+  override suspend fun filterNewsBasedOnAssociations(
+      lastDocumentSnapshot: DocumentSnapshot?,
+      userId: String
+  ): List<News> {
+    val query = firestore.collection("users").document(userId)
+    val snapshot = query.get().await() ?: return emptyList()
+    val followedAssociations: List<String> =
+        if (snapshot.get("following") is List<*>) {
+          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
+        } else {
+          emptyList()
+        }
+    val associationsTheUserBelongsTo: List<String> =
+        if (snapshot.get("associations") is List<*>) {
+          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
+        } else {
+          emptyList()
+        }
+    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
+      return getAllNews(lastDocumentSnapshot)
+    }
+    val news =
+        getAllNews(lastDocumentSnapshot).filter { news ->
+          news.associationId in followedAssociations ||
+              news.associationId in associationsTheUserBelongsTo
+        }
+    return news
+  }
+
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
     firestore
         .collection("news")
