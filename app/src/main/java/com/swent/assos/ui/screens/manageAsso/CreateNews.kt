@@ -43,7 +43,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
@@ -124,10 +123,6 @@ fun CreateNews(
         ) {
           item {
             OutlinedTextField(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
-                        .testTag("InputTitle"),
                 value = news.title,
                 onValueChange = { viewModel.setTitle(it) },
                 modifier =
@@ -160,11 +155,6 @@ fun CreateNews(
 
           item {
             OutlinedTextField(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .padding(horizontal = 32.dp, vertical = 8.dp)
-                        .height(150.dp)
-                        .testTag("InputDescription"),
                 value = news.description,
                 onValueChange = { viewModel.setDescription(it) },
                 modifier =
