@@ -25,7 +25,10 @@ from firebase_functions.firestore_fn import (
 )
 from flask import jsonify
 from google.cloud import firestore
+import sys
+import os
 initialize_app()
+
 
 
 
@@ -58,6 +61,8 @@ def find_original_acronym(fake_acronym):
         # Extract desired content using Selenium
         elements = driver.find_elements(By.CSS_SELECTOR, "ul li")
         driver.save_screenshot('./screenshot.png')
+        #print the folder where the screenshot is saved
+        print(os.getcwd())
         logs = driver.get_log("browser")
         for log in logs:
             print(log)
