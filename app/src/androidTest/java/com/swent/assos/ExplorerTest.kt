@@ -62,7 +62,7 @@ class ExplorerTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
 
       // Check if something is displayed when
       // inputting "180°C"
-      assoListItems { assertIsDisplayed() }
+      assoListoneEighty { assertIsDisplayed() }
     }
   }
 
@@ -79,12 +79,11 @@ class ExplorerTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSu
       step("search 180°C Association") {
         assoListSearch {
           performTextClearance()
-
           performTextInput("180°C")
         }
       }
 
-      assoListItems {
+      assoListoneEighty {
         assertIsDisplayed()
         performClick()
       }
