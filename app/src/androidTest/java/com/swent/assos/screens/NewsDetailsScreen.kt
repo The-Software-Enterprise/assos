@@ -12,8 +12,7 @@ class NewsDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val header: KNode = onNode { hasTestTag("Header") }
   val goBackButton: KNode = header.child { hasTestTag("GoBackButton") }
   val title: KNode = header.child { hasTestTag("Title") }
-  val body: KNode = onNode { hasTestTag("NewsDetailsScreen") }
-  val content: KNode = body.child { hasTestTag("Content") }
+  val content: KNode = onNode { hasTestTag("Content") }
   val mainImage: KNode = content.child { hasTestTag("Main Image") }
   val description: KNode = content.child { hasTestTag("description") }
   val subImageList: KNode = content.child { hasTestTag("subImageList") }
