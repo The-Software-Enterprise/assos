@@ -39,8 +39,7 @@ import com.swent.assos.ui.theme.Typography
 @Composable
 fun News(navigationActions: NavigationActions) {
   val viewModel: NewsViewModel = hiltViewModel()
-  val news by viewModel.allNews.collectAsState()
-
+  val news by viewModel.news.collectAsState()
   val listState = rememberLazyListState()
 
   LaunchedEffect(listState) {

@@ -123,6 +123,7 @@ class DbServiceTest {
     dbService.getAssociationById("id")
     dbService.followAssociation("id", {}, {})
     dbService.unfollowAssociation("id", {}, {})
+    dbService.filterNewsBasedOnAssociations(null, "id")
     dbService.getEventsFromAssociations(listOf("id"), null)
     dbService.getEventsFromAnAssociation("id", null)
 

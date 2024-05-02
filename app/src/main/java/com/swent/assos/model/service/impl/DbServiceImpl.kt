@@ -14,11 +14,10 @@ import com.swent.assos.model.data.EventFieldText
 import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
+import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
-import java.time.Instant
+import com.swent.assos.model.timestampToLocalDateTime
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -91,6 +90,35 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeNews(it) }
+  }
+
+  override suspend fun filterNewsBasedOnAssociations(
+      lastDocumentSnapshot: DocumentSnapshot?,
+      userId: String
+  ): List<News> {
+    val query = firestore.collection("users").document(userId)
+    val snapshot = query.get().await() ?: return emptyList()
+    val followedAssociations: List<String> =
+        if (snapshot.get("following") is List<*>) {
+          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
+        } else {
+          emptyList()
+        }
+    val associationsTheUserBelongsTo: List<String> =
+        if (snapshot.get("associations") is List<*>) {
+          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
+        } else {
+          emptyList()
+        }
+    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
+      return getAllNews(lastDocumentSnapshot)
+    }
+    val news =
+        getAllNews(lastDocumentSnapshot).filter { news ->
+          news.associationId in followedAssociations ||
+              news.associationId in associationsTheUserBelongsTo
+        }
+    return news
   }
 
   override fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
@@ -366,13 +394,4 @@ private fun deserializeAssociation(doc: DocumentSnapshot): Association {
       url = doc.getString("url") ?: "",
       description = doc.getString("description") ?: "",
       documentSnapshot = doc)
-}
-
-private fun timestampToLocalDateTime(timestamp: Timestamp?): LocalDateTime {
-  return LocalDateTime.ofInstant(
-      Instant.ofEpochSecond(timestamp?.seconds ?: 0), ZoneId.systemDefault())
-}
-
-fun localDateTimeToTimestamp(localDateTime: LocalDateTime): Timestamp {
-  return Timestamp(Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant()))
 }

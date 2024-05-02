@@ -36,10 +36,6 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   // Relaxed mocks methods have a default implementation returning values
   @RelaxedMockK lateinit var mockNavActions: NavigationActions
 
-  var associationAcronym = "180°C"
-
-  val newsHeader = "Test description -1934310868"
-
   @Before
   fun setup() {
     hiltRule.inject()
@@ -50,11 +46,9 @@ class NewsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withComposeSuppor
   private val newsDescription = "Test description $randomInt"
   @Test
   fun createNewsAndVerifyCreation() {
-
     composeTestRule.activity.setContent {
       CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
     }
-
     run {
       ComposeScreen.onComposeScreen<CreateNewsScreen>(composeTestRule) {
         step("Create a news") {

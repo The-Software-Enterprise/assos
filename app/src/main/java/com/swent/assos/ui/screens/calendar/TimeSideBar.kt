@@ -2,18 +2,16 @@ package com.swent.assos.ui.screens.calendar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-private val HourFormatter = DateTimeFormatter.ofPattern("h a")
+private val HourFormatter = DateTimeFormatter.ofPattern("HH.mm")
 
 @Composable
 fun TimeSidebar(
@@ -30,9 +28,6 @@ fun TimeSidebar(
 }
 
 @Composable
-fun BasicSidebarLabel(
-    time: LocalTime,
-    modifier: Modifier = Modifier,
-) {
-  Text(text = time.format(HourFormatter), modifier = modifier.fillMaxHeight().padding(4.dp))
+fun BasicSidebarLabel(time: LocalTime) {
+  Text(text = time.format(HourFormatter), fontSize = 12.sp)
 }
