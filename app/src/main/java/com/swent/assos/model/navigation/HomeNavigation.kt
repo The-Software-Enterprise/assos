@@ -20,20 +20,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.swent.assos.R
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
+import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -41,7 +38,6 @@ import kotlinx.coroutines.launch
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
   val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
-
   Column(
       modifier =
           Modifier.fillMaxSize().testTag("HomeNavigation").semantics {
@@ -60,7 +56,6 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         3 -> Profile(navigationActions = navigationActions)
       }
     }
-
     NavigationBar(
         modifier =
             Modifier.fillMaxWidth()
