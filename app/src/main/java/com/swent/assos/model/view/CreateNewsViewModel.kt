@@ -1,5 +1,6 @@
 package com.swent.assos.model.view
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
@@ -26,7 +27,9 @@ constructor(private val dbService: DbService, private val accountService: AuthSe
 
   fun createNews(associationId: String, navigationActions: NavigationActions) {
     val news = _news.value.copy(associationId = associationId)
-    dbService.createNews(news, { navigationActions.goBack() }, {})
+    if (news.title.isNotBlank() && news.description.isNotBlank() && news.images.isNotEmpty()) {
+      dbService.createNews(news, { navigationActions.goBack() }, {})
+    }
   }
 
   fun updateNews(news: News, navigationActions: NavigationActions) {
@@ -44,4 +47,12 @@ constructor(private val dbService: DbService, private val accountService: AuthSe
   fun setDescription(description: String) {
     _news.value = _news.value.copy(description = description)
   }
+
+  fun addImages(images: List<Uri>) {
+    _news.value = _news.value.copy(images = _news.value.images + images)
+  }
+
+    fun removeImage(image: Uri) {
+        _news.value = _news.value.copy(images = _news.value.images - image)
+    }
 }
