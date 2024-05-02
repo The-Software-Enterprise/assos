@@ -11,6 +11,7 @@ import io.mockk.confirmVerified
 import io.mockk.verify
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -36,6 +37,7 @@ class AssoDetailsTest : SuperTest() {
             assert(DataCache.currentUser.value.following.contains(assoId))
           }
         }
+        sleep(1000)
         step("Unfollow association") {
           followButton {
             performClick()
