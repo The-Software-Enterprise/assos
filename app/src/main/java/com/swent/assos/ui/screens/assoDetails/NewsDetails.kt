@@ -44,7 +44,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.theme.Typography
 import com.swent.assos.ui.theme.VeryLightGray
@@ -53,14 +52,14 @@ import com.swent.assos.ui.theme.VeryLightGray
 @Composable
 fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
   val viewModel: NewsViewModel = hiltViewModel()
-  //val assoViewModel: AssoViewModel = hiltViewModel()
+  // val assoViewModel: AssoViewModel = hiltViewModel()
 
   val news by viewModel.news.collectAsState()
-  //val asso by assoViewModel.association.collectAsState()
+  // val asso by assoViewModel.association.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     viewModel.getNews(newsId)
-    //assoViewModel.getAssociation(news.associationId)
+    // assoViewModel.getAssociation(news.associationId)
   }
 
   Scaffold(
@@ -70,15 +69,15 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
             /*Text(
-                text = asso.fullname,
-                style =
-                    Typography.bodyLarge.copy(
-                        fontSize = 1.sp,
-                        lineHeight = 20.sp,
-                        letterSpacing = 0.25.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))*/
+            text = asso.fullname,
+            style =
+                Typography.bodyLarge.copy(
+                    fontSize = 1.sp,
+                    lineHeight = 20.sp,
+                    letterSpacing = 0.25.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.Light),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))*/
 
             if (news.images.isNotEmpty()) {
               Image(

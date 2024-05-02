@@ -27,7 +27,6 @@ import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.ui.theme.Typography
 
 @Composable
 fun HomeItem(news: News, navigationActions: NavigationActions) {
@@ -62,9 +61,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier =
-                            Modifier.width(173.dp)
-                        )
+                        modifier = Modifier.width(173.dp))
                     Text(
                         text = news.description,
                         fontSize = 12.sp,
