@@ -23,16 +23,9 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         hasTestTag("InputDescription")
         hasSetTextAction()
       }
-  val inputDate: KNode =
-      form.child {
-        hasTestTag("InputDate")
-        hasSetTextAction()
-      }
-  val buttonSave: KNode = form.child { hasTestTag("ButtonSave") }
-  val buttonCancel: KNode = form.child { hasTestTag("ButtonCancel") }
+
+  val image: KNode = form.child { hasTestTag("InputImage") }
 
   val startTimePicker: KNode = form.child { hasTestTag("StartTimePicker") }
   val endTimePicker: KNode = form.child { hasTestTag("EndTimePicker") }
-  val startTimeconfirm: KNode = form.child { hasTestTag("StartTimePickerConfirmButton") }
-  val endTimeconfirm: KNode = form.child { hasTestTag("EndTimePickerConfirmButton") }
 }
