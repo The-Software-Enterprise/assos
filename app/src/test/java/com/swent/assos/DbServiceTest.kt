@@ -33,6 +33,8 @@ class DbServiceTest {
         Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).orderBy(any<String>()).limit(any()).get() } returns
         Tasks.forResult(mockQuerySnapshot)
+      coEvery { mockFirestore.collection(any()).orderBy(any<String>()).startAfter(any()).limit(any()).get() } returns
+              Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).add(any()) } returns Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).get() } returns
         Tasks.forResult(mockDocumentSnapshot)
@@ -52,6 +54,14 @@ class DbServiceTest {
     coEvery {
       mockFirestore
           .collection(any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .startAfter(any())
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
           .orderBy(any<String>(), Query.Direction.DESCENDING)
           .limit(any())
           .get()
@@ -59,6 +69,14 @@ class DbServiceTest {
     coEvery {
       mockFirestore
           .collection(any())
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .startAfter(any())
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
           .whereIn(any<String>(), any())
           .whereGreaterThan(any<String>(), any())
           .orderBy(any<String>(), Query.Direction.ASCENDING)
@@ -76,15 +94,34 @@ class DbServiceTest {
     coEvery {
       mockFirestore
           .collection(any())
-          .whereEqualTo(any<String>(), any())
+          .whereIn(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
           .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .startAfter(any())
+          .limit(any())
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
     coEvery {
       mockFirestore
           .collection(any())
           .whereEqualTo(any<String>(), any())
-          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.DESCENDING)
+          .startAfter(any())
           .limit(any())
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
@@ -102,6 +139,16 @@ class DbServiceTest {
           .whereEqualTo(any<String>(), any())
           .whereGreaterThan(any<String>(), any())
           .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereGreaterThan(any<String>(), any())
+          .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .startAfter(any())
           .limit(any())
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
