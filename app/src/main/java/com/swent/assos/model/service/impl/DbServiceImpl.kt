@@ -36,7 +36,7 @@ constructor(
     }
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "", // Handle nullability explicitly
+        firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
         following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
@@ -236,6 +236,28 @@ constructor(
           .update("following", FieldValue.arrayRemove(associationId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Unfollow Error") }
+    }
+  }
+
+  override suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update(
+              "associations",
+              FieldValue.arrayUnion(
+                  mapOf(
+                      "assoId" to triple.first,
+                      "position" to triple.second,
+                      "rank" to triple.third)))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
     }
   }
 }
