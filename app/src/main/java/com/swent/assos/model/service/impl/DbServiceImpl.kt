@@ -36,7 +36,7 @@ constructor(
     }
     return User(
         id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "", // Handle nullability explicitly
+        firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
         following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),

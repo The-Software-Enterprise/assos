@@ -14,6 +14,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Assos"
+rootProject.name = "assos"
 
 include(":app")
