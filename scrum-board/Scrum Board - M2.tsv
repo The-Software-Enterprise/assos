@@ -1,0 +1,81 @@
+Title	URL	Assignees	Status	Epic	Sprint	Nature	Task Type	Actual (#hours)
+firebase emulator setup		marinPh	Done In Sprint #4		Sprint 4	Sprint Task	Test	
+Figma Mockup Refinement	https://github.com/The-Software-Enterprise/assos/issues/51	MaximilienG1, Reza-rgb	Done In Sprint #4		Sprint 4	Sprint Task	Figma	15
+login testing	https://github.com/The-Software-Enterprise/assos/issues/59	JulesHerrscher	Done In Sprint #4	Epic 1	Sprint 4	Sprint Task	Test	1.5
+Fix login	https://github.com/The-Software-Enterprise/assos/issues/26	JulesHerrscher	Done In Sprint #4	Epic 1	Sprint 4	Sprint Task	Backend	
+Research on how to implement QR codes	https://github.com/The-Software-Enterprise/assos/issues/47	Julio12344	Done In Sprint #4	Epic 2	Sprint 3	Sprint Task	Research	
+Button: Follow An Association	https://github.com/The-Software-Enterprise/assos/issues/49	MaximilienG1	Done In Sprint #4	Epic 2	Sprint 4	Sprint Task	Frontend	
+User Story 6.1 : User Profile			Done In Sprint #5	Epic 2	Sprint 4	User Story	Frontend	
+Design of the explore page	https://github.com/The-Software-Enterprise/assos/issues/71	MaximilienG1	Done In Sprint #5	Epic 2	Sprint 5	Sprint Task	Frontend	0
+auto login		marinPh	Done In Sprint #5	Epic 1	Sprint 5	Sprint Task	Frontend	1
+link the calendar to the events in the database	https://github.com/The-Software-Enterprise/assos/issues/70	JulesHerrscher	Done In Sprint #5	Epic 2	Sprint 5	Sprint Task	Backend	
+Design the profile page		alicepotter	Done In Sprint #5	Epic 2	Sprint 5	Sprint Task	Frontend	
+Design of the association's presentation page	https://github.com/The-Software-Enterprise/assos/issues/77	MaximilienG1	Done In Sprint #5	Epic 2	Sprint 5	Sprint Task	Frontend	
+Add Firebase Emulator to CI	https://github.com/The-Software-Enterprise/assos/issues/48	marinPh	Done In Sprint #4		Sprint 4	Sprint Task	Backend	
+Instrumented Tests: Follow & Manage Association	https://github.com/The-Software-Enterprise/assos/issues/67	Reza-rgb	Done In Sprint #5		Sprint 5	Sprint Task	Test	5
+Design of the edit association page	https://github.com/The-Software-Enterprise/assos/issues/115	MaximilienG1	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Frontend	
+Figma Wireframe	https://github.com/The-Software-Enterprise/assos/issues/116	Reza-rgb	Done In Sprint #6		Sprint 6	Sprint Task	Figma	4
+Create an Event Tests	https://github.com/The-Software-Enterprise/assos/issues/119	alicepotter, Tikipiou	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Test	
+Design of the create news and create event pages	https://github.com/The-Software-Enterprise/assos/issues/114	alicepotter	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Frontend	
+Color scheme creation	https://github.com/The-Software-Enterprise/assos/issues/97	alicepotter	Done In Sprint #6		Sprint 6	Sprint Task	Frontend	
+Implement Storage Service	https://github.com/The-Software-Enterprise/assos/issues/66	Tikipiou	Done In Sprint #5		Sprint 5	Sprint Task	Backend	5
+Look For Use Case: GPS Sensor Data		alicepotter, JulesHerrscher, Julio12344, marinPh, MaximilienG1, Reza-rgb, Tikipiou	Done In Sprint #5	Epic 2	Sprint 5	Sprint Task	Research	
+Create new subpages for the profile	https://github.com/The-Software-Enterprise/assos/issues/92	alicepotter	Done In Sprint #6	Epic 2	Sprint 5	User Story	Frontend	
+Setup UI Blocks for Adding Posts	https://github.com/The-Software-Enterprise/assos/issues/85	Reza-rgb	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Frontend	0.5
+Scrapping association on signIn	https://github.com/The-Software-Enterprise/assos/issues/129	marinPh	Done In Sprint #6	Epic 1		Sprint Task	Backend	3
+Calendar tests	https://github.com/The-Software-Enterprise/assos/issues/118	JulesHerrscher, Reza-rgb	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Test	2
+UserStory : Manage my association	https://github.com/The-Software-Enterprise/assos/issues/93	marinPh, Tikipiou	Done In Sprint #6	Epic 3	Sprint 6	User Story		
+User Story : Edit Association Page	https://github.com/The-Software-Enterprise/assos/issues/64	JulesHerrscher, Reza-rgb	Done In Sprint #6	Epic 3	Sprint 6	User Story		
+User Story : Add Post	https://github.com/The-Software-Enterprise/assos/issues/62	JulesHerrscher, Reza-rgb	Done In Sprint #6	Epic 3	Sprint 6	User Story		
+Upload media from the gallery in the event creation	https://github.com/The-Software-Enterprise/assos/issues/90	Tikipiou	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Backend	3
+Home Navigation Tests	https://github.com/The-Software-Enterprise/assos/issues/120	marinPh	Done In Sprint #6		Sprint 6	Sprint Task	Test	4
+Filter the news based on followed associations	https://github.com/The-Software-Enterprise/assos/issues/54	JulesHerrscher	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Backend	1.5
+News Update Issue	https://github.com/The-Software-Enterprise/assos/issues/88	JulesHerrscher, Reza-rgb, Tikipiou	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Frontend	
+Personalized Home Page Feed	https://github.com/The-Software-Enterprise/assos/issues/126		Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Frontend	
+User Story : Interactive Calendar	https://github.com/The-Software-Enterprise/assos/issues/125	Reza-rgb	Done In Sprint #6	Epic 2	Sprint 5	User Story		
+Add a reminder part for the calendar	https://github.com/The-Software-Enterprise/assos/issues/94	JulesHerrscher	Done In Sprint #6	Epic 2	Sprint 6		Backend	
+Fix profile not updating when signing up.	https://github.com/The-Software-Enterprise/assos/issues/138	JulesHerrscher	Done In Sprint #6	Epic 1	Sprint 6	Sprint Task	Backend	
+Fix News Test	https://github.com/The-Software-Enterprise/assos/issues/95	JulesHerrscher, Tikipiou	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Test	
+User Settings	https://github.com/The-Software-Enterprise/assos/issues/121		Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Frontend	
+User Story : User Settings	https://github.com/The-Software-Enterprise/assos/issues/122		Done In Sprint #6	Epic 1	Sprint 6	User Story	Frontend	
+User Story : Personalized Home Page Feed	https://github.com/The-Software-Enterprise/assos/issues/123		Done In Sprint #6	Epic 2	Sprint 6	User Story	Frontend	
+Rethink Calendar Organisation	https://github.com/The-Software-Enterprise/assos/issues/99	Reza-rgb	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Frontend	3
+Refactor Database Code	https://github.com/The-Software-Enterprise/assos/issues/101	Reza-rgb	Done In Sprint #6		Sprint 6	Sprint Task	Backend	
+fix the sign up that crashes in a specific case	https://github.com/The-Software-Enterprise/assos/issues/127	JulesHerrscher, marinPh	Done In Sprint #6	Epic 1	Sprint 6	Sprint Task	Backend	2
+UI Create news	https://github.com/The-Software-Enterprise/assos/issues/111	Tikipiou	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Frontend	5
+Polish Explorer Design	https://github.com/The-Software-Enterprise/assos/issues/106	Reza-rgb	Done In Sprint #6	Epic 3	Sprint 6	Sprint Task	Frontend	3
+fix the follow button that does not update when clicking on it	https://github.com/The-Software-Enterprise/assos/issues/124	JulesHerrscher	Done In Sprint #6	Epic 2	Sprint 6	Sprint Task	Backend	
+End-to-end tests	https://github.com/The-Software-Enterprise/assos/issues/128	marinPh	Done In Sprint #6		Sprint 6	Sprint Task	Test	
+Link My Associations UI to DB	https://github.com/The-Software-Enterprise/assos/issues/72	Reza-rgb	Done In Sprint #5	Epic 1	Sprint 5	Sprint Task	Backend	2
+Signout button in settings		marinPh	Done In Sprint #5	Epic 1	Sprint 5	Sprint Task	Frontend	1
+Create Event Page Backend	https://github.com/The-Software-Enterprise/assos/issues/83		Done In Sprint #5	Epic 3	Sprint 5	Sprint Task	Backend	5
+Link Event Creation UI to Database	https://github.com/The-Software-Enterprise/assos/issues/86	Reza-rgb	Done In Sprint #5	Epic 3	Sprint 5	Sprint Task	Backend	5
+User Story : Create Event	https://github.com/The-Software-Enterprise/assos/issues/63	Reza-rgb	Done In Sprint #5	Epic 3	Sprint 5	User Story		
+Create Event Page Frontend	https://github.com/The-Software-Enterprise/assos/issues/75	Reza-rgb	Done In Sprint #5	Epic 3	Sprint 5	Sprint Task	Frontend	4
+Follow Association Button Backend		alicepotter	Done In Sprint #4	Epic 2	Sprint 4	User Story	Backend	0.3
+Update Scrum Board	https://github.com/The-Software-Enterprise/assos/issues/46	Reza-rgb	Done In Sprint #4		Sprint 4	Sprint Task	Scrum Board	
+User Authentication			Product Backlog	Epic 1				
+Explore Associations			Product Backlog	Epic 2				
+Manage Associations			Product Backlog	Epic 3				
+Tickets Management			Product Backlog	Epic 4				
+Join Association's Life			Product Backlog	Epic 5				
+Explore menu cleaning and linking	https://github.com/The-Software-Enterprise/assos/pull/61	Tikipiou	Done In Sprint #4	Epic 2	Sprint 5	Sprint Task	Backend	
+List of followed and member association page link		alicepotter	Done In Sprint #4	Epic 2	Sprint 4	User Story	Frontend	
+Explore Menu Cleaning and Linking	https://github.com/The-Software-Enterprise/assos/issues/58	Tikipiou	Done In Sprint #4	Epic 3	Sprint 4	User Story	Frontend	12
+List of followed associations Backend		alicepotter	Done In Sprint #4	Epic 2	Sprint 4	User Story	Backend	
+SetUp Screen Test		alicepotter	Done In Sprint #4		Sprint 4	Sprint Task	Test	0.25
+Make someone belong to the Asso	https://github.com/The-Software-Enterprise/assos/issues/50	alicepotter	Done In Sprint #4	Epic 2	Sprint 4	Sprint Task	Backend	
+Link the buttons of the Manage Association Page	https://github.com/The-Software-Enterprise/assos/issues/56	alicepotter	Done In Sprint #4	Epic 3	Sprint 4	Sprint Task	Backend	
+User Story: NFC With Tag		JulesHerrscher, Reza-rgb	Sprint Backlog	Epic 4		User Story		
+Send Simple Message To Test Tag		JulesHerrscher, Reza-rgb	Sprint Backlog	Epic 4	Sprint 7	Sprint Task	Backend	
+User Story: Tickets Tab		alicepotter, MaximilienG1	Sprint Backlog	Epic 4		User Story		
+User Story: Display Events		marinPh, Tikipiou	Sprint Backlog	Epic 5		User Story		
+Setup The Ticket Page		alicepotter, MaximilienG1	Sprint Backlog	Epic 4	Sprint 7	Sprint Task	Frontend	
+User Story: Display News		Julio12344	Sprint Backlog	Epic 5		User Story		
+Add fields in the event creation		Tikipiou	Sprint Backlog	Epic 5	Sprint 7	Sprint Task	Backend	
+Create the page to show the details of an event		marinPh	Sprint Backlog	Epic 5	Sprint 7	Sprint Task	Frontend	
+Staff for an event		marinPh, Tikipiou	Sprint Backlog	Epic 5	Sprint 7	Sprint Task	Frontend	
+Setup UI For News Page		Julio12344	Sprint Backlog	Epic 5	Sprint 7	Sprint Task	Frontend	
+Design a Particular Ticket Format		JulesHerrscher, Reza-rgb	Sprint Backlog	Epic 4	Sprint 7	Sprint Task	Backend	
+Link News Page UI to Database		Julio12344	Sprint Backlog	Epic 4	Sprint 7	Sprint Task	Backend	
+Link Tickets Storage to Database		alicepotter, MaximilienG1	Sprint Backlog	Epic 4	Sprint 7	Sprint Task	Backend	
