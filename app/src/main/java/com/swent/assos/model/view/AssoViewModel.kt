@@ -3,6 +3,7 @@ package com.swent.assos.model.view
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swent.assos.model.AssociationPosition
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
@@ -24,6 +25,7 @@ constructor(
     private val dbService: DbService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
+  val currentUser = DataCache.currentUser.asStateFlow()
 
   private val _association = MutableStateFlow(Association())
   val association = _association.asStateFlow()
@@ -98,5 +100,14 @@ constructor(
         _association.value = _association.value.copy(banner = banner)
       }
     }
+  }
+
+  fun joinAssociation(associationId: String) {
+    val triple =
+        Triple(associationId, AssociationPosition.MEMBER.string, AssociationPosition.MEMBER.rank)
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            associations = DataCache.currentUser.value.associations + triple)
+    viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, {}, {}) }
   }
 }
