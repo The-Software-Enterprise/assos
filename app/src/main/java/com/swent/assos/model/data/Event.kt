@@ -12,6 +12,5 @@ data class Event(
     val description: String = "",
     var startTime: LocalDateTime? = null,
     var endTime: LocalDateTime? = null,
-    val fields: MutableList<EventField> = mutableListOf(),
     val documentSnapshot: DocumentSnapshot? = null,
 )

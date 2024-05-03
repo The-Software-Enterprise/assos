@@ -9,9 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.EventFieldImage
-import com.swent.assos.model.data.EventFieldText
-import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
@@ -130,29 +127,6 @@ constructor(
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
 
-  override fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
-    firestore
-        .collection("news")
-        .document(news.id)
-        .set(
-            mapOf(
-                "title" to news.title,
-                "description" to news.description,
-                "images" to news.images,
-            ))
-        .addOnSuccessListener { onSucess() }
-        .addOnFailureListener { onError(it.message ?: "Error") }
-  }
-
-  override fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
-    firestore
-        .collection("news")
-        .document(news.id)
-        .delete()
-        .addOnSuccessListener { onSucess() }
-        .addOnFailureListener { onError(it.message ?: "Error") }
-  }
-
   override suspend fun getNews(
       associationId: String,
       lastDocumentSnapshot: DocumentSnapshot?
@@ -172,20 +146,6 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeNews(it) }
-  }
-
-  override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("startTime", Query.Direction.ASCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map { deserializeEvent(it) }
   }
 
   override suspend fun getEventsFromAnAssociation(
@@ -307,21 +267,7 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-      "fields" to
-          event.fields.map {
-            when (it.type) {
-              EventFieldType.IMAGE ->
-                  mapOf(
-                      "title" to it.title,
-                      "type" to it.type.toString(),
-                      "value" to (it as EventFieldImage).image)
-              EventFieldType.TEXT ->
-                  mapOf(
-                      "title" to it.title,
-                      "type" to it.type.toString(),
-                      "value" to (it as EventFieldText).text)
-            }
-          })
+  )
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
@@ -333,23 +279,6 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
-      fields =
-          if (doc["fields"] is List<*>) {
-            (doc["fields"] as List<*>)
-                .filterIsInstance<Map<String, String>>()
-                .map { map ->
-                  when (map["type"]) {
-                    EventFieldType.IMAGE.toString() ->
-                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                    EventFieldType.TEXT.toString() ->
-                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                    else -> EventFieldText("", "")
-                  }
-                }
-                .toMutableList()
-          } else {
-            mutableListOf()
-          },
       documentSnapshot = doc)
 }
 
