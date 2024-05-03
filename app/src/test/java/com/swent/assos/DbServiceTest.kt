@@ -33,8 +33,9 @@ class DbServiceTest {
         Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).orderBy(any<String>()).limit(any()).get() } returns
         Tasks.forResult(mockQuerySnapshot)
-      coEvery { mockFirestore.collection(any()).orderBy(any<String>()).startAfter(any()).limit(any()).get() } returns
-              Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore.collection(any()).orderBy(any<String>()).startAfter(any()).limit(any()).get()
+    } returns Tasks.forResult(mockQuerySnapshot)
     coEvery { mockFirestore.collection(any()).add(any()) } returns Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).get() } returns
         Tasks.forResult(mockDocumentSnapshot)
