@@ -2,7 +2,6 @@ package com.swent.assos.model.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
@@ -42,14 +41,6 @@ constructor(
         dbService.getAllNews(null).let { _allNews.value = it }
       }
     }
-  }
-
-  fun getNewsAssociation(associationId: String, callback: (Association) -> Unit) {
-    viewModelScope.launch(ioDispatcher) { callback(dbService.getAssociationById(associationId)) }
-  }
-
-  fun getNews(newsId: String) {
-    viewModelScope.launch(ioDispatcher) { _news.value = dbService.getNewsById(newsId) }
   }
 
   fun loadMoreAssociations() {

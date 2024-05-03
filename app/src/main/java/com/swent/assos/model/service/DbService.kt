@@ -25,15 +25,9 @@ interface DbService {
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
-  fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
-
-  fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
-
   suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
   // Events -------------------------------------------------------------------
-  suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event>
-
   suspend fun getEventsFromAnAssociation(
       associationId: String,
       lastDocumentSnapshot: DocumentSnapshot?
@@ -46,6 +40,7 @@ interface DbService {
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
+  // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
@@ -58,5 +53,9 @@ interface DbService {
       onError: (String) -> Unit
   )
 
-  suspend fun getNewsById(newsId: String): News
+  suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 }

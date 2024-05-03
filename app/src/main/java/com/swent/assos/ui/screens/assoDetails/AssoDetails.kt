@@ -23,6 +23,7 @@ import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
@@ -50,6 +51,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
@@ -63,6 +65,7 @@ import com.swent.assos.ui.components.NewsItem
 fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   val viewModel: AssoViewModel = hiltViewModel()
 
+  val currentUser by viewModel.currentUser.collectAsState()
   val association by viewModel.association.collectAsState()
   val news by viewModel.news.collectAsState()
   val events by viewModel.events.collectAsState()
@@ -102,75 +105,90 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             asso = association,
             navigationActions = navigationActions,
             viewModel = viewModel)
-      }) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-          item {
-            Image(
-                painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                contentDescription = null,
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .padding(10.dp)
-                        .height(200.dp)
-                        .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center)
+      },
+      floatingActionButton = {
+        if (!currentUser.associations.map { it.first }.contains(assoId))
+            JoinUsButton { viewModel.joinAssociation(assoId) }
+        else null
+      },
+      floatingActionButtonPosition = FabPosition.Center,
+  ) { paddingValues ->
+    LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
+      item {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = null,
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(10.dp)
+                    .height(200.dp)
+                    .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center)
+      }
 
-            Text(
-                text = association.description,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
+      item {
+        Text(
+            text = association.description,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
+      }
 
-            Text(
-                text = "Upcoming Events",
-                style = MaterialTheme.typography.headlineMedium,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp))
+      item {
+        Text(
+            text = "Upcoming Events",
+            style = MaterialTheme.typography.headlineMedium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 0.dp))
 
-            if (events.isNotEmpty()) {
-              LazyRow(
-                  state = listStateEvents,
-                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                    items(events) {
-                      EventItem(it, navigationActions)
-                      Spacer(modifier = Modifier.width(8.dp))
-                    }
-                  }
-            } else {
-              Text(
-                  text = "No upcoming events",
-                  style = MaterialTheme.typography.bodyMedium,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  fontWeight = FontWeight.Medium,
-                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-            }
-            Text(
-                text = "Latest Posts",
-                style = MaterialTheme.typography.headlineMedium,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-
-            if (news.isNotEmpty()) {
-              LazyRow(
-                  state = listStateNews,
-                  contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                    items(news) {
-                      NewsItem(it, navigationActions)
-                      Spacer(modifier = Modifier.width(8.dp))
-                    }
-                  }
-            } else {
-              Text(
-                  text = "No latest posts",
-                  style = MaterialTheme.typography.bodyMedium,
-                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-          }
+        if (events.isNotEmpty()) {
+          LazyRow(
+              state = listStateEvents,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(events) {
+                  EventItem(it, navigationActions)
+                  Spacer(modifier = Modifier.width(8.dp))
+                }
+              }
+        } else {
+          Text(
+              text = "No upcoming events",
+              style = MaterialTheme.typography.bodyMedium,
+              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+              fontWeight = FontWeight.Medium,
+              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
       }
+
+      item {
+        Text(
+            text = "Latest Posts",
+            style = MaterialTheme.typography.headlineMedium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+
+        if (news.isNotEmpty()) {
+          LazyRow(
+              state = listStateNews,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(news) {
+                  NewsItem(it, navigationActions)
+                  Spacer(modifier = Modifier.width(8.dp))
+                }
+              }
+        } else {
+          Text(
+              text = "No latest posts",
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+        }
+      }
+
+      item { Spacer(modifier = Modifier.height(20.dp)) }
+    }
+  }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -232,7 +250,7 @@ fun TopAssoBar(
 }
 
 @Composable
-fun CustomFAB(onClick: () -> Unit) {
+fun JoinUsButton(onClick: () -> Unit) {
   Row(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.Center,
@@ -243,14 +261,16 @@ fun CustomFAB(onClick: () -> Unit) {
             Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
                 .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
                 .width(92.dp)
-                .height(42.dp),
+                .height(42.dp)
+                .testTag("JoinButton"),
         containerColor = Color(0xFF5465FF),
     ) {
       Text(
           text = "Join us",
+          fontSize = 16.sp,
           fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
           fontWeight = FontWeight.SemiBold,
-          color = Color.White,
+          color = MaterialTheme.colorScheme.onPrimary,
           style = MaterialTheme.typography.bodyMedium)
     }
   }

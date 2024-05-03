@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,9 +35,9 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
           Modifier.clip(RoundedCornerShape(12.dp))
-              .background(Color.White)
+              .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
-              .testTag("NewsListItem2")
+              .testTag("NewsListItem")
               .height(100.dp)) {
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -58,11 +59,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               Column(
                   verticalArrangement = Arrangement.spacedBy(10.dp),
                   horizontalAlignment = Alignment.Start,
-                  modifier =
-                      Modifier.padding(
-                              start = 16.dp) // Assuming there's some spacing between the image and
-                          // the texts
-                          .align(Alignment.CenterVertically)) {
+                  modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterVertically)) {
                     Text(
                         text = news.title,
                         fontSize = 16.sp,

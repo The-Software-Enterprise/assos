@@ -9,12 +9,8 @@ class NewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<NewsScreen>(
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NewsScreen") }) {
 
-  val appTitle1: KNode = child { hasTestTag("AppTitle_1") }
-  val appTitle2: KNode = child { hasTestTag("AppTitle_2") }
-
-  val newsList: KNode = child { hasTestTag("NewsList") }
-  val newsListItems1: KNode = newsList.child { hasTestTag("NewsListItem1") }
-  val newsListItems2: KNode = newsListItems1.child { hasTestTag("NewsListItem2") }
-  val itemsTitle: KNode = newsListItems2.child { hasTestTag("ItemsTitle") }
-  val itemsDescription: KNode = newsListItems2.child { hasTestTag("ItemsDescription") }
+  val newsList: KNode = onNode { hasTestTag("NewsList") }
+  val newsListItem: KNode = newsList.child { hasTestTag("NewsListItem") }
+  val itemsTitle: KNode = newsListItem.child { hasTestTag("ItemsTitle") }
+  val itemsDescription: KNode = newsListItem.child { hasTestTag("ItemsDescription") }
 }
