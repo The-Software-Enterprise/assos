@@ -121,22 +121,28 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showStartDatePicker) {
     DatePickerDialog(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
               modifier = Modifier.testTag("StartDatePickerConfirmButton"),
               onClick = {
                 val selectedDate =
-                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    startDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
                 val currentDate = LocalDate.now()
-                if (selectedDate.isBefore(currentDate)) {
-                  Toast.makeText(
-                          context,
-                          "Selected date should be after today, please select again",
-                          Toast.LENGTH_SHORT)
-                      .show()
+                if (selectedDate != null) {
+                  if (selectedDate.isBefore(currentDate)) {
+                    Toast.makeText(
+                            context,
+                            "Selected date should be after today, please select again",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  } else {
+                    showStartDatePicker = false
+                    showStartTimePicker = true
+                  }
                 } else {
                   showStartDatePicker = false
                   showStartTimePicker = true
@@ -168,7 +174,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(),
                           time)
                 }
-
                 if (selectedDate.isBefore(current)) {
                   Toast.makeText(
                           context,
@@ -192,27 +197,32 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showEndDatePicker) {
     DatePickerDialog(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
                 val startDate =
-                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    startDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
                 val selectedEndDate =
-                    Instant.ofEpochMilli(endDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    endDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
+                if (selectedEndDate != null) {
+                  if (selectedEndDate.isBefore(startDate)) {
+                    Toast.makeText(
+                            context,
+                            "Selected end date should be after start date, please select again",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  } else {
 
-                if (selectedEndDate.isBefore(startDate)) {
-                  Toast.makeText(
-                          context,
-                          "Selected end date should be after start date, please select again",
-                          Toast.LENGTH_SHORT)
-                      .show()
+                    showEndDatePicker = false
+                    showEndTimePicker = true
+                  }
                 } else {
-
                   showEndDatePicker = false
                   showEndTimePicker = true
                 }
@@ -465,7 +475,7 @@ fun TimePickerDialog(
     onDismissRequest: () -> Unit,
     confirmButton: @Composable (() -> Unit),
     dismissButton: @Composable (() -> Unit)? = null,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable () -> Unit,
 ) {
   Dialog(
@@ -481,7 +491,7 @@ fun TimePickerDialog(
                 .background(shape = MaterialTheme.shapes.extraLarge, color = containerColor),
         color = containerColor) {
           Column(
-              modifier = Modifier.padding(24.dp),
+              modifier = Modifier.padding(24.dp).testTag("TimePickerDialog"),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
