@@ -29,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -50,9 +51,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
@@ -351,8 +355,8 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Box(
                     modifier =
                         Modifier.padding(8.dp)
-                            .width(120.dp)
-                            .height(150.dp)
+                            .width(150.dp)
+                            .height(75.dp)
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                             .testTag("InputImage")
                             .clickable {
@@ -362,20 +366,24 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             },
                     contentAlignment = Alignment.Center) {
                       if (event.image == Uri.EMPTY) {
-                        Text(text = "Image", modifier = Modifier.align(Alignment.Center))
+                        Icon(
+                            painter = painterResource(id = R.drawable.image),
+                            contentDescription = null)
                       } else {
                         Image(
                             painter = rememberAsyncImagePainter(event.image),
                             contentDescription = "image",
                             modifier =
                                 Modifier.size(150.dp)
+                                    .clip(shape = RoundedCornerShape(8.dp))
                                     .background(MaterialTheme.colorScheme.surface)
                                     .testTag("Image")
                                     .clickable {
                                       val pickImageIntent = Intent(Intent.ACTION_PICK)
                                       pickImageIntent.type = "image/*"
                                       launcher.launch(pickImageIntent)
-                                    })
+                                    },
+                            contentScale = ContentScale.Crop)
                       }
                     }
               }
