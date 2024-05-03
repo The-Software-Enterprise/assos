@@ -16,6 +16,12 @@ import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
 
+enum class AssociationPosition(val string: String, val rank: Int) {
+  PRESIDENT("president", 1),
+  TREASURER("treasurer", 2),
+  MEMBER("member", 3)
+}
+
 fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
   val bitMatrix: BitMatrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size)
   val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)

@@ -46,6 +46,7 @@ interface DbService {
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
+  // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
@@ -54,6 +55,12 @@ interface DbService {
 
   suspend fun unfollowAssociation(
       associationId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
+  suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
