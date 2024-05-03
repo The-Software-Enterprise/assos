@@ -9,9 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.EventFieldImage
-import com.swent.assos.model.data.EventFieldText
-import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
@@ -270,21 +267,7 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-      "fields" to
-          event.fields.map {
-            when (it.type) {
-              EventFieldType.IMAGE ->
-                  mapOf(
-                      "title" to it.title,
-                      "type" to it.type.toString(),
-                      "value" to (it as EventFieldImage).image)
-              EventFieldType.TEXT ->
-                  mapOf(
-                      "title" to it.title,
-                      "type" to it.type.toString(),
-                      "value" to (it as EventFieldText).text)
-            }
-          })
+  )
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
@@ -296,23 +279,6 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
-      fields =
-          if (doc["fields"] is List<*>) {
-            (doc["fields"] as List<*>)
-                .filterIsInstance<Map<String, String>>()
-                .map { map ->
-                  when (map["type"]) {
-                    EventFieldType.IMAGE.toString() ->
-                        EventFieldImage(title = map["title"] ?: "", image = map["value"] ?: "")
-                    EventFieldType.TEXT.toString() ->
-                        EventFieldText(title = map["title"] ?: "", text = map["value"] ?: "")
-                    else -> EventFieldText("", "")
-                  }
-                }
-                .toMutableList()
-          } else {
-            mutableListOf()
-          },
       documentSnapshot = doc)
 }
 
