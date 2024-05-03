@@ -1,8 +1,8 @@
 package com.swent.assos.ui.screens.assoDetails
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialogDefaults.shape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -53,6 +51,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
@@ -116,13 +115,19 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
     LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
       item {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter =
+                if (association.banner != Uri.EMPTY) {
+                  rememberAsyncImagePainter(association.banner)
+                } else {
+                  painterResource(id = R.drawable.ic_launcher_foreground)
+                },
             contentDescription = null,
             modifier =
                 Modifier.fillMaxWidth()
                     .padding(10.dp)
                     .height(200.dp)
-                    .background(Color.Gray, shape = RoundedCornerShape(20.dp)),
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .background(Color.Gray),
             contentScale = ContentScale.Crop,
             alignment = Alignment.Center)
       }

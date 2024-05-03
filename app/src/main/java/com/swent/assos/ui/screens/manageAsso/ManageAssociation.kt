@@ -1,6 +1,10 @@
 package com.swent.assos.ui.screens.manageAsso
 
-import android.graphics.drawable.Icon
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -40,6 +45,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -50,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
@@ -70,6 +77,14 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 
   val listStateNews = rememberLazyListState()
   val listStateEvents = rememberLazyListState()
+
+  val launcher =
+      rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
+        ->
+        if (result.resultCode == Activity.RESULT_OK) {
+          viewModel.setBanner(result.data?.data)
+        }
+      }
 
   LaunchedEffect(key1 = Unit) {
     viewModel.getAssociation(assoId)
@@ -105,19 +120,29 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
               item {
                 Box {
                   Image(
-                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                      painter =
+                          if (association.banner != Uri.EMPTY) {
+                            rememberAsyncImagePainter(association.banner)
+                          } else {
+                            painterResource(id = R.drawable.ic_launcher_foreground)
+                          },
                       contentDescription = null,
                       modifier =
                           Modifier.fillMaxWidth()
                               .padding(10.dp)
                               .height(200.dp)
-                              .background(GraySeparator, shape = RoundedCornerShape(20.dp)),
+                              .clip(RoundedCornerShape(20.dp))
+                              .background(GraySeparator),
                       contentScale = ContentScale.Crop,
                       alignment = Alignment.Center)
 
                   FloatingActionButton(
-                      onClick = { /* TODO*/},
-                      modifier = Modifier.align(Alignment.TopEnd).padding(5.dp),
+                      onClick = {
+                        val pickImageIntent = Intent(Intent.ACTION_PICK)
+                        pickImageIntent.type = "image/*"
+                        launcher.launch(pickImageIntent)
+                      },
+                      modifier = Modifier.size(60.dp).align(Alignment.TopEnd).padding(5.dp),
                       containerColor = MaterialTheme.colorScheme.primary,
                   ) {
                     Icon(
