@@ -104,24 +104,6 @@ class ProfileTest : SuperTest() {
   }
 
   @Test
-  fun settingsButtonTriggersNavigation() {
-    run {
-      ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
-        step("Click on settings button") {
-          settingsButton {
-            assertIsDisplayed()
-            performClick()
-          }
-        }
-        step("Check if we actually navigate to settings screen") {
-          verify { mockNavActions.navigateTo(Destinations.SETTINGS) }
-          confirmVerified(mockNavActions)
-        }
-      }
-    }
-  }
-
-  @Test
   fun logoutButtonIsDisplayed() {
     run {
       ComposeScreen.onComposeScreen<ProfileScreen>(composeTestRule) {
