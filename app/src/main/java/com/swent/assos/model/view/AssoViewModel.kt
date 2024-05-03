@@ -1,5 +1,6 @@
 package com.swent.assos.model.view
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
@@ -87,6 +88,15 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val lastDocumentSnapshot = _events.value.lastOrNull()?.documentSnapshot
       _events.value += dbService.getEventsFromAnAssociation(associationId, lastDocumentSnapshot)
+    }
+  }
+
+  fun setBanner(banner: Uri?) {
+    if (banner != null) {
+      viewModelScope.launch(ioDispatcher) {
+        dbService.updateBanner(_association.value.id, banner)
+        _association.value = _association.value.copy(banner = banner)
+      }
     }
   }
 }

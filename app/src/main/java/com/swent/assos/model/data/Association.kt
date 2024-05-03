@@ -10,5 +10,6 @@ data class Association(
     val url: String = "",
     val documentSnapshot: DocumentSnapshot? = null,
     val logo: Uri = Uri.EMPTY,
+    val banner: Uri = Uri.EMPTY,
     val description: String = ""
 )

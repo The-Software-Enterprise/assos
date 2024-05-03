@@ -1,5 +1,6 @@
 package com.swent.assos.model.service
 
+import android.net.Uri
 import com.google.firebase.firestore.DocumentSnapshot
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
@@ -57,4 +58,6 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
+
+  suspend fun updateBanner(associationId: String, banner: Uri)
 }
