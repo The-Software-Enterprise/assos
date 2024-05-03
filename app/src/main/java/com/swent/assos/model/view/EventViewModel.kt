@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.DbService
@@ -28,9 +27,6 @@ constructor(
   private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
   val event = _event.asStateFlow()
 
-  private val _fieldType = MutableStateFlow(EventFieldType.TEXT)
-  val fieldType = _fieldType.asStateFlow()
-
   private val _hourFormat = MutableStateFlow(HourFormat.AM)
   val hourFormat = _hourFormat.asStateFlow()
 
@@ -44,19 +40,6 @@ constructor(
           HourFormat.AM -> HourFormat.PM
           HourFormat.PM -> HourFormat.AM
         }
-  }
-
-  fun resetHourFormat() {
-    _hourFormat.value = HourFormat.AM
-  }
-
-  fun switchFieldType() {
-    _fieldType.value =
-        EventFieldType.entries[(_fieldType.value.ordinal + 1) % EventFieldType.entries.size]
-  }
-
-  fun resetFieldType() {
-    _fieldType.value = EventFieldType.TEXT
   }
 
   fun createEvent(onSuccess: () -> Unit) {

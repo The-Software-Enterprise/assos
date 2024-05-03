@@ -6,43 +6,29 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.outlined.Image
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -58,7 +44,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -71,16 +56,11 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.CustomAccessibilityAction
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -93,10 +73,6 @@ import com.maxkeppeker.sheets.core.models.base.rememberUseCaseState
 import com.maxkeppeler.sheets.date_time.DateTimeDialog
 import com.maxkeppeler.sheets.date_time.models.DateTimeSelection
 import com.swent.assos.R
-import com.swent.assos.model.data.EventField
-import com.swent.assos.model.data.EventFieldImage
-import com.swent.assos.model.data.EventFieldText
-import com.swent.assos.model.data.EventFieldType
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.HourFormat
@@ -108,8 +84,6 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.rememberReorderableLazyColumnState
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -117,12 +91,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   val viewModel: EventViewModel = hiltViewModel()
 
   val event by viewModel.event.collectAsState()
-  val currentFieldType by viewModel.fieldType.collectAsState()
   val hourFormat by viewModel.hourFormat.collectAsState()
-  val listFieldsReordered = remember { mutableStateListOf<EventField>() }
-
-  var openAlertDialogAddFields by remember { mutableStateOf(false) }
-  var openAlertDialogFields by remember { mutableStateOf(false) }
 
   var showTimePickerStart by remember { mutableStateOf(false) }
   var showTimePickerEnd by remember { mutableStateOf(false) }
@@ -154,6 +123,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         onDismissRequest = {},
         confirmButton = {
           TextButton(
+              modifier = Modifier.testTag("StartDatePickerConfirmButton"),
               onClick = {
                 val selectedDate =
                     Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
@@ -186,6 +156,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         onDismissRequest = {},
         confirmButton = {
           TextButton(
+              modifier = Modifier.testTag("StartTimePickerConfirmButton"),
               onClick = {
                 val current = LocalDateTime.now()
                 val time = LocalTime.of(startTimePickerState.hour, startTimePickerState.minute)
@@ -260,6 +231,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         onDismissRequest = {},
         confirmButton = {
           TextButton(
+              modifier = Modifier.testTag("EndTimePickerConfirmButton"),
               onClick = {
                 val startDate = event.startTime
                 var endDate = startDate
@@ -271,7 +243,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(),
                           time)
                 }
-
                 if (endDate == null || endDate!!.isBefore(startDate)) {
                   Toast.makeText(
                           context,
@@ -287,7 +258,11 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
         },
         dismissButton = {
-          TextButton(onClick = { showEndTimePicker = false }) { Text("Cancel") }
+          TextButton(
+              modifier = Modifier.testTag("EndTimePickerCancelButton"),
+              onClick = { showEndTimePicker = false }) {
+                Text("Cancel")
+              }
         }) {
           TimePicker(state = endTimePickerState)
         }
@@ -327,33 +302,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     }
                   }
                 })
-  }
-
-  if (openAlertDialogAddFields) {
-    AlertDialogAddFields(
-        onDismissRequest = { openAlertDialogAddFields = false },
-        onConfirmation = {
-          event.fields += it
-          listFieldsReordered += it
-          openAlertDialogAddFields = false
-        },
-        onChipClick = { viewModel.switchFieldType() },
-        currentFieldType = currentFieldType)
-  }
-
-  if (openAlertDialogFields) {
-    AlertDialogFields(
-        onDismissRequest = {
-          listFieldsReordered.clear()
-          listFieldsReordered.addAll(event.fields)
-          openAlertDialogFields = false
-        },
-        onConfirmation = {
-          event.fields.clear()
-          event.fields.addAll(listFieldsReordered)
-          openAlertDialogFields = false
-        },
-        listFields = listFieldsReordered)
   }
 
   Scaffold(
@@ -409,6 +357,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             .width(150.dp)
                             .height(75.dp)
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                            .testTag("InputImage")
                             .clickable {
                               val pickImageIntent = Intent(Intent.ACTION_PICK)
                               pickImageIntent.type = "image/*"
@@ -427,6 +376,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                 Modifier.size(150.dp)
                                     .clip(shape = RoundedCornerShape(8.dp))
                                     .background(MaterialTheme.colorScheme.surface)
+                                    .testTag("Image")
                                     .clickable {
                                       val pickImageIntent = Intent(Intent.ACTION_PICK)
                                       pickImageIntent.type = "image/*"
@@ -443,6 +393,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically) {
                       OutlinedButton(
+                          modifier = Modifier.testTag("StartTimePicker"),
                           shape = RoundedCornerShape(8.dp),
                           onClick = { showStartDatePicker = true }) {
                             Text(
@@ -454,6 +405,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           }
                       Spacer(modifier = Modifier.width(8.dp))
                       OutlinedButton(
+                          modifier = Modifier.testTag("EndTimePicker"),
                           shape = RoundedCornerShape(8.dp),
                           onClick = {
                             if (event.startTime != null) {
@@ -476,37 +428,8 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
 
               item {
-                Row(
-                    modifier = Modifier.padding(horizontal = 32.dp, vertical = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically) {
-                      FloatingActionButton(
-                          onClick = {
-                            viewModel.resetFieldType()
-                            openAlertDialogAddFields = true
-                          },
-                          containerColor = MaterialTheme.colorScheme.secondary,
-                          shape = RoundedCornerShape(size = 16.dp)) {
-                            Image(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(Color.White))
-                          }
-                      Spacer(modifier = Modifier.width(32.dp))
-                      FloatingActionButton(
-                          onClick = { openAlertDialogFields = true },
-                          containerColor = MaterialTheme.colorScheme.secondary,
-                      ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.rounded_stacks_24),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(Color.White))
-                      }
-                    }
-              }
-
-              item {
                 Button(
+                    modifier = Modifier.testTag("CreateButton"),
                     enabled =
                         event.description.isNotEmpty() &&
                             event.image != Uri.EMPTY &&
@@ -524,242 +447,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
               }
             }
       }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AlertDialogAddFields(
-    onDismissRequest: () -> Unit,
-    onConfirmation: (EventField) -> Unit,
-    onChipClick: () -> Unit,
-    currentFieldType: EventFieldType
-) {
-
-  var textValue by remember { mutableStateOf("") }
-  var imageUrlValue by remember { mutableStateOf("") }
-  var titleSection by remember { mutableStateOf("") }
-
-  AlertDialog(onDismissRequest = { onDismissRequest() }) {
-    Surface(
-        modifier = Modifier.width(400.dp).height(350.dp),
-        color = MaterialTheme.colorScheme.background,
-        shape = RoundedCornerShape(size = 8.dp)) {
-          Column(
-              modifier = Modifier.fillMaxSize(),
-              horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    "New field",
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                Spacer(modifier = Modifier.height(16.dp))
-                AssistChip(
-                    leadingIcon = {
-                      when (currentFieldType) {
-                        EventFieldType.IMAGE ->
-                            Image(
-                                imageVector = Icons.Outlined.Image,
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary))
-                        EventFieldType.TEXT ->
-                            Image(
-                                imageVector = Icons.Default.TextFields,
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary))
-                      }
-                    },
-                    modifier =
-                        Modifier.border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.tertiary,
-                                shape = RoundedCornerShape(size = 8.dp))
-                            .height(32.dp),
-                    onClick = { onChipClick() },
-                    label = {
-                      when (currentFieldType) {
-                        EventFieldType.IMAGE ->
-                            Text(text = "Image", color = MaterialTheme.colorScheme.primary)
-                        EventFieldType.TEXT ->
-                            Text(text = "Text", color = MaterialTheme.colorScheme.primary)
-                      }
-                    })
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = titleSection,
-                    onValueChange = { titleSection = it },
-                    label = {
-                      Text("Title", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                    })
-
-                when (currentFieldType) {
-                  EventFieldType.IMAGE -> {
-                    OutlinedTextField(
-                        value = imageUrlValue,
-                        onValueChange = { imageUrlValue = it },
-                        label = {
-                          Text(
-                              "Image URL",
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                        },
-                        modifier = Modifier.padding(16.dp))
-                  }
-                  EventFieldType.TEXT -> {
-                    OutlinedTextField(
-                        value = textValue,
-                        onValueChange = { textValue = it },
-                        label = {
-                          Text("Text", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                        },
-                        modifier = Modifier.padding(16.dp))
-                  }
-                }
-                Row {
-                  Button(onClick = { onDismissRequest() }) {
-                    Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                  }
-                  Spacer(modifier = Modifier.width(16.dp))
-                  Button(
-                      onClick = {
-                        when (currentFieldType) {
-                          EventFieldType.IMAGE -> {
-                            onConfirmation(
-                                EventFieldImage(title = titleSection, image = imageUrlValue))
-                          }
-                          EventFieldType.TEXT -> {
-                            onConfirmation(EventFieldText(title = titleSection, text = textValue))
-                          }
-                        }
-                      }) {
-                        Text(
-                            "Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                      }
-                }
-              }
-        }
-  }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-fun AlertDialogFields(
-    onDismissRequest: () -> Unit,
-    onConfirmation: () -> Unit,
-    listFields: MutableList<EventField>
-) {
-
-  val lazyListState = rememberLazyListState()
-  val reorderableLazyColumnState =
-      rememberReorderableLazyColumnState(lazyListState) { from, to ->
-        listFields.apply { add(to.index - 1, removeAt(from.index - 1)) }
-      }
-  AlertDialog(onDismissRequest = { onDismissRequest() }) {
-    if (listFields.isEmpty()) {
-      Surface(
-          modifier = Modifier.width(100.dp).height(100.dp),
-          color = MaterialTheme.colorScheme.background,
-          shape = RoundedCornerShape(size = 8.dp)) {
-            Text(
-                modifier = Modifier.padding(horizontal = 98.dp, vertical = 34.dp),
-                text = "No fields",
-                fontSize = 20.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-          }
-    } else {
-      Surface(
-          modifier = Modifier.width(400.dp).height(350.dp),
-          color = MaterialTheme.colorScheme.background,
-          shape = RoundedCornerShape(size = 8.dp)) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = lazyListState,
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                  item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        "Move fields",
-                        fontSize = 30.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                    Spacer(modifier = Modifier.height(16.dp))
-                  }
-
-                  itemsIndexed(listFields, key = { _, item -> item.hashCode() }) { index, field ->
-                    ReorderableItem(reorderableLazyColumnState, key = field.hashCode()) {
-                      val interactionSource = remember { MutableInteractionSource() }
-
-                      Card(
-                          onClick = {},
-                          modifier =
-                              Modifier.padding(horizontal = 16.dp, vertical = 4.dp).semantics {
-                                customActions =
-                                    listOf(
-                                        CustomAccessibilityAction(
-                                            label = "Move Up",
-                                            action = {
-                                              if (index > 0) {
-                                                listFields.apply { add(index - 1, removeAt(index)) }
-                                                true
-                                              } else {
-                                                false
-                                              }
-                                            }),
-                                        CustomAccessibilityAction(
-                                            label = "Move Down",
-                                            action = {
-                                              if (index < listFields.size - 1) {
-                                                listFields.apply { add(index + 1, removeAt(index)) }
-                                                true
-                                              } else {
-                                                false
-                                              }
-                                            }),
-                                    )
-                              },
-                          interactionSource = interactionSource,
-                      ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically) {
-                              Text(
-                                  text = field.title,
-                                  Modifier.padding(horizontal = 16.dp),
-                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                              IconButton(
-                                  modifier =
-                                      Modifier.draggableHandle(
-                                              interactionSource = interactionSource)
-                                          .clearAndSetSemantics {},
-                                  onClick = {}) {
-                                    Icon(
-                                        painterResource(id = R.drawable.menu),
-                                        contentDescription = null)
-                                  }
-                            }
-                      }
-                    }
-                  }
-
-                  item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row {
-                      Button(onClick = { onDismissRequest() }) {
-                        Text("Cancel", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                      }
-                      Spacer(modifier = Modifier.width(16.dp))
-                      Button(onClick = { onConfirmation() }) {
-                        Text(
-                            "Confirm", fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
-                      }
-                    }
-                  }
-                }
-          }
-    }
-  }
 }
 
 private fun convertTo24from(localTime: LocalDateTime, format: HourFormat): LocalDateTime =
