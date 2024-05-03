@@ -2,6 +2,23 @@ name: Build and Release
 
 on:
  workflow_dispatch:
+   inputs:
+     tag_name:
+       description: 'Tag name for the release'
+       required: true
+     release_name:
+       description: 'Release name'
+       required: true
+
+permissions:
+  contents: write
+  issues: write
+  deployments: write
+  packages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
 
 jobs:
  apk:
@@ -14,7 +31,11 @@ jobs:
        uses: actions/setup-java@v2.5.0
        with:
          distribution: temurin
-         java-version: "11"
+         java-version: "17"
+     - name: Load Google Service file
+       env:
+         DATA: ${{ secrets.GOOGLE_SERVICES_JSON }}
+       run: echo $DATA | base64 -di > app/google-services.json
      - name: Set execution flag for gradlew
        run: chmod +x gradlew
      - name: Build APK
@@ -40,8 +61,8 @@ jobs:
        env:
          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
        with:
-         tag_name: ${{ github.run_number }}
-         release_name: ${{ github.event.repository.name }} v${{ github.run_number }}
+         tag_name: ${{ github.event.inputs.tag_name }}
+         release_name: ${{ github.event.inputs.release_name }}
      - name: Upload Release APK
        id: upload_release_asset
        uses: actions/upload-release-asset@v1.0.1
