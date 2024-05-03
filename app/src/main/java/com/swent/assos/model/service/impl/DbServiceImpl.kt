@@ -130,29 +130,6 @@ constructor(
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
 
-  override fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
-    firestore
-        .collection("news")
-        .document(news.id)
-        .set(
-            mapOf(
-                "title" to news.title,
-                "description" to news.description,
-                "images" to news.images,
-            ))
-        .addOnSuccessListener { onSucess() }
-        .addOnFailureListener { onError(it.message ?: "Error") }
-  }
-
-  override fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit) {
-    firestore
-        .collection("news")
-        .document(news.id)
-        .delete()
-        .addOnSuccessListener { onSucess() }
-        .addOnFailureListener { onError(it.message ?: "Error") }
-  }
-
   override suspend fun getNews(
       associationId: String,
       lastDocumentSnapshot: DocumentSnapshot?
@@ -172,20 +149,6 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeNews(it) }
-  }
-
-  override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("startTime", Query.Direction.ASCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map { deserializeEvent(it) }
   }
 
   override suspend fun getEventsFromAnAssociation(

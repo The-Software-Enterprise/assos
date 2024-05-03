@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.service.impl.DbServiceImpl
 import io.mockk.coEvery
@@ -114,18 +115,34 @@ class DbServiceTest {
     val dbService = DbServiceImpl(mockFirestore, mockAuth)
 
     dbService.getUser("id")
-    dbService.createNews(News(), {}, {})
-    dbService.updateNews(News(), {}, {})
-    dbService.deleteNews(News(), {}, {})
-    dbService.getAllNews(null)
-    dbService.getAllEvents(null)
+
     dbService.getAllAssociations(null)
+    dbService.getAllAssociations(mockDocumentSnapshot)
+
     dbService.getAssociationById("id")
-    dbService.followAssociation("id", {}, {})
-    dbService.unfollowAssociation("id", {}, {})
+
+    dbService.getAllNews(null)
+    dbService.getAllNews(mockDocumentSnapshot)
+
     dbService.filterNewsBasedOnAssociations(null, "id")
-    dbService.getEventsFromAssociations(listOf("id"), null)
+    dbService.filterNewsBasedOnAssociations(mockDocumentSnapshot, "id")
+
+    dbService.getNews("id", null)
+    dbService.getNews("id", mockDocumentSnapshot)
+
+    dbService.createNews(News(), {}, {})
+
     dbService.getEventsFromAnAssociation("id", null)
+    dbService.getEventsFromAnAssociation("id", mockDocumentSnapshot)
+
+    dbService.getEventsFromAssociations(listOf("id"), null)
+    dbService.getEventsFromAssociations(listOf("id"), mockDocumentSnapshot)
+
+    dbService.createEvent(Event(id = "id"), {}, {})
+
+    dbService.followAssociation("id", {}, {})
+
+    dbService.unfollowAssociation("id", {}, {})
 
     return@runBlocking
   }

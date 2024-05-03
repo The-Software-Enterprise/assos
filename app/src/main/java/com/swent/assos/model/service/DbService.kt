@@ -25,15 +25,9 @@ interface DbService {
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
-  fun updateNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
-
-  fun deleteNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
-
   suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
   // Events -------------------------------------------------------------------
-  suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event>
-
   suspend fun getEventsFromAnAssociation(
       associationId: String,
       lastDocumentSnapshot: DocumentSnapshot?
