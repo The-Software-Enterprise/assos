@@ -20,4 +20,5 @@ To directly address the visibility issue, StudentSphere provides a centralized p
 Figma : https://www.figma.com/team_invite/redeem/Z6aOlqKXBjUkzQUDpnfWkr
 
 **Architecture Diagram** \
-![Image JPEG-4108-BDD7-76-0](https://github.com/The-Software-Enterprise/assos/assets/92825638/d712d536-488e-41cb-a954-a0cf7b7dcd5f)
+<img width="1291" alt="Capture d’écran 2024-05-03 à 13 23 30" src="https://github.com/The-Software-Enterprise/assos/assets/91310864/88f8ed79-8504-4966-897f-4e1aeb3b26c8">
+
