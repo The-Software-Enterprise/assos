@@ -126,6 +126,7 @@ class DbServiceTest {
     dbService.filterNewsBasedOnAssociations(null, "id")
     dbService.getEventsFromAssociations(listOf("id"), null)
     dbService.getEventsFromAnAssociation("id", null)
+    dbService.joinAssociation(Triple("id", "member", 3), {}, {})
 
     return@runBlocking
   }
