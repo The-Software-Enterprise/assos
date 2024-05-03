@@ -114,4 +114,44 @@ class CreateEventTest : SuperTest() {
       }
     }
   }
+
+  @Test
+  fun testCreateAnEntireEvent() {
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("Fill the form") {
+          // form { assertIsDisplayed() }
+          inputTitle {
+            assertIsDisplayed()
+            performClick()
+            performTextInput(eventTitle)
+          }
+          inputDescription {
+            assertIsDisplayed()
+            performClick()
+            performTextInput(eventDescription)
+          }
+        }
+
+        step("choose the start time") {
+          startTimePicker { performClick() }
+          // select the time
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
+
+        step("choose the end time") {
+          startTimePicker { performClick() }
+          // select the time
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
+
+        step("test the image") { image { performClick() } }
+        composeTestRule.waitForIdle()
+      }
+    }
+  }
 }
