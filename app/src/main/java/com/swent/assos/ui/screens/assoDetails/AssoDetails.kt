@@ -114,22 +114,22 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   ) { paddingValues ->
     LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
       item {
-          Image(
-              painter =
-              if (association.banner != Uri.EMPTY) {
+        Image(
+            painter =
+                if (association.banner != Uri.EMPTY) {
                   rememberAsyncImagePainter(association.banner)
-              } else {
+                } else {
                   painterResource(id = R.drawable.ic_launcher_foreground)
-              },
-              contentDescription = null,
-              modifier =
-              Modifier.fillMaxWidth()
-                  .padding(10.dp)
-                  .height(200.dp)
-                  .clip(shape = RoundedCornerShape(20.dp))
-                  .background(Color.Gray),
-              contentScale = ContentScale.Crop,
-              alignment = Alignment.Center)
+                },
+            contentDescription = null,
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(10.dp)
+                    .height(200.dp)
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .background(Color.Gray),
+            contentScale = ContentScale.Crop,
+            alignment = Alignment.Center)
       }
 
       item {
