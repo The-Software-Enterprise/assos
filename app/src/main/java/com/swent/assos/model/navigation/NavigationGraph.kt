@@ -21,6 +21,7 @@ import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
 import com.swent.assos.ui.screens.profile.Settings
+import com.swent.assos.ui.screens.ticket.ScanTicket
 import com.swent.assos.ui.screens.ticket.TicketDetails
 
 @Composable
@@ -44,6 +45,9 @@ fun NavigationGraph() {
     composable(Destinations.TICKET_DETAILS.route) {
       TicketDetails(navigationActions = navigationActions)
     }
+      composable(Destinations.SCAN_TICKET.route) {
+          ScanTicket(navigationActions = navigationActions)
+      }
     composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
       AssoDetails(
           assoId = backStackEntry.arguments?.getString("assoId").toString(),
@@ -104,5 +108,6 @@ enum class Destinations(val route: String) {
   APPEARANCE("Appearance"),
   MY_ASSOCIATIONS("MyAssociations"),
   FOLLOWING("Following"),
-  TICKET_DETAILS("TicketDetails")
+  TICKET_DETAILS("TicketDetails"),
+    SCAN_TICKET("ScanTicket")
 }

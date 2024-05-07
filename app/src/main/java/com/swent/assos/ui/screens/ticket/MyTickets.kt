@@ -75,7 +75,7 @@ fun MyTickets(navigationActions: NavigationActions) {
               modifier = Modifier.testTag("AddImages"),
               containerColor = MaterialTheme.colorScheme.tertiary,
               contentColor = MaterialTheme.colorScheme.onTertiary,
-              onClick = {  },
+              onClick = { navigationActions.navigateTo(Destinations.SCAN_TICKET.route) },
               shape = RoundedCornerShape(size = 16.dp)) {
               Image(imageVector = Icons.Default.CameraAlt, contentDescription = null)
           }
