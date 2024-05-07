@@ -15,9 +15,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -65,7 +69,17 @@ fun MyTickets(navigationActions: NavigationActions) {
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
-      topBar = { PageTitle(title = "My Tickets") }) { paddingValues ->
+      topBar = { PageTitle(title = "My Tickets") },
+              floatingActionButton = {
+          FloatingActionButton(
+              modifier = Modifier.testTag("AddImages"),
+              containerColor = MaterialTheme.colorScheme.tertiary,
+              contentColor = MaterialTheme.colorScheme.onTertiary,
+              onClick = {  },
+              shape = RoundedCornerShape(size = 16.dp)) {
+              Image(imageVector = Icons.Default.CameraAlt, contentDescription = null)
+          }
+      }) { paddingValues ->
         LazyColumn(
             modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketList"),
             horizontalAlignment = Alignment.CenterHorizontally,
