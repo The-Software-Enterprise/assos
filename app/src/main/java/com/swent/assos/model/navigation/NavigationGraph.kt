@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
@@ -21,6 +22,7 @@ import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
 import com.swent.assos.ui.screens.profile.Settings
+import com.swent.assos.ui.screens.ticket.TicketDetails
 
 @Composable
 fun NavigationGraph() {
@@ -40,6 +42,9 @@ fun NavigationGraph() {
     composable(Destinations.LOGIN.route) { LoginScreen(navigationActions = navigationActions) }
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
+    composable(Destinations.TICKET_DETAILS.route) {
+      TicketDetails(navigationActions = navigationActions)
+    }
     composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
       AssoDetails(
           assoId = backStackEntry.arguments?.getString("assoId").toString(),
@@ -100,4 +105,5 @@ enum class Destinations(val route: String) {
   APPEARANCE("Appearance"),
   MY_ASSOCIATIONS("MyAssociations"),
   FOLLOWING("Following"),
+  TICKET_DETAILS("TicketDetails")
 }
