@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
-  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
+  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
   Column(
       modifier =
           Modifier.fillMaxSize().testTag("HomeNavigation").semantics {
