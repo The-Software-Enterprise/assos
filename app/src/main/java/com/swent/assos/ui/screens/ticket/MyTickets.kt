@@ -80,48 +80,47 @@ fun MyTickets(navigationActions: NavigationActions) {
 
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
-    Card(
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
-        shape = RoundedCornerShape(12.dp),
-        modifier =
-        Modifier.testTag("TicketItem")
-            .padding(16.dp)
-            .border(
-                width = 0.5.dp,
-                color = MaterialTheme.colorScheme.outline,
-                shape = RoundedCornerShape(12.dp)
-            )) {
+  Card(
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
+      shape = RoundedCornerShape(12.dp),
+      modifier =
+          Modifier.testTag("TicketItem")
+              .padding(16.dp)
+              .border(
+                  width = 0.5.dp,
+                  color = MaterialTheme.colorScheme.outline,
+                  shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
-            Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
-                navigationActions.navigateTo(Destinations.TICKET_DETAILS.route)
-            },
+                Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
+                  navigationActions.navigateTo(Destinations.TICKET_DETAILS.route)
+                },
         ) {
-            Image(
-                painter = rememberAsyncImagePainter(ticket.banner),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier =
-                Modifier.fillMaxWidth()
-                    .height(84.dp)
-                    .background(MaterialTheme.colorScheme.outline))
+          Image(
+              painter = rememberAsyncImagePainter(ticket.banner),
+              contentDescription = null,
+              contentScale = ContentScale.Crop,
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .height(84.dp)
+                      .background(MaterialTheme.colorScheme.outline))
 
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = ticket.name,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
-            Spacer(modifier = Modifier.height(6.dp))
+          Spacer(modifier = Modifier.height(10.dp))
+          Text(
+              text = ticket.name,
+              style = MaterialTheme.typography.titleMedium,
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+          Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = ticket.startTime?.let { dateToReadableString(it) } ?: "",
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
-            Spacer(modifier = Modifier.height(10.dp))
+          Text(
+              text = ticket.startTime?.let { dateToReadableString(it) } ?: "",
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+          Spacer(modifier = Modifier.height(10.dp))
         }
-    }
+      }
 }
 
 fun dateToReadableString(date: LocalDateTime): String {
-    return "${date.dayOfMonth} ${date.month} ${date.year}, ${date.hour}:${date.minute}"
+  return "${date.dayOfMonth} ${date.month} ${date.year}, ${date.hour}:${date.minute}"
 }

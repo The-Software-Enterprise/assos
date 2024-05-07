@@ -7,7 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
