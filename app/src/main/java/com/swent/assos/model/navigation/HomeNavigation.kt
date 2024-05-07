@@ -55,7 +55,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         0 -> News(navigationActions = navigationActions)
         1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
-          3 -> MyTickets(navigationActions = navigationActions)
+        3 -> MyTickets(navigationActions = navigationActions)
         4 -> Profile(navigationActions = navigationActions)
       }
     }
@@ -90,12 +90,12 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                         painterResource(id = R.drawable.calendar),
                         contentDescription = "Calendar",
                         modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
-                  3 ->
-                      Icon(
-                          painterResource(id = R.drawable.qrcode),
-                          contentDescription = "Ticket",
-                          modifier =
-                          Modifier.size(28.dp).padding(bottom = 4.dp).testTag("TicketIcon"))
+                3 ->
+                    Icon(
+                        painterResource(id = R.drawable.qrcode),
+                        contentDescription = "Ticket",
+                        modifier =
+                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("TicketIcon"))
                 4 ->
                     Icon(
                         painterResource(id = R.drawable.profile),
