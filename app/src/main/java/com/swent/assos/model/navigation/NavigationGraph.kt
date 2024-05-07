@@ -45,9 +45,7 @@ fun NavigationGraph() {
     composable(Destinations.TICKET_DETAILS.route) {
       TicketDetails(navigationActions = navigationActions)
     }
-      composable(Destinations.SCAN_TICKET.route) {
-          ScanTicket(navigationActions = navigationActions)
-      }
+    composable(Destinations.SCAN_TICKET.route) { ScanTicket(navigationActions = navigationActions) }
     composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->
       AssoDetails(
           assoId = backStackEntry.arguments?.getString("assoId").toString(),
@@ -109,5 +107,5 @@ enum class Destinations(val route: String) {
   MY_ASSOCIATIONS("MyAssociations"),
   FOLLOWING("Following"),
   TICKET_DETAILS("TicketDetails"),
-    SCAN_TICKET("ScanTicket")
+  SCAN_TICKET("ScanTicket")
 }
