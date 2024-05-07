@@ -257,6 +257,14 @@ constructor(
           .addOnFailureListener { onError(it.message ?: "") }
     }
   }
+
+  override suspend fun updateBanner(associationId: String, banner: Uri) {
+    firestore
+        .collection("associations")
+        .document(associationId)
+        .update("banner", banner.toString())
+        .await()
+  }
 }
 
 private fun serialize(event: Event): Map<String, Any> {
@@ -322,5 +330,6 @@ private fun deserializeAssociation(doc: DocumentSnapshot): Association {
       url = doc.getString("url") ?: "",
       description = doc.getString("description") ?: "",
       logo = doc.getString("logo")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
+      banner = doc.getString("banner")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
       documentSnapshot = doc)
 }

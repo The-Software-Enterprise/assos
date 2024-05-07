@@ -29,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -50,9 +51,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
@@ -117,22 +121,28 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showStartDatePicker) {
     DatePickerDialog(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
               modifier = Modifier.testTag("StartDatePickerConfirmButton"),
               onClick = {
                 val selectedDate =
-                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    startDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
                 val currentDate = LocalDate.now()
-                if (selectedDate.isBefore(currentDate)) {
-                  Toast.makeText(
-                          context,
-                          "Selected date should be after today, please select again",
-                          Toast.LENGTH_SHORT)
-                      .show()
+                if (selectedDate != null) {
+                  if (selectedDate.isBefore(currentDate)) {
+                    Toast.makeText(
+                            context,
+                            "Selected date should be after today, please select again",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  } else {
+                    showStartDatePicker = false
+                    showStartTimePicker = true
+                  }
                 } else {
                   showStartDatePicker = false
                   showStartTimePicker = true
@@ -164,7 +174,6 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate(),
                           time)
                 }
-
                 if (selectedDate.isBefore(current)) {
                   Toast.makeText(
                           context,
@@ -188,27 +197,32 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showEndDatePicker) {
     DatePickerDialog(
+        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
               onClick = {
                 val startDate =
-                    Instant.ofEpochMilli(startDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    startDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
                 val selectedEndDate =
-                    Instant.ofEpochMilli(endDatePickerState.selectedDateMillis!!)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate()
+                    endDatePickerState.selectedDateMillis?.let {
+                      Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                    }
+                if (selectedEndDate != null) {
+                  if (selectedEndDate.isBefore(startDate)) {
+                    Toast.makeText(
+                            context,
+                            "Selected end date should be after start date, please select again",
+                            Toast.LENGTH_SHORT)
+                        .show()
+                  } else {
 
-                if (selectedEndDate.isBefore(startDate)) {
-                  Toast.makeText(
-                          context,
-                          "Selected end date should be after start date, please select again",
-                          Toast.LENGTH_SHORT)
-                      .show()
+                    showEndDatePicker = false
+                    showEndTimePicker = true
+                  }
                 } else {
-
                   showEndDatePicker = false
                   showEndTimePicker = true
                 }
@@ -351,8 +365,8 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                 Box(
                     modifier =
                         Modifier.padding(8.dp)
-                            .width(120.dp)
-                            .height(150.dp)
+                            .width(150.dp)
+                            .height(75.dp)
                             .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                             .testTag("InputImage")
                             .clickable {
@@ -362,20 +376,24 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             },
                     contentAlignment = Alignment.Center) {
                       if (event.image == Uri.EMPTY) {
-                        Text(text = "Image", modifier = Modifier.align(Alignment.Center))
+                        Icon(
+                            painter = painterResource(id = R.drawable.image),
+                            contentDescription = null)
                       } else {
                         Image(
                             painter = rememberAsyncImagePainter(event.image),
                             contentDescription = "image",
                             modifier =
                                 Modifier.size(150.dp)
+                                    .clip(shape = RoundedCornerShape(8.dp))
                                     .background(MaterialTheme.colorScheme.surface)
                                     .testTag("Image")
                                     .clickable {
                                       val pickImageIntent = Intent(Intent.ACTION_PICK)
                                       pickImageIntent.type = "image/*"
                                       launcher.launch(pickImageIntent)
-                                    })
+                                    },
+                            contentScale = ContentScale.Crop)
                       }
                     }
               }
@@ -457,7 +475,7 @@ fun TimePickerDialog(
     onDismissRequest: () -> Unit,
     confirmButton: @Composable (() -> Unit),
     dismissButton: @Composable (() -> Unit)? = null,
-    containerColor: Color = MaterialTheme.colorScheme.surface,
+    containerColor: Color = MaterialTheme.colorScheme.background,
     content: @Composable () -> Unit,
 ) {
   Dialog(
@@ -473,7 +491,7 @@ fun TimePickerDialog(
                 .background(shape = MaterialTheme.shapes.extraLarge, color = containerColor),
         color = containerColor) {
           Column(
-              modifier = Modifier.padding(24.dp),
+              modifier = Modifier.padding(24.dp).testTag("TimePickerDialog"),
               horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp),
