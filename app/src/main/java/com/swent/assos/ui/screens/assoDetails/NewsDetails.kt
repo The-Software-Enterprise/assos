@@ -138,28 +138,28 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
           }
         }
   } else {
-      Scaffold(
-          modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
-          topBar = {
-              PageTitleWithGoBack(title = "NO NEWS", navigationActions = navigationActions)
-          }) { paddingValues ->
+    Scaffold(
+        modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
+        topBar = {
+          PageTitleWithGoBack(title = "NO NEWS", navigationActions = navigationActions)
+        }) { paddingValues ->
           LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-              item {
-                  Image(
-                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                      contentDescription = null,
-                      modifier =
+            item {
+              Image(
+                  painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                  contentDescription = null,
+                  modifier =
                       Modifier.fillMaxWidth()
                           .padding(15.dp)
                           .height(200.dp)
                           .clip(shape = RoundedCornerShape(20.dp))
                           .background(Color.Gray)
                           .testTag("Main Image"),
-                      contentScale = ContentScale.Crop,
-                      alignment = Alignment.Center)
+                  contentScale = ContentScale.Crop,
+                  alignment = Alignment.Center)
 
-                  Box(
-                      modifier =
+              Box(
+                  modifier =
                       Modifier.fillMaxWidth()
                           .padding(top = 5.dp, bottom = 5.dp)
                           .padding(horizontal = 10.dp)
@@ -167,47 +167,42 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                               color = MaterialTheme.colorScheme.surface,
                               shape = RoundedCornerShape(20.dp))
                           .testTag("descriptionBox")) {
-                      Text(
-                          text = "No news found.",
-                          style = MaterialTheme.typography.bodyMedium,
-                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                          fontWeight = FontWeight.Medium,
-                          modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
+                    Text(
+                        text = "No news found.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
                   }
 
+              Text(
+                  text = "Pictures :",
+                  style = MaterialTheme.typography.headlineSmall,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                  fontWeight = FontWeight.Medium,
+                  modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-                      Text(
-                          text = "Pictures :",
-                          style = MaterialTheme.typography.headlineSmall,
-                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                          fontWeight = FontWeight.Medium,
-                          modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-
-                      Row(
-                          modifier = Modifier.testTag("subImageList")) {
-                              Card(
-                                  modifier =
-                                  Modifier.padding(horizontal = 10.dp)
-                                      .width(150.dp)
-                                      .height(120.dp)
-                                      .testTag("subImageBox"),
-                                  shape = RoundedCornerShape(20.dp),
-                              ) {
-                                  AsyncImage(
-                                      model = painterResource(id = R.drawable.ic_launcher_foreground),
-                                      contentDescription = null,
-                                      modifier = Modifier.fillMaxWidth().testTag("subImage"),
-                                      contentScale = ContentScale.Crop,
-                                      alignment = Alignment.Center)
-
-                              }
-
-                      }
-
-
-                  Spacer(modifier = Modifier.height(20.dp))
+              Row(modifier = Modifier.testTag("subImageList")) {
+                Card(
+                    modifier =
+                        Modifier.padding(horizontal = 10.dp)
+                            .width(150.dp)
+                            .height(120.dp)
+                            .testTag("subImageBox"),
+                    shape = RoundedCornerShape(20.dp),
+                ) {
+                  AsyncImage(
+                      model = painterResource(id = R.drawable.ic_launcher_foreground),
+                      contentDescription = null,
+                      modifier = Modifier.fillMaxWidth().testTag("subImage"),
+                      contentScale = ContentScale.Crop,
+                      alignment = Alignment.Center)
+                }
               }
+
+              Spacer(modifier = Modifier.height(20.dp))
+            }
           }
-      }
+        }
   }
 }
