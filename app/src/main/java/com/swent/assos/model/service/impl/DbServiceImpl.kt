@@ -293,11 +293,11 @@ constructor(
     return snapshot.documents.map { deserializeTicket(it) }
   }
 
-    override suspend fun getTicketFromId(ticketId: String): Ticket {
-        val query = firestore.collection("tickets").document(ticketId)
-        val snapshot = query.get().await() ?: return Ticket("", "", "")
-        return deserializeTicket(snapshot)
-    }
+  override suspend fun getTicketFromId(ticketId: String): Ticket {
+    val query = firestore.collection("tickets").document(ticketId)
+    val snapshot = query.get().await() ?: return Ticket("", "", "")
+    return deserializeTicket(snapshot)
+  }
 }
 
 private fun serialize(event: Event): Map<String, Any> {

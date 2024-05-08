@@ -44,7 +44,7 @@ fun NavigationGraph() {
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     composable(Destinations.TICKET_DETAILS.route + "/{eventId}") { backStackEntry ->
       TicketDetails(
-            eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          eventId = backStackEntry.arguments?.getString("eventId").toString(),
           navigationActions = navigationActions)
     }
     composable(Destinations.SCAN_TICKET.route) { ScanTicket(navigationActions = navigationActions) }

@@ -2,7 +2,6 @@ package com.swent.assos.model.view
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.di.IoDispatcher
@@ -26,22 +25,18 @@ constructor(
   private val _tickets = MutableStateFlow<List<Ticket>>(emptyList())
   val tickets = _tickets.asStateFlow()
 
-    private val _currentTicket = MutableStateFlow(Ticket())
-    val currentTicket = _currentTicket.asStateFlow()
+  private val _currentTicket = MutableStateFlow(Ticket())
+  val currentTicket = _currentTicket.asStateFlow()
 
-
-
-    fun getTickets() {
-        viewModelScope.launch(ioDispatcher) {
-            _tickets.value = dbService.getTickets(currentUser.value.id, lastDocumentSnapshot = null)
-        }
+  fun getTickets() {
+    viewModelScope.launch(ioDispatcher) {
+      _tickets.value = dbService.getTickets(currentUser.value.id, lastDocumentSnapshot = null)
     }
+  }
 
-    fun getTicket(ticketId: String) {
-        viewModelScope.launch(ioDispatcher) {
-            _currentTicket.value = dbService.getTicketFromId(ticketId)
-        }
+  fun getTicket(ticketId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _currentTicket.value = dbService.getTicketFromId(ticketId)
     }
-
-
+  }
 }

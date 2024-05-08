@@ -29,21 +29,18 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
-import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
 
-
   val viewModelEvent: EventViewModel = hiltViewModel()
-    val event by viewModelEvent.event.collectAsState()
+  val event by viewModelEvent.event.collectAsState()
 
-    LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
+  LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketScreen"),

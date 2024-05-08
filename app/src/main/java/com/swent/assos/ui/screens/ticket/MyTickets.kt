@@ -42,7 +42,6 @@ import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
-import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
 import java.time.LocalDateTime
@@ -51,10 +50,10 @@ import java.time.LocalDateTime
 @Composable
 fun MyTickets(navigationActions: NavigationActions) {
 
-    val viewModel: TicketViewModel = hiltViewModel()
-    val myTickets by viewModel.tickets.collectAsState()
+  val viewModel: TicketViewModel = hiltViewModel()
+  val myTickets by viewModel.tickets.collectAsState()
 
-    LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
+  LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
@@ -84,10 +83,10 @@ fun MyTickets(navigationActions: NavigationActions) {
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
-    val viewModel : EventViewModel = hiltViewModel()
-    val event by viewModel.event.collectAsState()
+  val viewModel: EventViewModel = hiltViewModel()
+  val event by viewModel.event.collectAsState()
 
-    LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
+  LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
@@ -102,7 +101,8 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
-                  navigationActions.navigateTo(Destinations.TICKET_DETAILS.route + "/${ticket.eventId}")
+                  navigationActions.navigateTo(
+                      Destinations.TICKET_DETAILS.route + "/${ticket.eventId}")
                 },
         ) {
           Image(
