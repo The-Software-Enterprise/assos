@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,9 +40,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
+import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
+import java.time.LocalDateTime
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -53,126 +54,60 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val news by viewModel.allNews.collectAsState()
 
-  // LaunchedEffect(key1 = Unit) { viewModel. }
+  val specificNews =
+      news.find { it.id == newsId }
+          ?: News(
+              id = "",
+              title = "",
+              description = "",
+              images = listOf(Uri.EMPTY),
+              createdAt = LocalDateTime.now(),
+              associationId = "",
+              eventIds = mutableListOf())
 
-  val specificNews = news.find { it.id == newsId }
-  if (specificNews != null) {
-    Scaffold(
-        modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
-        topBar = {
-          PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
-        }) { paddingValues ->
-          LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-            item {
-              Image(
-                  painter =
-                      if (specificNews.images[0] != Uri.EMPTY) {
-                        rememberAsyncImagePainter(specificNews.images[0])
-                      } else {
-                        painterResource(id = R.drawable.ic_launcher_foreground)
-                      },
-                  contentDescription = null,
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(15.dp)
-                          .height(200.dp)
-                          .clip(shape = RoundedCornerShape(20.dp))
-                          .background(Color.Gray)
-                          .testTag("Main Image"),
-                  contentScale = ContentScale.Crop,
-                  alignment = Alignment.Center)
+  Scaffold(
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
+      topBar = {
+        PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
+      }) { paddingValues ->
+        LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
+          item {
+            Image(
+                painter =
+                    if (specificNews.images[0] != Uri.EMPTY) {
+                      rememberAsyncImagePainter(specificNews.images[0])
+                    } else {
+                      painterResource(id = R.drawable.ic_launcher_foreground)
+                    },
+                contentDescription = null,
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(15.dp)
+                        .height(200.dp)
+                        .clip(shape = RoundedCornerShape(20.dp))
+                        .background(Color.Gray)
+                        .testTag("Main Image"),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center)
 
-              Box(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(top = 5.dp, bottom = 5.dp)
-                          .padding(horizontal = 10.dp)
-                          .background(
-                              color = MaterialTheme.colorScheme.surface,
-                              shape = RoundedCornerShape(20.dp))
-                          .testTag("descriptionBox")) {
-                    Text(
-                        text = specificNews.description,
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
-                  }
+            Box(
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(top = 5.dp, bottom = 5.dp)
+                        .padding(horizontal = 10.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(20.dp))
+                        .testTag("descriptionBox")) {
+                  Text(
+                      text = specificNews.description,
+                      style = MaterialTheme.typography.bodyMedium,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                      modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
+                }
 
-              if (specificNews.images.isNotEmpty()) {
-                Text(
-                    text = "Pictures :",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
-
-                LazyRow(
-                    modifier = Modifier.testTag("subImageList"),
-                    contentPadding = PaddingValues(horizontal = 16.dp)) {
-                      items(specificNews.images) { image ->
-                        Card(
-                            modifier =
-                                Modifier.padding(horizontal = 10.dp)
-                                    .width(150.dp)
-                                    .height(120.dp)
-                                    .testTag("subImageBox"),
-                            shape = RoundedCornerShape(20.dp),
-                        ) {
-                          AsyncImage(
-                              model = image,
-                              contentDescription = null,
-                              modifier = Modifier.fillMaxWidth().testTag("subImage"),
-                              contentScale = ContentScale.Crop,
-                              alignment = Alignment.Center)
-                          Spacer(modifier = Modifier.width(8.dp))
-                        }
-                      }
-                    }
-              }
-
-              Spacer(modifier = Modifier.height(20.dp))
-            }
-          }
-        }
-  } else {
-    Scaffold(
-        modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
-        topBar = {
-          PageTitleWithGoBack(title = "NO NEWS", navigationActions = navigationActions)
-        }) { paddingValues ->
-          LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-            item {
-              Image(
-                  painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                  contentDescription = null,
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(15.dp)
-                          .height(200.dp)
-                          .clip(shape = RoundedCornerShape(20.dp))
-                          .background(Color.Gray)
-                          .testTag("Main Image"),
-                  contentScale = ContentScale.Crop,
-                  alignment = Alignment.Center)
-
-              Box(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(top = 5.dp, bottom = 5.dp)
-                          .padding(horizontal = 10.dp)
-                          .background(
-                              color = MaterialTheme.colorScheme.surface,
-                              shape = RoundedCornerShape(20.dp))
-                          .testTag("descriptionBox")) {
-                    Text(
-                        text = "No news found.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
-                  }
-
+            if (specificNews.images.isNotEmpty()) {
               Text(
                   text = "Pictures :",
                   style = MaterialTheme.typography.headlineSmall,
@@ -180,27 +115,32 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                   fontWeight = FontWeight.Medium,
                   modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-              Row(modifier = Modifier.testTag("subImageList")) {
-                Card(
-                    modifier =
-                        Modifier.padding(horizontal = 10.dp)
-                            .width(150.dp)
-                            .height(120.dp)
-                            .testTag("subImageBox"),
-                    shape = RoundedCornerShape(20.dp),
-                ) {
-                  Image(
-                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                      contentDescription = null,
-                      modifier = Modifier.fillMaxWidth().testTag("subImage"),
-                      contentScale = ContentScale.Crop,
-                      alignment = Alignment.Center)
-                }
-              }
-
-              Spacer(modifier = Modifier.height(20.dp))
+              LazyRow(
+                  modifier = Modifier.testTag("subImageList"),
+                  contentPadding = PaddingValues(horizontal = 16.dp)) {
+                    items(specificNews.images) { image ->
+                      Card(
+                          modifier =
+                              Modifier.padding(horizontal = 10.dp)
+                                  .width(150.dp)
+                                  .height(120.dp)
+                                  .testTag("subImageBox"),
+                          shape = RoundedCornerShape(20.dp),
+                      ) {
+                        AsyncImage(
+                            model = image,
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxWidth().testTag("subImage"),
+                            contentScale = ContentScale.Crop,
+                            alignment = Alignment.Center)
+                        Spacer(modifier = Modifier.width(8.dp))
+                      }
+                    }
+                  }
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
           }
         }
-  }
+      }
 }
