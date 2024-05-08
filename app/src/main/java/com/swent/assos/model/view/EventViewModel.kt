@@ -71,6 +71,10 @@ constructor(
       _event.value = _event.value.copy(image = uri)
     }
   }
+
+  fun getEvent(id: String) {
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventFromId(id) }
+  }
 }
 
 enum class HourFormat {

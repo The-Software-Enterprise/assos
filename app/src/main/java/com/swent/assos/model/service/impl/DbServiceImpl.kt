@@ -204,6 +204,12 @@ constructor(
         .addOnFailureListener { onError("Error") }
   }
 
+  override suspend fun getEventFromId(eventId: String): Event {
+    val query = firestore.collection("events").document(eventId)
+    val snapshot = query.get().await() ?: return Event("", "", "")
+    return deserializeEvent(snapshot)
+  }
+
   override suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,

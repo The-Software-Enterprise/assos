@@ -2,7 +2,6 @@
 
 package com.swent.assos.ui.screens.ticket
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,25 +45,7 @@ import java.time.LocalDateTime
 @Composable
 fun MyTickets(navigationActions: NavigationActions) {
 
-  val balelecTicket =
-      Ticket(
-          name = "Balélec Ticket",
-          startTime = LocalDateTime.now(),
-          banner =
-              Uri.parse(
-                  "https://scontent-zrh1-1.xx.fbcdn.net/v/t39.30808-6/417379790_892614632321109_331978589442030329_n.jpg?stp=cp6_dst-jpg&_nc_cat=104&ccb=1-7&_nc_sid=5f2048&_nc_ohc=BCPdUFeZuqoQ7kNvgFT7nt-&_nc_ht=scontent-zrh1-1.xx&oh=00_AfA0SUayO8Bt2y2LQJLNHaL8CP7NSV5ChMfmQuuP5fxrHA&oe=663AC822"))
-
-  val rocketTeamTicket =
-      Ticket(
-          name = "Rocket Launch Ticket",
-          startTime = LocalDateTime.now(),
-      )
-
-  val challengeTicket = Ticket(name = "Challenge Week Ticket", startTime = LocalDateTime.now())
-
-  val amacPartyTicket = Ticket(name = "AMAC Party Ticket", startTime = LocalDateTime.now())
-
-  val myTickets = listOf(balelecTicket, rocketTeamTicket, challengeTicket, amacPartyTicket)
+  val myTickets = listOf<Ticket>() // TODO : get my tickets from viewmodel
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
@@ -93,6 +74,9 @@ fun MyTickets(navigationActions: NavigationActions) {
 
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
+
+  // Get the corresponding event from the ticket
+
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
@@ -110,7 +94,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
                 },
         ) {
           Image(
-              painter = rememberAsyncImagePainter(ticket.banner),
+              painter = rememberAsyncImagePainter(""), /*TODO : ticket banner */
               contentDescription = null,
               contentScale = ContentScale.Crop,
               modifier =
@@ -120,13 +104,15 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
           Spacer(modifier = Modifier.height(10.dp))
           Text(
-              text = ticket.name,
+              text = "", /*TODO : ticket name */
               style = MaterialTheme.typography.titleMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text = ticket.startTime?.let { dateToReadableString(it) } ?: "",
+              text =
+                  "", // ticket.startTime?.let { dateToReadableString(it) } ?: "", /*TODO : ticket
+                      // start time*/
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))

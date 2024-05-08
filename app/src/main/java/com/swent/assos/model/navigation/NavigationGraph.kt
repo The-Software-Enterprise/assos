@@ -22,7 +22,6 @@ import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
 import com.swent.assos.ui.screens.profile.Settings
 import com.swent.assos.ui.screens.ticket.ScanTicket
-import com.swent.assos.ui.screens.ticket.TicketDetails
 
 @Composable
 fun NavigationGraph() {
@@ -43,7 +42,7 @@ fun NavigationGraph() {
     composable(Destinations.SIGN_UP.route) { SignUpScreen(navigationActions = navigationActions) }
     composable(Destinations.HOME.route) { HomeNavigation(navigationActions = navigationActions) }
     composable(Destinations.TICKET_DETAILS.route) {
-      TicketDetails(navigationActions = navigationActions)
+      // TicketDetails(navigationActions = navigationActions) //TODO
     }
     composable(Destinations.SCAN_TICKET.route) { ScanTicket(navigationActions = navigationActions) }
     composable(Destinations.ASSO_DETAILS.route + "/{assoId}") { backStackEntry ->

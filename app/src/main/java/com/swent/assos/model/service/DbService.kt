@@ -41,6 +41,8 @@ interface DbService {
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
+  suspend fun getEventFromId(eventId: String): Event
+
   // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
       associationId: String,
