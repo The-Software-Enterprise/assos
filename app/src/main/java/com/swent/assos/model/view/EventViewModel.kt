@@ -27,19 +27,8 @@ constructor(
   private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
   val event = _event.asStateFlow()
 
-  private val _hourFormat = MutableStateFlow(HourFormat.AM)
-  val hourFormat = _hourFormat.asStateFlow()
-
   init {
     viewModelScope.launch(ioDispatcher) {}
-  }
-
-  fun switchHourFormat() {
-    _hourFormat.value =
-        when (_hourFormat.value) {
-          HourFormat.AM -> HourFormat.PM
-          HourFormat.PM -> HourFormat.AM
-        }
   }
 
   fun createEvent(onSuccess: () -> Unit) {
@@ -71,9 +60,4 @@ constructor(
       _event.value = _event.value.copy(image = uri)
     }
   }
-}
-
-enum class HourFormat {
-  AM,
-  PM
 }
