@@ -44,7 +44,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()) {
+            modifier = Modifier.fillMaxSize().testTag("NewsItemRow")) {
               if (news.images.isNotEmpty()) {
                 AsyncImage(
                     model = news.images[0],
@@ -61,7 +61,10 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               Column(
                   verticalArrangement = Arrangement.spacedBy(10.dp),
                   horizontalAlignment = Alignment.Start,
-                  modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterVertically)) {
+                  modifier =
+                      Modifier.padding(start = 16.dp)
+                          .align(Alignment.CenterVertically)
+                          .testTag("NewsItemColumn")) {
                     Text(
                         text = news.title,
                         fontSize = 16.sp,
