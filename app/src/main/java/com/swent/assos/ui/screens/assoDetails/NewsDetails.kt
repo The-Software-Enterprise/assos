@@ -57,9 +57,9 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
   val specificNews =
       news.find { it.id == newsId }
           ?: News(
-              id = "",
-              title = "",
-              description = "",
+              id = "0000",
+              title = "NO TITLE",
+              description = "NO DESCRIPTION",
               images = listOf(Uri.EMPTY),
               createdAt = LocalDateTime.now(),
               associationId = "",
