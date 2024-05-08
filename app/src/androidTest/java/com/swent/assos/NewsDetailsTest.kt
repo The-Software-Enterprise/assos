@@ -27,7 +27,7 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
 
   @get:Rule(order = 1) var hiltRule = HiltAndroidRule(this)
 
-  @get:Rule(order = 2) var composeTestRule1 = createAndroidComposeRule<MainActivity>()
+  @get:Rule(order = 2) var composeTestRule = createAndroidComposeRule<MainActivity>()
 
   // This rule automatic initializes lateinit properties with @MockK, @RelaxedMockK, etc.
   @get:Rule(order = 3) val mockkRule = MockKRule(this)
@@ -37,7 +37,7 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
   @Before
   fun setup() {
     hiltRule.inject()
-    composeTestRule1.activity.setContent {
+    composeTestRule.activity.setContent {
       NewsDetails(newsId = "GTi6W84Se3DGjfK6Z7MG", navigationActions = mockNavActions)
     }
   }
@@ -45,7 +45,7 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
   @Test
   fun goBackButtonNavigatesToHome() {
     run {
-      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule1) {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Go back") {
           goBackButton {
             assertIsDisplayed()
@@ -64,11 +64,10 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
   fun createNewsAndVerifyNewsDetails() {
 
     run {
-      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule1) {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Check the News details is correctly displayed") {
           mainImage { assertIsDisplayed() }
           descriptionText { assertIsDisplayed() }
-          subImageList { assertIsDisplayed() }
           subImageList { assertIsDisplayed() }
         }
       }
