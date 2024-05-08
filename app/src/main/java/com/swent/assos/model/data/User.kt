@@ -9,5 +9,5 @@ data class User(
     var following: List<String> = mutableListOf(),
     val sciper: String = "000000",
     val semester: String = "",
-    var tickets: List<Ticket> = mutableListOf()
+    var tickets: List<String> = mutableListOf()
 )
