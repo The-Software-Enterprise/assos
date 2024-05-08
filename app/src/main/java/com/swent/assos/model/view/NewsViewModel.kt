@@ -58,4 +58,11 @@ constructor(
       }
     }
   }
+  fun getNews() {
+    viewModelScope.launch(ioDispatcher) {
+      _allNews.value = dbService.getAllNews(lastDocumentSnapshot = null)
+    }
+  }
+
+
 }

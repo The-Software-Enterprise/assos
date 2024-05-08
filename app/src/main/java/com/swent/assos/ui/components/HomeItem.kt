@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,7 +39,10 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .testTag("NewsListItem")
-              .height(100.dp)) {
+              .height(100.dp)
+              .clickable {
+                navigationActions.navigateTo("newsDetails/${news.id}/")
+              }) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,
