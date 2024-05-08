@@ -191,8 +191,8 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                             .testTag("subImageBox"),
                     shape = RoundedCornerShape(20.dp),
                 ) {
-                  AsyncImage(
-                      model = painterResource(id = R.drawable.ic_launcher_foreground),
+                  Image(
+                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
                       contentDescription = null,
                       modifier = Modifier.fillMaxWidth().testTag("subImage"),
                       contentScale = ContentScale.Crop,
