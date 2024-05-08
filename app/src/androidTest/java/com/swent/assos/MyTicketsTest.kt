@@ -75,4 +75,20 @@ class MyTicketsTest : SuperTest() {
         }
     }
 
+    @Test
+    fun clickOnFloatingActionButtonRedirectsToScanTicket() {
+        run {
+            ComposeScreen.onComposeScreen<MyTicketsScreen>(composeTestRule) {
+                step("Check if floating action button is displayed and perform click") {
+                    addImages {
+                        assertIsDisplayed()
+                        performClick()
+                    }
+                }
+            }
+            verify { mockNavActions.navigateTo(Destinations.SCAN_TICKET.route) }
+            confirmVerified(mockNavActions)
+        }
+    }
+
 }

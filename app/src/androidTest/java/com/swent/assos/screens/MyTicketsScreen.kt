@@ -14,5 +14,7 @@ class MyTicketsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     val ticketList: KNode = child { hasTestTag("TicketList") }
     val ticketItem: KNode = ticketList.child { hasTestTag("TicketItem") }
 
+    val addImages : KNode = onNode { hasTestTag("AddImages") }
+
 
 }
