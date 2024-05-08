@@ -9,7 +9,6 @@ class ScanTicketScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("ScanTicketScreen") }) {
 
-    val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
-    val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
-
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+  val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
 }

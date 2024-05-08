@@ -43,7 +43,7 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
   LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketDetailsScreen"),
       topBar = { PageTitleWithGoBack(event.title, navigationActions) }) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketDetails"),
@@ -58,12 +58,20 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
                       .padding(horizontal = 16.dp)
                       .height(150.dp)
                       .clip(shape = RoundedCornerShape(20.dp))
-                      .background(Color.Gray))
+                      .background(Color.Gray)
+                      .testTag("EventImage"))
+
           Spacer(modifier = Modifier.height(8.dp))
 
-          Text(text = "Start Time: ${event.startTime}", modifier = Modifier.padding(8.dp))
-          Text(text = "End Time: ${event.endTime}", modifier = Modifier.padding(8.dp))
-          Text(text = "Description: ${event.description}", modifier = Modifier.padding(8.dp))
+          Text(
+              text = "Start Time: " + event.startTime?.let { dateToReadableString(it) },
+              modifier = Modifier.padding(8.dp).testTag("StartTime"))
+          Text(
+              text = "End Time: " + event.endTime?.let { dateToReadableString(it) },
+              modifier = Modifier.padding(8.dp).testTag("EndTime"))
+          Text(
+              text = "Description: ${event.description}",
+              modifier = Modifier.padding(8.dp).testTag("Description"))
         }
       }
 }

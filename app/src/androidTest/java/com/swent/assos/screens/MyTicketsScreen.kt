@@ -9,12 +9,10 @@ class MyTicketsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("MyTicketsScreen") }) {
 
-    val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
 
-    val ticketList: KNode = child { hasTestTag("TicketList") }
-    val ticketItem: KNode = ticketList.child { hasTestTag("TicketItem") }
+  val ticketList: KNode = child { hasTestTag("TicketList") }
+  val ticketItem: KNode = ticketList.child { hasTestTag("TicketItem") }
 
-    val addImages : KNode = onNode { hasTestTag("AddImages") }
-
-
+  val addImages: KNode = onNode { hasTestTag("AddImages") }
 }
