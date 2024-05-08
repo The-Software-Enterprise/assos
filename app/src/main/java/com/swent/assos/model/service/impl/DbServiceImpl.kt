@@ -10,6 +10,7 @@ import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
@@ -271,6 +272,26 @@ constructor(
         .update("banner", banner.toString())
         .await()
   }
+
+  override suspend fun getTickets(
+      userId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<Ticket> {
+    if (userId.isEmpty()) {
+      return emptyList()
+    }
+    val query = firestore.collection("tickets").whereEqualTo("userId", userId)
+    val snapshot =
+        if (lastDocumentSnapshot == null) {
+          query.limit(10).get().await()
+        } else {
+          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
 }
 
 private fun serialize(event: Event): Map<String, Any> {
@@ -294,6 +315,11 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       documentSnapshot = doc)
+}
+
+private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
+  return Ticket(
+      id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
 private fun serialize(news: News): Map<String, Any> {

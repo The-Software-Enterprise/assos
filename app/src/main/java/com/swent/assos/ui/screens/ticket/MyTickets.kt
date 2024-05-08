@@ -112,7 +112,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
           Text(
               text =
                   "", // ticket.startTime?.let { dateToReadableString(it) } ?: "", /*TODO : ticket
-                      // start time*/
+              // start time*/
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
