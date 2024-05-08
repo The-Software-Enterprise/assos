@@ -16,7 +16,7 @@ data class Event(
     val documentSnapshot: DocumentSnapshot? = null,
 ) {
   sealed class Field {
-    data class Text(val title: String, val text: String) : Field()
+    data class Text(var title: String, var text: String) : Field()
 
     data class Image(val uris: List<Uri>) : Field()
   }

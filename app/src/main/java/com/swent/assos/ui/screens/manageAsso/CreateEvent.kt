@@ -28,6 +28,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.TextFields
@@ -149,15 +150,15 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       floatingActionButton = {
         Column {
           FloatingActionButton(
-              modifier = Modifier.testTag("AddImages"),
-              onClick = {},
+              modifier = Modifier.testTag("AddTextField"),
+              onClick = { viewModel.addField(Event.Field.Text("", "")) },
               shape = RoundedCornerShape(size = 16.dp)) {
                 Image(imageVector = Icons.Default.TextFields, contentDescription = null)
               }
           Spacer(modifier = Modifier.size(16.dp))
           FloatingActionButton(
-              modifier = Modifier.testTag("AddImages"),
-              onClick = {},
+              modifier = Modifier.testTag("AddImageField"),
+              onClick = { viewModel.addField(Event.Field.Image(emptyList())) },
               shape = RoundedCornerShape(size = 16.dp)) {
                 Image(imageVector = Icons.Default.PhotoLibrary, contentDescription = null)
               }
@@ -357,13 +358,29 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                     .background(
                                         MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
                                         RoundedCornerShape(5.dp))
-                                    .clickable { }
+                                    .clickable {}
                                     .padding(3.dp),
                             colorFilter =
                                 ColorFilter.tint(
                                     MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
                         )
                       }
+                    }
+                    item {
+                      Box(
+                          modifier =
+                              Modifier.fillMaxHeight(0.9f)
+                                  .aspectRatio(1f)
+                                  .clip(RoundedCornerShape(8.dp))
+                                  .background(Color.Gray),
+                          contentAlignment = Alignment.Center) {
+                            FloatingActionButton(
+                                onClick = {}, shape = RoundedCornerShape(size = 8.dp)) {
+                                  Image(
+                                      imageVector = Icons.Default.AddPhotoAlternate,
+                                      contentDescription = "add an image")
+                                }
+                          }
                     }
                     item { Spacer(modifier = Modifier.width(12.dp)) }
                   }

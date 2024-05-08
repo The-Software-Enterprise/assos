@@ -60,4 +60,10 @@ constructor(
       _event.value = _event.value.copy(image = uri)
     }
   }
+
+  fun addField(field: Event.Field) {
+    val fields = _event.value.fields.toMutableList()
+    fields.add(field)
+    _event.value = _event.value.copy(fields = fields)
+  }
 }
