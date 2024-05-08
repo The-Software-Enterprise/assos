@@ -24,6 +24,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -34,10 +36,14 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
 import java.time.LocalDateTime
 
@@ -45,7 +51,10 @@ import java.time.LocalDateTime
 @Composable
 fun MyTickets(navigationActions: NavigationActions) {
 
-  val myTickets = listOf<Ticket>() // TODO : get my tickets from viewmodel
+    val viewModel: TicketViewModel = hiltViewModel()
+    val myTickets by viewModel.tickets.collectAsState()
+
+    LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
@@ -75,7 +84,10 @@ fun MyTickets(navigationActions: NavigationActions) {
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
-  // Get the corresponding event from the ticket
+    val viewModel : EventViewModel = hiltViewModel()
+    val event by viewModel.event.collectAsState()
+
+    LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
@@ -90,11 +102,11 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
-                  navigationActions.navigateTo(Destinations.TICKET_DETAILS.route)
+                  navigationActions.navigateTo(Destinations.TICKET_DETAILS.route + "/${ticket.eventId}")
                 },
         ) {
           Image(
-              painter = rememberAsyncImagePainter(""), /*TODO : ticket banner */
+              painter = rememberAsyncImagePainter(event.image),
               contentDescription = null,
               contentScale = ContentScale.Crop,
               modifier =
@@ -104,15 +116,13 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
           Spacer(modifier = Modifier.height(10.dp))
           Text(
-              text = "", /*TODO : ticket name */
+              text = event.title,
               style = MaterialTheme.typography.titleMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text =
-                  "", // ticket.startTime?.let { dateToReadableString(it) } ?: "", /*TODO : ticket
-              // start time*/
+              text = event.startTime?.let { dateToReadableString(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))

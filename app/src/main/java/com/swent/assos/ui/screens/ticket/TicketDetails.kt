@@ -32,16 +32,18 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TicketDetails(ticket: Ticket, navigationActions: NavigationActions) {
+fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
 
-  val viewModel: EventViewModel = hiltViewModel()
-  val event by viewModel.event.collectAsState()
 
-  LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
+  val viewModelEvent: EventViewModel = hiltViewModel()
+    val event by viewModelEvent.event.collectAsState()
+
+    LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketScreen"),
@@ -60,19 +62,6 @@ fun TicketDetails(ticket: Ticket, navigationActions: NavigationActions) {
                       .height(150.dp)
                       .clip(shape = RoundedCornerShape(20.dp))
                       .background(Color.Gray))
-          Spacer(modifier = Modifier.height(8.dp))
-
-          Image(
-              painter = rememberAsyncImagePainter(""),
-              contentDescription = null,
-              contentScale = ContentScale.Crop,
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .padding(horizontal = 16.dp)
-                      .height(350.dp)
-                      .clip(shape = RoundedCornerShape(20.dp))
-                      .background(Color.Gray))
-
           Spacer(modifier = Modifier.height(8.dp))
 
           Text(text = "Start Time: ${event.startTime}", modifier = Modifier.padding(8.dp))
