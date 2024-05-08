@@ -40,9 +40,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               .fillMaxWidth()
               .testTag("NewsListItem")
               .height(100.dp)
-              .clickable {
-                navigationActions.navigateTo("newsDetails/${news.id}/")
-              }) {
+              .clickable { navigationActions.navigateTo("NewsDetails/${news.id}") }) {
         Row(
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically,

@@ -9,12 +9,14 @@ class NewsDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("NewsDetailsScreen") }) {
 
-  val header: KNode = onNode { hasTestTag("Header") }
-  val goBackButton: KNode = header.child { hasTestTag("GoBackButton") }
-  val title: KNode = header.child { hasTestTag("Title") }
-  val content: KNode = onNode { hasTestTag("Content") }
+  val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+
+  val content: KNode = child { hasTestTag("Content") }
   val mainImage: KNode = content.child { hasTestTag("Main Image") }
-  val description: KNode = content.child { hasTestTag("description") }
+  val descriptionBox: KNode = content.child { hasTestTag("descriptionBox") }
+  val descriptionText: KNode = descriptionBox.child { hasTestTag("descriptionText") }
   val subImageList: KNode = content.child { hasTestTag("subImageList") }
-  val subImage: KNode = subImageList.child { hasTestTag("subImage") }
+  val subImageBox: KNode = subImageList.child { hasTestTag("subImageBox") }
+  val subImage: KNode = subImageBox.child { hasTestTag("subImage") }
 }

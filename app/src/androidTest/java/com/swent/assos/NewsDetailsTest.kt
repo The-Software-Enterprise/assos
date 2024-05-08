@@ -12,8 +12,10 @@ import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.confirmVerified
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
+import io.mockk.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,14 +43,31 @@ class NewsDetailsTest : TestCase(kaspressoBuilder = Kaspresso.Builder.withCompos
   }
 
   @Test
+  fun goBackButtonNavigatesToHome() {
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        step("Go back") {
+          goBackButton {
+            assertIsDisplayed()
+            performClick()
+          }
+        }
+        step("Check if we really navigate back to profile") {
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
   fun createNewsAndVerifyNewsDetails() {
 
     run {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Check the News details is correctly displayed") {
-          title { assertIsDisplayed() }
-          description { assertIsDisplayed() }
           mainImage { assertIsDisplayed() }
+          descriptionText { assertIsDisplayed() }
           subImageList { assertIsDisplayed() }
           subImageList { assertIsDisplayed() }
         }

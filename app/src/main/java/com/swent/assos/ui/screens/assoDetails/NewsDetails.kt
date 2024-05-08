@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,9 +43,9 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
-import com.swent.assos.ui.components.PageTitle
+import com.swent.assos.ui.components.PageTitleWithGoBack
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
@@ -52,16 +53,16 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val news by viewModel.allNews.collectAsState()
 
-  LaunchedEffect(key1 = Unit) {
-    viewModel.getNews()
-  }
+  LaunchedEffect(key1 = Unit) { viewModel.getNews() }
 
   val specificNews = news.find { it.id == newsId }
   if (specificNews != null) {
 
     Scaffold(
-        modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
-        topBar = {  PageTitle(title = specificNews.title)  }) { paddingValues ->
+        modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
+        topBar = {
+          PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
+        }) { paddingValues ->
           LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
             item {
               Image(
@@ -74,96 +75,68 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                   contentDescription = null,
                   modifier =
                       Modifier.fillMaxWidth()
-                          .padding(10.dp)
+                          .padding(15.dp)
                           .height(200.dp)
                           .clip(shape = RoundedCornerShape(20.dp))
-                          .background(Color.Gray),
+                          .background(Color.Gray)
+                          .testTag("Main Image"),
                   contentScale = ContentScale.Crop,
                   alignment = Alignment.Center)
 
-                Box(
-                    modifier =
-                    Modifier.width(400.dp)
-                        .padding(top = 5.dp, bottom = 4.dp)
-                        .background(
-                            MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))) {
+              Box(
+                  modifier =
+                      Modifier.fillMaxWidth()
+                          .padding(top = 5.dp, bottom = 5.dp)
+                          .padding(horizontal = 10.dp)
+                          .background(
+                              color = MaterialTheme.colorScheme.surface,
+                              shape = RoundedCornerShape(20.dp))
+                          .testTag("descriptionBox")) {
                     Text(
                         text = specificNews.description,
-                        style = MaterialTheme.typography.headlineMedium,
+                        style = MaterialTheme.typography.bodyMedium,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Bold)
-                }
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(all = 8.dp).testTag("descriptionText"))
+                  }
 
-                if (specificNews.images.isNotEmpty()) {
-                    LazyRow(
-                        modifier = Modifier.padding(paddingValues).testTag("subImageList"),
-                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                    ) {
-                        items(specificNews.images) { image ->
-                            Card(
-                                modifier =
-                                Modifier.padding(10.dp)
-                                    .width(120.dp)
-                                    .height(70.dp)
-                                    .testTag("subImage"), // Keep your height as it is
-                                shape = RoundedCornerShape(20.dp),
-                            ) {
-                                AsyncImage(
-                                    model = image,
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentScale = ContentScale.Crop,
-                                    alignment = Alignment.Center)
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
+              if (specificNews.images.isNotEmpty()) {
+                Text(
+                    text = "Pictures :",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+
+                LazyRow(
+                    modifier = Modifier.testTag("subImageList"),
+                    contentPadding = PaddingValues(horizontal = 16.dp)) {
+                      items(specificNews.images) { image ->
+                        Card(
+                            modifier =
+                                Modifier.padding(horizontal = 10.dp)
+                                    .width(150.dp)
+                                    .height(120.dp)
+                                    .testTag("subImageBox"),
+                            shape = RoundedCornerShape(20.dp),
+                        ) {
+                          AsyncImage(
+                              model = image,
+                              contentDescription = null,
+                              modifier = Modifier.fillMaxWidth().testTag("subImage"),
+                              contentScale = ContentScale.Crop,
+                              alignment = Alignment.Center)
+                          Spacer(modifier = Modifier.width(8.dp))
                         }
+                      }
                     }
-                }
+              }
 
-                Spacer(modifier = Modifier.height(20.dp))
-
+              Spacer(modifier = Modifier.height(20.dp))
             }
-
-
           }
         }
   } else {
-      Scaffold(
-          modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
-          topBar = {  PageTitle(title = "ERROR - NO NEWS FOUND")  }) { paddingValues ->
-          LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
-              item {
-                  Image(
-                      painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                      contentDescription = null,
-                      modifier =
-                      Modifier.fillMaxWidth()
-                          .padding(10.dp)
-                          .height(200.dp)
-                          .clip(shape = RoundedCornerShape(20.dp))
-                          .background(Color.Gray),
-                      contentScale = ContentScale.Crop,
-                      alignment = Alignment.Center)
-
-                  Box(
-                      modifier =
-                      Modifier.width(400.dp)
-                          .padding(top = 5.dp, bottom = 4.dp)
-                          .background(
-                              MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(20.dp))) {
-                      Text(
-                          text = "ERROR - NO NEWS FOUND",
-                          style = MaterialTheme.typography.headlineMedium,
-                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                          fontWeight = FontWeight.Bold)
-                  }
-
-                  Spacer(modifier = Modifier.height(20.dp))
-
-              }
-
-
-          }
-      }
+    Text("No news found")
   }
 }
