@@ -54,11 +54,10 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val news by viewModel.allNews.collectAsState()
 
-  LaunchedEffect(key1 = Unit) { viewModel.getNews() }
+  //LaunchedEffect(key1 = Unit) { viewModel. }
 
   val specificNews = news.find { it.id == newsId }
   if (specificNews != null) {
-
     Scaffold(
         modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
         topBar = {

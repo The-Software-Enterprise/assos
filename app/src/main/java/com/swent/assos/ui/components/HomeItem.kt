@@ -38,13 +38,16 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
           Modifier.clip(RoundedCornerShape(12.dp))
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
-              .testTag("NewsListItem")
               .height(100.dp)
-              .clickable { navigationActions.navigateTo("NewsDetails/${news.id}") }) {
+              .clickable { navigationActions.navigateTo("NewsDetails/${news.id}") }
+              .testTag("NewsListItem")) {
         Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize().testTag("NewsItemRow")) {
+            verticalAlignment = Alignment.CenterVertically
+            ) {
               if (news.images.isNotEmpty()) {
                 AsyncImage(
                     model = news.images[0],
@@ -59,25 +62,25 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     modifier = Modifier.width(80.dp).fillMaxWidth())
               }
               Column(
+                  modifier = Modifier
+                      .padding(start = 16.dp)
+                      .align(Alignment.CenterVertically)
+                      .testTag("NewsItemColumn"),
                   verticalArrangement = Arrangement.spacedBy(10.dp),
-                  horizontalAlignment = Alignment.Start,
-                  modifier =
-                      Modifier.padding(start = 16.dp)
-                          .align(Alignment.CenterVertically)
-                          .testTag("NewsItemColumn")) {
+                  horizontalAlignment = Alignment.Start) {
                     Text(
+                        modifier = Modifier.width(173.dp).testTag("NewsItemsTitle"),
                         text = news.title,
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier.width(173.dp).testTag("ItemsTitle"))
+                        color = Color.Black)
                     Text(
+                        modifier = Modifier.width(173.dp).weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light,
-                        modifier = Modifier.width(173.dp).weight(1f).testTag("ItemsDescription"))
+                        fontWeight = FontWeight.Light)
                   }
             }
       }
