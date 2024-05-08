@@ -162,7 +162,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 
                 LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                   items(events) {
-                    EventItem(it, navigationActions)
+                    EventItem(it, navigationActions, association)
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }

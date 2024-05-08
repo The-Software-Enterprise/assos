@@ -99,11 +99,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
       topBar = {
-        TopAssoBar(
-            assoId = assoId,
-            asso = association,
-            navigationActions = navigationActions,
-            viewModel = viewModel)
+        TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
       },
       floatingActionButton = {
         if (!currentUser.associations.map { it.first }.contains(assoId))
@@ -152,7 +148,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               state = listStateEvents,
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(events) {
-                  EventItem(it, navigationActions)
+                  EventItem(it, navigationActions, association)
                   Spacer(modifier = Modifier.width(8.dp))
                 }
               }
@@ -198,12 +194,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAssoBar(
-    assoId: String,
-    asso: Association,
-    navigationActions: NavigationActions,
-    viewModel: AssoViewModel
-) {
+fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewModel: AssoViewModel) {
   val associationFollowed = viewModel.associationFollowed.collectAsState()
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
@@ -228,9 +219,9 @@ fun TopAssoBar(
             modifier = Modifier.testTag("FollowButton").padding(5.dp),
             onClick = {
               if (associationFollowed.value) {
-                viewModel.unfollowAssociation(assoId)
+                viewModel.unfollowAssociation(asso.id)
               } else {
-                viewModel.followAssociation(assoId)
+                viewModel.followAssociation(asso.id)
               }
             },
             label = {

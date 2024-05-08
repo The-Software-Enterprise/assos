@@ -23,12 +23,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
-fun EventItem(event: Event, navigationActions: NavigationActions) {
+fun EventItem(event: Event, navigationActions: NavigationActions, asso: Association) {
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
@@ -38,11 +39,14 @@ fun EventItem(event: Event, navigationActions: NavigationActions) {
               .border(
                   width = 0.5.dp,
                   color = MaterialTheme.colorScheme.outline,
-                  shape = RoundedCornerShape(12.dp))) {
+                  shape = RoundedCornerShape(12.dp))
+              .clickable {
+                navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
+              }) {
         Column(
             modifier =
                 Modifier.width(200.dp).padding(vertical = 0.dp).clickable(false) {
-                  navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${event.id}")
+                  navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
                 },
         ) {
           Image(
