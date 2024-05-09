@@ -27,25 +27,16 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
-import com.swent.assos.model.navigation.Destinations
-import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
-fun ListItemAsso(asso: Association, navigationActions: NavigationActions) {
+fun ListItemAsso(asso: Association, callback: () -> Unit) {
   ListItem(
       modifier =
           Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
               .background(color = Color.White, shape = RoundedCornerShape(size = 15.dp))
-              .testTag("AssoListItem${asso.acronym}")
-              .clickable {
-                val dest =
-                    Destinations.ASSO_DETAILS.route +
-                        "/${
-                                asso.id
-                            }"
-                navigationActions.navigateTo(dest)
-              },
+              .testTag("AssoListItem")
+              .clickable { callback() },
       headlineContent = {
         Text(
             text = asso.acronym,

@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.components.ListItemAsso
@@ -86,7 +87,11 @@ fun Explorer(navigationActions: NavigationActions) {
                 }
               } else {
                 items(items = associations, key = { it.id }) {
-                  ListItemAsso(asso = it, navigationActions = navigationActions)
+                  ListItemAsso(
+                      asso = it,
+                      callback = {
+                        navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${it.id}")
+                      })
                 }
               }
             }

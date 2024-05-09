@@ -13,5 +13,6 @@ class MyAssociationsScreen(semanticsProvider: SemanticsNodeInteractionsProvider)
   val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
 
   val contentSection: KNode = child { hasTestTag("ContentSection") }
-  val associationCard: KNode = contentSection.child { hasTestTag("AssociationCard") }
+  val associationCard: KNode = contentSection.child { hasTestTag("AssoListItem") }
+  val acronym: KNode = associationCard.child { hasTestTag("acronym") }
 }
