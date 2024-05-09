@@ -207,41 +207,43 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {
-        AssistChip(
-            colors =
-                if (associationFollowed.value)
-                    AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.surface)
-                else
-                    AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.primary),
-            border = null,
-            modifier = Modifier.testTag("FollowButton").padding(5.dp),
-            onClick = {
-              if (associationFollowed.value) {
-                viewModel.unfollowAssociation(asso.id)
-              } else {
-                viewModel.followAssociation(asso.id)
-              }
-            },
-            label = {
-              if (associationFollowed.value) {
-                Text(
-                    text = "Following",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                )
-              } else {
-                Text(
-                    text = "Follow",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                )
-              }
-            },
-        )
+        if (asso.id != "") {
+          AssistChip(
+              colors =
+                  if (associationFollowed.value)
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.surface)
+                  else
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.primary),
+              border = null,
+              modifier = Modifier.testTag("FollowButton").padding(5.dp),
+              onClick = {
+                if (associationFollowed.value) {
+                  viewModel.unfollowAssociation(asso.id)
+                } else {
+                  viewModel.followAssociation(asso.id)
+                }
+              },
+              label = {
+                if (associationFollowed.value) {
+                  Text(
+                      text = "Following",
+                      color = MaterialTheme.colorScheme.onSurface,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                } else {
+                  Text(
+                      text = "Follow",
+                      color = MaterialTheme.colorScheme.onPrimary,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                }
+              },
+          )
+        }
       })
 }
 
