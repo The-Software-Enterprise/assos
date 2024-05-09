@@ -19,7 +19,7 @@ interface DbService {
   suspend fun getEventById(eventId: String): Event
 
   suspend fun applyStaffing(
-      associationId: String,
+      eventId: String,
       userId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit

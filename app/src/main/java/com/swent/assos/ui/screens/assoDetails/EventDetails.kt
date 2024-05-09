@@ -36,8 +36,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
@@ -57,14 +55,22 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val asso by assoViewModel.association.collectAsState()
   var confirming by remember { mutableStateOf(false) }
 
+  val userId by assoViewModel.currentUser.collectAsState()
+
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
     Log.d("EventDetails", "EventDetails: ${event.image}")
   }
   ConfirmDialog(
-      onDismissRequest = {},
-      confirmButton = { eventViewModel.applyStaffing(eventId, {}) },
+      onDismissRequest = { confirming = false },
+      confirmButton = {
+        ConfirmButton(
+            onConfirm = {
+              confirming = false
+              eventViewModel.applyStaffing(userId.id, {})
+            })
+      },
       text = "Do you want to apply for staffing?",
       showing = confirming)
 
@@ -74,11 +80,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       floatingActionButton = {
         JoinUsButton {
           // call the function to apply for staffing
-
-          eventViewModel.applyStaffing(assoId) {
-            // show a snackbar
-
-          }
+          confirming = true
         }
       },
       floatingActionButtonPosition = FabPosition.Center,
@@ -108,28 +110,24 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 
       item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
     }
-
-    JoinUsButton { confirming = true }
   }
 }
 
 @Composable
 fun ConfirmDialog(
     onDismissRequest: () -> Unit,
-    confirmButton: () -> Unit,
+    confirmButton: @Composable () -> Unit,
     text: String,
     showing: Boolean
 ) {
   // create a dialog to confirm the action
-  if (true) {
-    Dialog(
+  if (showing) {
+    AlertDialog(
         onDismissRequest = onDismissRequest,
-        properties = DialogProperties(dismissOnBackPress = true, dismissOnClickOutside = true)) {
-          AlertDialog(
-              onDismissRequest = onDismissRequest,
-              confirmButton = { confirmButton() },
-              text = { Text(text) })
-        }
+        confirmButton = confirmButton,
+        text = { Text(text = text) },
+        containerColor = Color.White,
+        dismissButton = { ConfirmButton(onDismissRequest, "No") })
   }
 }
 
@@ -152,4 +150,9 @@ fun TopNewsBar(
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {})
+}
+
+@Composable
+fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
+  Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }

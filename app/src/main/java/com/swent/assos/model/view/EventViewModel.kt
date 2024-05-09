@@ -83,10 +83,7 @@ constructor(
 
     viewModelScope.launch(ioDispatcher) {
       dbService.applyStaffing(
-          associationId = _event.value.associationId,
-          userId = id,
-          onSuccess = onSuccess,
-          onError = {})
+          eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
     }
   }
 }
