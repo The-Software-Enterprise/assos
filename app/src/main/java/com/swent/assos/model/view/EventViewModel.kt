@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
+import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ class EventViewModel
 constructor(
     private val dbService: DbService,
     private val storageService: StorageService,
+    private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -28,7 +30,11 @@ constructor(
   val event = _event.asStateFlow()
 
   init {
-    viewModelScope.launch(ioDispatcher) {}
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
+  }
+
+  fun getEvent(eventId: String) {
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
   }
 
   fun createEvent(onSuccess: () -> Unit) {
@@ -60,6 +66,16 @@ constructor(
       _event.value = _event.value.copy(image = uri)
     }
   }
+
+  fun applyStaffing(id: String, onSuccess: () -> Unit) {
+    // get user ID
+
+    viewModelScope.launch(ioDispatcher) {
+      dbService.applyStaffing(
+          eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
+    }
+  }
+}
 
   fun addField(field: Event.Field) {
     val fields = _event.value.fields.toMutableList()
