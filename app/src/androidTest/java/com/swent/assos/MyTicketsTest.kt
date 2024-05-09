@@ -61,7 +61,6 @@ class MyTicketsTest : SuperTest() {
         step("Check if my ticket is displayed and perform click") {
           ticketItem {
             assertIsDisplayed()
-            // assert(hasText("Rocket Team", substring = true, ignoreCase = true))
             performClick()
           }
         }
