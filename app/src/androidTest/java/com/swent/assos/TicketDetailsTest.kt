@@ -29,14 +29,6 @@ class TicketDetailsTest : SuperTest() {
   override fun setup() {
     DataCache.currentUser.value = User(id = profileId, tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
     FirebaseFirestore.getInstance()
-        .collection("tickets")
-        .add(
-            Ticket(
-                id = "1",
-                eventId = eventId,
-                userId = profileId,
-            ))
-    FirebaseFirestore.getInstance()
         .collection("events")
         .add(
             Event(
