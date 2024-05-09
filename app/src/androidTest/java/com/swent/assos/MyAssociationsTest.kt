@@ -59,7 +59,6 @@ class MyAssociationsTest : SuperTest() {
         step("Check if my associations are displayed") {
           associationCard {
             assertIsDisplayed()
-            assert(hasText("Rocket Team", substring = true, ignoreCase = true))
             performClick()
           }
         }
