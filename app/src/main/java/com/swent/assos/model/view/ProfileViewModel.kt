@@ -36,7 +36,8 @@ constructor(
   private val _lastName = MutableStateFlow("")
   val lastName = _lastName.asStateFlow()
 
-  private var _loading = false
+  private var _loading = MutableStateFlow(true)
+  val loading = _loading.asStateFlow()
 
   fun signOut() {
     try {
@@ -48,6 +49,7 @@ constructor(
   }
 
   init {
+    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
         _firstName.value = currentUser.firstName
@@ -66,16 +68,19 @@ constructor(
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
+        _loading.value = false
       }
     }
   }
 
   fun updateUser() {
+    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       authService.currentUser.collect { firebaseUser ->
         val user: User = dbService.getUser(firebaseUser.uid)
         _firstName.value = user.firstName
         _lastName.value = user.lastName
+        _loading.value = false
       }
     }
   }
