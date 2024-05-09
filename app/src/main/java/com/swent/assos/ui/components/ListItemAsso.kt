@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -34,7 +35,9 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-              .background(color = Color.White, shape = RoundedCornerShape(size = 15.dp))
+              .background(
+                  color = MaterialTheme.colorScheme.onPrimary,
+                  shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable { callback() },
       headlineContent = {
@@ -43,7 +46,7 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
             fontWeight = FontWeight.SemiBold,
-            color = Color.Black)
+            color = MaterialTheme.colorScheme.onSurface)
       },
       supportingContent = {
         Text(
