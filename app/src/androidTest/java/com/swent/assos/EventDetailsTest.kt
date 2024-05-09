@@ -7,7 +7,6 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.model.service.impl.serialize
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.EventDetails

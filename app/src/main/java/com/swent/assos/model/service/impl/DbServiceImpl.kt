@@ -14,7 +14,6 @@ import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.timestampToLocalDateTime
-import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 

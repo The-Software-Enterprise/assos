@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Association
@@ -34,8 +33,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier
-              .padding(0.dp)
+          Modifier.padding(0.dp)
               .border(
                   width = 0.5.dp,
                   color = MaterialTheme.colorScheme.outline,
@@ -44,8 +42,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                 navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
               }) {
         Column(
-            modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp),
+            modifier = Modifier.width(200.dp).padding(vertical = 0.dp),
         ) {
           Image(
               painter = rememberAsyncImagePainter(event.image),
