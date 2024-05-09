@@ -12,8 +12,11 @@ data class Event(
     val description: String = "",
     var startTime: LocalDateTime = LocalDateTime.now(),
     var endTime: LocalDateTime = LocalDateTime.now().plusHours(1),
-    val fields: List<Field> = emptyList(),
+    var fields: List<Field> = emptyList(),
     val documentSnapshot: DocumentSnapshot? = null,
+
+    // Use to listen change in state
+    val _unused: Boolean = false,
 ) {
   sealed class Field {
     data class Text(var title: String, var text: String) : Field()

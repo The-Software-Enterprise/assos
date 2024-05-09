@@ -30,7 +30,7 @@ constructor(
   val event = _event.asStateFlow()
 
   init {
-    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
+    getEvent(_event.value.id)
   }
 
   fun getEvent(eventId: String) {
@@ -40,11 +40,24 @@ constructor(
   fun createEvent(onSuccess: () -> Unit) {
     val event = _event.value
     viewModelScope.launch(ioDispatcher) {
-      storageService.uploadFile(
-          event.image,
+      storageService.uploadFiles(
+          listOf(event.image) +
+              event.fields.filterIsInstance<Event.Field.Image>().flatMap { it.uris },
           "events/${event.id}",
-          onSuccess = {
-            event.image = it
+          onSuccess = { uris ->
+            event.image = uris[0]
+            event.fields =
+                event.fields.mapIndexed { index, field ->
+                  if (field is Event.Field.Image) {
+                    val uriIndex =
+                        event.fields.subList(0, index).filterIsInstance<Event.Field.Image>().sumOf {
+                          it.uris.size
+                        }
+                    Event.Field.Image(uris.subList(uriIndex + 1, uriIndex + field.uris.size + 1))
+                  } else {
+                    field
+                  }
+                }
             viewModelScope.launch(ioDispatcher) {
               dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
             }
@@ -68,18 +81,33 @@ constructor(
   }
 
   fun applyStaffing(id: String, onSuccess: () -> Unit) {
-    // get user ID
-
     viewModelScope.launch(ioDispatcher) {
       dbService.applyStaffing(
           eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
     }
   }
-}
+
+  fun addImagesToField(uris: List<Uri>, index: Int) {
+    val fields = _event.value.fields.toMutableList()
+    fields[index] = Event.Field.Image((fields[index] as Event.Field.Image).uris + uris)
+    _event.value = _event.value.copy(fields = fields)
+  }
 
   fun addField(field: Event.Field) {
     val fields = _event.value.fields.toMutableList()
     fields.add(field)
     _event.value = _event.value.copy(fields = fields)
+  }
+
+  fun updateFieldTitle(index: Int, title: String) {
+    val fields = _event.value.fields.toMutableList()
+    (fields[index] as Event.Field.Text).title = title
+    _event.value = _event.value.copy(fields = fields, _unused = !_event.value._unused)
+  }
+
+  fun updateFieldText(index: Int, text: String) {
+    val fields = _event.value.fields.toMutableList()
+    (fields[index] as Event.Field.Text).text = text
+    _event.value = _event.value.copy(fields = fields, _unused = !_event.value._unused)
   }
 }

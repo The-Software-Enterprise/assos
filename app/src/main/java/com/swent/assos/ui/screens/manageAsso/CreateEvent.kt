@@ -26,6 +26,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddPhotoAlternate
@@ -51,8 +53,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -85,14 +89,15 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   val context = LocalContext.current
+  val coroutineScope = rememberCoroutineScope()
 
   val viewModel: EventViewModel = hiltViewModel()
-
   val event by viewModel.event.collectAsState()
 
   var startDatePickerState = rememberDatePickerState()
@@ -105,12 +110,21 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
   var endTimePickerState = rememberTimePickerState()
   var showEndTimePicker by remember { mutableStateOf(false) }
 
-  val launcher =
+  var fieldIndex by remember { mutableIntStateOf(-1) }
+  val lazyListState = rememberLazyListState()
+
+  val launcherBanner =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
         ->
         if (result.resultCode == Activity.RESULT_OK) {
           viewModel.setImage(result.data?.data)
         }
+      }
+
+  val launcherImagesField =
+      rememberLauncherForActivityResult(contract = ActivityResultContracts.GetMultipleContents()) {
+          uris: List<Uri> ->
+        viewModel.addImagesToField(uris, fieldIndex)
       }
 
   LaunchedEffect(key1 = Unit) { event.associationId = assoId }
@@ -140,7 +154,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                       .padding(vertical = 5.dp, horizontal = 10.dp)
                       .testTag("CreateButton")) {
                 Text(
-                    text = "Publish",
+                    text = "Create",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onPrimary)
@@ -151,14 +165,20 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
         Column {
           FloatingActionButton(
               modifier = Modifier.testTag("AddTextField"),
-              onClick = { viewModel.addField(Event.Field.Text("", "")) },
+              onClick = {
+                viewModel.addField(Event.Field.Text("", ""))
+                coroutineScope.launch { lazyListState.scrollToItem(event.fields.size + 2) }
+              },
               shape = RoundedCornerShape(size = 16.dp)) {
                 Image(imageVector = Icons.Default.TextFields, contentDescription = null)
               }
           Spacer(modifier = Modifier.size(16.dp))
           FloatingActionButton(
               modifier = Modifier.testTag("AddImageField"),
-              onClick = { viewModel.addField(Event.Field.Image(emptyList())) },
+              onClick = {
+                viewModel.addField(Event.Field.Image(emptyList()))
+                coroutineScope.launch { lazyListState.scrollToItem(event.fields.size + 2) }
+              },
               shape = RoundedCornerShape(size = 16.dp)) {
                 Image(imageVector = Icons.Default.PhotoLibrary, contentDescription = null)
               }
@@ -166,6 +186,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
       },
   ) { paddingValues ->
     LazyColumn(
+        state = lazyListState,
         modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("Form"),
         horizontalAlignment = Alignment.CenterHorizontally) {
           item {
@@ -203,7 +224,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                         .clickable {
                           val pickImageIntent = Intent(Intent.ACTION_PICK)
                           pickImageIntent.type = "image/*"
-                          launcher.launch(pickImageIntent)
+                          launcherBanner.launch(pickImageIntent)
                         },
                 contentAlignment = Alignment.Center) {
                   if (event.image == Uri.EMPTY) {
@@ -225,14 +246,9 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                         }
                   } else {
                     Image(
+                        modifier = Modifier.fillMaxSize(),
                         painter = rememberAsyncImagePainter(event.image),
                         contentDescription = "image",
-                        modifier =
-                            Modifier.fillMaxSize().testTag("Image").clickable {
-                              val pickImageIntent = Intent(Intent.ACTION_PICK)
-                              pickImageIntent.type = "image/*"
-                              launcher.launch(pickImageIntent)
-                            },
                         contentScale = ContentScale.Crop)
                   }
 
@@ -308,13 +324,38 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                     ))
           }
 
-          items(event.fields) {
-            if (it is Event.Field.Text) {
+          itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->
+            if (field is Event.Field.Text) {
               OutlinedTextField(
+                  modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                  value = field.title,
+                  onValueChange = { viewModel.updateFieldTitle(index, it) },
+                  textStyle = TextStyle(fontSize = 16.sp, lineHeight = 10.sp),
+                  placeholder = {
+                    Text(
+                        "Title",
+                        fontSize = 16.sp,
+                        lineHeight = 10.sp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f))
+                  },
+                  colors =
+                      OutlinedTextFieldDefaults.colors(
+                          focusedBorderColor = MaterialTheme.colorScheme.background,
+                          unfocusedBorderColor = MaterialTheme.colorScheme.background,
+                          cursorColor = MaterialTheme.colorScheme.secondary,
+                      ),
+                  singleLine = true,
+              )
+              Box(
                   modifier =
-                      Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("InputText"),
-                  value = it.text,
-                  onValueChange = {},
+                      Modifier.height(2.dp)
+                          .fillMaxWidth()
+                          .padding(horizontal = 16.dp)
+                          .background(color = MaterialTheme.colorScheme.surface))
+              OutlinedTextField(
+                  modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                  value = field.text,
+                  onValueChange = { viewModel.updateFieldText(index, it) },
                   textStyle = TextStyle(fontSize = 13.sp),
                   placeholder = {
                     Text(
@@ -329,12 +370,37 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           cursorColor = MaterialTheme.colorScheme.secondary,
                       ),
                   singleLine = true)
-            } else if (it is Event.Field.Image) {
+            } else if (field is Event.Field.Image) {
               LazyRow(
                   modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
                   horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    item { Spacer(modifier = Modifier.width(12.dp)) }
-                    items(it.uris) {
+                    item {
+                      Row(
+                          modifier =
+                              Modifier.fillMaxHeight(0.9f)
+                                  .padding(horizontal = 10.dp)
+                                  .clip(RoundedCornerShape(8.dp))
+                                  .background(MaterialTheme.colorScheme.surface)
+                                  .clickable {
+                                    fieldIndex = index
+                                    launcherImagesField.launch("image/*")
+                                  },
+                          verticalAlignment = Alignment.CenterVertically,
+                          horizontalArrangement = Arrangement.Center) {
+                            Row(
+                                modifier = Modifier.padding(horizontal = 30.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                            ) {
+                              Image(
+                                  imageVector = Icons.Outlined.AddPhotoAlternate,
+                                  contentDescription = "add an image",
+                                  colorFilter =
+                                      ColorFilter.tint(MaterialTheme.colorScheme.onSurface))
+                            }
+                          }
+                    }
+                    items(field.uris) {
                       Box(
                           modifier =
                               Modifier.fillMaxHeight(0.9f)
@@ -366,32 +432,20 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                         )
                       }
                     }
-                    item {
-                      Box(
-                          modifier =
-                              Modifier.fillMaxHeight(0.9f)
-                                  .aspectRatio(1f)
-                                  .clip(RoundedCornerShape(8.dp))
-                                  .background(Color.Gray),
-                          contentAlignment = Alignment.Center) {
-                            FloatingActionButton(
-                                onClick = {}, shape = RoundedCornerShape(size = 8.dp)) {
-                                  Image(
-                                      imageVector = Icons.Default.AddPhotoAlternate,
-                                      contentDescription = "add an image")
-                                }
-                          }
-                    }
                     item { Spacer(modifier = Modifier.width(12.dp)) }
                   }
             }
           }
+
+          item { Spacer(modifier = Modifier.height(30.dp)) }
         }
   }
 
   if (showStartDatePicker) {
     DatePickerDialog(
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        modifier =
+            Modifier.background(
+                color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(20.dp)),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
@@ -466,7 +520,9 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
 
   if (showEndDatePicker) {
     DatePickerDialog(
-        modifier = Modifier.background(color = MaterialTheme.colorScheme.background),
+        modifier =
+            Modifier.background(
+                color = MaterialTheme.colorScheme.background, shape = RoundedCornerShape(20.dp)),
         onDismissRequest = {},
         confirmButton = {
           TextButton(
