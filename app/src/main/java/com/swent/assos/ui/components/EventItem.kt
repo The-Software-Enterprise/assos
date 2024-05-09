@@ -34,7 +34,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("NewsItem")
+          Modifier
               .padding(0.dp)
               .border(
                   width = 0.5.dp,
@@ -45,9 +45,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
               }) {
         Column(
             modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(true) {
-                  navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
-                },
+                Modifier.width(200.dp).padding(vertical = 0.dp),
         ) {
           Image(
               painter = rememberAsyncImagePainter(event.image),

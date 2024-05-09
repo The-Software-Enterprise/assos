@@ -302,14 +302,14 @@ constructor(
   }
 }
 
-private fun serialize(event: Event): Map<String, Any> {
+fun serialize(event: Event): Map<String, Any> {
   return mapOf(
       "title" to event.title,
       "description" to event.description,
       "associationId" to event.associationId,
       "image" to event.image.toString(),
-      "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
-      "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+      "startTime" to localDateTimeToTimestamp(event.startTime),
+      "endTime" to localDateTimeToTimestamp(event.endTime),
       "fields" to
           event.fields.map {
             when (it) {
@@ -320,7 +320,7 @@ private fun serialize(event: Event): Map<String, Any> {
           })
 }
 
-private fun deserializeEvent(doc: DocumentSnapshot): Event {
+fun deserializeEvent(doc: DocumentSnapshot): Event {
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -365,7 +365,7 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       documentSnapshot = doc)
 }
 
-private fun serialize(news: News): Map<String, Any> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,
@@ -375,7 +375,7 @@ private fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
-private fun deserializeNews(doc: DocumentSnapshot): News {
+fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -397,7 +397,7 @@ private fun deserializeNews(doc: DocumentSnapshot): News {
       documentSnapshot = doc)
 }
 
-private fun deserializeAssociation(doc: DocumentSnapshot): Association {
+fun deserializeAssociation(doc: DocumentSnapshot): Association {
   return Association(
       id = doc.id,
       acronym = doc.getString("acronym") ?: "",

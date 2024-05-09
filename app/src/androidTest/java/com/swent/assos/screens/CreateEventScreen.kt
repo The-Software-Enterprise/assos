@@ -10,22 +10,17 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
 
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
   val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
-
-  val form: KNode = child { hasTestTag("Form") }
-
   val inputTitle: KNode =
-      form.child {
+      onNode {
         hasTestTag("InputTitle")
         hasSetTextAction()
       }
   val inputDescription: KNode =
-      form.child {
+      onNode {
         hasTestTag("InputDescription")
         hasSetTextAction()
       }
-
-  val image: KNode = form.child { hasTestTag("InputImage") }
-
-  val startTimePicker: KNode = form.child { hasTestTag("StartTimePicker") }
-  val endTimePicker: KNode = form.child { hasTestTag("EndTimePicker") }
+  val image: KNode = onNode { hasTestTag("InputImage") }
+  val startTimePicker: KNode = onNode { hasTestTag("StartTimePicker") }
+  val endTimePicker: KNode = onNode { hasTestTag("EndTimePicker") }
 }

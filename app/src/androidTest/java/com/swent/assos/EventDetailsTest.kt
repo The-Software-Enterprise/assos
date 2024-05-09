@@ -7,6 +7,8 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.service.impl.DbServiceImpl
+import com.swent.assos.model.service.impl.serialize
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -21,10 +23,8 @@ class EventDetailsTest : SuperTest() {
   val event = Event("123456", "description", assoID, Uri.EMPTY, "assoId")
 
   override fun setup() {
-
     super.setup()
-    FirebaseFirestore.getInstance().collection("events").document(event.id).set(event)
-
+    FirebaseFirestore.getInstance().collection("events").document(event.id).set(serialize(event))
     composeTestRule.activity.setContent {
       EventDetails(eventId = event.id, assoId = assoID, navigationActions = mockNavActions)
     }

@@ -63,7 +63,6 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
-          // form { assertIsDisplayed() }
           inputTitle {
             assertIsDisplayed()
             performClick()
@@ -84,7 +83,6 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
-          // form { assertIsDisplayed() }
           inputTitle {
             assertIsDisplayed()
             performClick()
@@ -99,9 +97,6 @@ class CreateEventTest : SuperTest() {
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_MONTH, 1)
-        val tomorrowDate = calendar.get(Calendar.DAY_OF_MONTH)
-        // next month
-        val nextMonth = calendar.add(Calendar.MONTH, 1)
 
         step("choose the start time") {
           startTimePicker { performClick() }
@@ -120,7 +115,6 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
-          // form { assertIsDisplayed() }
           inputTitle {
             assertIsDisplayed()
             performClick()
