@@ -310,7 +310,14 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-  )
+      "fields" to
+          event.fields.map {
+            when (it) {
+              is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
+              is Event.Field.Image ->
+                  mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
+            }
+          })
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
@@ -322,6 +329,39 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+      fields =
+          if (doc["fields"] is List<*>) {
+            (doc["fields"] as List<*>)
+                .mapNotNull {
+                  if (it is Map<*, *>) {
+                    val type = it["type"] as? String
+                    when (type) {
+                      "text" -> {
+                        val title = it["title"] as? String ?: ""
+                        val text = it["text"] as? String ?: ""
+                        Event.Field.Text(title, text)
+                      }
+                      "image" -> {
+                        val uris =
+                            (it["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                              Uri.parse(it)
+                            }
+                        if (uris != null) {
+                          Event.Field.Image(uris)
+                        } else {
+                          null
+                        }
+                      }
+                      else -> null
+                    }
+                  } else {
+                    null
+                  }
+                }
+                .filterNotNull()
+          } else {
+            emptyList()
+          },
       documentSnapshot = doc)
 }
 
