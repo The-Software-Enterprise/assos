@@ -23,9 +23,8 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.AssociationCard
-import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.ListItemAsso
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -54,14 +53,14 @@ fun MyAssociations(navigationActions: NavigationActions) {
             } else {
               items(items = myAssociations, key = { it.id }) {
                 ListItemAsso(
-                  asso = it,
-                  callback = {
-                    navigationActions.navigateTo(
-                      Destinations.ASSO_MODIFY_PAGE.route + "/${it.id}")
-                  })
+                    asso = it,
+                    callback = {
+                      navigationActions.navigateTo(
+                          Destinations.ASSO_MODIFY_PAGE.route + "/${it.id}")
+                    })
               }
             }
-
+          }
         }
   }
 }

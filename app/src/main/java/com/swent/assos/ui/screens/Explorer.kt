@@ -94,16 +94,23 @@ fun Explorer(navigationActions: NavigationActions) {
                       callback = {
                         navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${it.id}")
                       })
-              if (loading) {
-                item { LoadingCircle() }
-              } else {
-                if (associations.isEmpty()) {
-                  item {
-                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
-                  }
+                }
+                if (loading) {
+                  item { LoadingCircle() }
                 } else {
-                  items(items = associations, key = { it.id }) {
-                    ListItemAsso(asso = it, navigationActions = navigationActions)
+                  if (associations.isEmpty()) {
+                    item {
+                      Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                    }
+                  } else {
+                    items(items = associations, key = { it.id }) {
+                      ListItemAsso(
+                          asso = it,
+                          callback = {
+                            navigationActions.navigateTo(
+                                Destinations.ASSO_DETAILS.route + "/${it.id}")
+                          })
+                    }
                   }
                 }
               }
