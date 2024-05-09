@@ -25,6 +25,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.AssociationCard
 import com.swent.assos.ui.components.LoadingCircle
+import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -43,8 +44,9 @@ fun Following(navigationActions: NavigationActions) {
         contentPadding = paddingValues,
         modifier =
             Modifier.testTag("ContentSection")
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)) {
+
           if (loading) {
             item { LoadingCircle() }
           } else {
@@ -52,12 +54,11 @@ fun Following(navigationActions: NavigationActions) {
               item { Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center) }
             } else {
               items(items = followedAssociationsList, key = { it.id }) {
-                AssociationCard(
-                    association = it,
+                ListItemAsso(
+                    asso = it,
                     callback = {
                       navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${it.id}")
                     })
-              }
             }
           }
         }

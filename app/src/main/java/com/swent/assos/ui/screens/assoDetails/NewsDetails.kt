@@ -73,7 +73,7 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
           item {
             Image(
                 painter =
-                    if (specificNews.images[0] != Uri.EMPTY) {
+                    if (specificNews.images.isNotEmpty() && specificNews.images[0] != Uri.EMPTY) {
                       rememberAsyncImagePainter(specificNews.images[0])
                     } else {
                       painterResource(id = R.drawable.ic_launcher_foreground)
