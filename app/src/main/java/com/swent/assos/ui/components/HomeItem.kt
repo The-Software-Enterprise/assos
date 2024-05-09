@@ -39,7 +39,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
-              .clickable { navigationActions.navigateTo("NewsDetails/${news.id}") }
+              .clickable { navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/{newsId}") }
               .testTag("NewsListItem")) {
         Row(
             modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
