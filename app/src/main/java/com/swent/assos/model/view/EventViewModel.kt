@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
+import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ class EventViewModel
 constructor(
     private val dbService: DbService,
     private val storageService: StorageService,
+    private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -31,7 +33,11 @@ constructor(
   val hourFormat = _hourFormat.asStateFlow()
 
   init {
-    viewModelScope.launch(ioDispatcher) {}
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
+  }
+
+  fun getEvent(eventId: String) {
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
   }
 
   fun switchHourFormat() {
@@ -69,6 +75,15 @@ constructor(
   fun setImage(uri: Uri?) {
     if (uri != null) {
       _event.value = _event.value.copy(image = uri)
+    }
+  }
+
+  fun applyStaffing(id: String, onSuccess: () -> Unit) {
+    // get user ID
+
+    viewModelScope.launch(ioDispatcher) {
+      dbService.applyStaffing(
+          eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
     }
   }
 }
