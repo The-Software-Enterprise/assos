@@ -69,6 +69,6 @@ class NFCTest {
     nfcActivity.setMode(NFCMode.WRITE)
     //intent.data = mockTag
     nfcActivity.onNewIntent(intent)
-    every { mockTag.boxedValue } returns "Hello !" }
+    every { mockTag.boxedValue } returns "Hello !"
   }
 }
