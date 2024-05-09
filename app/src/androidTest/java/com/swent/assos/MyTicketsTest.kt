@@ -3,7 +3,9 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.screens.MyTicketsScreen
@@ -20,23 +22,18 @@ import org.junit.runner.RunWith
 class MyTicketsTest : SuperTest() {
 
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
-  private val firstName = "Antoine"
-  private val lastName = "Marchand"
-
   private val eventId = "4sS18EaaF6qknAFqxHX2"
 
   override fun setup() {
-    DataCache.currentUser.value =
-        User(
-            id = profileId,
-            firstName = firstName,
-            lastName = lastName,
-            email = "antoine.marchand@epfl.ch",
-            associations = listOf(Triple("QjAOBhVVcL0P2G1etPgk", "Chef de projet", 1)),
-            sciper = "330249",
-            semester = "GM-BA6",
-            tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
-    super.setup()
+    DataCache.currentUser.value = User(id = profileId, tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
+    FirebaseFirestore.getInstance()
+        .collection("tickets")
+        .add(
+            Ticket(
+                id = "1",
+                eventId = eventId,
+                userId = profileId,
+            ))
     composeTestRule.activity.setContent { MyTickets(navigationActions = mockNavActions) }
   }
 
