@@ -5,6 +5,7 @@ import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.screens.TicketDetailsScreen
@@ -13,6 +14,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
+import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,6 +35,16 @@ class TicketDetailsTest : SuperTest() {
                 id = "1",
                 eventId = eventId,
                 userId = profileId,
+            ))
+    FirebaseFirestore.getInstance()
+        .collection("events")
+        .add(
+            Event(
+                id = "1",
+                title = "Rocket team meeting",
+                description = "Rocket team meeting",
+                startTime = LocalDateTime.of(2024, 5, 4, 16, 44),
+                endTime = LocalDateTime.of(2024, 5, 4, 16, 44),
             ))
     composeTestRule.activity.setContent {
       TicketDetails(eventId = eventId, navigationActions = mockNavActions)
