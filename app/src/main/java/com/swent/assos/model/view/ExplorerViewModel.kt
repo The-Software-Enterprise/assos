@@ -28,11 +28,16 @@ constructor(private val dbService: DbService, private val authService: AuthServi
 
   private var _loading = false
 
+  private var _loadingDisplay = MutableStateFlow(false)
+  val loading = _loadingDisplay.asStateFlow()
+
   init {
+    _loadingDisplay.value = true
     viewModelScope.launch(Dispatchers.IO) {
       dbService.getAllAssociations(null).let {
         _allAssociations.value = it
         filterOnSearch(_researchQuery.value)
+        _loadingDisplay.value = false
       }
     }
   }
