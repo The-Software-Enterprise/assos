@@ -15,10 +15,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.AssociationCard
+import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -36,15 +35,10 @@ fun MyAssociations(navigationActions: NavigationActions) {
         contentPadding = paddingValues,
         modifier =
             Modifier.testTag("ContentSection")
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)) {
           items(myAssociations.size) { k ->
-            AssociationCard(
-                association = myAssociations[k],
-                callback = {
-                  navigationActions.navigateTo(
-                      Destinations.ASSO_MODIFY_PAGE.route + "/${myAssociations[k].id}")
-                })
+            ListItemAsso(asso = myAssociations[k], navigationActions = navigationActions)
           }
         }
   }

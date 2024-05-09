@@ -15,10 +15,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.AssociationCard
+import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -36,15 +35,10 @@ fun Following(navigationActions: NavigationActions) {
         contentPadding = paddingValues,
         modifier =
             Modifier.testTag("ContentSection")
-                .background(MaterialTheme.colorScheme.background)
+                .background(MaterialTheme.colorScheme.surface)
                 .padding(16.dp)) {
           items(followedAssociationsList.size) { k ->
-            AssociationCard(
-                association = followedAssociationsList[k],
-                callback = {
-                  navigationActions.navigateTo(
-                      Destinations.ASSO_DETAILS.route + "/${followedAssociationsList[k].id}")
-                })
+            ListItemAsso(asso = followedAssociationsList[k], navigationActions = navigationActions)
           }
         }
   }
