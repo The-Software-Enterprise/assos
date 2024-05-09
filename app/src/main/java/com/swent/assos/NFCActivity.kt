@@ -41,7 +41,7 @@ class NFCActivity : Activity() {
   }
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-  override fun onNewIntent(intent: Intent?) {
+  public override fun onNewIntent(intent: Intent?) { // Attention maybe we do not want it public
     super.onNewIntent(intent)
     when (mode) {
       NFCMode.READ ->
@@ -126,6 +126,7 @@ class NFCActivity : Activity() {
     return result.toString()
   }
 
+  @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   fun createNFCMessage(payload: String, intent: Intent?): Boolean {
 
     val pathPrefix = "swent.com:nfcapp"
@@ -137,7 +138,7 @@ class NFCActivity : Activity() {
             payload.toByteArray())
     val nfcMessage = NdefMessage(arrayOf(nfcRecord))
     intent?.let {
-      val tag = it.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
+      val tag = it.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
       return writeMessageToTag(nfcMessage, tag)
     }
     return false
