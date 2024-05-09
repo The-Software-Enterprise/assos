@@ -81,7 +81,7 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, null)
+    val snapshot = query.get().await() ?: return Event("")
     return deserializeEvent(snapshot)
   }
 
