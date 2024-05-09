@@ -40,7 +40,7 @@ class TicketDetailsTest : SuperTest() {
         .collection("events")
         .add(
             Event(
-                id = "1",
+                id = eventId,
                 title = "Rocket team meeting",
                 description = "Rocket team meeting",
                 startTime = LocalDateTime.of(2024, 5, 4, 16, 44),
