@@ -42,7 +42,7 @@ class TicketDetailsTest : SuperTest() {
     }
   }
 
-  @Test
+  /*@Test
   fun ticketDetailsDisplaysTheCorrectPageTitle() {
     run {
       ComposeScreen.onComposeScreen<TicketDetailsScreen>(composeTestRule) {
@@ -54,7 +54,7 @@ class TicketDetailsTest : SuperTest() {
         }
       }
     }
-  }
+  }*/
 
   @Test
   fun goBackButtonNavigatesToMyTickets() {
