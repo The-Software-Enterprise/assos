@@ -83,34 +83,21 @@ fun Explorer(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
-              if (associations.isEmpty()) {
-                item {
-                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
-                }
+              if (loading) {
+                item { LoadingCircle() }
               } else {
-                items(items = associations, key = { it.id }) {
-                  ListItemAsso(
-                      asso = it,
-                      callback = {
-                        navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${it.id}")
-                      })
-                }
-                if (loading) {
-                  item { LoadingCircle() }
+                if (associations.isEmpty()) {
+                  item {
+                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                  }
                 } else {
-                  if (associations.isEmpty()) {
-                    item {
-                      Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
-                    }
-                  } else {
-                    items(items = associations, key = { it.id }) {
-                      ListItemAsso(
-                          asso = it,
-                          callback = {
-                            navigationActions.navigateTo(
-                                Destinations.ASSO_DETAILS.route + "/${it.id}")
-                          })
-                    }
+                  items(items = associations, key = { it.id }) {
+                    ListItemAsso(
+                        asso = it,
+                        callback = {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${it.id}")
+                        })
                   }
                 }
               }
