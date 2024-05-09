@@ -94,10 +94,10 @@ class EndToEnd : SuperTest() {
           navigationBar {
             assertIsDisplayed()
             // check if child exists
-            hasAnyChild(hasTestTag("NavigationBarItem3"))
+            hasAnyChild(hasTestTag("NavigationBarItem4"))
             // click on child
           }
-          composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
+          composeTestRule.onNodeWithTag("NavigationBarItem4").performClick()
           // check if we are on the profile screen
           profileScreen { assertIsDisplayed() }
         }
@@ -245,11 +245,11 @@ class EndToEnd : SuperTest() {
           navigationBar {
             assertIsDisplayed()
             // check if child exists
-            hasAnyChild(hasTestTag("NavigationBarItem3"))
+            hasAnyChild(hasTestTag("NavigationBarItem4"))
             // click on child
           }
 
-          composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
+          composeTestRule.onNodeWithTag("NavigationBarItem4").performClick()
           // check if we are on the profile screen
           profileScreen { assertIsDisplayed() }
         }
