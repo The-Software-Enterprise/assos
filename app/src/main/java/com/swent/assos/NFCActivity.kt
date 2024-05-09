@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
@@ -19,6 +20,14 @@ class NFCActivity: Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_nfc)
+
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_NFC)) {
+            // NFC is not supported on this device
+            Toast.makeText(this, "NFC is not supported on this device", Toast.LENGTH_SHORT).show()
+            finish() // Finish the activity
+            return
+        }
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     }
 
@@ -42,11 +51,21 @@ class NFCActivity: Activity() {
 
     private fun enableNFCForegroundDispatch() {
         // Enable NFC foreground dispatch to capture NFC intents
-        nfcAdapter.enableForegroundDispatch(this, null, null, null)
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0
+        )
+        val intentFilters = arrayOf<IntentFilter>(
+            IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED),
+            IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED),
+            IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED)
+        )
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, null)
     }
 
     private fun disableNFCForegroundDispatch() {
         // Disable NFC foreground dispatch
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         nfcAdapter.disableForegroundDispatch(this)
     }
 
@@ -57,6 +76,16 @@ class NFCActivity: Activity() {
             val tagValue = it.toHexString()
             Toast.makeText(this, "NFC tag detected: $tagValue", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun createNFCIntentFilter(): Array<IntentFilter> {
+        val intentFilter = IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED)
+        try {
+            intentFilter.addDataType("*/*")
+        } catch (e: IntentFilter.MalformedMimeTypeException) {
+            throw RuntimeException("Failed to add MIME type.", e)
+        }
+        return arrayOf(intentFilter)
     }
 
     fun ByteArray.toHexString(): String {

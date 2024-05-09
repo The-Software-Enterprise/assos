@@ -28,6 +28,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".NFCActivity">
+            <!-- Include any additional configurations here -->
+        </activity>
     </application>
 
 </manifest>
