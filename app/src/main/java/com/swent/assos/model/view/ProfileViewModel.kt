@@ -49,7 +49,6 @@ constructor(
   }
 
   init {
-    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
         _firstName.value = currentUser.firstName

@@ -36,7 +36,6 @@ constructor(
 
   init {
     viewModelScope.launch(ioDispatcher) {
-      _loadingDisplay.value = true
       if (DataCache.currentUser.value.id.isNotEmpty()) {
         dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
           _allNews.value = it
