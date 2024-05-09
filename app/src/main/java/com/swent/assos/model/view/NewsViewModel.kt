@@ -31,14 +31,22 @@ constructor(
 
   private var _loading = false
 
+  private var _loadingDisplay = MutableStateFlow(true)
+  val loading = _loadingDisplay.asStateFlow()
+
   init {
     viewModelScope.launch(ioDispatcher) {
+      _loadingDisplay.value = true
       if (DataCache.currentUser.value.id.isNotEmpty()) {
         dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
           _allNews.value = it
+          _loadingDisplay.value = false
         }
       } else {
-        dbService.getAllNews(null).let { _allNews.value = it }
+        dbService.getAllNews(null).let {
+          _allNews.value = it
+          _loadingDisplay.value = false
+        }
       }
     }
   }

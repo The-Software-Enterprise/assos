@@ -1,12 +1,10 @@
 package com.swent.assos.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
 
 @Composable
@@ -27,6 +26,7 @@ fun News(navigationActions: NavigationActions) {
   val viewModel: NewsViewModel = hiltViewModel()
   val news by viewModel.allNews.collectAsState()
   val listState = rememberLazyListState()
+  val loading = viewModel.loading.collectAsState()
 
   LaunchedEffect(listState) {
     snapshotFlow { listState.layoutInfo.visibleItemsInfo }
@@ -42,14 +42,17 @@ fun News(navigationActions: NavigationActions) {
     LazyColumn(
         modifier =
             Modifier.padding(paddingValues)
-                .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 15.dp)
                 .padding(top = 5.dp)
                 .testTag("NewsList"),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         userScrollEnabled = true,
         state = listState) {
-          items(news) { news -> HomeItem(news = news, navigationActions) }
+          if (loading.value) {
+            item { LoadingCircle() }
+          } else {
+            items(news) { news -> HomeItem(news = news, navigationActions) }
+          }
         }
   }
 }
