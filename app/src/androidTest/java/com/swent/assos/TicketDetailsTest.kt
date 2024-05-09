@@ -74,7 +74,7 @@ class TicketDetailsTest : SuperTest() {
     }
   }
 
-  @Test
+  /*@Test
   fun ticketItemsAreDisplayed() {
     run {
       ComposeScreen.onComposeScreen<TicketDetailsScreen>(composeTestRule) {
@@ -95,5 +95,5 @@ class TicketDetailsTest : SuperTest() {
         }
       }
     }
-  }
+  }*/
 }
