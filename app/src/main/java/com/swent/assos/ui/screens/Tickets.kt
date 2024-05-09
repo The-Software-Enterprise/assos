@@ -9,12 +9,13 @@ import com.swent.assos.NFCActivity
 
 @Composable
 fun Tickets() {
-    val context = LocalContext.current
-    Button(onClick = {
+  val context = LocalContext.current
+  Button(
+      onClick = {
         // Launch NFCActivity
         val intent = Intent(context, NFCActivity::class.java)
         context.startActivity(intent)
-    }) {
+      }) {
         Text("Launch NFC Activity")
-    }
+      }
 }
