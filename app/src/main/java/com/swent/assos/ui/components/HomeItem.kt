@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
