@@ -45,7 +45,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
               }) {
         Column(
             modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(false) {
+                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(true) {
                   navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
                 },
         ) {

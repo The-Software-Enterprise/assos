@@ -33,7 +33,7 @@ constructor(
   val hourFormat = _hourFormat.asStateFlow()
 
   init {
-    viewModelScope.launch(ioDispatcher) {}
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
   }
 
   fun getEvent(eventId: String) {

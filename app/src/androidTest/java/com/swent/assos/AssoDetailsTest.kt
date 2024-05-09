@@ -24,7 +24,6 @@ class AssoDetailsTest : SuperTest() {
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
     }
-    Thread.sleep(10000)
   }
 
   @Test

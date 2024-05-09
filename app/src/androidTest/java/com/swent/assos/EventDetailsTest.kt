@@ -21,27 +21,24 @@ class EventDetailsTest : SuperTest() {
   val event = Event("123456", "description", assoID, Uri.EMPTY, "assoId")
 
   override fun setup() {
-    FirebaseFirestore.getInstance()
-        .collection("events")
-        .document(event.id)
-        .set(event)
-        .addOnSuccessListener {
-          super.setup()
-          composeTestRule.activity.setContent {
-            EventDetails(eventId = event.id, assoId = assoID, navigationActions = mockNavActions)
-          }
-        }
+
+    super.setup()
+    FirebaseFirestore.getInstance().collection("events").document(event.id).set(event)
+
+    composeTestRule.activity.setContent {
+      EventDetails(eventId = event.id, assoId = assoID, navigationActions = mockNavActions)
+    }
   }
 
   @Test
   fun testEventDetails() {
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("I want to join") { composeTestRule.onNodeWithText("Join us").performClick() }
+        step("I want to join") { composeTestRule.onNodeWithText("Become Staff").performClick() }
       }
       step("I changed my mind") { composeTestRule.onNodeWithText("No").performClick() }
 
-      step("I want to join again") { composeTestRule.onNodeWithText("Join us").performClick() }
+      step("I want to join again") { composeTestRule.onNodeWithText("Become Staff").performClick() }
       step("Confirm") { composeTestRule.onNodeWithText("Yes").performClick() }
     }
   }

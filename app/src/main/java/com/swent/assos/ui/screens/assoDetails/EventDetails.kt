@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -71,16 +72,15 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               eventViewModel.applyStaffing(userId.id, {})
             })
       },
-      text = "Do you want to apply for staffing?",
+      text = "Do you want to apply for staffing? \n You will be contacted by the association.",
       showing = confirming)
 
   Scaffold(
       modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
-        JoinUsButton {
-          // call the function to apply for staffing
-          confirming = true
+        if (eventId != "") {
+          JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
         }
       },
       floatingActionButtonPosition = FabPosition.Center,
@@ -102,7 +102,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 Modifier.padding(10.dp)
                     .height(200.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
-                    .background(Color.Gray)
+                    .background(MaterialTheme.colorScheme.background)
                     .fillMaxWidth(),
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop)
@@ -126,7 +126,7 @@ fun ConfirmDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = confirmButton,
         text = { Text(text = text) },
-        containerColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         dismissButton = { ConfirmButton(onDismissRequest, "No") })
   }
 }
