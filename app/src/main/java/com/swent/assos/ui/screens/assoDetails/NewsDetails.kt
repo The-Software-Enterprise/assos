@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -85,7 +84,7 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                         .padding(15.dp)
                         .height(200.dp)
                         .clip(shape = RoundedCornerShape(20.dp))
-                        .background(Color.Gray)
+                        .background(MaterialTheme.colorScheme.surface)
                         .testTag("Main Image"),
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center)
