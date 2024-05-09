@@ -96,6 +96,7 @@ class EndToEnd : SuperTest() {
             hasAnyChild(hasTestTag("NavigationBarItem3"))
             // click on child
           }
+
           composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
           // check if we are on the profile screen
           profileScreen { assertIsDisplayed() }
