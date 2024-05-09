@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.screens.TicketDetailsScreen
 import com.swent.assos.ui.screens.ticket.TicketDetails
