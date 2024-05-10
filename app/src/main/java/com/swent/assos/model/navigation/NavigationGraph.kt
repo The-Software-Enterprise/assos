@@ -56,6 +56,7 @@ fun NavigationGraph() {
     composable(Destinations.EVENT_DETAILS.route + "/{eventId}") { backStackEntry ->
       EventDetails(
           eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
           navigationActions = navigationActions)
     }
     composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->

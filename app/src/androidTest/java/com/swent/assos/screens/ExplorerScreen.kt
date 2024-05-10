@@ -10,7 +10,7 @@ class ExplorerScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         viewBuilderAction = { hasTestTag("ExplorerScreen") }) {
 
   val assoList: KNode = child { hasTestTag("AssoList") }
-  val assoListoneEighty: KNode = assoList.child { hasTestTag("AssoListItem180°C") }
+  val assoListoneEighty: KNode = assoList.child { hasTestTag("AssoListItem") }
 
   val searchAsso: KNode = child { hasTestTag("SearchAsso") }
   val assoListSearch: KNode = searchAsso.child { hasSetTextAction() }

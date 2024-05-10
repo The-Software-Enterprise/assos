@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -58,6 +59,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
+import org.w3c.dom.Text
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -99,15 +101,11 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
       topBar = {
-        TopAssoBar(
-            assoId = assoId,
-            asso = association,
-            navigationActions = navigationActions,
-            viewModel = viewModel)
+        TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
       },
       floatingActionButton = {
         if (!currentUser.associations.map { it.first }.contains(assoId))
-            JoinUsButton { viewModel.joinAssociation(assoId) }
+            JoinUsButton(onClick = { viewModel.joinAssociation(assoId) }, text = "Join us")
         else null
       },
       floatingActionButtonPosition = FabPosition.Center,
@@ -152,7 +150,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               state = listStateEvents,
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(events) {
-                  EventItem(it, navigationActions)
+                  EventItem(it, navigationActions, association)
                   Spacer(modifier = Modifier.width(8.dp))
                 }
               }
@@ -198,12 +196,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAssoBar(
-    assoId: String,
-    asso: Association,
-    navigationActions: NavigationActions,
-    viewModel: AssoViewModel
-) {
+fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewModel: AssoViewModel) {
   val associationFollowed = viewModel.associationFollowed.collectAsState()
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
@@ -216,46 +209,48 @@ fun TopAssoBar(
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {
-        AssistChip(
-            colors =
-                if (associationFollowed.value)
-                    AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.surface)
-                else
-                    AssistChipDefaults.assistChipColors(
-                        containerColor = MaterialTheme.colorScheme.primary),
-            border = null,
-            modifier = Modifier.testTag("FollowButton").padding(5.dp),
-            onClick = {
-              if (associationFollowed.value) {
-                viewModel.unfollowAssociation(assoId)
-              } else {
-                viewModel.followAssociation(assoId)
-              }
-            },
-            label = {
-              if (associationFollowed.value) {
-                Text(
-                    text = "Following",
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                )
-              } else {
-                Text(
-                    text = "Follow",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                )
-              }
-            },
-        )
+        if (asso.id != "") {
+          AssistChip(
+              colors =
+                  if (associationFollowed.value)
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.surface)
+                  else
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.primary),
+              border = null,
+              modifier = Modifier.testTag("FollowButton").padding(5.dp),
+              onClick = {
+                if (associationFollowed.value) {
+                  viewModel.unfollowAssociation(asso.id)
+                } else {
+                  viewModel.followAssociation(asso.id)
+                }
+              },
+              label = {
+                if (associationFollowed.value) {
+                  Text(
+                      text = "Following",
+                      color = MaterialTheme.colorScheme.onSurface,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                } else {
+                  Text(
+                      text = "Follow",
+                      color = MaterialTheme.colorScheme.onPrimary,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                }
+              },
+          )
+        }
       })
 }
 
 @Composable
-fun JoinUsButton(onClick: () -> Unit) {
+fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
   Row(
       modifier = Modifier.fillMaxWidth(),
       horizontalArrangement = Arrangement.Center,
@@ -265,13 +260,13 @@ fun JoinUsButton(onClick: () -> Unit) {
         modifier =
             Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
                 .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
-                .width(92.dp)
+                .then(Modifier.widthIn(min = 92.dp))
                 .height(42.dp)
                 .testTag("JoinButton"),
         containerColor = Color(0xFF5465FF),
     ) {
       Text(
-          text = "Join us",
+          text = text,
           fontSize = 16.sp,
           fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
           fontWeight = FontWeight.SemiBold,

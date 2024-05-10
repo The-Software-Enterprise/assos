@@ -40,7 +40,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
               .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(false) {
+                Modifier.width(200.dp).padding(vertical = 0.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
         ) {

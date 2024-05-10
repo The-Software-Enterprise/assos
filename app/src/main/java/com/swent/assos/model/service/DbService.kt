@@ -17,6 +17,15 @@ interface DbService {
 
   suspend fun getAssociationById(associationId: String): Association
 
+  suspend fun getEventById(eventId: String): Event
+
+  suspend fun applyStaffing(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
@@ -24,6 +33,14 @@ interface DbService {
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
   ): List<News>
+
+  suspend fun addApplicant(
+      toWhat: String,
+      id: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 

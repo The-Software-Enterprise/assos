@@ -9,10 +9,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -28,15 +26,6 @@ fun News(navigationActions: NavigationActions) {
   val news by viewModel.allNews.collectAsState()
   val listState = rememberLazyListState()
 
-  LaunchedEffect(listState) {
-    snapshotFlow { listState.layoutInfo.visibleItemsInfo }
-        .collect { visibleItems ->
-          if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
-            viewModel.loadMoreAssociations()
-          }
-        }
-  }
-
   Scaffold(modifier = Modifier.testTag("NewsScreen"), topBar = { PageTitle(title = "Home") }) {
       paddingValues ->
     LazyColumn(
@@ -44,7 +33,7 @@ fun News(navigationActions: NavigationActions) {
             Modifier.padding(paddingValues)
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(horizontal = 15.dp)
-                .padding(top = 5.dp)
+                .padding(vertical = 5.dp)
                 .testTag("NewsList"),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         userScrollEnabled = true,
