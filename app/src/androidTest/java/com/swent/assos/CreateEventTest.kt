@@ -6,7 +6,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.screens.CreateEventScreen
-import com.swent.assos.ui.screens.manageAsso.CreateEvent
+import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified

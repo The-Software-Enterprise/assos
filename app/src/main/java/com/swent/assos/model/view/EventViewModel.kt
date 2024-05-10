@@ -87,15 +87,21 @@ constructor(
     }
   }
 
+  fun addField(field: Event.Field) {
+    val fields = _event.value.fields.toMutableList()
+    fields.add(field)
+    _event.value = _event.value.copy(fields = fields)
+  }
+
   fun addImagesToField(uris: List<Uri>, index: Int) {
     val fields = _event.value.fields.toMutableList()
     fields[index] = Event.Field.Image((fields[index] as Event.Field.Image).uris + uris)
     _event.value = _event.value.copy(fields = fields)
   }
 
-  fun addField(field: Event.Field) {
+  fun removeImageFromField(index: Int, uri: Uri) {
     val fields = _event.value.fields.toMutableList()
-    fields.add(field)
+    fields[index] = Event.Field.Image((fields[index] as Event.Field.Image).uris - uri)
     _event.value = _event.value.copy(fields = fields)
   }
 
