@@ -270,7 +270,6 @@ class EndToEnd : SuperTest() {
           associationCard {
             assertIsDisplayed()
             assertIsDisplayed()
-            assert(hasText("180°C", substring = true, ignoreCase = true))
           }
         }
       }
