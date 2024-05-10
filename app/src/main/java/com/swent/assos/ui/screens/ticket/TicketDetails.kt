@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -47,15 +46,10 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
   LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("TicketDetailsScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketDetailsScreen"),
       topBar = { PageTitleWithGoBack(event.title, navigationActions) }) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-                .testTag("TicketDetails"),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketDetails"),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           Image(
@@ -75,21 +69,15 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
           Text(
               text = "Start Time: " + event.startTime?.let { dateToReadableString(it) },
               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              modifier = Modifier
-                  .padding(8.dp)
-                  .testTag("StartTime"))
+              modifier = Modifier.padding(8.dp).testTag("StartTime"))
           Text(
               text = "End Time: " + event.endTime?.let { dateToReadableString(it) },
               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              modifier = Modifier
-                  .padding(8.dp)
-                  .testTag("EndTime"))
+              modifier = Modifier.padding(8.dp).testTag("EndTime"))
           Text(
               text = "Description: ${event.description}",
               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              modifier = Modifier
-                  .padding(8.dp)
-                  .testTag("Description"))
+              modifier = Modifier.padding(8.dp).testTag("Description"))
         }
       }
 }
