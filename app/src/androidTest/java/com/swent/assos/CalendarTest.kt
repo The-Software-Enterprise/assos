@@ -6,7 +6,6 @@ import com.swent.assos.screens.CalendarScreen
 import com.swent.assos.ui.screens.calendar.Calendar
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
-import java.lang.Thread.sleep
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import org.junit.Test
@@ -34,7 +33,6 @@ class CalendarTest : SuperTest() {
                 LocalDate.now().format(titleDateFormatter), ignoreCase = true, substring = true)
           }
           titleItemSelected {
-            sleep(3000)
             assertIsDisplayed()
             assertTextContains(
                 LocalDate.now().dayOfMonth.toString(), ignoreCase = true, substring = true)

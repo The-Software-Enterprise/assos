@@ -60,6 +60,7 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
           }
     }
     _loading = false
+    _loadingDisplay.value = false
   }
 
   fun loadMoreEvents() {
