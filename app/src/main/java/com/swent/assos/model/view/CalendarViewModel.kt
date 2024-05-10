@@ -34,14 +34,19 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
 
   private var _loading = false
 
+  private var _loadingDisplay = MutableStateFlow(true)
+  val loading = _loadingDisplay.asStateFlow()
+
   private val user = DataCache.currentUser
 
   fun updateEvents() {
     _loading = true
+    _loadingDisplay.value = _events.value.isEmpty()
     viewModelScope.launch(ioDispatcher) {
       dbService
           .getEventsFromAssociations(
-              user.value.following + user.value.associations.map { it.first }, null)
+              associationIds = user.value.following + user.value.associations.map { it.first },
+              lastDocumentSnapshot = null)
           .let {
             _events.value = it
             _tomorrowEvents.value =
@@ -51,20 +56,23 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
                     .filter { event ->
                       event.second.startTime?.toLocalDate() == LocalDate.now().plusDays(1)
                     }
+            _loadingDisplay.value = false
           }
     }
     _loading = false
+    _loadingDisplay.value = false
   }
 
   fun loadMoreEvents() {
     if (!_loading) {
       _loading = true
+      _loadingDisplay.value = _events.value.isEmpty()
       viewModelScope.launch(ioDispatcher) {
         val lastDocumentSnapshot = _events.value.lastOrNull()?.documentSnapshot
         dbService
             .getEventsFromAssociations(
-                user.value.following + user.value.associations.map { it.first },
-                lastDocumentSnapshot)
+                associationIds = user.value.following + user.value.associations.map { it.first },
+                lastDocumentSnapshot = lastDocumentSnapshot)
             .let {
               _events.value += it
               _events.value = _events.value.distinct()
@@ -75,6 +83,7 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
                       .filter { event ->
                         event.second.startTime?.toLocalDate() == LocalDate.now().plusDays(1)
                       }
+              _loadingDisplay.value = false
               if (it.isNotEmpty()) {
                 _loading = false
               }

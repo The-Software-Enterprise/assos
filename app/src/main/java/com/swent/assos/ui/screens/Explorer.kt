@@ -45,6 +45,7 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.components.ListItemAsso
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -52,6 +53,7 @@ import com.swent.assos.ui.components.PageTitle
 fun Explorer(navigationActions: NavigationActions) {
   val explorerViewModel: ExplorerViewModel = hiltViewModel()
   val associations by explorerViewModel.filteredAssociations.collectAsState()
+  val loading by explorerViewModel.loading.collectAsState()
 
   val listState = rememberLazyListState()
 
@@ -81,17 +83,22 @@ fun Explorer(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
-              if (associations.isEmpty()) {
-                item {
-                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
-                }
+              if (loading) {
+                item { LoadingCircle() }
               } else {
-                items(items = associations, key = { it.id }) {
-                  ListItemAsso(
-                      asso = it,
-                      callback = {
-                        navigationActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${it.id}")
-                      })
+                if (associations.isEmpty()) {
+                  item {
+                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                  }
+                } else {
+                  items(items = associations, key = { it.id }) {
+                    ListItemAsso(
+                        asso = it,
+                        callback = {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${it.id}")
+                        })
+                  }
                 }
               }
             }

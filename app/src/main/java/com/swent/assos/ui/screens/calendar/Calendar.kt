@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.view.CalendarViewModel
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -48,6 +49,7 @@ fun Calendar(
   val events = calendarViewModel.events.collectAsState()
   val selectedEvents = calendarViewModel.selectedEvents.collectAsState()
   val selectedDate = calendarViewModel.selectedDate.collectAsState()
+  val loading = calendarViewModel.loading.collectAsState()
 
   val verticalScrollState = rememberScrollState(1350)
 
@@ -58,36 +60,40 @@ fun Calendar(
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CalendarScreen"),
       topBar = { PageTitle(title = "Calendar - ${selectedDate.value.format(dateFormatter)}") }) {
-        Column(
-            modifier =
-                Modifier.padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
-                    .padding(it)
-                    .fillMaxSize()) {
-              InfiniteScrollableDaysList(
-                  selectedDate = selectedDate,
-                  onDateSelected = { newDate -> calendarViewModel.updateSelectedDate(newDate) })
+        if (loading.value) {
+          LoadingCircle()
+        } else {
+          Column(
+              modifier =
+                  Modifier.padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+                      .padding(it)
+                      .fillMaxSize()) {
+                InfiniteScrollableDaysList(
+                    selectedDate = selectedDate,
+                    onDateSelected = { newDate -> calendarViewModel.updateSelectedDate(newDate) })
 
-              Spacer(modifier = Modifier.height(16.dp))
-              Text(
-                  text =
-                      if (selectedDate.value == LocalDate.now()) {
-                        "Schedule Today"
-                      } else {
-                        "Daily Schedule"
-                      },
-                  fontSize = 16.sp,
-                  fontWeight = FontWeight.SemiBold,
-                  color = Color(0xFF1E293B))
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text =
+                        if (selectedDate.value == LocalDate.now()) {
+                          "Schedule Today"
+                        } else {
+                          "Daily Schedule"
+                        },
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF1E293B))
 
-              Spacer(modifier = Modifier.height(32.dp))
-              DailySchedule(
-                  events = selectedEvents,
-                  verticalScrollState = verticalScrollState,
-                  eventContent = eventContent)
-              Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
+                DailySchedule(
+                    events = selectedEvents,
+                    verticalScrollState = verticalScrollState,
+                    eventContent = eventContent)
+                Spacer(modifier = Modifier.height(32.dp))
 
-              Reminder(calendarViewModel = calendarViewModel)
-            }
+                Reminder(calendarViewModel = calendarViewModel)
+              }
+        }
       }
 }
 
