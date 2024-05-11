@@ -1,74 +1,57 @@
 package com.swent.assos
 
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.nfc.Tag
+import android.nfc.tech.NdefFormatable
 import android.os.Bundle
-import android.os.Parcel
-import android.os.Parcelable
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.coEvery
 import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
-import java.lang.reflect.Method
 import io.mockk.mockk
 import org.junit.Test
-import java.lang.reflect.Field
-import java.lang.reflect.Modifier
-
-interface NfcInteraction {
-  fun readTag(): String
-  fun writeTag(data: String)
-}
-
-class NfcInteractionImpl : NfcInteraction {
-  private var data : String? = null
-
-  override fun readTag(): String {
-    // Logic to read data from NFC tag
-    return "Data from NFC tag"
-  }
-
-  override fun writeTag(data: String) {
-    // Logic to write data to NFC tag
-    this.data = data
-  }
-}
+import org.junit.runner.RunWith
+import java.lang.reflect.Method
 
 
 @RunWith(AndroidJUnit4::class)
 class NFCTest {
 
   private val mockTag = mockk<Tag>()
-  private val mockParcelCreator = object : Parcelable.Creator<Tag> {
-    override fun createFromParcel(`in`: Parcel): Tag {
-      // This closure holds a reference to mockTag.
-      return mockTag
-    }
-    override fun newArray(size: Int): Array<Tag> {
-      return arrayOf(mockTag) // Second closure.
-    }
-  }
-
-  private val intent = mockk<Intent>()
+  private val mockIntent = mockk<Intent>()
   private val nfcActivity = NFCActivity()
 
-  private fun reassignStaticFinalField(field: Field, newValue: Any?) {
-    field.isAccessible = true
-    val modifiersField = Field::class.java.getDeclaredField("accessFlags")
-    modifiersField.isAccessible = true
-    modifiersField.setInt(field, field.modifiers and  Modifier.FINAL.inv())
-    field.set(null, newValue)
+  var tagClass: Class<*> = Tag::class.java
+  var createMockTagMethod: Method = tagClass.getMethod(
+    "createMockTag",
+    ByteArray::class.java,
+    IntArray::class.java,
+    Array<Bundle>::class.java
+  )
+
+  @Test
+  fun testReadNFC() {
+    every { mockTag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
+    every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
+    every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
+
+    nfcActivity.setMode(NFCMode.READ)
+
+    nfcActivity.onNewIntent(mockIntent)
   }
 
   @Test
   fun testWriteNFC() {
-    reassignStaticFinalField(android.nfc.Tag::class.java.getField("CREATOR"), mockParcelCreator)
+    every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
+    every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
+
+    // Mock behavior of NdefFormatable
+    val mockNdefFormatable = mockk<NdefFormatable>()
+    every { NdefFormatable.get(mockTag) } returns mockNdefFormatable
+
     nfcActivity.setMode(NFCMode.WRITE)
-    //intent.data = mockTag
-    nfcActivity.onNewIntent(intent)
-    every { mockTag.boxedValue } returns "Hello !"
+
+    nfcActivity.onNewIntent(mockIntent)
+    assert(mockTag.boxedValue == "Hello !")
   }
 }

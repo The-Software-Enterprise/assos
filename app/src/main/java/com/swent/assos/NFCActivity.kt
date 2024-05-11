@@ -94,7 +94,7 @@ class NFCActivity : Activity() {
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   private fun handleNfcTag(intent: Intent) {
-    val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
+    val tag: Tag? = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
     tag?.id?.let {
       val tagValue = it.toHexString()
       Toast.makeText(this, "NFC tag detected: $tagValue", Toast.LENGTH_SHORT).show()
@@ -138,7 +138,7 @@ class NFCActivity : Activity() {
             payload.toByteArray())
     val nfcMessage = NdefMessage(arrayOf(nfcRecord))
     intent?.let {
-      val tag = it.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
+      val tag = it.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
       return writeMessageToTag(nfcMessage, tag)
     }
     return false
@@ -184,6 +184,7 @@ class NFCActivity : Activity() {
       return false
     } catch (e: Exception) {
       // Write operation has failed
+      throw e
     }
     return false
   }
