@@ -31,6 +31,7 @@ import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
+import com.swent.assos.ui.screens.ticket.MyTickets
 import java.util.Calendar
 import kotlinx.coroutines.launch
 
@@ -38,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeNavigation(navigationActions: NavigationActions) {
   val coroutineScope = rememberCoroutineScope()
-  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 4 }
+  val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
   Column(
       modifier =
           Modifier.fillMaxSize().testTag("HomeNavigation").semantics {
@@ -54,7 +55,8 @@ fun HomeNavigation(navigationActions: NavigationActions) {
         0 -> News(navigationActions = navigationActions)
         1 -> Explorer(navigationActions = navigationActions)
         2 -> Calendar()
-        3 -> Profile(navigationActions = navigationActions)
+        3 -> MyTickets(navigationActions = navigationActions)
+        4 -> Profile(navigationActions = navigationActions)
       }
     }
     NavigationBar(
@@ -65,7 +67,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                 .semantics { testTagsAsResourceId = true },
         containerColor = Color.Transparent,
     ) {
-      repeat(4) { index ->
+      repeat(5) { index ->
         NavigationBarItem(
             modifier =
                 Modifier.testTag("NavigationBarItem$index").semantics {
@@ -90,6 +92,12 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                         modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
                 3 ->
                     Icon(
+                        painterResource(id = R.drawable.qrcode),
+                        contentDescription = "Ticket",
+                        modifier =
+                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("TicketIcon"))
+                4 ->
+                    Icon(
                         painterResource(id = R.drawable.profile),
                         contentDescription = "Profile",
                         modifier =
@@ -104,6 +112,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     0 -> "Home"
                     1 -> "Explorer"
                     2 -> "Calendar"
+                    3 -> "Ticket"
                     else -> "Profile"
                   }
               if (pagerState.currentPage == index) {

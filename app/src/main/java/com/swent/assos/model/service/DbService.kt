@@ -5,6 +5,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 
 interface DbService {
@@ -58,6 +59,8 @@ interface DbService {
 
   suspend fun createEvent(event: Event, onSuccess: () -> Unit, onError: (String) -> Unit)
 
+  suspend fun getEventFromId(eventId: String): Event
+
   // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
       associationId: String,
@@ -78,4 +81,10 @@ interface DbService {
   )
 
   suspend fun updateBanner(associationId: String, banner: Uri)
+
+  // Tickets ---------------------------------------------------------------
+
+  suspend fun getTickets(userId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Ticket>
+
+  suspend fun getTicketFromId(ticketId: String): Ticket
 }
