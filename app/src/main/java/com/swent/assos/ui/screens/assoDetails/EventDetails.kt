@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,12 +37,16 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
@@ -76,7 +81,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
+      modifier = Modifier
+          .testTag("EventDetails")
+          .semantics { contentDescription = "EventDetails" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
@@ -86,7 +93,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
     LazyColumn(
-        modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
+        modifier = Modifier
+            .testTag("EventDetailsList")
+            .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       item {
@@ -99,16 +108,33 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 },
             contentDescription = null,
             modifier =
-                Modifier.padding(10.dp)
-                    .height(200.dp)
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth(),
+            Modifier
+                .padding(10.dp)
+                .height(200.dp)
+                .clip(shape = RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxWidth(),
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop)
       }
 
-      item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
+      item {
+        Text(
+            text = event.description,
+            style = MaterialTheme.typography.bodyMedium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier
+                .padding(all = 8.dp)
+                .testTag("eventDescriptionText"))
+      }
+
+      if (!userId.associations.map { it.first }.contains(assoId)) {
+        item {
+            Spacer(modifier = Modifier.padding(top = 15.dp))
+            JoinUsButton(onClick = { navigationActions.navigateTo(Destinations.STAFF_MANAGEMENT.route + "/${eventId}")}, text = "Saff List")
+        }
+      }
     }
   }
 }
@@ -147,7 +173,9 @@ fun TopNewsBar(
         Image(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+            modifier = Modifier
+                .testTag("GoBackButton")
+                .clickable { navigationActions.goBack() })
       },
       actions = {})
 }

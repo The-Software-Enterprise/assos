@@ -81,7 +81,7 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, null)
+    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, mapOf("userId" to "0000", "status" to "pending", "createdAt" to Timestamp.now()))
     return deserializeEvent(snapshot)
   }
 
@@ -300,9 +300,20 @@ constructor(
         .update("banner", banner.toString())
         .await()
   }
+
 }
 
 private fun serialize(event: Event): Map<String, Any> {
+
+    val staffMap = mutableMapOf<String, Any>()
+    event.staff.forEach { (key, value) ->
+        when (value) {
+            is LocalDateTime -> staffMap[key] = localDateTimeToTimestamp(LocalDateTime.now())
+            is String -> staffMap[key] = value
+            else -> println("Unsupported type in staff map, skipping")
+        }
+    }
+
   return mapOf(
       "title" to event.title,
       "description" to event.description,
@@ -310,16 +321,31 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+      "applicants" to staffMap,
   )
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
-  return Event(
+    val staffMap = doc.getData()?.get("fields") as? Map<String, Any> ?: mapOf()
+
+    val staff = mutableMapOf<String, Any>()
+    staffMap.forEach { (key, value) ->
+        when (value) {
+            is String -> staff[key] = value
+            is Timestamp -> staff[key] = timestampToLocalDateTime(value)
+            else -> println("Unsupported type in staff map")
+        }
+    }
+
+    return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
       description = doc.getString("description") ?: "",
       associationId = doc.getString("associationId") ?: "",
       image = Uri.parse(doc.getString("image") ?: ""),
+
+     staff = staff,
+
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       documentSnapshot = doc)
