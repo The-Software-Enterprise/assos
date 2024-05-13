@@ -79,7 +79,7 @@ interface DbService {
       eventId: String,
       onSuccess: () -> Unit,
       onFailure: () -> Unit
-  ): () -> Unit
+  )
 
   suspend fun joinAssociation(
       triple: Triple<String, String, Int>,

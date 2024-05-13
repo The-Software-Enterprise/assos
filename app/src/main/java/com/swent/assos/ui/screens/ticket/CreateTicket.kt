@@ -1,15 +1,11 @@
 package com.swent.assos.ui.screens.ticket
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,11 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
+import com.swent.assos.ui.screens.assoDetails.JoinUsButton
+
+@Composable
+fun EmailSubmit(onClick: () -> Unit) {
+  JoinUsButton(onClick = onClick, text = "Submit")
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -69,27 +70,23 @@ fun CreateTicket(navigationActions: NavigationActions, eventId: String) {
       topBar = {
         PageTitleWithGoBack(title = "Create a Ticket", navigationActions = navigationActions)
       },
+      floatingActionButton = {
+        EmailSubmit(
+            onClick = {
+              eventViewModel.createTicket(email, { showingSuccess = true }, { showingError = true })
+            })
+      },
+      floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
     resultDialog(email)
     Column(
         modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("Form"),
         horizontalAlignment = Alignment.CenterHorizontally) {
-          OutlinedTextField(value = email, onValueChange = { email = it })
-          EmailSubmit {
-            eventViewModel.createTicket(email, { showingSuccess = true }, { showingError = true })
-          }
+          OutlinedTextField(
+              value = email,
+              onValueChange = { email = it },
+              modifier = Modifier.testTag("EmailField").padding(paddingValues),
+              label = { Text("Email") })
         }
-  }
-}
-
-@Composable
-fun EmailSubmit(onClick: () -> Unit) {
-  Row(
-      modifier =
-          Modifier.padding(16.dp).width(92.dp).height(48.dp).clickable(true, onClick = onClick),
-      horizontalArrangement = Arrangement.Center,
-      verticalAlignment = Alignment.Bottom,
-  ) {
-    Text(text = "Submit")
   }
 }
