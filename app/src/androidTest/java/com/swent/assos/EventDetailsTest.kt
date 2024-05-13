@@ -2,6 +2,7 @@ package com.swent.assos
 
 import android.net.Uri
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -81,11 +82,14 @@ class EventDetailsTest : SuperTest() {
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+          composeTestRule.onNodeWithText("Create ticket").isDisplayed()
+        }
         step("I want to create a ticket") {
           composeTestRule.onNodeWithText("Create ticket").performClick()
         }
         step("Check if we actually navigate to create a ticket screen") {
-          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route) }
+          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route + "/${event2.id}") }
           confirmVerified(mockNavActions)
         }
       }

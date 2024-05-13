@@ -90,7 +90,15 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
-          JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+            true ->
+                JoinUsButton(
+                    onClick = {
+                      navigationActions.navigateTo(Destinations.CREATE_TICKET.route + "/${eventId}")
+                    },
+                    text = "Create ticket")
+            false -> JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          }
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
