@@ -86,6 +86,13 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+  suspend fun addTicketToUser(
+      email: String,
+      eventId: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
+  )
+
   suspend fun joinAssociation(
       triple: Triple<String, String, Int>,
       onSuccess: () -> Unit,

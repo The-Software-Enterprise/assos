@@ -71,6 +71,35 @@ constructor(
     return snapshot.documents.map { deserializeAssociation(it) }
   }
 
+  override suspend fun addTicketToUser(
+      email: String,
+      eventId: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
+  ) {
+
+    val user = firestore.collection("users").whereEqualTo("email", email).get().await()
+    when {
+      // if the user does not exist
+      user.documents.isEmpty() -> {
+        onFailure()
+        return
+      }
+    }
+    val userId = user.documents[0].id
+    val ticket = mapOf("eventId" to eventId, "userId" to userId)
+    // add the ticket to the ticket collection and get the id created
+    val ticketId = firestore.collection("tickets").add(ticket).await().id
+    // and add the ticket to the ticket collection in user
+    firestore
+        .collection("users")
+        .document(userId)
+        .collection("tickets")
+        .document(ticketId)
+        .set(ticket)
+    onSuccess()
+  }
+
   override suspend fun applyStaffing(
       eventId: String,
       userId: String,
