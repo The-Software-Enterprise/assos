@@ -216,33 +216,44 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     color = MaterialTheme.colorScheme.onPrimary))
       }
-      if (firebaseError) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = responseError,
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
-            style =
-                TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 32.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
-      }
-      if (badCredentials) {
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Password must be at least 6 characters and email must be filled",
-            color = MaterialTheme.colorScheme.error,
-            modifier =
-                Modifier.fillMaxWidth()
-                    .padding(horizontal = 32.dp)
-                    .align(Alignment.CenterHorizontally),
-            style =
-                TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 32.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
-      }
+        when (firebaseError) {
+            true -> {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = responseError,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                    style =
+                        TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 32.sp,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
+            }
+
+            false -> {}
+        }
+
+        when (badCredentials) {
+            true -> {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Password must be at least 6 characters and email must be filled",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier =
+                    Modifier.fillMaxWidth()
+                        .padding(horizontal = 32.dp)
+                        .align(Alignment.CenterHorizontally),
+                    style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
+            }
+
+            false -> {}
+        }
+
+
       Spacer(modifier = Modifier.height(16.dp))
       Text(
           "Already have an account?",
