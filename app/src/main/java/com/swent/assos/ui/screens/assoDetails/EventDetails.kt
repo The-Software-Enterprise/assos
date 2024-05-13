@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -42,9 +43,12 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.ListItemAsso
 
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
@@ -57,6 +61,10 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   var confirming by remember { mutableStateOf(false) }
 
   val userId by assoViewModel.currentUser.collectAsState()
+
+  val viewModel: ProfileViewModel = hiltViewModel()
+
+  val myAssociations by viewModel.memberAssociations.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -76,17 +84,25 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
+      modifier = Modifier
+          .testTag("EventDetails")
+          .semantics { contentDescription = "EventDetails" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
-          JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          if (isMember(myAssociations = myAssociations, cuurentAsso = asso.id)) {
+
+          } else {
+            JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          }
         }
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
     LazyColumn(
-        modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
+        modifier = Modifier
+            .testTag("EventDetailsList")
+            .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       item {
@@ -99,16 +115,28 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 },
             contentDescription = null,
             modifier =
-                Modifier.padding(10.dp)
-                    .height(200.dp)
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth(),
+            Modifier
+                .padding(10.dp)
+                .height(200.dp)
+                .clip(shape = RoundedCornerShape(20.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxWidth(),
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop)
       }
 
       item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
+
+        item { Text(text = asso.id, modifier = Modifier.padding(10.dp)) }
+
+        items(items = myAssociations, key = { it.id }) {
+            ListItemAsso(
+                asso = it,
+                callback = {
+                    navigationActions.navigateTo(
+                        Destinations.ASSO_MODIFY_PAGE.route + "/${it.id}")
+                })
+        }
     }
   }
 }
@@ -147,7 +175,9 @@ fun TopNewsBar(
         Image(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+            modifier = Modifier
+                .testTag("GoBackButton")
+                .clickable { navigationActions.goBack() })
       },
       actions = {})
 }
@@ -155,4 +185,15 @@ fun TopNewsBar(
 @Composable
 fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
+}
+
+@Composable
+fun isMember(myAssociations : List<Association>, cuurentAsso : String) : Boolean {
+    var isMember = false
+    for (asso in myAssociations) {
+        if (asso.id == cuurentAsso) {
+        isMember = true
+        }
+    }
+    return isMember
 }
