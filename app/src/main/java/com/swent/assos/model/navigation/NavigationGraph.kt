@@ -92,8 +92,10 @@ fun NavigationGraph() {
     composable(Destinations.MY_ASSOCIATIONS.route) {
       MyAssociations(navigationActions = navigationActions)
     }
-    composable(Destinations.CREATE_TICKET.route) {
-      CreateTicket(navigationActions = navigationActions)
+    composable(Destinations.CREATE_TICKET.route + "/eventId") { backStackEntry ->
+      CreateTicket(
+          navigationActions = navigationActions,
+          eventId = backStackEntry.arguments?.getString("eventId") ?: "")
     }
   }
 }

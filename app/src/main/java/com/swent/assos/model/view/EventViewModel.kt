@@ -78,6 +78,14 @@ constructor(
     }
   }
 
+  fun createTicket(email: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+
+    viewModelScope.launch(ioDispatcher) {
+      dbService.addTicketToUser(
+          email, eventId = _event.value.id, onSuccess = onSuccess, onFailure = onFailure)
+    }
+  }
+
   fun applyStaffing(id: String, onSuccess: () -> Unit) {
     // get user ID
 

@@ -85,7 +85,7 @@ class EventDetailsTest : SuperTest() {
           composeTestRule.onNodeWithText("Create ticket").performClick()
         }
         step("Check if we actually navigate to create a ticket screen") {
-          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route) }
+          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route + "/${event2.id}") }
           confirmVerified(mockNavActions)
         }
       }

@@ -89,7 +89,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
           when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
             true ->
                 JoinUsButton(
-                    onClick = { navigationActions.navigateTo(Destinations.CREATE_TICKET.route) },
+                    onClick = {
+                      navigationActions.navigateTo(Destinations.CREATE_TICKET.route + "/${eventId}")
+                    },
                     text = "Create ticket")
             false -> JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
           }
