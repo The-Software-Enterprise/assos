@@ -27,6 +27,13 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+  suspend fun applyJoinAsso(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
@@ -94,4 +101,6 @@ interface DbService {
   suspend fun getTicketFromId(ticketId: String): Ticket
 
   suspend fun getApplicantsByEventId(eventId: String): List<Applicant>
+
+  suspend fun getApplicantsByAssoId(assoId: String): List<Applicant>
 }

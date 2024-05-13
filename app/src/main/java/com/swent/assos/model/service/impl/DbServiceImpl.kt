@@ -81,6 +81,15 @@ constructor(
     this.addApplicant("events", eventId, userId, onSuccess, onError)
   }
 
+  override suspend fun applyJoinAsso(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    this.addApplicant("associations", assoId, userId, onSuccess, onError)
+  }
+
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
     val snapshot =
@@ -101,6 +110,18 @@ constructor(
     val applicants = mutableListOf<Applicant>()
     val querySnapshot =
         firestore.collection("events").document(eventId).collection("applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      applicants.add(deserializeApplicant(document))
+    }
+
+    return applicants
+  }
+
+  override suspend fun getApplicantsByAssoId(assoId: String): List<Applicant> {
+    val applicants = mutableListOf<Applicant>()
+    val querySnapshot =
+        firestore.collection("associations").document(assoId).collection("applicants").get().await()
 
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))

@@ -33,17 +33,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Applicant
-import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ApplicantViewModel
 import com.swent.assos.model.view.UserViewModel
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import kotlinx.coroutines.launch
 
 @Composable
 fun NameListItem(
     userId: String,
     eventId: String,
-    navigationActions: NavigationActions,
+    isStaffing: Boolean,
 ) {
 
   val userViewModel: UserViewModel = hiltViewModel()
@@ -56,13 +55,10 @@ fun NameListItem(
   val applicant: Applicant =
       applicants.find { it.userId == userId } ?: Applicant("", "", LocalDateTime.now(), "")
 
-  LaunchedEffect(key1 = Unit) {
-    applicantsViewModel.getApplicants(eventId)
-    userViewModel.getUser(userId)
-  }
+  LaunchedEffect(key1 = Unit) { userViewModel.getUser(userId) }
 
-    var status by remember { mutableStateOf(applicant.status) }
-    val scope = rememberCoroutineScope()
+  var status by remember { mutableStateOf(applicant.status) }
+  val scope = rememberCoroutineScope()
 
   Box(
       modifier =
@@ -74,13 +70,8 @@ fun NameListItem(
               .height(30.dp)
               .testTag("NameListItem")) {
         Row(
-            modifier =
-                Modifier.fillMaxSize()
-                    .padding(
-                        horizontal = 8.dp)
-                    .testTag("NameItemRow"),
-            horizontalArrangement =
-                Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp).testTag("NameItemRow"),
+            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
               Text(
                   text = user.firstName + " " + user.lastName,
@@ -90,35 +81,40 @@ fun NameListItem(
                   modifier = Modifier.padding(all = 2.dp).testTag("NameListItemFullName"))
 
               AssistChip(
-                      colors = if (status == "accepted")
-                          AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.surface)
+                  colors =
+                      if (status == "accepted")
+                          AssistChipDefaults.assistChipColors(
+                              containerColor = MaterialTheme.colorScheme.surface)
                       else
-                          AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.primary),
-                      border = null,
-                      modifier = Modifier
-                          .testTag("AcceptButton")
-                          .padding(5.dp)
-                          .fillMaxHeight(),
-                      onClick = {
-                          scope.launch {
-                              if (status == "accepted") {
-                                  applicantsViewModel.unAcceptStaff(applicant.id, eventId)
-                                  status = "pending" // Assuming pending is the initial state
-                              } else {
-                                  applicantsViewModel.acceptStaff(applicant.id, eventId)
-                                  status = "accepted"
-                              }
-                          }
-                      },
-                      label = {
-                          Text(
-                              text = if (status == "accepted") "Un-Accept" else "Accept",
-                              color = if (status == "accepted") MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.Medium,
-                          )
+                          AssistChipDefaults.assistChipColors(
+                              containerColor = MaterialTheme.colorScheme.primary),
+                  border = null,
+                  modifier = Modifier.testTag("AcceptStaffButton").padding(5.dp).fillMaxHeight(),
+                  onClick = {
+                    scope.launch {
+                      if (isStaffing) {
+                        if (status == "accepted") {
+                          applicantsViewModel.unAcceptStaff(applicant.id, eventId)
+                          status = "pending" // Assuming pending is the initial state
+                        } else {
+                          applicantsViewModel.acceptStaff(applicant.id, eventId)
+                          status = "accepted"
+                        }
+                      } else {
+                        // TODO IN CASE OF AN APPLICATION TO JOIN THE COMMITTEE OF AN ASSOCIATION
                       }
-              )
+                    }
+                  },
+                  label = {
+                    Text(
+                        text = if (status == "accepted") "Un-Accept" else "Accept",
+                        color =
+                            if (status == "accepted") MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onPrimary,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        fontWeight = FontWeight.Medium,
+                    )
+                  })
             }
       }
 }

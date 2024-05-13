@@ -23,9 +23,15 @@ constructor(
   private val _applicants = MutableStateFlow(emptyList<Applicant>())
   val applicants = _applicants.asStateFlow()
 
-  fun getApplicants(eventId: String) {
+  fun getApplicantsForStaffing(eventId: String) {
     viewModelScope.launch(ioDispatcher) {
       _applicants.value = dbService.getApplicantsByEventId(eventId)
+    }
+  }
+
+  fun getApplicantsForJoining(assoId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _applicants.value = dbService.getApplicantsByAssoId(assoId)
     }
   }
 

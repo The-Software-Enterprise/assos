@@ -23,21 +23,19 @@ import com.swent.assos.ui.components.NameListItem
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @Composable
-fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
+fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) {
 
   val applicantsViewModel: ApplicantViewModel = hiltViewModel()
 
   val applicants by applicantsViewModel.applicants.collectAsState()
   val listState = rememberLazyListState()
 
-  LaunchedEffect(key1 = Unit) { applicantsViewModel.getApplicantsForStaffing(eventId) }
-
-  val sortedApplicants = applicants.sortedWith(compareBy { it.status != "pending" })
+  LaunchedEffect(key1 = Unit) { applicantsViewModel.getApplicantsForJoining(assoId) }
 
   Scaffold(
-      modifier = Modifier.testTag("StaffManagementScreen"),
+      modifier = Modifier.testTag("ApplicationManagementScreen"),
       topBar = {
-        PageTitleWithGoBack(title = "Staff Management", navigationActions = navigationActions)
+        PageTitleWithGoBack(title = "Application Management", navigationActions = navigationActions)
       }) { paddingValues ->
         LazyColumn(
             contentPadding = paddingValues,
@@ -47,15 +45,15 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
                     .padding(vertical = 7.dp)
                     .padding(start = 16.dp, end = 16.dp)
                     .background(MaterialTheme.colorScheme.surface)
-                    .testTag("StaffList"),
+                    .testTag("ApplicationList"),
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = true,
             state = listState) {
-              if (sortedApplicants.isEmpty()) {
-                item { NameListItem(userId = "0000", eventId = eventId, isStaffing = false) }
+              if (applicants.isEmpty()) {
+                item { NameListItem(userId = "0000", eventId = assoId, isStaffing = false) }
               } else {
-                items(sortedApplicants) { applicant ->
-                  NameListItem(userId = applicant.userId, eventId = eventId, isStaffing = true)
+                items(applicants) { applicant ->
+                  NameListItem(userId = applicant.userId, eventId = assoId, isStaffing = false)
                 }
               }
             }
