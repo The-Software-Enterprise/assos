@@ -30,7 +30,7 @@ class EventDetailsTest : SuperTest() {
   private val firstName = "Antoine"
   private val lastName = "Marchand"
 
-  private val memberAssociation = Association("QjAOBhVVcL0P2G1etPgk")
+  private val memberAssociation = Association("1GysfTi14xSiW4Te9fUH")
 
   val user =
       User(
@@ -50,7 +50,7 @@ class EventDetailsTest : SuperTest() {
 
     FirebaseFirestore.getInstance().collection("events").add(event1)
     FirebaseFirestore.getInstance().collection("events").add(event2)
-    FirebaseFirestore.getInstance().collection("users").add(user)
+    // FirebaseFirestore.getInstance().collection("users").add(user)
   }
 
   @Test
