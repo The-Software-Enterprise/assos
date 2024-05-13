@@ -66,11 +66,11 @@ fun NavigationGraph() {
           newsId = backStackEntry.arguments?.getString("newsId").toString(),
           navigationActions = navigationActions)
     }
-      composable(Destinations.STAFF_MANAGEMENT.route + "/{eventId}") { backStackEntry ->
-          StaffManagement(
-              eventId = backStackEntry.arguments?.getString("eventId").toString(),
-              navigationActions = navigationActions)
-      }
+    composable(Destinations.STAFF_MANAGEMENT.route + "/{eventId}") { backStackEntry ->
+      StaffManagement(
+          eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          navigationActions = navigationActions)
+    }
     composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
       CreateNews(
           navigationActions = navigationActions,
@@ -119,7 +119,7 @@ enum class Destinations(val route: String) {
   APPEARANCE("Appearance"),
   MY_ASSOCIATIONS("MyAssociations"),
   FOLLOWING("Following"),
-    STAFF_MANAGEMENT("StaffManagement"),
+  STAFF_MANAGEMENT("StaffManagement"),
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
   CREATE_TICKET("CreateTicket")

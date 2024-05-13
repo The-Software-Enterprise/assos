@@ -32,13 +32,12 @@ constructor(
   private val _hourFormat = MutableStateFlow(HourFormat.AM)
   val hourFormat = _hourFormat.asStateFlow()
 
-    private var _loadingDisplay = MutableStateFlow(true)
-    val loading = _loadingDisplay.asStateFlow()
+  private var _loadingDisplay = MutableStateFlow(true)
+  val loading = _loadingDisplay.asStateFlow()
 
   init {
     viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
   }
-
 
   fun getEvent(eventId: String) {
     viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }

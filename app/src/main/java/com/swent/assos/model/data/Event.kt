@@ -13,10 +13,7 @@ data class Event(
     val description: String = "",
     var startTime: LocalDateTime? = null,
     var endTime: LocalDateTime? = null,
-    var staff: Map<String, Any> = mapOf(
-        "userId" to "000",
-        "status" to "pending",
-        "createdAt" to Timestamp.now()
-    ),
+    var staff: Map<String, Any> =
+        mapOf("userId" to "000", "status" to "pending", "createdAt" to Timestamp.now()),
     val documentSnapshot: DocumentSnapshot? = null,
 )

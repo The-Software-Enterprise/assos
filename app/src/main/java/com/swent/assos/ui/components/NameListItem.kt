@@ -30,38 +30,32 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.AssoViewModel
-import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.UserViewModel
 
 @Composable
-fun NameListItem(userId: String, navigationActions: NavigationActions, /*onCLick: () -> Unit*/) {
+fun NameListItem(
+    userId: String,
+    navigationActions: NavigationActions, /*onCLick: () -> Unit*/
+) {
 
-    val viewModel: UserViewModel = hiltViewModel()
-    val user by viewModel.user.collectAsState()
+  val viewModel: UserViewModel = hiltViewModel()
+  val user by viewModel.user.collectAsState()
 
-    LaunchedEffect(key1 = Unit) {
-        viewModel.getUser(userId)
-    }
-
+  LaunchedEffect(key1 = Unit) { viewModel.getUser(userId) }
 
   var buttonText by remember { mutableStateOf("Accept") }
   var isAccepted by remember { mutableStateOf(false) }
 
   Box(
       modifier =
-      Modifier
-          .shadow(4.dp, RoundedCornerShape(6.dp))
-          .background(MaterialTheme.colorScheme.background)
-          .fillMaxWidth()
-          .height(20.dp)
-          .testTag("NameListItem")) {
+          Modifier.shadow(4.dp, RoundedCornerShape(6.dp))
+              .background(MaterialTheme.colorScheme.background)
+              .fillMaxWidth()
+              .height(20.dp)
+              .testTag("NameListItem")) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag("NameItemRow"),
+            modifier = Modifier.fillMaxSize().testTag("NameItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               Text(
@@ -69,19 +63,16 @@ fun NameListItem(userId: String, navigationActions: NavigationActions, /*onCLick
                   style = MaterialTheme.typography.bodyMedium,
                   fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                   fontWeight = FontWeight.Medium,
-                  modifier = Modifier
-                      .padding(all = 2.dp)
-                      .testTag("NameListItemFullName"))
+                  modifier = Modifier.padding(all = 2.dp).testTag("NameListItemFullName"))
               Button(
                   onClick = {
-                    //onCLick()
+                    // onCLick()
                     isAccepted = !isAccepted
                     buttonText = if (isAccepted) "Accepted" else "Accept"
                   },
                   modifier =
-                  Modifier
-                      .padding(end = 8.dp) // Padding to push the button towards the right
-                      .testTag("AcceptButton") // Test tag for testing purposes
+                      Modifier.padding(end = 8.dp) // Padding to push the button towards the right
+                          .testTag("AcceptButton") // Test tag for testing purposes
                   ) {
                     Text(
                         text = buttonText,

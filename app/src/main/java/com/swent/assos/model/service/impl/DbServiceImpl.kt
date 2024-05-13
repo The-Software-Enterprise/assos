@@ -82,7 +82,17 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, mapOf("userId" to "userId", "status" to "pending", "createdAt" to Timestamp.now()))
+    val snapshot =
+        query.get().await()
+            ?: return Event(
+                "",
+                "",
+                "",
+                Uri.EMPTY,
+                "",
+                null,
+                null,
+                mapOf("userId" to "0000", "status" to "pending", "createdAt" to Timestamp.now()))
     return deserializeEvent(snapshot)
   }
 
@@ -240,11 +250,13 @@ constructor(
         .addOnFailureListener { onError("Error") }
   }
 
-    override suspend fun getEventFromId(eventId: String): Event {
-        TODO("Not yet implemented")
-    }
+  override suspend fun getEventFromId(eventId: String): Event {
+    val query = firestore.collection("events").document(eventId)
+    val snapshot = query.get().await() ?: return Event("", "", "")
+    return deserializeEvent(snapshot)
+  }
 
-    override suspend fun followAssociation(
+  override suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
@@ -306,19 +318,43 @@ constructor(
         .await()
   }
 
-    override suspend fun getTickets(
-        userId: String,
-        lastDocumentSnapshot: DocumentSnapshot?
-    ): List<Ticket> {
-        TODO("Not yet implemented")
+  override suspend fun getTickets(
+      userId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<Ticket> {
+    if (userId.isEmpty()) {
+      return emptyList()
     }
+    val query = firestore.collection("tickets").whereEqualTo("userId", userId)
+    val snapshot =
+        if (lastDocumentSnapshot == null) {
+          query.limit(10).get().await()
+        } else {
+          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
 
-    override suspend fun getTicketFromId(ticketId: String): Ticket {
-        TODO("Not yet implemented")
-    }
+  override suspend fun getTicketFromId(ticketId: String): Ticket {
+    val query = firestore.collection("tickets").document(ticketId)
+    val snapshot = query.get().await() ?: return Ticket("", "", "")
+    return deserializeTicket(snapshot)
+  }
 }
 
 private fun serialize(event: Event): Map<String, Any> {
+  val staffMap = mutableMapOf<String, Any>()
+  event.staff.forEach { (key, value) ->
+    when (value) {
+      is LocalDateTime -> staffMap[key] = localDateTimeToTimestamp(LocalDateTime.now())
+      is String -> staffMap[key] = value
+      else -> println("Unsupported type in staff map, skipping")
+    }
+  }
+
   return mapOf(
       "title" to event.title,
       "description" to event.description,
@@ -326,19 +362,37 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+      "applicants" to staffMap,
   )
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
+  val staffMap = doc.getData()?.get("fields") as? Map<String, Any> ?: mapOf()
+
+  val staff = mutableMapOf<String, Any>()
+  staffMap.forEach { (key, value) ->
+    when (value) {
+      is String -> staff[key] = value
+      is Timestamp -> staff[key] = timestampToLocalDateTime(value)
+      else -> println("Unsupported type in staff map")
+    }
+  }
+
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
       description = doc.getString("description") ?: "",
       associationId = doc.getString("associationId") ?: "",
       image = Uri.parse(doc.getString("image") ?: ""),
+      staff = staff,
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       documentSnapshot = doc)
+}
+
+private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
+  return Ticket(
+      id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
 private fun serialize(news: News): Map<String, Any> {
