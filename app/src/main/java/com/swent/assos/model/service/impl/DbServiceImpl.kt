@@ -82,7 +82,7 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, null)
+    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, mapOf("userId" to "userId", "status" to "pending", "createdAt" to Timestamp.now()))
     return deserializeEvent(snapshot)
   }
 
@@ -240,7 +240,11 @@ constructor(
         .addOnFailureListener { onError("Error") }
   }
 
-  override suspend fun followAssociation(
+    override suspend fun getEventFromId(eventId: String): Event {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun followAssociation(
       associationId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
@@ -301,6 +305,17 @@ constructor(
         .update("banner", banner.toString())
         .await()
   }
+
+    override suspend fun getTickets(
+        userId: String,
+        lastDocumentSnapshot: DocumentSnapshot?
+    ): List<Ticket> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getTicketFromId(ticketId: String): Ticket {
+        TODO("Not yet implemented")
+    }
 }
 
 private fun serialize(event: Event): Map<String, Any> {
