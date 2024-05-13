@@ -1,6 +1,5 @@
 package com.swent.assos.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,8 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
@@ -44,11 +43,19 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
         ) {
-          Image(
-              painter = painterResource(id = R.drawable.ic_launcher_foreground),
-              contentDescription = null,
-              contentScale = ContentScale.FillHeight,
-              modifier = Modifier.fillMaxWidth().height(84.dp).background(Color.Gray))
+          if (news.images.isNotEmpty()) {
+            AsyncImage(
+                model = news.images[0],
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier.fillMaxWidth().background(Color.Gray))
+          } else {
+            AsyncImage(
+                model = R.drawable.ic_launcher_foreground,
+                contentDescription = null,
+                contentScale = ContentScale.FillHeight,
+                modifier = Modifier.fillMaxWidth().background(Color.Gray))
+          }
 
           Spacer(modifier = Modifier.height(8.dp))
           Text(

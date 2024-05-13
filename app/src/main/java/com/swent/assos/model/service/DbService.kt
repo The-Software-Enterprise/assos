@@ -2,6 +2,7 @@ package com.swent.assos.model.service
 
 import android.net.Uri
 import com.google.firebase.firestore.DocumentSnapshot
+import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -41,6 +42,10 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
+
+  suspend fun unAcceptStaff(applicantId: String, eventId: String)
+
+  suspend fun acceptStaff(applicantId: String, eventId: String)
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
@@ -87,4 +92,6 @@ interface DbService {
   suspend fun getTickets(userId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Ticket>
 
   suspend fun getTicketFromId(ticketId: String): Ticket
+
+  suspend fun getApplicantsByEventId(eventId: String): List<Applicant>
 }

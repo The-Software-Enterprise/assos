@@ -4,12 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,56 +31,94 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.swent.assos.R
+import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.ApplicantViewModel
 import com.swent.assos.model.view.UserViewModel
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @Composable
 fun NameListItem(
     userId: String,
-    navigationActions: NavigationActions, /*onCLick: () -> Unit*/
+    eventId: String,
+    navigationActions: NavigationActions,
 ) {
 
-  val viewModel: UserViewModel = hiltViewModel()
-  val user by viewModel.user.collectAsState()
+  val userViewModel: UserViewModel = hiltViewModel()
+  val user by userViewModel.user.collectAsState()
 
-  LaunchedEffect(key1 = Unit) { viewModel.getUser(userId) }
+  val applicantsViewModel: ApplicantViewModel = hiltViewModel()
 
-  var buttonText by remember { mutableStateOf("Accept") }
-  var isAccepted by remember { mutableStateOf(false) }
+  val applicants by applicantsViewModel.applicants.collectAsState()
+
+  val applicant: Applicant =
+      applicants.find { it.userId == userId } ?: Applicant("", "", LocalDateTime.now(), "")
+
+  LaunchedEffect(key1 = Unit) {
+    applicantsViewModel.getApplicants(eventId)
+    userViewModel.getUser(userId)
+  }
+
+    var status by remember { mutableStateOf(applicant.status) }
+    val scope = rememberCoroutineScope()
 
   Box(
       modifier =
           Modifier.shadow(4.dp, RoundedCornerShape(6.dp))
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
-              .height(20.dp)
+              .padding(vertical = 8.dp)
+              .padding(horizontal = 5.dp)
+              .height(30.dp)
               .testTag("NameListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().testTag("NameItemRow"),
-            horizontalArrangement = Arrangement.Start,
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(
+                        horizontal = 8.dp)
+                    .testTag("NameItemRow"),
+            horizontalArrangement =
+                Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
               Text(
-                  text = user.firstName + user.lastName,
+                  text = user.firstName + " " + user.lastName,
                   style = MaterialTheme.typography.bodyMedium,
                   fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                   fontWeight = FontWeight.Medium,
                   modifier = Modifier.padding(all = 2.dp).testTag("NameListItemFullName"))
-              Button(
-                  onClick = {
-                    // onCLick()
-                    isAccepted = !isAccepted
-                    buttonText = if (isAccepted) "Accepted" else "Accept"
-                  },
-                  modifier =
-                      Modifier.padding(end = 8.dp) // Padding to push the button towards the right
-                          .testTag("AcceptButton") // Test tag for testing purposes
-                  ) {
-                    Text(
-                        text = buttonText,
-                    )
-                  }
+
+              AssistChip(
+                      colors = if (status == "accepted")
+                          AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.surface)
+                      else
+                          AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.primary),
+                      border = null,
+                      modifier = Modifier
+                          .testTag("AcceptButton")
+                          .padding(5.dp)
+                          .fillMaxHeight(),
+                      onClick = {
+                          scope.launch {
+                              if (status == "accepted") {
+                                  applicantsViewModel.unAcceptStaff(applicant.id, eventId)
+                                  status = "pending" // Assuming pending is the initial state
+                              } else {
+                                  applicantsViewModel.acceptStaff(applicant.id, eventId)
+                                  status = "accepted"
+                              }
+                          }
+                      },
+                      label = {
+                          Text(
+                              text = if (status == "accepted") "Un-Accept" else "Accept",
+                              color = if (status == "accepted") MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onPrimary,
+                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                              fontWeight = FontWeight.Medium,
+                          )
+                      }
+              )
             }
       }
 }

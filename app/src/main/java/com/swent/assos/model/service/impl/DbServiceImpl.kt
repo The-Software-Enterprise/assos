@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -92,8 +93,40 @@ constructor(
                 "",
                 null,
                 null,
-                mapOf("userId" to "0000", "status" to "pending", "createdAt" to Timestamp.now()))
+            )
     return deserializeEvent(snapshot)
+  }
+
+  override suspend fun getApplicantsByEventId(eventId: String): List<Applicant> {
+    val applicants = mutableListOf<Applicant>()
+    val querySnapshot =
+        firestore.collection("events").document(eventId).collection("applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      applicants.add(deserializeApplicant(document))
+    }
+
+    return applicants
+  }
+
+  override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
+
+    firestore
+        .collection("events")
+        .document(eventId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "pending")
+  }
+
+  override suspend fun acceptStaff(applicantId: String, eventId: String) {
+
+    firestore
+        .collection("events")
+        .document(eventId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "accepted")
   }
 
   override suspend fun addApplicant(
@@ -346,14 +379,6 @@ constructor(
 }
 
 private fun serialize(event: Event): Map<String, Any> {
-  val staffMap = mutableMapOf<String, Any>()
-  event.staff.forEach { (key, value) ->
-    when (value) {
-      is LocalDateTime -> staffMap[key] = localDateTimeToTimestamp(LocalDateTime.now())
-      is String -> staffMap[key] = value
-      else -> println("Unsupported type in staff map, skipping")
-    }
-  }
 
   return mapOf(
       "title" to event.title,
@@ -362,29 +387,16 @@ private fun serialize(event: Event): Map<String, Any> {
       "image" to event.image.toString(),
       "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
       "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-      "applicants" to staffMap,
   )
 }
 
 private fun deserializeEvent(doc: DocumentSnapshot): Event {
-  val staffMap = doc.getData()?.get("fields") as? Map<String, Any> ?: mapOf()
-
-  val staff = mutableMapOf<String, Any>()
-  staffMap.forEach { (key, value) ->
-    when (value) {
-      is String -> staff[key] = value
-      is Timestamp -> staff[key] = timestampToLocalDateTime(value)
-      else -> println("Unsupported type in staff map")
-    }
-  }
-
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
       description = doc.getString("description") ?: "",
       associationId = doc.getString("associationId") ?: "",
       image = Uri.parse(doc.getString("image") ?: ""),
-      staff = staff,
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       documentSnapshot = doc)
@@ -437,4 +449,12 @@ private fun deserializeAssociation(doc: DocumentSnapshot): Association {
       logo = doc.getString("logo")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
       banner = doc.getString("banner")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
       documentSnapshot = doc)
+}
+
+private fun deserializeApplicant(doc: DocumentSnapshot): Applicant {
+  return Applicant(
+      id = doc.id,
+      userId = doc.getString("userId") ?: "",
+      status = doc.getString("status") ?: "unknown",
+      createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")))
 }

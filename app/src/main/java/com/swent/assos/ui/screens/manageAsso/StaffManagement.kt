@@ -1,10 +1,13 @@
 package com.swent.assos.ui.screens.manageAsso
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,19 +22,19 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.ApplicantViewModel
 import com.swent.assos.ui.components.NameListItem
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @Composable
 fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
 
-  val eventViewModel: EventViewModel = hiltViewModel()
+  val applicantsViewModel: ApplicantViewModel = hiltViewModel()
 
-  val event by eventViewModel.event.collectAsState()
+  val applicants by applicantsViewModel.applicants.collectAsState()
   val listState = rememberLazyListState()
 
-  LaunchedEffect(key1 = Unit) { eventViewModel.getEvent(eventId) }
+  LaunchedEffect(key1 = Unit) { applicantsViewModel.getApplicants(eventId) }
 
   Scaffold(
       modifier = Modifier.testTag("StaffManagementScreen"),
@@ -39,26 +42,27 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
         PageTitleWithGoBack(title = "Staff Management", navigationActions = navigationActions)
       }) { paddingValues ->
         LazyColumn(
+            contentPadding = paddingValues,
             modifier =
-                Modifier.padding(paddingValues)
-                    .padding(horizontal = 15.dp)
-                    .padding(vertical = 5.dp)
+                Modifier.fillMaxHeight()
+                    .padding(horizontal = 10.dp)
+                    .padding(vertical = 7.dp)
+                    .padding(start = 16.dp, end = 16.dp)
+                    .background(MaterialTheme.colorScheme.surface)
                     .testTag("NewsList"),
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = true,
             state = listState) {
-              if (event.staff.isEmpty()) {
+              if (applicants.isEmpty()) {
                 item {
-                  Text(
-                      text = event.title + stringResource(R.string.NoResult),
-                      textAlign = TextAlign.Center)
+                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
-                val userIds = event.staff.filterKeys { it == "userId" }.values
-                items(userIds.toList()) { userId ->
-                  if (userId is String) {
-                    NameListItem(userId = userId, navigationActions = navigationActions)
-                  }
+                items(applicants) { applicant ->
+                  NameListItem(
+                      userId = applicant.userId,
+                      eventId = eventId,
+                      navigationActions = navigationActions)
                 }
               }
             }

@@ -117,23 +117,26 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 contentScale = ContentScale.Crop)
           }
 
-            item {
-                Text(
-                    text = event.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier
-                        .padding(all = 8.dp)
-                        .testTag("eventDescriptionText"))
-            }
+          item {
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.bodyMedium,
+                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(all = 8.dp).testTag("eventDescriptionText"))
+          }
 
-            if (!userId.associations.map { it.first }.contains(assoId)) {
-                item {
-                    Spacer(modifier = Modifier.padding(top = 15.dp))
-                    JoinUsButton(onClick = { navigationActions.navigateTo(Destinations.STAFF_MANAGEMENT.route + "/${eventId}")}, text = "Saff List")
-                }
+          if (myAssociations.find { it.id == assoId } != null) {
+            item {
+              Spacer(modifier = Modifier.padding(top = 15.dp))
+              JoinUsButton(
+                  onClick = {
+                    navigationActions.navigateTo(
+                        Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                  },
+                  text = "Saff List")
             }
+          }
         }
       }
 }
