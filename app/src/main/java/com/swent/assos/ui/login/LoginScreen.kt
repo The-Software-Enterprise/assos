@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,16 +25,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -59,13 +63,16 @@ fun LoginScreen(navigationActions: NavigationActions) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.padding(5.dp, 10.dp, 0.dp, 16.dp)) {
+        modifier = Modifier.fillMaxWidth()) {
           Text(
+              modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
               text = "Sign In",
               style =
                   TextStyle(
-                      fontSize = 24.sp,
+                      fontSize = 30.sp,
                       lineHeight = 32.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.SemiBold,
                       color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
@@ -78,12 +85,19 @@ fun LoginScreen(navigationActions: NavigationActions) {
             email = it
             loginViewModel.userNotFound.value = false
           },
-          label = { Text("Email") },
-          modifier =
-              Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                  .fillMaxWidth()
-                  .padding(16.dp)
-                  .testTag("EmailField"))
+          label = {
+            Text(
+                "Email",
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onSurface))
+          },
+          modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth().testTag("EmailField"))
+
+      Spacer(modifier = Modifier.height(16.dp))
 
       OutlinedTextField(
           value = password,
@@ -91,14 +105,20 @@ fun LoginScreen(navigationActions: NavigationActions) {
             password = it
             loginViewModel.userNotFound.value = false
           },
-          label = { Text("Password") },
-          modifier =
-              Modifier.fillMaxWidth()
-                  .padding(16.dp)
-                  .testTag("PasswordField")
-                  .padding(start = 16.dp, top = 4.dp, bottom = 4.dp),
+          label = {
+            Text(
+                "Password",
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onSurface))
+          },
+          modifier = Modifier.fillMaxWidth().testTag("PasswordField").padding(horizontal = 16.dp),
           visualTransformation = PasswordVisualTransformation(),
       )
+      Spacer(modifier = Modifier.height(32.dp))
 
       Button(
           modifier =
@@ -121,15 +141,35 @@ fun LoginScreen(navigationActions: NavigationActions) {
             }
           },
       ) {
-        Text("Sign In", color = Color.White, modifier = Modifier.fillMaxWidth())
+        Text(
+            "Sign In",
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.fillMaxWidth(),
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    color = MaterialTheme.colorScheme.onSurface))
       }
 
       if (userNotFound) {
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Text(
             modifier = Modifier.testTag("ErrorMessage"),
             text = errorMessage,
-            color = MaterialTheme.colorScheme.error)
+            color = MaterialTheme.colorScheme.error,
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
       }
+
+      Spacer(modifier = Modifier.height(16.dp))
 
       Text(
           // if clicked, go to sign up page using hilt navigation
@@ -139,9 +179,15 @@ fun LoginScreen(navigationActions: NavigationActions) {
                     navigationActions.navigateTo(Destinations.SIGN_UP)
                   }
                   .testTag("SignUpNavButton"),
-          color = Color.Blue,
+          color = MaterialTheme.colorScheme.primary,
           textDecoration = TextDecoration.Underline,
-          text = "Don't have an account? Sign up")
+          text = "Don't have an account? Sign up",
+          style =
+              TextStyle(
+                  fontSize = 16.sp,
+                  lineHeight = 32.sp,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+              ))
     }
   }
 }
