@@ -32,29 +32,26 @@ class EventDetailsTest : SuperTest() {
 
   val memberAssociation = Association("QjAOBhVVcL0P2G1etPgk")
 
-  val user = User(
-    id = profileId,
-    firstName = firstName,
-    lastName = lastName,
-    email = "antoine.marchand@epfl.ch",
-    associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
-    sciper = "330249",
-    semester = "GM-BA6")
+  val user =
+      User(
+          id = profileId,
+          firstName = firstName,
+          lastName = lastName,
+          email = "antoine.marchand@epfl.ch",
+          associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
+          sciper = "330249",
+          semester = "GM-BA6")
 
   val event2 = Event("123457", "title", memberAssociation.id, Uri.EMPTY, "description")
 
-
-
   override fun setup() {
 
-    DataCache.currentUser.value =
-      user
+    DataCache.currentUser.value = user
 
     FirebaseFirestore.getInstance().collection("events").add(event1)
     FirebaseFirestore.getInstance().collection("events").add(event2)
     FirebaseFirestore.getInstance().collection("users").add(user)
     FirebaseFirestore.getInstance().collection("associations").add(memberAssociation)
-
   }
 
   @Test
@@ -76,15 +73,18 @@ class EventDetailsTest : SuperTest() {
   }
 
   @Test
-  fun testCreateTicketButton(){
+  fun testCreateTicketButton() {
 
     composeTestRule.activity.setContent {
-      EventDetails(eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociation.id)
+      EventDetails(
+          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociation.id)
     }
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("I want to create a ticket") { composeTestRule.onNodeWithText("Create ticket").performClick() }
+        step("I want to create a ticket") {
+          composeTestRule.onNodeWithText("Create ticket").performClick()
+        }
         step("Check if we actually navigate to create a ticket screen") {
           verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route) }
           confirmVerified(mockNavActions)

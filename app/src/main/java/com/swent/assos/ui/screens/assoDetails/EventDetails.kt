@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -57,7 +56,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.ListItemAsso
 
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
@@ -93,9 +91,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier
-          .testTag("EventDetails")
-          .semantics { contentDescription = "EventDetails" },
+      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
@@ -109,9 +105,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
     LazyColumn(
-        modifier = Modifier
-            .testTag("EventDetailsList")
-            .padding(paddingValues),
+        modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       item {
@@ -124,18 +118,16 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 },
             contentDescription = null,
             modifier =
-            Modifier
-                .padding(10.dp)
-                .height(200.dp)
-                .clip(shape = RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxWidth(),
+                Modifier.padding(10.dp)
+                    .height(200.dp)
+                    .clip(shape = RoundedCornerShape(20.dp))
+                    .background(MaterialTheme.colorScheme.background)
+                    .fillMaxWidth(),
             alignment = Alignment.Center,
             contentScale = ContentScale.Crop)
       }
 
       item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
-
     }
   }
 }
@@ -174,9 +166,7 @@ fun TopNewsBar(
         Image(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier
-                .testTag("GoBackButton")
-                .clickable { navigationActions.goBack() })
+            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {})
 }
@@ -187,40 +177,39 @@ fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
 }
 
 @Composable
-fun isMember(myAssociations : List<Association>, cuurentAsso : String) : Boolean {
-    var isMember = false
-    for (asso in myAssociations) {
-        if (asso.id == cuurentAsso) {
-        isMember = true
-        }
+fun isMember(myAssociations: List<Association>, cuurentAsso: String): Boolean {
+  var isMember = false
+  for (asso in myAssociations) {
+    if (asso.id == cuurentAsso) {
+      isMember = true
     }
-    return isMember
+  }
+  return isMember
 }
 
 @Composable
 fun CreateTicketButton(navigationActions: NavigationActions) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        FloatingActionButton(
-            onClick = {navigationActions.navigateTo(Destinations.CREATE_TICKET.route)},
-            modifier =
+  Row(
+      modifier = Modifier.fillMaxWidth(),
+      horizontalArrangement = Arrangement.Center,
+  ) {
+    FloatingActionButton(
+        onClick = { navigationActions.navigateTo(Destinations.CREATE_TICKET.route) },
+        modifier =
             Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
                 .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
                 .then(Modifier.widthIn(min = 92.dp))
                 .height(42.dp)
                 .testTag("CreateTicketButton"),
-            containerColor = Color(0xFF5465FF),
-        ) {
-            Text(
-                text = "Create ticket",
-                fontSize = 16.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.bodyMedium)
-        }
+        containerColor = Color(0xFF5465FF),
+    ) {
+      Text(
+          text = "Create ticket",
+          fontSize = 16.sp,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.SemiBold,
+          color = MaterialTheme.colorScheme.onPrimary,
+          style = MaterialTheme.typography.bodyMedium)
     }
-
+  }
 }

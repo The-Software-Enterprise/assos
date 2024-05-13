@@ -92,9 +92,9 @@ fun NavigationGraph() {
     composable(Destinations.MY_ASSOCIATIONS.route) {
       MyAssociations(navigationActions = navigationActions)
     }
-      composable(Destinations.CREATE_TICKET.route) {
-          CreateTicket(navigationActions = navigationActions)
-      }
+    composable(Destinations.CREATE_TICKET.route) {
+      CreateTicket(navigationActions = navigationActions)
+    }
   }
 }
 
@@ -115,5 +115,5 @@ enum class Destinations(val route: String) {
   FOLLOWING("Following"),
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
-    CREATE_TICKET("CreateTicket")
+  CREATE_TICKET("CreateTicket")
 }
