@@ -20,7 +20,7 @@ import com.swent.assos.ui.components.PageTitleWithGoBack
 fun CreateTicket(navigationActions: NavigationActions) {
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CreateTicketScreen"),
       topBar = {
         PageTitleWithGoBack(title = "Create a Ticket", navigationActions = navigationActions)
       },
