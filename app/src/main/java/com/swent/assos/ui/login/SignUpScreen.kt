@@ -233,7 +233,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         Text(
             text = "Password must be at least 6 characters and email must be filled",
             color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.padding(horizontal = 32.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp).align(Alignment.CenterHorizontally),
             style =
                 TextStyle(
                     fontSize = 16.sp,
