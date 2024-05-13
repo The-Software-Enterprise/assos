@@ -70,9 +70,73 @@ constructor(
     return snapshot.documents.map { deserializeAssociation(it) }
   }
 
+  override suspend fun addTicketToUser(
+      email: String,
+      eventId: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
+  ) {
+
+    val user = firestore.collection("users").whereEqualTo("email", email).get().await()
+    when {
+      // if the user does not exist
+      user.documents.isEmpty() -> {
+        onFailure()
+        return
+      }
+    }
+    val userId = user.documents[0].id
+    val ticket = mapOf("eventId" to eventId, "userId" to userId)
+    // add the ticket to the ticket collection and get the id created
+    val ticketId = firestore.collection("tickets").add(ticket).await().id
+    // and add the ticket to the ticket collection in user
+    firestore
+        .collection("users")
+        .document(userId)
+        .collection("tickets")
+        .document(ticketId)
+        .set(ticket)
+    onSuccess()
+  }
+
+  override suspend fun applyStaffing(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+
+    this.addApplicant("events", eventId, userId, onSuccess, onError)
+  }
+
+  override suspend fun getEventById(eventId: String): Event {
+    val query = firestore.collection("events").document(eventId)
+    val snapshot = query.get().await() ?: return Event("", "", "", Uri.EMPTY, "", null, null, null)
+    return deserializeEvent(snapshot)
+  }
+
+  override suspend fun addApplicant(
+      toWhat: String,
+      id: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection(toWhat)
+          .document(id)
+          .collection("applicants")
+          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
+    }
+  }
+
   override suspend fun getAssociationById(associationId: String): Association {
     val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association("", "", "", "", description = "")
+    val snapshot = query.get().await() ?: return Association()
     return deserializeAssociation(snapshot)
   }
 

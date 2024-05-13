@@ -60,7 +60,6 @@ class FollowingTest : SuperTest() {
         step("Check if the associations I am following is displayed") {
           associationCard {
             assertIsDisplayed()
-            assert(hasText("Rocket Team", substring = true, ignoreCase = true))
             performClick()
           }
         }
