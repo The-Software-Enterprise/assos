@@ -23,14 +23,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class EventDetailsTest : SuperTest() {
-  val assoID = "02s16UZba2Bsx5opTcQb"
-  val event1 = Event("123456", "description", assoID, Uri.EMPTY, "assoId")
+  private val assoID = "02s16UZba2Bsx5opTcQb"
+  private val event1 = Event("123456", "description", assoID, Uri.EMPTY, "assoId")
 
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
   private val firstName = "Antoine"
   private val lastName = "Marchand"
 
-  val memberAssociation = Association("QjAOBhVVcL0P2G1etPgk")
+  private val memberAssociation = Association("QjAOBhVVcL0P2G1etPgk")
 
   val user =
       User(
@@ -42,7 +42,7 @@ class EventDetailsTest : SuperTest() {
           sciper = "330249",
           semester = "GM-BA6")
 
-  val event2 = Event("123457", "title", memberAssociation.id, Uri.EMPTY, "description")
+  private val event2 = Event("123457", "title", memberAssociation.id, Uri.EMPTY, "description")
 
   override fun setup() {
 
@@ -51,7 +51,6 @@ class EventDetailsTest : SuperTest() {
     FirebaseFirestore.getInstance().collection("events").add(event1)
     FirebaseFirestore.getInstance().collection("events").add(event2)
     FirebaseFirestore.getInstance().collection("users").add(user)
-    FirebaseFirestore.getInstance().collection("associations").add(memberAssociation)
   }
 
   @Test
