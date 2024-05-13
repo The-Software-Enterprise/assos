@@ -5,12 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -25,18 +25,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.firebase.functions.FirebaseFunctions
 import com.google.firebase.functions.functions
+import com.swent.assos.R
 import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -66,13 +70,16 @@ fun SignUpScreen(navigationActions: NavigationActions) {
     Row(
         verticalAlignment = Alignment.Top,
         horizontalArrangement = Arrangement.Start,
-        modifier = Modifier.padding(5.dp, 10.dp, 0.dp, 16.dp)) {
+        modifier = Modifier.fillMaxWidth()) {
           Text(
+              modifier = Modifier.padding(horizontal = 20.dp, vertical = 32.dp),
               text = "Sign Up",
               style =
                   TextStyle(
-                      fontSize = 24.sp,
+                      fontSize = 30.sp,
                       lineHeight = 32.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.SemiBold,
                       color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
@@ -86,12 +93,20 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.badCredentials.value = false
             loginViewModel.firebaseError.value = false
           },
-          label = { Text("Email") },
-          modifier =
-              Modifier.padding(16.dp)
-                  .fillMaxWidth()
-                  .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                  .testTag("EmailField"))
+          label = {
+            Text(
+                "Email",
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onSurface))
+          },
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("EmailField"))
+
+      Spacer(modifier = Modifier.height(16.dp))
+
       OutlinedTextField(
           value = password,
           onValueChange = {
@@ -99,13 +114,20 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.firebaseError.value = false
             password = it
           },
-          label = { Text("Password") },
+          label = {
+            Text(
+                "Password",
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onSurface))
+          },
           visualTransformation = PasswordVisualTransformation(),
-          modifier =
-              Modifier.padding(16.dp)
-                  .fillMaxWidth()
-                  .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                  .testTag("PasswordField"))
+          modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("PasswordField"))
+      Spacer(modifier = Modifier.height(16.dp))
+
       OutlinedTextField(
           value = confirmPassword,
           onValueChange = {
@@ -113,16 +135,33 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.badCredentials.value = false
             loginViewModel.firebaseError.value = false
           },
-          label = { Text("Confirm Password") },
+          label = {
+            Text(
+                "Confirm Password",
+                style =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onSurface))
+          },
           visualTransformation = PasswordVisualTransformation(),
           modifier =
-              Modifier.padding(16.dp)
-                  .fillMaxWidth()
-                  .padding(start = 16.dp, top = 4.dp, bottom = 4.dp)
-                  .testTag("ConfirmPasswordField"))
+              Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("ConfirmPasswordField"))
       if (password != confirmPassword) {
-        Text("Passwords do not match", color = Color.Red)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            "Passwords do not match",
+            color = MaterialTheme.colorScheme.error,
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                ))
       }
+      Spacer(modifier = Modifier.height(32.dp))
+
       Button(
           onClick = {
             loginViewModel.signUp(email, password, confirmPassword) { success ->
@@ -159,32 +198,66 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                       elevation = 3.dp,
                       spotColor = MaterialTheme.colorScheme.onSurface,
                       ambientColor = MaterialTheme.colorScheme.onSurface)
-                  .width(100.dp)
+                  .width(105.dp)
                   .height(42.dp)
                   .background(
                       color = MaterialTheme.colorScheme.primary,
-                      shape = RoundedCornerShape(size = 16.dp)),
+                      shape = MaterialTheme.shapes.small),
           colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
       ) {
-        Text("Sign Up")
+        Text(
+            "Sign Up",
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    color = MaterialTheme.colorScheme.onPrimary))
       }
       if (firebaseError) {
-        Text(text = responseError, color = MaterialTheme.colorScheme.error)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = responseError,
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
       }
       if (badCredentials) {
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
-            "Password must be at least 6 characters and email must be filled",
-            color = MaterialTheme.colorScheme.error)
+            text = "Password must be at least 6 characters and email must be filled",
+            color = MaterialTheme.colorScheme.error,
+            modifier = Modifier.padding(horizontal = 32.dp),
+            style =
+                TextStyle(
+                    fontSize = 16.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))))
       }
+      Spacer(modifier = Modifier.height(16.dp))
       Text(
           "Already have an account?",
+          style =
+              TextStyle(
+                  fontSize = 16.sp,
+                  lineHeight = 32.sp,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+              ),
           modifier =
               Modifier.testTag("LoginNavButton").clickable {
                 loginViewModel.firebaseError.value = false
                 loginViewModel.badCredentials.value = false
                 navigationActions.navigateTo(Destinations.LOGIN)
-              })
+              },
+          color = MaterialTheme.colorScheme.primary,
+          textDecoration = TextDecoration.Underline,
+      )
     }
   }
 }
