@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -37,9 +36,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -50,6 +46,7 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.ProfileViewModel
 
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
@@ -62,6 +59,10 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   var confirming by remember { mutableStateOf(false) }
 
   val userId by assoViewModel.currentUser.collectAsState()
+
+  val viewModel: ProfileViewModel = hiltViewModel()
+
+  val myAssociations by viewModel.memberAssociations.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -81,62 +82,40 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier
-          .testTag("EventDetails")
-          .semantics { contentDescription = "EventDetails" },
+      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
           JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
         }
       },
-      floatingActionButtonPosition = FabPosition.Center,
-  ) { paddingValues ->
-    LazyColumn(
-        modifier = Modifier
-            .testTag("EventDetailsList")
-            .padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      item {
-        Image(
-            painter =
-                if (event.image != Uri.EMPTY) {
-                  rememberAsyncImagePainter(event.image)
-                } else {
-                  painterResource(id = R.drawable.ic_launcher_foreground)
-                },
-            contentDescription = null,
-            modifier =
-            Modifier
-                .padding(10.dp)
-                .height(200.dp)
-                .clip(shape = RoundedCornerShape(20.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxWidth(),
-            alignment = Alignment.Center,
-            contentScale = ContentScale.Crop)
-      }
+      floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+          item {
+            Image(
+                painter =
+                    if (event.image != Uri.EMPTY) {
+                      rememberAsyncImagePainter(event.image)
+                    } else {
+                      painterResource(id = R.drawable.ic_launcher_foreground)
+                    },
+                contentDescription = null,
+                modifier =
+                    Modifier.padding(10.dp)
+                        .height(200.dp)
+                        .clip(shape = RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxWidth(),
+                alignment = Alignment.Center,
+                contentScale = ContentScale.Crop)
+          }
 
-      item {
-        Text(
-            text = event.description,
-            style = MaterialTheme.typography.bodyMedium,
-            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier
-                .padding(all = 8.dp)
-                .testTag("eventDescriptionText"))
-      }
-
-      if (!userId.associations.map { it.first }.contains(assoId)) {
-        item {
-            Spacer(modifier = Modifier.padding(top = 15.dp))
-            JoinUsButton(onClick = { navigationActions.navigateTo(Destinations.STAFF_MANAGEMENT.route + "/${eventId}")}, text = "Saff List")
+          item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
         }
       }
-    }
-  }
 }
 
 @Composable
@@ -173,9 +152,7 @@ fun TopNewsBar(
         Image(
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier
-                .testTag("GoBackButton")
-                .clickable { navigationActions.goBack() })
+            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {})
 }
@@ -183,4 +160,14 @@ fun TopNewsBar(
 @Composable
 fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
+}
+
+@Composable
+fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
+  for (asso in myAssociations) {
+    if (asso.id == currentAsso) {
+      return true
+    }
+  }
+  return false
 }
