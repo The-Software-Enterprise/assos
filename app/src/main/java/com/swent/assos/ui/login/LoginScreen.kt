@@ -124,14 +124,11 @@ fun LoginScreen(navigationActions: NavigationActions) {
         Text("Sign In", color = Color.White, modifier = Modifier.fillMaxWidth())
       }
 
-      when (userNotFound) {
-        true -> {
-          Text(
-              modifier = Modifier.testTag("ErrorMessage"),
-              text = errorMessage,
-              color = MaterialTheme.colorScheme.error)
-        }
-        false -> {}
+      if (userNotFound) {
+        Text(
+            modifier = Modifier.testTag("ErrorMessage"),
+            text = errorMessage,
+            color = MaterialTheme.colorScheme.error)
       }
 
       Text(
