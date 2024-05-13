@@ -42,9 +42,11 @@ import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.ProfileViewModel
 
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
@@ -57,6 +59,10 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   var confirming by remember { mutableStateOf(false) }
 
   val userId by assoViewModel.currentUser.collectAsState()
+
+  val viewModel: ProfileViewModel = hiltViewModel()
+
+  val myAssociations by viewModel.memberAssociations.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -80,37 +86,42 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
-          JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+            true ->
+                JoinUsButton(
+                    onClick = { navigationActions.navigateTo(Destinations.CREATE_TICKET.route) },
+                    text = "Create ticket")
+            false -> JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+          }
         }
       },
-      floatingActionButtonPosition = FabPosition.Center,
-  ) { paddingValues ->
-    LazyColumn(
-        modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-      item {
-        Image(
-            painter =
-                if (event.image != Uri.EMPTY) {
-                  rememberAsyncImagePainter(event.image)
-                } else {
-                  painterResource(id = R.drawable.ic_launcher_foreground)
-                },
-            contentDescription = null,
-            modifier =
-                Modifier.padding(10.dp)
-                    .height(200.dp)
-                    .clip(shape = RoundedCornerShape(20.dp))
-                    .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth(),
-            alignment = Alignment.Center,
-            contentScale = ContentScale.Crop)
-      }
+      floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+          item {
+            Image(
+                painter =
+                    if (event.image != Uri.EMPTY) {
+                      rememberAsyncImagePainter(event.image)
+                    } else {
+                      painterResource(id = R.drawable.ic_launcher_foreground)
+                    },
+                contentDescription = null,
+                modifier =
+                    Modifier.padding(10.dp)
+                        .height(200.dp)
+                        .clip(shape = RoundedCornerShape(20.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .fillMaxWidth(),
+                alignment = Alignment.Center,
+                contentScale = ContentScale.Crop)
+          }
 
-      item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
-    }
-  }
+          item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
+        }
+      }
 }
 
 @Composable
@@ -155,4 +166,14 @@ fun TopNewsBar(
 @Composable
 fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
+}
+
+@Composable
+fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
+  for (asso in myAssociations) {
+    if (asso.id == currentAsso) {
+      return true
+    }
+  }
+  return false
 }
