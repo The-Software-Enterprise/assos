@@ -23,18 +23,21 @@
             android:exported="true"
             android:theme="@style/Theme.Assos">
             <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data
-                    android:host="ext"
-                    android:pathPrefix="/swent.com:nfcapp"
-                    android:scheme="vnd.android.nfc" />
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity android:name=".NFCActivity">
-            <!-- Include any additional configurations here -->
+        <activity
+            android:name=".NFCActivity"
+            android:exported="true"
+            android:screenOrientation="nosensor"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
     </application>
 
