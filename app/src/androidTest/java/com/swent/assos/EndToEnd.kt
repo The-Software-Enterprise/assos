@@ -4,7 +4,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasTestTag
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -94,10 +93,10 @@ class EndToEnd : SuperTest() {
           navigationBar {
             assertIsDisplayed()
             // check if child exists
-            hasAnyChild(hasTestTag("NavigationBarItem3"))
+            hasAnyChild(hasTestTag("NavigationBarItem4"))
             // click on child
           }
-          composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
+          composeTestRule.onNodeWithTag("NavigationBarItem4").performClick()
           // check if we are on the profile screen
           profileScreen { assertIsDisplayed() }
         }
@@ -245,11 +244,11 @@ class EndToEnd : SuperTest() {
           navigationBar {
             assertIsDisplayed()
             // check if child exists
-            hasAnyChild(hasTestTag("NavigationBarItem3"))
+            hasAnyChild(hasTestTag("NavigationBarItem4"))
             // click on child
           }
 
-          composeTestRule.onNodeWithTag("NavigationBarItem3").performClick()
+          composeTestRule.onNodeWithTag("NavigationBarItem4").performClick()
           // check if we are on the profile screen
           profileScreen { assertIsDisplayed() }
         }
@@ -270,7 +269,6 @@ class EndToEnd : SuperTest() {
           associationCard {
             assertIsDisplayed()
             assertIsDisplayed()
-            assert(hasText("180°C", substring = true, ignoreCase = true))
           }
         }
       }

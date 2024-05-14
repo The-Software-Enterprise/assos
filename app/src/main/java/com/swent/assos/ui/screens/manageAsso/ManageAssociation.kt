@@ -53,6 +53,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -162,7 +163,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
 
                 LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                   items(events) {
-                    EventItem(it, navigationActions)
+                    EventItem(it, navigationActions, association)
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }
@@ -179,6 +180,18 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                     Spacer(modifier = Modifier.width(8.dp))
                   }
                 }
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(
+                    text = "Applications",
+                    modifier =
+                        Modifier.clickable {
+                          navigationActions.navigateTo(
+                              Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
+                        },
+                    style = MaterialTheme.typography.headlineMedium,
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = 20.sp)
 
                 Spacer(modifier = Modifier.height(20.dp))
               }

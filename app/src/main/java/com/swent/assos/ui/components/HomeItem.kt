@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -28,21 +29,25 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 
 @Composable
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.clip(RoundedCornerShape(12.dp))
+          Modifier.shadow(4.dp, RoundedCornerShape(12.dp))
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
-              .testTag("NewsListItem")
-              .height(100.dp)) {
+              .height(100.dp)
+              .clickable {
+                navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
+              }
+              .testTag("NewsListItem")) {
         Row(
+            modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxSize()) {
+            verticalAlignment = Alignment.CenterVertically) {
               if (news.images.isNotEmpty()) {
                 AsyncImage(
                     model = news.images[0],
@@ -57,22 +62,26 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     modifier = Modifier.width(80.dp).fillMaxWidth())
               }
               Column(
+                  modifier =
+                      Modifier.padding(start = 16.dp)
+                          .align(Alignment.CenterVertically)
+                          .testTag("NewsItemColumn"),
                   verticalArrangement = Arrangement.spacedBy(10.dp),
-                  horizontalAlignment = Alignment.Start,
-                  modifier = Modifier.padding(start = 16.dp).align(Alignment.CenterVertically)) {
+                  horizontalAlignment = Alignment.Start) {
                     Text(
+                        modifier = Modifier.width(173.dp).testTag("NewsItemsTitle"),
                         text = news.title,
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        modifier = Modifier.width(173.dp).testTag("ItemsTitle"))
+                        color = Color.Black)
                     Text(
+                        modifier =
+                            Modifier.width(173.dp).weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light,
-                        modifier = Modifier.width(173.dp).weight(1f).testTag("ItemsDescription"))
+                        fontWeight = FontWeight.Light)
                   }
             }
       }
