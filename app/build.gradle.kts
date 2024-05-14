@@ -131,7 +131,6 @@ dependencies {
   testImplementation("io.mockk:mockk:1.12.0")
   testImplementation("io.mockk:mockk-android:1.13.7")
   testImplementation("io.mockk:mockk-agent:1.13.7")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
