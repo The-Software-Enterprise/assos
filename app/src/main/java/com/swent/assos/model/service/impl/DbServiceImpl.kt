@@ -538,6 +538,14 @@ constructor(
     val snapshot = query.get().await() ?: return Ticket("", "", "")
     return deserializeTicket(snapshot)
   }
+    override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> {
+        val query = firestore.collection("tickets").whereEqualTo("eventId", eventId)
+        val snapshot = query.get().await()
+        if (snapshot.isEmpty) {
+          return emptyList()
+        }
+        return snapshot.documents.map { deserializeTicket(it) }
+    }
 }
 
 fun serialize(event: Event): Map<String, Any> {

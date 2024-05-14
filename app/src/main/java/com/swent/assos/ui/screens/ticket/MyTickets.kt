@@ -2,6 +2,7 @@
 
 package com.swent.assos.ui.screens.ticket
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +35,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
@@ -53,11 +56,14 @@ fun MyTickets(navigationActions: NavigationActions) {
 
   val viewModel: TicketViewModel = hiltViewModel()
   val myTickets by viewModel.tickets.collectAsState()
+    val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
+      modifier = Modifier
+          .semantics { testTagsAsResourceId = true }
+          .testTag("MyTicketsScreen"),
       topBar = { PageTitle(title = "My Tickets") },
       floatingActionButton = {
         FloatingActionButton(
@@ -73,10 +79,22 @@ fun MyTickets(navigationActions: NavigationActions) {
             }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketList"),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(paddingValues)
+                .testTag("TicketList"),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
+            item {
+                Button(
+                    onClick = {
+                        // Launch NFCActivity
+
+                    }) {
+                    Text("Launch NFC Activity")
+                }
+            }
           items(items = myTickets) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }
@@ -96,17 +114,23 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("TicketItem")
-              .padding(16.dp)
-              .border(
-                  width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.outline,
-                  shape = RoundedCornerShape(12.dp))) {
+      Modifier
+          .testTag("TicketItem")
+          .padding(16.dp)
+          .border(
+              width = 0.5.dp,
+              color = MaterialTheme.colorScheme.outline,
+              shape = RoundedCornerShape(12.dp)
+          )) {
         Column(
             modifier =
-                Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
-                  navigationActions.navigateTo(
-                      Destinations.TICKET_DETAILS.route + "/${ticket.eventId}")
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 0.dp)
+                .clickable {
+                    navigationActions.navigateTo(
+                        Destinations.TICKET_DETAILS.route + "/${ticket.eventId}"
+                    )
                 },
         ) {
           Image(
@@ -114,21 +138,26 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
               contentDescription = null,
               contentScale = ContentScale.Crop,
               modifier =
-                  Modifier.fillMaxWidth()
-                      .height(84.dp)
-                      .background(MaterialTheme.colorScheme.outline))
+              Modifier
+                  .fillMaxWidth()
+                  .height(84.dp)
+                  .background(MaterialTheme.colorScheme.outline))
 
           Spacer(modifier = Modifier.height(10.dp))
           Text(
               text = event.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
               text = event.startTime?.let { dateToReadableString(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
         }
       }
