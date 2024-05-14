@@ -13,9 +13,11 @@ import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
+import com.swent.assos.ui.screens.manageAsso.ApplicationManagement
 import com.swent.assos.ui.screens.manageAsso.CreateEvent
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
+import com.swent.assos.ui.screens.manageAsso.StaffManagement
 import com.swent.assos.ui.screens.profile.Appearance
 import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
@@ -63,6 +65,16 @@ fun NavigationGraph() {
     composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->
       NewsDetails(
           newsId = backStackEntry.arguments?.getString("newsId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.STAFF_MANAGEMENT.route + "/{eventId}") { backStackEntry ->
+      StaffManagement(
+          eventId = backStackEntry.arguments?.getString("eventId").toString(),
+          navigationActions = navigationActions)
+    }
+    composable(Destinations.APPLICATION_MANAGEMENT.route + "/{assoId}") { backStackEntry ->
+      ApplicationManagement(
+          assoId = backStackEntry.arguments?.getString("assoId").toString(),
           navigationActions = navigationActions)
     }
     composable(Destinations.CREATE_NEWS.route + "/{assoId}") { backStackEntry ->
@@ -115,6 +127,8 @@ enum class Destinations(val route: String) {
   APPEARANCE("Appearance"),
   MY_ASSOCIATIONS("MyAssociations"),
   FOLLOWING("Following"),
+  STAFF_MANAGEMENT("StaffManagement"),
+  APPLICATION_MANAGEMENT("ApplicationManagement"),
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
   CREATE_TICKET("CreateTicket")
