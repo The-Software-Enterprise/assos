@@ -11,6 +11,7 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
@@ -53,6 +54,40 @@ constructor(
             } ?: emptyList())
   }
 
+  override suspend fun getUserByEmail(
+      email: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
+  ): User {
+    val query = firestore.collection("users").whereEqualTo("email", email)
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      onFailure()
+      return User()
+    }
+    onSuccess()
+    return User(
+        id = snapshot.documents[0].id,
+        firstName = snapshot.documents[0].getString("firstname") ?: "",
+        lastName = snapshot.documents[0].getString("name") ?: "",
+        email = snapshot.documents[0].getString("email") ?: "",
+        following =
+            (snapshot.documents[0].get("following") as? MutableList<String>) ?: mutableListOf(),
+        associations =
+            snapshot.documents[0].get("associations")?.let { associations ->
+              (associations as? List<Map<String, Any>>)?.mapNotNull {
+                val assoId = it["assoId"] as? String
+                val position = it["position"] as? String
+                val rank = (it["rank"] as? Long)?.toInt()
+                if (assoId != null && position != null && rank != null) {
+                  Triple(assoId, position, rank)
+                } else {
+                  null
+                }
+              } ?: emptyList()
+            } ?: emptyList())
+  }
+
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
@@ -70,33 +105,49 @@ constructor(
     return snapshot.documents.map { deserializeAssociation(it) }
   }
 
-  override suspend fun addTicketToUser(
-      email: String,
+  override suspend fun removeTicketFromUser(
+      applicantId: String,
       eventId: String,
-      onSuccess: () -> Unit,
-      onFailure: () -> Unit
+      status: ParticipationStatus
   ) {
+    // remove ticket from ticket collection
+    firestore
+        .collection("tickets")
+        .whereEqualTo("userId", applicantId)
+        .whereEqualTo("eventId", eventId)
+        .whereEqualTo("participantStatus", status)
+        .get()
+        .addOnSuccessListener {
+          for (document in it.documents) {
+            firestore.collection("tickets").document(document.id).delete()
+          }
+        }
+  }
 
-    val user = firestore.collection("users").whereEqualTo("email", email).get().await()
-    when {
-      // if the user does not exist
-      user.documents.isEmpty() -> {
-        onFailure()
-        return
-      }
-    }
-    val userId = user.documents[0].id
-    val ticket = mapOf("eventId" to eventId, "userId" to userId)
-    // add the ticket to the ticket collection and get the id created
-    val ticketId = firestore.collection("tickets").add(ticket).await().id
-    // and add the ticket to the ticket collection in user
+  override suspend fun addTicketToUser(
+      applicantId: String,
+      eventId: String,
+      status: ParticipationStatus,
+  ) {
+    // add ticket to ticket collection and get the ticket id
+    val ticketId =
+        firestore
+            .collection("tickets")
+            .add(
+                mapOf(
+                    "userId" to applicantId,
+                    "eventId" to eventId,
+                    "participantStatus" to status.name))
+            .await()
+            .id
+    // add ticket id to user collection tickets
     firestore
         .collection("users")
-        .document(userId)
+        .document(applicantId)
         .collection("tickets")
         .document(ticketId)
-        .set(ticket)
-    onSuccess()
+        .set(mapOf("ticketId" to ticketId))
+        .await()
   }
 
   override suspend fun applyStaffing(

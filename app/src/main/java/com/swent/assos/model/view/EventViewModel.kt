@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.AuthService
@@ -81,11 +82,20 @@ constructor(
     }
   }
 
-  fun createTicket(email: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+  fun createTicket(
+      email: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit,
+      status: ParticipationStatus
+  ) {
 
     viewModelScope.launch(ioDispatcher) {
-      dbService.addTicketToUser(
-          email, eventId = _event.value.id, onSuccess = onSuccess, onFailure = onFailure)
+      val user = dbService.getUserByEmail(email, onSuccess = onSuccess, onFailure = onFailure)
+      if (user.id != "") {
+        dbService.addTicketToUser(user.id, _event.value.id, status)
+      } else {
+        onFailure()
+      }
     }
   }
 
