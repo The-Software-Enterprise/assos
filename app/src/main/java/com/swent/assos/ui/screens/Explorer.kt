@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -67,7 +69,9 @@ fun Explorer(navigationActions: NavigationActions) {
   }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ExplorerScreen"),
+      modifier = Modifier
+        .semantics { testTagsAsResourceId = true }
+        .testTag("ExplorerScreen"),
       topBar = {
         Column {
           PageTitle(title = "Explorer")
@@ -76,10 +80,10 @@ fun Explorer(navigationActions: NavigationActions) {
       }) { paddingValues ->
         LazyColumn(
             modifier =
-                Modifier.fillMaxWidth()
-                    .padding(paddingValues)
-                    .testTag("AssoList")
-                    .background(color = MaterialTheme.colorScheme.surface),
+            Modifier
+              .fillMaxWidth()
+              .padding(paddingValues)
+              .testTag("AssoList"),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
@@ -91,6 +95,7 @@ fun Explorer(navigationActions: NavigationActions) {
                     Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                   }
                 } else {
+                  item { Spacer(modifier = Modifier.height(6.dp)) }
                   items(items = associations, key = { it.id }) {
                     ListItemAsso(
                         asso = it,
@@ -114,14 +119,18 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
 
   Column(
       modifier =
-          Modifier.fillMaxWidth()
-              .padding(10.dp)
-              .background(
-                  color = MaterialTheme.colorScheme.background,
-                  shape = RoundedCornerShape(size = 28.dp)),
+      Modifier
+        .fillMaxWidth()
+        .padding(10.dp)
+        .background(
+          color = MaterialTheme.colorScheme.background,
+          shape = RoundedCornerShape(size = 28.dp)
+        ),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
-            modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
+            modifier = Modifier
+              .fillMaxWidth()
+              .testTag("SearchAsso"),
             colors = SearchBarDefaults.colors(containerColor = Color(0x50C9CAD9)),
             trailingIcon = {
               if (isSearching) {
