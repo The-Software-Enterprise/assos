@@ -31,8 +31,8 @@ import androidx.compose.ui.res.painterResource
 import com.swent.assos.model.PendingIntent_Mutable
 import com.swent.assos.model.parcelable
 import com.swent.assos.ui.theme.AssosTheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class NFCActivity : ComponentActivity() {
 
@@ -45,10 +45,7 @@ class NFCActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       AssosTheme {
-        NFCDisplay(
-          msgListState = _msgList,
-          modeState = _mode,
-          onSwitch = { switchMode() })
+        NFCDisplay(msgListState = _msgList, modeState = _mode, onSwitch = { switchMode() })
       }
     }
 
@@ -63,7 +60,7 @@ class NFCActivity : ComponentActivity() {
   }
 
   private fun switchMode() {
-    when(_mode.value) {
+    when (_mode.value) {
       NFCMode.READ -> this._mode.value = NFCMode.WRITE
       NFCMode.WRITE -> this._mode.value = NFCMode.READ
     }
@@ -117,10 +114,13 @@ class NFCActivity : ComponentActivity() {
       val messages = mutableListOf<NdefMessage>()
 
       if (rawMsgs != null) {
-        when(_mode.value) {
-          NFCMode.READ -> { rawMsgs.forEach { messages.add(it as NdefMessage) } }
+        when (_mode.value) {
+          NFCMode.READ -> {
+            rawMsgs.forEach { messages.add(it as NdefMessage) }
+          }
           NFCMode.WRITE -> {
-            val messageWrittenSuccessfully = createNFCMessage("This is a test, ici c'est Paris", intent)
+            val messageWrittenSuccessfully =
+                createNFCMessage("This is a test, ici c'est Paris", intent)
             if (messageWrittenSuccessfully) {
               // Message written to tag
               Toast.makeText(this, "Successfully written to tag", Toast.LENGTH_SHORT).show()
@@ -130,22 +130,22 @@ class NFCActivity : ComponentActivity() {
             }
           }
         }
-
       } else {
         // Unknown tag type
         when (_mode.value) {
-            NFCMode.READ -> {
-              val empty = ByteArray(0)
-              val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
-              val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
-              val payload = dumpTagData(tag).toByteArray()
-              val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
-              val msg = NdefMessage(arrayOf(record))
-              messages.add(msg)
-            }
-            NFCMode.WRITE -> {
-              Toast.makeText(this, "Sorry, we do not know this type of tag", Toast.LENGTH_SHORT).show()
-            }
+          NFCMode.READ -> {
+            val empty = ByteArray(0)
+            val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
+            val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
+            val payload = dumpTagData(tag).toByteArray()
+            val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
+            val msg = NdefMessage(arrayOf(record))
+            messages.add(msg)
+          }
+          NFCMode.WRITE -> {
+            Toast.makeText(this, "Sorry, we do not know this type of tag", Toast.LENGTH_SHORT)
+                .show()
+          }
         }
       }
 
@@ -259,16 +259,15 @@ class NFCActivity : ComponentActivity() {
     return result
   }
 
-
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   fun createNFCMessage(payload: String, intent: Intent): Boolean {
     val pathPrefix = "swent.com:nfcapp"
     val nfcRecord =
-      NdefRecord(
-        NdefRecord.TNF_EXTERNAL_TYPE,
-        pathPrefix.toByteArray(),
-        ByteArray(0),
-        payload.toByteArray())
+        NdefRecord(
+            NdefRecord.TNF_EXTERNAL_TYPE,
+            pathPrefix.toByteArray(),
+            ByteArray(0),
+            payload.toByteArray())
     val nfcMessage = NdefMessage(arrayOf(nfcRecord))
     intent.let {
       val tag = it.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
@@ -316,59 +315,50 @@ class NFCActivity : ComponentActivity() {
       return false
     } catch (e: Exception) {
       // Write operation has failed
-       throw e
+      throw e
     }
     return false
   }
-
 }
 
 @Composable
 fun NFCDisplay(
-  msgListState: MutableStateFlow<List<String>>,
-  modeState: MutableStateFlow<NFCMode>,
-  onSwitch: () -> Unit
+    msgListState: MutableStateFlow<List<String>>,
+    modeState: MutableStateFlow<NFCMode>,
+    onSwitch: () -> Unit
 ) {
 
   val msgList = msgListState.collectAsState()
   var mode = modeState.collectAsState()
 
   Scaffold(
-    floatingActionButton = {
-      AssistChip(
-        onClick = { onSwitch() },
-        label = {
-          when (mode.value) {
-            NFCMode.READ -> Text("Reading")
-            NFCMode.WRITE -> Text("Writing")
-          }
-        },
-        leadingIcon = {
-            when (mode.value) {
+      floatingActionButton = {
+        AssistChip(
+            onClick = { onSwitch() },
+            label = {
+              when (mode.value) {
+                NFCMode.READ -> Text("Reading")
+                NFCMode.WRITE -> Text("Writing")
+              }
+            },
+            leadingIcon = {
+              when (mode.value) {
                 NFCMode.READ ->
-                  Icon(
-                    painter = painterResource(id = R.drawable.barcode_reader),
-                    contentDescription = null)
-                NFCMode.WRITE ->
                     Icon(
-                        painter = painterResource(id = R.drawable.edit),
+                        painter = painterResource(id = R.drawable.barcode_reader),
                         contentDescription = null)
-            }
-
-        })
-    }
-  ) {
-    Column(
-      modifier = Modifier.padding(it)
-    ) {
-      msgList.value.forEach {
-        Text(it)
-        Divider()
+                NFCMode.WRITE ->
+                    Icon(painter = painterResource(id = R.drawable.edit), contentDescription = null)
+              }
+            })
+      }) {
+        Column(modifier = Modifier.padding(it)) {
+          msgList.value.forEach {
+            Text(it)
+            Divider()
+          }
+        }
       }
-    }
-  }
-
-
 }
 
 enum class NFCMode {

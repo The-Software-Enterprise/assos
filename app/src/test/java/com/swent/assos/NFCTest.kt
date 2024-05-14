@@ -1,57 +1,70 @@
 package com.swent.assos
 
 import android.content.Intent
+import android.nfc.NdefMessage
+import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
-import android.nfc.tech.NdefFormatable
-import android.os.Bundle
+import android.nfc.tech.Ndef
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import io.mockk.core.ValueClassSupport.boxedValue
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.lang.reflect.Method
-
 
 @RunWith(AndroidJUnit4::class)
 class NFCTest {
 
   private val mockTag = mockk<Tag>()
   private val mockIntent = mockk<Intent>()
-  private val nfcActivity = NFCActivity()
-
-  var tagClass: Class<*> = Tag::class.java
-  var createMockTagMethod: Method = tagClass.getMethod(
-    "createMockTag",
-    ByteArray::class.java,
-    IntArray::class.java,
-    Array<Bundle>::class.java
-  )
+  private val mockMessage = mockk<NdefMessage>()
+  private val mockNDEF = mockk<Ndef>()
+  private val activity = NFCActivity()
 
   @Test
   fun testReadNFC() {
     every { mockTag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
     every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
-    every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
+    every { mockIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) } returns
+        arrayOf(mockMessage)
+    val pathPrefix = "swent.com:nfcapp"
+    val payload = "Hello !"
+    val nfcRecord =
+        NdefRecord(
+            NdefRecord.TNF_EXTERNAL_TYPE,
+            pathPrefix.toByteArray(),
+            ByteArray(0),
+            payload.toByteArray())
+    every { mockMessage.records } returns arrayOf(nfcRecord)
 
-    nfcActivity.setMode(NFCMode.READ)
-
-    nfcActivity.onNewIntent(mockIntent)
+    activity.onNewIntent(mockIntent)
+    val res = activity._msgList.value
+    assert(res.contains("Message: $payload"))
   }
 
   @Test
   fun testWriteNFC() {
     every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
     every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
+    mockkStatic(Ndef::class)
+    every { Ndef.get(mockTag) } returns mockNDEF
+    every { mockNDEF.maxSize } returns NDEF_MAX_SIZE
+    every { mockNDEF.connect() } returns Unit
+    every { mockNDEF.isWritable } returns true
+    var res = mockMessage
+    every { mockNDEF.writeNdefMessage(any()) } answers
+        { msg ->
+          res = msg.invocation.args[0] as NdefMessage
+        }
+    every { mockNDEF.close() } returns Unit
 
-    // Mock behavior of NdefFormatable
-    val mockNdefFormatable = mockk<NdefFormatable>()
-    every { NdefFormatable.get(mockTag) } returns mockNdefFormatable
+    assert(activity.createNFCMessage("Test", mockIntent))
+    val str = String(res.records[0].payload)
+    assert(str.contains("Test"))
+  }
 
-    nfcActivity.setMode(NFCMode.WRITE)
-
-    nfcActivity.onNewIntent(mockIntent)
-    assert(mockTag.boxedValue == "Hello !")
+  companion object {
+    private const val NDEF_MAX_SIZE = 100
   }
 }
