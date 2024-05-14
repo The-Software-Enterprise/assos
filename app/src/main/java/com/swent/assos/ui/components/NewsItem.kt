@@ -48,13 +48,13 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                 model = news.images[0],
                 contentDescription = null,
                 contentScale = ContentScale.FillHeight,
-                modifier = Modifier.fillMaxWidth().background(Color.Gray))
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface))
           } else {
             AsyncImage(
                 model = R.drawable.ic_launcher_foreground,
                 contentDescription = null,
                 contentScale = ContentScale.FillHeight,
-                modifier = Modifier.fillMaxWidth().background(Color.Gray))
+                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface))
           }
 
           Spacer(modifier = Modifier.height(8.dp))
