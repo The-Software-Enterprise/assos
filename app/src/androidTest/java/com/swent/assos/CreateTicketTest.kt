@@ -14,12 +14,13 @@ import com.google.firebase.ktx.Firebase
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.User
 import com.swent.assos.screens.CreateTicketScreen
-import com.swent.assos.screens.MyAssociationsScreen
 import com.swent.assos.ui.screens.ticket.CreateTicket
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
+import org.junit.After
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -52,6 +53,7 @@ class CreateTicketTest : SuperTest() {
           sciper = "330250",
           semester = "GM-BA6")
 
+  @Before
   override fun setup() {
     super.setup()
     composeTestRule.activity.setContent {
@@ -61,6 +63,7 @@ class CreateTicketTest : SuperTest() {
   }
 
   @Test
+  @After
   fun createTicketDisplaysTheCorrectPageTitle() {
     run {
       ComposeScreen.onComposeScreen<CreateTicketScreen>(composeTestRule) {
@@ -75,9 +78,10 @@ class CreateTicketTest : SuperTest() {
   }
 
   @Test
+  @After
   fun goBackButtonNavigatesToEventDetails() {
     run {
-      ComposeScreen.onComposeScreen<MyAssociationsScreen>(composeTestRule) {
+      ComposeScreen.onComposeScreen<CreateTicketScreen>(composeTestRule) {
         step("Go back") {
           goBackButton {
             assertIsDisplayed()
