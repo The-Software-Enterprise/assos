@@ -34,8 +34,7 @@ import com.swent.assos.model.data.Association
 fun ListItemAsso(asso: Association, callback: () -> Unit) {
   ListItem(
       modifier =
-          Modifier
-              .fillMaxWidth()
+          Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
               .shadow(elevation = 6.dp, shape = RoundedCornerShape(15.dp))
               .shadow(elevation = 2.dp, shape = RoundedCornerShape(15.dp))

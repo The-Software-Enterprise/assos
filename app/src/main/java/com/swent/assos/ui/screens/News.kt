@@ -36,11 +36,10 @@ fun News(navigationActions: NavigationActions) {
       paddingValues ->
     LazyColumn(
         modifier =
-        Modifier
-          .padding(paddingValues)
-          .padding(horizontal = 15.dp)
-          .padding(vertical = 5.dp)
-          .testTag("NewsList"),
+            Modifier.padding(paddingValues)
+                .padding(horizontal = 15.dp)
+                .padding(vertical = 5.dp)
+                .testTag("NewsList"),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         userScrollEnabled = true,
         state = listState) {

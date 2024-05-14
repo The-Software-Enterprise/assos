@@ -12,7 +12,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
@@ -24,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,7 +32,6 @@ import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.calendar.Calendar
 import com.swent.assos.ui.screens.profile.Profile
 import com.swent.assos.ui.screens.ticket.MyTickets
-import java.util.Calendar
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -75,7 +72,9 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                 Modifier.testTag("NavigationBarItem$index").semantics {
                   testTagsAsResourceId = true
                 },
-          colors = NavigationBarItemDefaults.colors(indicatorColor = MaterialTheme.colorScheme.surfaceTint),
+            colors =
+                NavigationBarItemDefaults.colors(
+                    indicatorColor = MaterialTheme.colorScheme.surfaceTint),
             icon = {
               when (index) {
                 0 ->
