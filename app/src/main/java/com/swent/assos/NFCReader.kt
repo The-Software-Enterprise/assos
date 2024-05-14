@@ -22,19 +22,30 @@ import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
+
 @AndroidEntryPoint
 class NFCReader : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
-  val validIDs = MutableStateFlow(mutableListOf<String>())
+  val _msgList = MutableStateFlow(emptyList<String>())
   lateinit var ticketId: String
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    setContent {
+      AssosTheme {
+        NFCReading(msgListState = _msgList)
+      }
+    }
 
+    //appeler l'intent comme ceci (cf. ChatGPT)
+    //val intent = Intent(this, TargetActivity::class.java)
+    //intent.putExtra("ticketId", value) // "key" is a string identifier, value can be any Serializable or Parcelable object
+    //startActivity(intent)
     ticketId = intent.getStringExtra("ticketId") ?: ""
 
+    resolveIntent(intent)
     nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     if (nfcAdapter == null) {
       // No NFC Dialog
@@ -42,8 +53,6 @@ class NFCReader : ComponentActivity() {
       finish() // Finish the activity
       return
     }
-
-    setContent { AssosTheme { NFCReading(ticketId = ticketId, context = this) } }
   }
 
   override fun onResume() {
@@ -94,35 +103,24 @@ class NFCReader : ComponentActivity() {
       val messages = mutableListOf<NdefMessage>()
 
       if (rawMsgs != null) {
-        rawMsgs.forEach { messages.add(it as NdefMessage) }
+            rawMsgs.forEach { messages.add(it as NdefMessage) }
       } else {
         // Unknown tag type
-        val empty = ByteArray(0)
-        val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
-        val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
-        val payload = dumpTagData(tag).toByteArray()
-        val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
-        val msg = NdefMessage(arrayOf(record))
-        messages.add(msg)
-      }
-      validIDs.value.clear()
-      messages.forEach {
-        if (it.records.size > 1) {
-          for (i in it.records.indices) {
-            if (i != 0) {
-              validIDs.value += String(it.records[i].payload)
-            }
-          }
-        } else {
-          validIDs.value += String(it.records[0].payload)
+            val empty = ByteArray(0)
+            val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
+            val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
+            val payload = dumpTagData(tag).toByteArray()
+            val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
+            val  msg = NdefMessage(arrayOf(record))
+            messages.add(msg)
         }
-      }
-      if (validIDs.value.contains(ticketId)) {
-        Toast.makeText(this, "You're in !! Have fun", Toast.LENGTH_SHORT).show()
-      } else {
-        Toast.makeText(this, "Sorry, we can not let you in", Toast.LENGTH_SHORT).show()
-      }
-      finish()
+    messages.forEach {
+          if (it.records.size > 1) {
+            _msgList.value += "Message: ${String(it.records[1].payload)}"
+          } else {
+            _msgList.value += "Message: ${String(it.records[0].payload)}"
+          }
+        }
     }
   }
 
