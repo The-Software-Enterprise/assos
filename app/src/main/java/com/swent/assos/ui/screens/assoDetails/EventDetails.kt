@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
@@ -121,7 +125,26 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 contentScale = ContentScale.Crop)
           }
 
-          item { Text(text = event.description, modifier = Modifier.padding(10.dp)) }
+          item {
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.bodyMedium,
+                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.padding(all = 8.dp).testTag("eventDescriptionText"))
+          }
+
+          if (myAssociations.find { it.id == assoId } != null) {
+            item {
+              Spacer(modifier = Modifier.padding(top = 15.dp))
+              JoinUsButton(
+                  onClick = {
+                    navigationActions.navigateTo(
+                        Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                  },
+                  text = "Saff List")
+            }
+          }
         }
       }
 }
