@@ -57,13 +57,12 @@ class CreateTicketTest : SuperTest() {
     composeTestRule.activity.setContent {
       CreateTicket(navigationActions = mockNavActions, eventId = memberAssociation.id)
     }
-      composeTestRule.waitForIdle()
+    composeTestRule.waitForIdle()
   }
 
   @Test
   fun createTicketDisplaysTheCorrectPageTitle() {
     run {
-
       ComposeScreen.onComposeScreen<CreateTicketScreen>(composeTestRule) {
         step("Check if page title is displayed") {
           pageTitle {
