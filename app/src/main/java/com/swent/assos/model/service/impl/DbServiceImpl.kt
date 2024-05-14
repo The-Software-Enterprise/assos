@@ -25,7 +25,6 @@ constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
 ) : DbService {
-
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
