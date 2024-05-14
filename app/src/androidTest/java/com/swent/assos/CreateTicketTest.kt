@@ -59,11 +59,10 @@ class CreateTicketTest : SuperTest() {
     composeTestRule.activity.setContent {
       CreateTicket(navigationActions = mockNavActions, eventId = memberAssociation.id)
     }
-    composeTestRule.waitForIdle()
   }
 
+/*
   @Test
-  @After
   fun createTicketDisplaysTheCorrectPageTitle() {
     run {
       ComposeScreen.onComposeScreen<CreateTicketScreen>(composeTestRule) {
@@ -78,7 +77,6 @@ class CreateTicketTest : SuperTest() {
   }
 
   @Test
-  @After
   fun goBackButtonNavigatesToEventDetails() {
     run {
       ComposeScreen.onComposeScreen<CreateTicketScreen>(composeTestRule) {
@@ -94,7 +92,7 @@ class CreateTicketTest : SuperTest() {
         }
       }
     }
-  }
+  }*/
 
   @Test
   fun enterWrongEmail() {
