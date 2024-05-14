@@ -2,7 +2,6 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -17,9 +16,6 @@ import com.swent.assos.screens.CreateTicketScreen
 import com.swent.assos.ui.screens.ticket.CreateTicket
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
-import io.mockk.confirmVerified
-import io.mockk.verify
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -61,7 +57,7 @@ class CreateTicketTest : SuperTest() {
     }
   }
 
-/*
+  /*
   @Test
   fun createTicketDisplaysTheCorrectPageTitle() {
     run {
