@@ -31,7 +31,6 @@
         <activity
             android:name=".NFCActivity"
             android:exported="true"
-            android:screenOrientation="nosensor"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance">
             <intent-filter>
