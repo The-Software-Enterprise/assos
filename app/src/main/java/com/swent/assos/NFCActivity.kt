@@ -119,8 +119,7 @@ class NFCActivity : ComponentActivity() {
             rawMsgs.forEach { messages.add(it as NdefMessage) }
           }
           NFCMode.WRITE -> {
-            val messageWrittenSuccessfully =
-                createNFCMessage("This is a test", intent)
+            val messageWrittenSuccessfully = createNFCMessage("This is a test", intent)
             if (messageWrittenSuccessfully) {
               // Message written to tag
               Toast.makeText(this, "Successfully written to tag", Toast.LENGTH_SHORT).show()
