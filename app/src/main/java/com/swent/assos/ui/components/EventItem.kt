@@ -39,7 +39,8 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                   color = MaterialTheme.colorScheme.outline,
                   shape = RoundedCornerShape(12.dp))
               .clickable {
-                navigationActions.navigateTo(Destinations.EVENT_DETAILS.route + "/${event.id}")
+                navigationActions.navigateTo(
+                    Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
               }) {
         Column(
             modifier = Modifier.width(200.dp).padding(vertical = 0.dp),

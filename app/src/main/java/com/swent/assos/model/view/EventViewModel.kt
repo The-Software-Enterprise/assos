@@ -29,6 +29,9 @@ constructor(
   private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
   val event = _event.asStateFlow()
 
+  private var _loadingDisplay = MutableStateFlow(true)
+  val loading = _loadingDisplay.asStateFlow()
+
   init {
     getEvent(_event.value.id)
   }
@@ -37,7 +40,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
   }
 
-  fun createEvent(onSuccess: () -> Unit) {
+  fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
     val event = _event.value
     viewModelScope.launch(ioDispatcher) {
       storageService.uploadFiles(
@@ -77,6 +80,14 @@ constructor(
   fun setImage(uri: Uri?) {
     if (uri != null) {
       _event.value = _event.value.copy(image = uri)
+    }
+  }
+
+  fun createTicket(email: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
+
+    viewModelScope.launch(ioDispatcher) {
+      dbService.addTicketToUser(
+          email, eventId = _event.value.id, onSuccess = onSuccess, onFailure = onFailure)
     }
   }
 
