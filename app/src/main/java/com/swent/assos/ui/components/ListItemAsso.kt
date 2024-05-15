@@ -36,10 +36,10 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
   ListItem(
       modifier =
           Modifier.fillMaxWidth()
-              .shadow(4.dp, RoundedCornerShape(12.dp), ambientColor = MaterialTheme.colorScheme.surface, spotColor = MaterialTheme.colorScheme.surface)
+              //.shadow(4.dp, RoundedCornerShape(12.dp), ambientColor = MaterialTheme.colorScheme.surface, spotColor = MaterialTheme.colorScheme.surface)
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
               .background(
-                  color = MaterialTheme.colorScheme.onPrimary,
+                  color = MaterialTheme.colorScheme.surface,
                   shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable { callback() },

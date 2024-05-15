@@ -80,7 +80,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                       lineHeight = 32.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.SemiBold,
-                      color = MaterialTheme.colorScheme.onSurface))
+                      color = MaterialTheme.colorScheme.onBackground))
         }
     Column(
         verticalArrangement = Arrangement.Center,

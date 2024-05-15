@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,8 +37,11 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(4.dp, RoundedCornerShape(12.dp), ambientColor = MaterialTheme.colorScheme.surface, spotColor = MaterialTheme.colorScheme.surface)
-              .background(MaterialTheme.colorScheme.background)
+          Modifier
+              //.shadow(2.dp, RoundedCornerShape(2.dp))
+              .background(
+                  color = MaterialTheme.colorScheme.surface,
+                  shape = RoundedCornerShape(size = 15.dp))
               .fillMaxWidth()
               .height(100.dp)
               .clickable {
@@ -45,7 +49,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               }
               .testTag("NewsListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
+            modifier = Modifier.fillMaxSize().border(width = 0.5.dp, color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(15.dp)).background(color = Color.Transparent, shape = RoundedCornerShape(15.dp)).testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               if (news.images.isNotEmpty()) {

@@ -36,6 +36,9 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       modifier =
           Modifier.testTag("NewsItem")
               .padding(0.dp)
+              .background(
+                  color = MaterialTheme.colorScheme.surface,
+                  shape = RoundedCornerShape(size = 15.dp))
               .border(
                   width = 0.5.dp,
                   color = MaterialTheme.colorScheme.outline,

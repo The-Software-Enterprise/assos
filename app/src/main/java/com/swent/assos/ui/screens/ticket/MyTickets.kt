@@ -89,7 +89,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
   LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
   Card(
-      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("TicketItem")

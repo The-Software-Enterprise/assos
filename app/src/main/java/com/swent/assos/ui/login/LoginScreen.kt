@@ -16,6 +16,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +74,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                       lineHeight = 32.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.SemiBold,
-                      color = MaterialTheme.colorScheme.onSurface))
+                      color = MaterialTheme.colorScheme.onBackground))
         }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -93,7 +94,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onSurface))
+                        color = MaterialTheme.colorScheme.onBackground))
           },
           modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth().testTag("EmailField"))
 
@@ -113,7 +114,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onSurface))
+                        color = MaterialTheme.colorScheme.onBackground))
           },
           modifier = Modifier.fillMaxWidth().testTag("PasswordField").padding(horizontal = 16.dp),
           visualTransformation = PasswordVisualTransformation(),
