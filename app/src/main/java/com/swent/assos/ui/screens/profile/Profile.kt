@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -110,7 +111,7 @@ fun UserNameDisplay(name: String) {
                     lineHeight = 20.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(500),
-                    color = Color(0xFF49454F),
+                    color = MaterialTheme.colorScheme.onBackground,
                     letterSpacing = 0.1.sp,
                 ),
             modifier = Modifier.height(20.dp).testTag("Name"))
