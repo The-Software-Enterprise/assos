@@ -27,7 +27,7 @@ class NFCWriter : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
   private val ticketList = MutableStateFlow(emptyList<String>())
-  lateinit var eventID: String
+  private lateinit var eventID: String
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +40,9 @@ class NFCWriter : ComponentActivity() {
     // startActivity(intent)
     eventID = intent.getStringExtra("eventID") ?: ""
 
-    setContent { AssosTheme { NFCWriting(ticketList = ticketList, eventID = eventID) } }
+    setContent {
+      AssosTheme { NFCWriting(ticketList = ticketList, eventID = eventID, context = this) }
+    }
 
     // resolveIntent(intent)
     nfcAdapter = NfcAdapter.getDefaultAdapter(this)
@@ -97,6 +99,7 @@ class NFCWriter : ComponentActivity() {
             NfcAdapter.ACTION_NDEF_DISCOVERED)
     if (intent.action in validActions) {
       if (ticketList.value.isEmpty()) {
+        /* TODO = Manage if an event has no ticket to write*/
         Toast.makeText(
                 this, "We could not write your tickets, wait a few seconds...", Toast.LENGTH_SHORT)
             .show()
@@ -105,6 +108,7 @@ class NFCWriter : ComponentActivity() {
         if (messageWrittenSuccessfully) {
           // Message written to tag
           Toast.makeText(this, "Successfully written to tag", Toast.LENGTH_SHORT).show()
+          finish()
         } else {
           // Something went wrong
           Toast.makeText(this, "Sorry, we could not write your data", Toast.LENGTH_SHORT).show()
