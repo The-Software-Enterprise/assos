@@ -78,7 +78,9 @@ fun CameraPreview(lifecycleOwner: LifecycleOwner) {
             }
 
         val preview =
-            Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
+            Preview.Builder().build().also {
+                it.setSurfaceProvider(previewView.surfaceProvider)
+            }
 
         cameraProviderFuture.addListener(
             {
