@@ -6,14 +6,14 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class NFCTest {
 
   private val mockTag = mockk<Tag>()
