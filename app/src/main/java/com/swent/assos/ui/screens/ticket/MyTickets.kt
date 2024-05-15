@@ -3,6 +3,8 @@
 package com.swent.assos.ui.screens.ticket
 
 import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,13 +43,15 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.swent.assos.NFCReader
+import com.swent.assos.NFCWriter
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
-import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -55,14 +59,22 @@ fun MyTickets(navigationActions: NavigationActions) {
 
   val viewModel: TicketViewModel = hiltViewModel()
   val myTickets by viewModel.tickets.collectAsState()
-    val context = LocalContext.current
+  /*TODO = Make a special UI For Host*/
+  val eventID = "02ttjtn3a8Uj07WmxmTr"
+  val launcher =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            // Handle the result of the activity here
+            // For example, you can retrieve data from the activity result
+            val data = result.data
+            // Handle the data accordingly
+          }
+  val intent = Intent(LocalContext.current, NFCWriter::class.java).putExtra("eventID", eventID)
 
   LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("MyTicketsScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),
       topBar = { PageTitle(title = "My Tickets") },
       floatingActionButton = {
         FloatingActionButton(
@@ -75,22 +87,19 @@ fun MyTickets(navigationActions: NavigationActions) {
             }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-                .testTag("TicketList"),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketList"),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-            item {
-                Button(
-                    onClick = {
-                        // Launch NFCActivity
-
-                    }) {
-                    Text("Launch NFC Activity")
+          item {
+            Button(
+                onClick = {
+                  // Launch NFCActivity
+                  launcher.launch(intent)
+                }) {
+                  Text("Write Balélec tickets to NFC tag")
                 }
-            }
+          }
           items(items = myTickets) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }
@@ -103,6 +112,16 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
   val viewModel: EventViewModel = hiltViewModel()
   val event by viewModel.event.collectAsState()
+  val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu, HH:mm")
+  val launcher =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            // Handle the result of the activity here
+            // For example, you can retrieve data from the activity result
+            val data = result.data
+            // Handle the data accordingly
+          }
+  val intent = Intent(LocalContext.current, NFCReader::class.java).putExtra("ticketId", ticket.id)
 
   LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
@@ -110,23 +129,16 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-      Modifier
-          .testTag("TicketItem")
-          .padding(16.dp)
-          .border(
-              width = 0.5.dp,
-              color = MaterialTheme.colorScheme.outline,
-              shape = RoundedCornerShape(12.dp)
-          )) {
+          Modifier.testTag("TicketItem")
+              .padding(16.dp)
+              .border(
+                  width = 0.5.dp,
+                  color = MaterialTheme.colorScheme.outline,
+                  shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 0.dp)
-                .clickable {
-                    navigationActions.navigateTo(
-                        Destinations.TICKET_DETAILS.route + "/${ticket.eventId}"
-                    )
+                Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
+                  launcher.launch(intent)
                 },
         ) {
           Image(
@@ -134,31 +146,22 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
               contentDescription = null,
               contentScale = ContentScale.Crop,
               modifier =
-              Modifier
-                  .fillMaxWidth()
-                  .height(84.dp)
-                  .background(MaterialTheme.colorScheme.outline))
+                  Modifier.fillMaxWidth()
+                      .height(84.dp)
+                      .background(MaterialTheme.colorScheme.outline))
 
           Spacer(modifier = Modifier.height(10.dp))
           Text(
               text = event.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 16.dp))
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text = event.startTime?.let { dateToReadableString(it) } ?: "",
+              text = event.startTime?.let { dateFormatter.format(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier
-                  .fillMaxWidth()
-                  .padding(horizontal = 16.dp))
+              modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
         }
       }
-}
-
-fun dateToReadableString(date: LocalDateTime): String {
-  return "${date.dayOfMonth} ${date.month} ${date.year}, ${date.hour}:${date.minute}"
 }
