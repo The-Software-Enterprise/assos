@@ -28,7 +28,7 @@ fun FloatingButtons(viewModel: EventViewModel, lazyListState: LazyListState) {
 
   Column {
     FloatingActionButton(
-        modifier = Modifier.testTag("AddTextField"),
+        modifier = Modifier.testTag("AddTextFieldButton"),
         onClick = {
           viewModel.addField(Event.Field.Text("", ""))
           coroutineScope.launch { lazyListState.scrollToItem(event.fields.size + 2) }
@@ -38,7 +38,7 @@ fun FloatingButtons(viewModel: EventViewModel, lazyListState: LazyListState) {
         }
     Spacer(modifier = Modifier.size(16.dp))
     FloatingActionButton(
-        modifier = Modifier.testTag("AddImageField"),
+        modifier = Modifier.testTag("AddImageFieldButton"),
         onClick = {
           viewModel.addField(Event.Field.Image(emptyList()))
           coroutineScope.launch { lazyListState.scrollToItem(event.fields.size + 2) }

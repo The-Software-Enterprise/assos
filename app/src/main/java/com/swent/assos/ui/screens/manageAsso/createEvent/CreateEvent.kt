@@ -228,7 +228,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                   lineHeight = 16.sp,
                   singleLine = true,
                   paddingValues = PaddingValues(horizontal = 10.dp),
-                  testTag = "",
+                  testTag = "InputFieldTitle" + index,
               )
               Box(
                   modifier =
@@ -245,7 +245,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                   lineHeight = 13.sp,
                   singleLine = false,
                   paddingValues = PaddingValues(horizontal = 16.dp),
-                  testTag = "",
+                  testTag = "InputFieldDescription" + index,
               )
             } else if (field is Event.Field.Image) {
               LazyRow(
@@ -261,7 +261,8 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                                   .clickable {
                                     fieldIndex = index
                                     launcherImagesField.launch("image/*")
-                                  },
+                                  }
+                                  .testTag("InputFieldImage" + index),
                           verticalAlignment = Alignment.CenterVertically,
                           horizontalArrangement = Arrangement.Center) {
                             Row(
