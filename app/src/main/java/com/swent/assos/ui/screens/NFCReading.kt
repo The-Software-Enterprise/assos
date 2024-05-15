@@ -1,46 +1,23 @@
 package com.swent.assos.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import android.app.Activity
+import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.R
 import com.swent.assos.model.view.NFCViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun NFCReading(
-    msgListState: MutableStateFlow<List<String>>,
-) {
-    val nfcViewModel: NFCViewModel = hiltViewModel()
-    val msgList = msgListState.collectAsState()
+fun NFCReading(ticketList: MutableStateFlow<List<String>>, ticketId: String, context: Activity) {
+  val nfcViewModel: NFCViewModel = hiltViewModel()
+  val validIDs = ticketList.collectAsState()
 
-    Scaffold(
-        floatingActionButton = {
-            AssistChip(
-                onClick = {  },
-                label = {
-                    Text("Reading")
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.barcode_reader),
-                        contentDescription = null)
-                })
-        }) {
-        Column(modifier = Modifier.padding(it)) {
-            msgList.value.forEach {
-                Text(it)
-                Divider()
-            }
-        }
+  LaunchedEffect(key1 = validIDs) {
+    if (nfcViewModel.checkTicket(ticketId, validIDs.value)) {
+      Toast.makeText(context, "NFC is not supported on this device", Toast.LENGTH_SHORT).show()
+      context.finish()
     }
+  }
 }
