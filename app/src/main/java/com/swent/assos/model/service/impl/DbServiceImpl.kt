@@ -431,6 +431,30 @@ constructor(
                 .addOnFailureListener { onError(it.message ?: "") }
     }
 
+    override suspend fun quitAssociation(
+        assoId: String,
+        userId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val userRef = firestore.collection("users").document(userId)
+
+        userRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val associations = document.get("associations") as List<Map<String, Any>>?
+                associations?.find { it["assoId"] == assoId }?.let { associationToQuit ->
+                    userRef.update("associations", FieldValue.arrayRemove(associationToQuit))
+                        .addOnSuccessListener { onSuccess() }
+                        .addOnFailureListener { onError(it.message ?: "Failed to remove association") }
+                } ?: onError("Association not found")
+            } else {
+                onError("User not found")
+            }
+        }.addOnFailureListener {
+            onError(it.message ?: "Error fetching user details")
+        }
+    }
+
   override suspend fun updateBanner(associationId: String, banner: Uri) {
     firestore
         .collection("associations")

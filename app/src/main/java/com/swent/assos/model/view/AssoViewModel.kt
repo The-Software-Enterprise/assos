@@ -129,4 +129,8 @@ constructor(
       }
 
     }
+
+  fun quitAssociation(assoId: String, userId: String) {
+    viewModelScope.launch(ioDispatcher) { dbService.quitAssociation(assoId, userId,{}, {}) }
+  }
 }

@@ -120,4 +120,5 @@ interface DbService {
   suspend fun getApplicantsByAssoId(assoId: String): List<Applicant>
     suspend fun acceptApplicant(applicantId: String, assoId: String)
     suspend fun unAcceptApplicant(applicantId: String, assoId: String)
+    suspend fun quitAssociation(assoId: String, userId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 }
