@@ -116,12 +116,13 @@ fun NameListItem(
                           if (status == "accepted") {
                               applicantsViewModel.unAcceptApplicant(applicantId =  applicant.id, assoId = eventId)
                               status = "pending" // Assuming pending is the initial state
-                          } else if (!currentUser.associations.map{it.first}.contains(asso.id)){
+                          } else{
                               applicantsViewModel.acceptApplicant(
                                   applicantId = applicant.id,
                                   assoId = eventId
                               )
-                              assoViewModel.joinAssociation(asso.id)
+
+                              assoViewModel.joinAssociation(eventId)
                               status = "accepted"
 
                           }
