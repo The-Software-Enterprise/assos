@@ -34,7 +34,17 @@
 
         </activity>
         <activity
-            android:name=".NFCActivity"
+            android:name=".NFCReader"
+            android:exported="true"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.nfc.action.TAG_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NFCWriter"
             android:exported="true"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance">
