@@ -448,11 +448,22 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                             event.startTime != null &&
                             event.endTime != null,
                     onClick = {
-                      viewModel.createEvent(onSuccess = { navigationActions.goBack(); Toast.makeText(
-                          context,
-                          "The event has been successfully created!",
-                          Toast.LENGTH_SHORT)
-                          .show() }, onError = { Toast.makeText(context, "Unfortunately, the event has not been created. Please try again!", Toast.LENGTH_SHORT).show() })
+                      viewModel.createEvent(
+                          onSuccess = {
+                            navigationActions.goBack()
+                            Toast.makeText(
+                                    context,
+                                    "The event has been successfully created!",
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                          },
+                          onError = {
+                            Toast.makeText(
+                                    context,
+                                    "Unfortunately, the event has not been created. Please try again!",
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                          })
                     }) {
                       Text(
                           text = "Create",
