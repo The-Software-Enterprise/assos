@@ -106,7 +106,7 @@ fun CameraPreview(lifecycleOwner: LifecycleOwner) {
 @Composable
 fun CameraCaptureButton(imageCapture: ImageCapture, localContext: Context) {
   FloatingActionButton(
-      modifier = Modifier.padding(16.dp),
+      modifier = Modifier.padding(16.dp).testTag("scanButton"),
       onClick = {
         val photoFile =
             File(
