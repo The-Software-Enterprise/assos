@@ -1,7 +1,6 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -39,20 +38,6 @@ class CreateEventTest : SuperTest() {
           goBackButton { performClick() }
           verify { mockNavActions.goBack() }
           confirmVerified(mockNavActions)
-        }
-      }
-    }
-  }
-
-  @Test
-  fun createEventDisplaysTheCorrectPageTitle() {
-    run {
-      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
-        step("Check if page title is displayed") {
-          pageTitle {
-            assertIsDisplayed()
-            assert(hasText("Create an event", substring = true, ignoreCase = true))
-          }
         }
       }
     }

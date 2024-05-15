@@ -14,7 +14,6 @@ import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import com.swent.assos.ui.screens.manageAsso.ApplicationManagement
-import com.swent.assos.ui.screens.manageAsso.CreateEvent
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 import com.swent.assos.ui.screens.manageAsso.StaffManagement
