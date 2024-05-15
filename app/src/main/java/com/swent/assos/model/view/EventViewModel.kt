@@ -52,7 +52,7 @@ constructor(
         }
   }
 
-  fun createEvent(onSuccess: () -> Unit) {
+  fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
     val event = _event.value
     viewModelScope.launch(ioDispatcher) {
       storageService.uploadFile(
