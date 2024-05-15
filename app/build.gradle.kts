@@ -67,6 +67,11 @@ android {
       }
     }
   }
+  configurations {
+    all {
+      exclude(group = "androidx.appcompat", module = "appcompat")
+    }
+  }
 }
 
 dependencies {
@@ -145,6 +150,9 @@ dependencies {
 
   //Images
   implementation ("io.coil-kt:coil-compose:2.1.0")
+
+  // Lottie Animation
+  implementation("com.airbnb.android:lottie-compose:4.0.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

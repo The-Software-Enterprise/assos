@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class NFCReader : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
-  val validIDs = MutableStateFlow(emptyList<String>())
+  val validIDs = MutableStateFlow(mutableListOf<String>())
   private lateinit var ticketId: String
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -35,7 +35,6 @@ class NFCReader : ComponentActivity() {
 
     ticketId = intent.getStringExtra("ticketId") ?: ""
 
-    resolveIntent(intent)
     nfcAdapter = NfcAdapter.getDefaultAdapter(this)
     if (nfcAdapter == null) {
       // No NFC Dialog
@@ -44,9 +43,7 @@ class NFCReader : ComponentActivity() {
       return
     }
 
-    setContent {
-      AssosTheme { NFCReading(ticketList = validIDs, ticketId = ticketId, context = this) }
-    }
+    setContent { AssosTheme { NFCReading(ticketId = ticketId, context = this) } }
   }
 
   override fun onResume() {
@@ -108,6 +105,7 @@ class NFCReader : ComponentActivity() {
         val msg = NdefMessage(arrayOf(record))
         messages.add(msg)
       }
+      validIDs.value.clear()
       messages.forEach {
         if (it.records.size > 1) {
           validIDs.value += String(it.records[1].payload)
@@ -115,6 +113,12 @@ class NFCReader : ComponentActivity() {
           validIDs.value += String(it.records[0].payload)
         }
       }
+      if (validIDs.value.contains(ticketId)) {
+        Toast.makeText(this, "You're in !! Have fun", Toast.LENGTH_SHORT).show()
+      } else {
+        Toast.makeText(this, "Sorry, we can not let you in", Toast.LENGTH_SHORT).show()
+      }
+      finish()
     }
   }
 
