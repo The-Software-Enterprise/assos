@@ -16,7 +16,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import com.swent.assos.model.PendingIntent_Mutable
-import com.swent.assos.model.data.Ticket
 import com.swent.assos.ui.screens.NFCWriting
 import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -97,8 +96,6 @@ class NFCWriter : ComponentActivity() {
             NfcAdapter.ACTION_TECH_DISCOVERED,
             NfcAdapter.ACTION_NDEF_DISCOVERED)
     if (intent.action in validActions) {
-      val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
-
       if (ticketList.value.isEmpty()) {
         Toast.makeText(
                 this, "We could not write your tickets, wait a few seconds...", Toast.LENGTH_SHORT)
@@ -139,21 +136,6 @@ class NFCWriter : ComponentActivity() {
     }
   }
 
-  private fun createNFCMessageFromTickets(tickets: List<Ticket>): Boolean {
-    val pathPrefix = "swent.com:nfcapp"
-    val nfcRecord =
-        NdefRecord(
-            NdefRecord.TNF_EXTERNAL_TYPE,
-            pathPrefix.toByteArray(),
-            ByteArray(0),
-            tickets.map { it.id }.toString().toByteArray())
-    val nfcMessage = NdefMessage(arrayOf(nfcRecord))
-    intent.let {
-      val tag = it.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
-      return writeMessageToTag(nfcMessage, tag)
-    }
-  }
-
   private fun writeMessageToTag(nfcMessage: NdefMessage, tag: Tag?): Boolean {
 
     try {
@@ -163,6 +145,7 @@ class NFCWriter : ComponentActivity() {
         it.connect()
         if (it.maxSize < nfcMessage.toByteArray().size) {
           // Message too large to write to NFC tag
+          it.close()
           return false
         }
         if (it.isWritable) {
@@ -172,6 +155,7 @@ class NFCWriter : ComponentActivity() {
           return true
         } else {
           // NFC tag is read-only
+          it.close()
           return false
         }
       }
