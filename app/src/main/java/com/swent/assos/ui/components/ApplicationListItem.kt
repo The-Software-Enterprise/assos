@@ -39,7 +39,7 @@ import java.time.LocalDateTime
 import kotlinx.coroutines.launch
 
 @Composable
-fun NameListItem(
+fun ApplicationListItem(
     userId: String,
     eventId: String,
     isStaffing: Boolean,
@@ -68,9 +68,9 @@ fun NameListItem(
               .padding(vertical = 8.dp)
               .padding(horizontal = 5.dp)
               .height(30.dp)
-              .testTag("NameListItem")) {
+              .testTag("ApplicationListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp).testTag("NameItemRow"),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp).testTag("ApplicationItemRow"),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
               Text(
@@ -78,7 +78,7 @@ fun NameListItem(
                   style = MaterialTheme.typography.bodyMedium,
                   fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                   fontWeight = FontWeight.Medium,
-                  modifier = Modifier.padding(all = 2.dp).testTag("NameListItemFullName"))
+                  modifier = Modifier.padding(all = 2.dp).testTag("ApplicationListItemFullName"))
 
               AssistChip(
                   colors =
@@ -89,7 +89,7 @@ fun NameListItem(
                           AssistChipDefaults.assistChipColors(
                               containerColor = MaterialTheme.colorScheme.primary),
                   border = null,
-                  modifier = Modifier.testTag("AcceptStaffButton").padding(5.dp).fillMaxHeight(),
+                  modifier = Modifier.testTag("AcceptApplicationButton").padding(5.dp).fillMaxHeight(),
                   onClick = {
                     scope.launch {
                       if (isStaffing) {
