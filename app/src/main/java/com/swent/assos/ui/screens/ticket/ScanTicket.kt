@@ -63,11 +63,10 @@ fun ScanTicket(navigationActions: NavigationActions) {
 }
 
 @Composable
-fun CameraPreview(lifecycleOwner: LifecycleOwner) {
+fun CameraPreview(lifecycleOwner: LifecycleOwner, imageCapture: ImageCapture) {
   val context = LocalContext.current
   val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
   val executor = remember { Executors.newSingleThreadExecutor() }
-  val imageCapture = remember { ImageCapture.Builder().build() }
 
   AndroidView(
       modifier = Modifier.fillMaxSize(),
@@ -158,7 +157,7 @@ fun CameraScreen() {
 
   if (hasCameraPermission) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-      CameraPreview(lifecycleOwner = lifecycleOwner)
+      CameraPreview(lifecycleOwner = lifecycleOwner, imageCapture = imageCapture)
       CameraCaptureButton(imageCapture = imageCapture, localContext = context)
     }
   }
