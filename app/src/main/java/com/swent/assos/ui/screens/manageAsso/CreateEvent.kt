@@ -460,7 +460,7 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                           onError = {
                             Toast.makeText(
                                     context,
-                                    "Unfortunately, the event has not been created. Please try again!",
+                                    "Unfortunately, the event could not be created. Please try again!",
                                     Toast.LENGTH_SHORT)
                                 .show()
                           })
