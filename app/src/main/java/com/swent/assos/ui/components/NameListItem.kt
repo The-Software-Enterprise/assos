@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.view.ApplicantViewModel
+import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.UserViewModel
 import java.time.LocalDateTime
 import kotlinx.coroutines.launch
@@ -49,13 +50,23 @@ fun NameListItem(
   val user by userViewModel.user.collectAsState()
 
   val applicantsViewModel: ApplicantViewModel = hiltViewModel()
-
   val applicants by applicantsViewModel.applicants.collectAsState()
+
+        val assoViewModel: AssoViewModel = hiltViewModel()
+        val asso by assoViewModel.association.collectAsState()
+
 
   val applicant: Applicant =
       applicants.find { it.userId == userId } ?: Applicant("", "", LocalDateTime.now(), "")
 
-  LaunchedEffect(key1 = Unit) { userViewModel.getUser(userId) }
+  LaunchedEffect(key1 = Unit) {
+      userViewModel.getUser(userId)
+
+      if (!isStaffing) {
+          assoViewModel.getAssociation(eventId)
+      }
+
+  }
 
   var status by remember { mutableStateOf(applicant.status) }
   val scope = rememberCoroutineScope()
@@ -101,7 +112,14 @@ fun NameListItem(
                           status = "accepted"
                         }
                       } else {
-                        // TODO IN CASE OF AN APPLICATION TO JOIN THE COMMITTEE OF AN ASSOCIATION
+                          if (status == "accepted") {
+                              applicantsViewModel.unAcceptApplicant(applicantId =  applicant.id, assoId = eventId)
+                              status = "pending" // Assuming pending is the initial state
+                          } else {
+                              applicantsViewModel.acceptApplicant(applicantId =  applicant.id, assoId = eventId)
+                              assoViewModel.joinAssociation(asso.id)
+                              status = "accepted"
+                          }
                       }
                     }
                   },

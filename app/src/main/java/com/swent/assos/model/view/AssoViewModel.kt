@@ -110,4 +110,14 @@ constructor(
             associations = DataCache.currentUser.value.associations + triple)
     viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, {}, {}) }
   }
+
+    fun applyToAssociation(userId: String, onSuccess: () -> Unit) {
+
+      viewModelScope.launch(ioDispatcher) {
+        dbService.applyJoinAsso(
+          assoId = _association.value.id, userId = userId, onSuccess = onSuccess, onError = {}
+        )
+      }
+
+    }
 }

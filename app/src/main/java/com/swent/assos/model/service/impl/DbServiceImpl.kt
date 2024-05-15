@@ -159,7 +159,25 @@ constructor(
     return applicants
   }
 
-  override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
+    override suspend fun acceptApplicant(applicantId: String, assoId: String) {
+        firestore
+            .collection("associations")
+            .document(assoId)
+            .collection("applicants")
+            .document(applicantId)
+            .update("status", "accepted")
+    }
+
+    override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
+        firestore
+            .collection("associations")
+            .document(assoId)
+            .collection("applicants")
+            .document(applicantId)
+            .update("status", "pending")
+    }
+
+    override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
 
     firestore
         .collection("events")

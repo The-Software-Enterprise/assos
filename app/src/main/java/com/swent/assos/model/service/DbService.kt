@@ -110,4 +110,6 @@ interface DbService {
   suspend fun getApplicantsByEventId(eventId: String): List<Applicant>
 
   suspend fun getApplicantsByAssoId(assoId: String): List<Applicant>
+    suspend fun acceptApplicant(applicantId: String, assoId: String)
+    suspend fun unAcceptApplicant(applicantId: String, assoId: String)
 }
