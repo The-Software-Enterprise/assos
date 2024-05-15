@@ -79,29 +79,34 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     Icon(
                         painterResource(id = R.drawable.home),
                         contentDescription = "Home",
-                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp),
+                        tint = MaterialTheme.colorScheme.onBackground)
                 1 ->
                     Icon(
                         painterResource(id = R.drawable.explorer),
                         contentDescription = "Explorer",
-                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp),
+                        tint = MaterialTheme.colorScheme.onBackground)
                 2 ->
                     Icon(
                         painterResource(id = R.drawable.calendar),
                         contentDescription = "Calendar",
-                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp))
+                        modifier = Modifier.size(28.dp).padding(bottom = 4.dp),
+                        tint = MaterialTheme.colorScheme.onBackground)
                 3 ->
                     Icon(
                         painterResource(id = R.drawable.qrcode),
                         contentDescription = "Ticket",
                         modifier =
-                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("TicketIcon"))
+                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("TicketIcon"),
+                        tint = MaterialTheme.colorScheme.onBackground)
                 4 ->
                     Icon(
                         painterResource(id = R.drawable.profile),
                         contentDescription = "Profile",
                         modifier =
-                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("ProfileIcon"))
+                            Modifier.size(28.dp).padding(bottom = 4.dp).testTag("ProfileIcon"),
+                        tint = MaterialTheme.colorScheme.onBackground)
               }
             },
             selected = pagerState.currentPage == index,
@@ -116,9 +121,9 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     else -> "Profile"
                   }
               if (pagerState.currentPage == index) {
-                Text(text = label, fontWeight = FontWeight.SemiBold)
+                Text(text = label, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
               } else {
-                Text(text = label)
+                Text(text = label, color = MaterialTheme.colorScheme.onBackground)
               }
             })
       }
