@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +39,7 @@ fun News(navigationActions: NavigationActions) {
             Modifier.padding(paddingValues)
                 .padding(horizontal = 15.dp)
                 .padding(vertical = 5.dp)
+                .background(MaterialTheme.colorScheme.surface)
                 .testTag("NewsList"),
         verticalArrangement = Arrangement.spacedBy(15.dp),
         userScrollEnabled = true,
