@@ -68,10 +68,13 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
+fun CreateEvent(
+    assoId: String,
+    navigationActions: NavigationActions,
+    viewModel: EventViewModel = hiltViewModel()
+) {
   val context = LocalContext.current
 
-  val viewModel: EventViewModel = hiltViewModel()
   val event by viewModel.event.collectAsState()
   val canCreate =
       event.description.isNotEmpty() && event.image != Uri.EMPTY && event.title.isNotEmpty()

@@ -5,14 +5,23 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.swent.assos.model.service.impl.AuthServiceImpl
+import com.swent.assos.model.service.impl.DbServiceImpl
+import com.swent.assos.model.service.impl.StorageServiceImpl
+import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.screens.CreateEventScreen
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
+import java.time.LocalDateTime
 import java.util.Calendar
 import kotlin.random.Random
+import kotlinx.coroutines.Dispatchers
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -23,16 +32,29 @@ class CreateEventTest : SuperTest() {
   private val randomInt = Random.nextInt()
   private val eventTitle = "Test event $randomInt"
   private val eventDescription = "Test description $randomInt"
+  private val fieldTitle1 = "Test field title 1"
+  private val fieldDescription1 = "Test field description 1"
+  private val fieldTitle2 = "Test field title 2"
+  private val fieldDescription2 = "Test field description 2"
+
+  private lateinit var eventViewModel: EventViewModel
 
   override fun setup() {
     super.setup()
+    eventViewModel =
+        EventViewModel(
+            DbServiceImpl(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()),
+            StorageServiceImpl(FirebaseStorage.getInstance()),
+            AuthServiceImpl(FirebaseAuth.getInstance()),
+            Dispatchers.IO)
     composeTestRule.activity.setContent {
-      CreateEvent(assoId = assoId, navigationActions = mockNavActions)
+      CreateEvent(assoId = assoId, navigationActions = mockNavActions, eventViewModel)
     }
   }
 
   @Test
   fun createEventCancel() {
+    eventViewModel.clear()
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
@@ -99,6 +121,7 @@ class CreateEventTest : SuperTest() {
 
   @Test
   fun testDatePicker() {
+    eventViewModel.clear()
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("choose the start time") {
@@ -122,6 +145,7 @@ class CreateEventTest : SuperTest() {
 
   @Test
   fun testCreateAnEntireEvent() {
+    eventViewModel.clear()
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
@@ -142,12 +166,12 @@ class CreateEventTest : SuperTest() {
           inputFieldTitle0 {
             assertIsDisplayed()
             performClick()
-            performTextInput("Test field title 1")
+            performTextInput(fieldTitle1)
           }
           inputFieldDescription0 {
             assertIsDisplayed()
             performClick()
-            performTextInput("Test field description 1")
+            performTextInput(fieldDescription1)
           }
         }
 
@@ -158,16 +182,63 @@ class CreateEventTest : SuperTest() {
           inputFieldTitle2 {
             assertIsDisplayed()
             performClick()
-            performTextInput("Test field title 2")
+            performTextInput(fieldTitle2)
           }
           inputFieldDescription2 {
             assertIsDisplayed()
             performClick()
-            performTextInput("Test field description 2")
+            performTextInput(fieldDescription2)
           }
         }
 
         step("Create the event") { createButton { performClick() } }
+      }
+    }
+  }
+
+  @Test
+  fun testBadDates() {
+    eventViewModel.clear()
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("choose the start date before today") {
+          eventViewModel.event.value.startTime = LocalDateTime.now().minusDays(1)
+          startTimePicker { performClick() }
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
+
+        composeTestRule.waitForIdle()
+
+        step("choose the start time before now") {
+          startTimePicker { performClick() }
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          eventViewModel.event.value.startTime = LocalDateTime.now().minusHours(1)
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
+
+        composeTestRule.waitForIdle()
+
+        step("choose the end date before start date") {
+          eventViewModel.event.value.startTime = LocalDateTime.now().plusDays(1)
+          eventViewModel.event.value.endTime = LocalDateTime.now().minusDays(1)
+          endTimePicker { performClick() }
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
+
+        composeTestRule.waitForIdle()
+
+        step("choose the end time before start time") {
+          endTimePicker { performClick() }
+          composeTestRule.onNodeWithText("OK").assertExists()
+          composeTestRule.onNodeWithText("OK").performClick()
+          eventViewModel.event.value.endTime = LocalDateTime.now().minusHours(1)
+          composeTestRule.onNodeWithText("OK").performClick()
+        }
       }
     }
   }
