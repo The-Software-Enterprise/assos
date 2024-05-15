@@ -13,7 +13,7 @@ data class Event(
     var startTime: LocalDateTime = LocalDateTime.now(),
     var endTime: LocalDateTime = LocalDateTime.now().plusHours(1),
     var fields: List<Field> = emptyList(),
-    val documentSnapshot: DocumentSnapshot? = null,
+    var documentSnapshot: DocumentSnapshot? = null,
 
     // Use to listen change in state
     val _unused: Boolean = false,

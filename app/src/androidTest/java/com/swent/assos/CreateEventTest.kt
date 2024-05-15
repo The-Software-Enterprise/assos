@@ -1,5 +1,6 @@
 package com.swent.assos
 
+import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
@@ -8,9 +9,13 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.swent.assos.model.data.Event
+import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.impl.AuthServiceImpl
 import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.model.service.impl.StorageServiceImpl
+import com.swent.assos.model.service.impl.deserializeEvent
+import com.swent.assos.model.service.impl.serialize
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.screens.CreateEventScreen
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
@@ -22,6 +27,8 @@ import java.time.LocalDateTime
 import java.util.Calendar
 import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -241,5 +248,22 @@ class CreateEventTest : SuperTest() {
         }
       }
     }
+  }
+
+  @Test
+  fun testSerializeDeserializeEvent() = runBlocking {
+    val event =
+        Event(
+            id = generateUniqueID(),
+            title = "title",
+            description = "description",
+            image = Uri.parse("https://www.google.com"),
+            fields = listOf())
+    val serialized = serialize(event)
+    FirebaseFirestore.getInstance().collection("events").document(event.id).set(serialized).await()
+    val documentSnapshot =
+        FirebaseFirestore.getInstance().collection("events").document(event.id).get().await()
+    val deserialized = deserializeEvent(documentSnapshot)
+    deserialized.documentSnapshot = null
   }
 }
