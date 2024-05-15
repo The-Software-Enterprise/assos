@@ -3,6 +3,7 @@ package com.swent.assos.ui.screens.manageAsso.createEvent
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -107,7 +108,22 @@ fun CreateEvent(assoId: String, navigationActions: NavigationActions) {
                               alpha = if (canCreate) 1f else 0.5f))
                       .clickable {
                         if (canCreate)
-                            viewModel.createEvent(onSuccess = { navigationActions.goBack() })
+                            viewModel.createEvent(
+                                onSuccess = {
+                                  navigationActions.goBack()
+                                  Toast.makeText(
+                                          context,
+                                          "The event has been successfully created!",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                },
+                                onError = {
+                                  Toast.makeText(
+                                          context,
+                                          "Unfortunately, the event could not be created. Please try again!",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                })
                       }
                       .padding(vertical = 5.dp, horizontal = 10.dp)
                       .testTag("CreateButton")) {
