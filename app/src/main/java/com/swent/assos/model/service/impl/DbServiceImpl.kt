@@ -411,6 +411,26 @@ constructor(
     }
   }
 
+    override suspend fun joinAssociation(
+        triple: Triple<String, String, Int>,
+        userId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+            firestore
+                .collection("users")
+                .document(userId)
+                .update(
+                    "associations",
+                    FieldValue.arrayUnion(
+                        mapOf(
+                            "assoId" to triple.first,
+                            "position" to triple.second,
+                            "rank" to triple.third)))
+                .addOnSuccessListener { onSuccess() }
+                .addOnFailureListener { onError(it.message ?: "") }
+    }
+
   override suspend fun updateBanner(associationId: String, banner: Uri) {
     firestore
         .collection("associations")

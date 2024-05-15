@@ -52,9 +52,7 @@ fun NameListItem(
   val applicantsViewModel: ApplicantViewModel = hiltViewModel()
   val applicants by applicantsViewModel.applicants.collectAsState()
 
-        val assoViewModel: AssoViewModel = hiltViewModel()
-        val asso by assoViewModel.association.collectAsState()
-    val currentUser by assoViewModel.currentUser.collectAsState()
+    val assoViewModel: AssoViewModel = hiltViewModel()
 
 
   val applicant: Applicant =
@@ -62,10 +60,6 @@ fun NameListItem(
 
   LaunchedEffect(key1 = Unit) {
       userViewModel.getUser(userId)
-
-      if (!isStaffing) {
-          assoViewModel.getAssociation(eventId)
-      }
 
   }
 
@@ -117,7 +111,8 @@ fun NameListItem(
                               applicantsViewModel.unAcceptApplicant(applicantId =  applicant.id, assoId = eventId)
                               status = "pending" // Assuming pending is the initial state
                           } else {
-                              assoViewModel.joinAssociation(eventId)
+
+                              assoViewModel.joinAssociation(eventId, userId)
 
                               applicantsViewModel.acceptApplicant(
                                   applicantId = applicant.id,

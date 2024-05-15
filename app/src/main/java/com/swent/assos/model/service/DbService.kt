@@ -99,6 +99,14 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+
+    suspend fun joinAssociation(
+        triple: Triple<String, String, Int>,
+        userId: String,
+        onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    )
+
   suspend fun updateBanner(associationId: String, banner: Uri)
 
   // Tickets ---------------------------------------------------------------
