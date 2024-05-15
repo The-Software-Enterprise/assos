@@ -67,6 +67,11 @@ android {
       }
     }
   }
+  configurations {
+    all {
+      exclude(group = "androidx.appcompat", module = "appcompat")
+    }
+  }
 }
 
 dependencies {
@@ -146,6 +151,9 @@ dependencies {
   //Images
   implementation ("io.coil-kt:coil-compose:2.1.0")
 
+  // Lottie Animation
+  implementation("com.airbnb.android:lottie-compose:4.0.0")
+
   // CameraX core library
   implementation("androidx.camera:camera-camera2:1.1.0-alpha06")
   implementation("androidx.camera:camera-lifecycle:1.1.0-alpha06")
@@ -198,8 +206,4 @@ sonar {
     property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory.get()}/reports/lint-results-debug.xml")
     property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
   }
-
-
-
-
 }
