@@ -41,11 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -201,9 +203,16 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
-      title = { Text(asso.acronym, modifier = Modifier.testTag("Title")) },
+      title = { Text(asso.acronym, modifier = Modifier.testTag("Title"), style =
+      TextStyle(
+          fontSize = 30.sp,
+          lineHeight = 32.sp,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.SemiBold,
+          color = MaterialTheme.colorScheme.onBackground)) },
       navigationIcon = {
         Image(
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
