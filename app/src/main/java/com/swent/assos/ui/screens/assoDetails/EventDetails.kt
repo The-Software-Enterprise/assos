@@ -171,6 +171,12 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                   }
             }
           }
+
+          item {
+            if (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+              Button(onClick = { launcher.launch(intent) }) { Text("Setup NFC Tag") }
+            }
+          }
         }
       }
 }
