@@ -54,6 +54,7 @@ fun NameListItem(
 
         val assoViewModel: AssoViewModel = hiltViewModel()
         val asso by assoViewModel.association.collectAsState()
+    val currentUser by assoViewModel.currentUser.collectAsState()
 
 
   val applicant: Applicant =
@@ -115,10 +116,14 @@ fun NameListItem(
                           if (status == "accepted") {
                               applicantsViewModel.unAcceptApplicant(applicantId =  applicant.id, assoId = eventId)
                               status = "pending" // Assuming pending is the initial state
-                          } else {
-                              applicantsViewModel.acceptApplicant(applicantId =  applicant.id, assoId = eventId)
+                          } else if (!currentUser.associations.map{it.first}.contains(asso.id)){
+                              applicantsViewModel.acceptApplicant(
+                                  applicantId = applicant.id,
+                                  assoId = eventId
+                              )
                               assoViewModel.joinAssociation(asso.id)
                               status = "accepted"
+
                           }
                       }
                     }
