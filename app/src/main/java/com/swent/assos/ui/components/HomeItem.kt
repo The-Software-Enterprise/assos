@@ -36,7 +36,7 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(4.dp, RoundedCornerShape(12.dp))
+          Modifier.shadow(4.dp, RoundedCornerShape(12.dp), ambientColor = MaterialTheme.colorScheme.surface, spotColor = MaterialTheme.colorScheme.surface)
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
@@ -74,14 +74,15 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black)
+                        color = MaterialTheme.colorScheme.onBackground)
                     Text(
                         modifier =
                             Modifier.width(173.dp).weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light)
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
             }
       }
