@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,7 +42,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.NFCReader
-import com.swent.assos.NFCWriter
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -59,17 +56,6 @@ fun MyTickets(navigationActions: NavigationActions) {
 
   val viewModel: TicketViewModel = hiltViewModel()
   val myTickets by viewModel.tickets.collectAsState()
-  /*TODO = Make a special UI For Host*/
-  val eventID = "02ttjtn3a8Uj07WmxmTr"
-  val launcher =
-      rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            // Handle the result of the activity here
-            // For example, you can retrieve data from the activity result
-            val data = result.data
-            // Handle the data accordingly
-          }
-  val intent = Intent(LocalContext.current, NFCWriter::class.java).putExtra("eventID", eventID)
 
   LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
 
@@ -91,15 +77,6 @@ fun MyTickets(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-          item {
-            Button(
-                onClick = {
-                  // Launch NFCActivity
-                  launcher.launch(intent)
-                }) {
-                  Text("Write Balélec tickets to NFC tag")
-                }
-          }
           items(items = myTickets) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }

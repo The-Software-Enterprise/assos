@@ -1,7 +1,10 @@
 package com.swent.assos.ui.screens.assoDetails
 
+import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
@@ -43,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.swent.assos.NFCWriter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
@@ -67,6 +73,16 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val viewModel: ProfileViewModel = hiltViewModel()
 
   val myAssociations by viewModel.memberAssociations.collectAsState()
+
+  val launcher =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            // Handle the result of the activity here
+            // For example, you can retrieve data from the activity result
+            val data = result.data
+            // Handle the data accordingly
+          }
+  val intent = Intent(LocalContext.current, NFCWriter::class.java).putExtra("eventID", eventId)
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -145,6 +161,12 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                   text = "Saff List")
             }
           }
+
+          item {
+            if (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+              Button(onClick = { launcher.launch(intent) }) { Text("Setup NFC Tag") }
+            }
+          }
         }
       }
 }
@@ -193,12 +215,6 @@ fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }
 
-@Composable
 fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
-  for (asso in myAssociations) {
-    if (asso.id == currentAsso) {
-      return true
-    }
-  }
-  return false
+  return myAssociations.map { it.id }.contains(currentAsso)
 }
