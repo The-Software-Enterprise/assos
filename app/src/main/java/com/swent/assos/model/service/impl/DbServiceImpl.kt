@@ -54,6 +54,28 @@ constructor(
             } ?: emptyList())
   }
 
+  private fun deserialiazeUser(doc: DocumentSnapshot): User {
+    return User(
+        id = doc.id,
+        firstName = doc.getString("firstname") ?: "",
+        lastName = doc.getString("name") ?: "",
+        email = doc.getString("email") ?: "",
+        following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
+        associations =
+            doc.get("associations")?.let { associations ->
+              (associations as? List<Map<String, Any>>)?.mapNotNull {
+                val assoId = it["assoId"] as? String
+                val position = it["position"] as? String
+                val rank = (it["rank"] as? Long)?.toInt()
+                if (assoId != null && position != null && rank != null) {
+                  Triple(assoId, position, rank)
+                } else {
+                  null
+                }
+              } ?: emptyList()
+            } ?: emptyList())
+  }
+
   override suspend fun getUserByEmail(
       email: String,
       onSuccess: () -> Unit,
@@ -66,26 +88,7 @@ constructor(
       return User()
     }
     onSuccess()
-    return User(
-        id = snapshot.documents[0].id,
-        firstName = snapshot.documents[0].getString("firstname") ?: "",
-        lastName = snapshot.documents[0].getString("name") ?: "",
-        email = snapshot.documents[0].getString("email") ?: "",
-        following =
-            (snapshot.documents[0].get("following") as? MutableList<String>) ?: mutableListOf(),
-        associations =
-            snapshot.documents[0].get("associations")?.let { associations ->
-              (associations as? List<Map<String, Any>>)?.mapNotNull {
-                val assoId = it["assoId"] as? String
-                val position = it["position"] as? String
-                val rank = (it["rank"] as? Long)?.toInt()
-                if (assoId != null && position != null && rank != null) {
-                  Triple(assoId, position, rank)
-                } else {
-                  null
-                }
-              } ?: emptyList()
-            } ?: emptyList())
+    return deserialiazeUser(snapshot.documents[0])
   }
 
   override suspend fun getAllAssociations(
