@@ -1,23 +1,16 @@
 package com.swent.assos
 
-import android.os.SystemClock.sleep
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.screens.CreateEventScreen
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import okhttp3.internal.wait
 import java.util.Calendar
 import kotlin.random.Random
 import org.junit.Test
@@ -174,9 +167,7 @@ class CreateEventTest : SuperTest() {
           }
         }
 
-        step("Create the event") {
-          createButton { performClick() }
-        }
+        step("Create the event") { createButton { performClick() } }
       }
     }
   }
