@@ -22,27 +22,17 @@ import com.swent.assos.ui.theme.AssosTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 
-
 @AndroidEntryPoint
 class NFCReader : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
-  val _msgList = MutableStateFlow(emptyList<String>())
-  lateinit var ticketId: String
+  val validIDs = MutableStateFlow(emptyList<String>())
+  private lateinit var ticketId: String
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContent {
-      AssosTheme {
-        NFCReading(msgListState = _msgList)
-      }
-    }
 
-    //appeler l'intent comme ceci (cf. ChatGPT)
-    //val intent = Intent(this, TargetActivity::class.java)
-    //intent.putExtra("ticketId", value) // "key" is a string identifier, value can be any Serializable or Parcelable object
-    //startActivity(intent)
     ticketId = intent.getStringExtra("ticketId") ?: ""
 
     resolveIntent(intent)
@@ -52,6 +42,10 @@ class NFCReader : ComponentActivity() {
       Toast.makeText(this, "NFC is not supported on this device", Toast.LENGTH_SHORT).show()
       finish() // Finish the activity
       return
+    }
+
+    setContent {
+      AssosTheme { NFCReading(ticketList = validIDs, ticketId = ticketId, context = this) }
     }
   }
 
@@ -103,24 +97,24 @@ class NFCReader : ComponentActivity() {
       val messages = mutableListOf<NdefMessage>()
 
       if (rawMsgs != null) {
-            rawMsgs.forEach { messages.add(it as NdefMessage) }
+        rawMsgs.forEach { messages.add(it as NdefMessage) }
       } else {
         // Unknown tag type
-            val empty = ByteArray(0)
-            val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
-            val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
-            val payload = dumpTagData(tag).toByteArray()
-            val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
-            val  msg = NdefMessage(arrayOf(record))
-            messages.add(msg)
+        val empty = ByteArray(0)
+        val id = intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)
+        val tag = intent.parcelable<Tag>(NfcAdapter.EXTRA_TAG) ?: return
+        val payload = dumpTagData(tag).toByteArray()
+        val record = NdefRecord(NdefRecord.TNF_UNKNOWN, empty, id, payload)
+        val msg = NdefMessage(arrayOf(record))
+        messages.add(msg)
+      }
+      messages.forEach {
+        if (it.records.size > 1) {
+          validIDs.value += String(it.records[1].payload)
+        } else {
+          validIDs.value += String(it.records[0].payload)
         }
-    messages.forEach {
-          if (it.records.size > 1) {
-            _msgList.value += "Message: ${String(it.records[1].payload)}"
-          } else {
-            _msgList.value += "Message: ${String(it.records[0].payload)}"
-          }
-        }
+      }
     }
   }
 
