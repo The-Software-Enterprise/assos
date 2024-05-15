@@ -79,7 +79,7 @@ fun Explorer(navigationActions: NavigationActions) {
                 Modifier.fillMaxWidth()
                     .padding(paddingValues)
                     .testTag("AssoList")
-                    .background(color = MaterialTheme.colorScheme.surface),
+                    .background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
@@ -88,7 +88,7 @@ fun Explorer(navigationActions: NavigationActions) {
               } else {
                 if (associations.isEmpty()) {
                   item {
-                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
                   }
                 } else {
                   items(items = associations, key = { it.id }) {
