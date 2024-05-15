@@ -35,6 +35,7 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -42,6 +43,7 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
 
   val viewModelEvent: EventViewModel = hiltViewModel()
   val event by viewModelEvent.event.collectAsState()
+  val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu, HH:mm")
 
   LaunchedEffect(key1 = Unit) { viewModelEvent.getEvent(eventId) }
 
@@ -67,11 +69,11 @@ fun TicketDetails(eventId: String, navigationActions: NavigationActions) {
           Spacer(modifier = Modifier.height(8.dp))
 
           Text(
-              text = "Start Time: " + event.startTime?.let { dateToReadableString(it) },
+              text = "Start Time: " + event.startTime?.let { dateFormatter.format(it) },
               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
               modifier = Modifier.padding(8.dp).testTag("StartTime"))
           Text(
-              text = "End Time: " + event.endTime?.let { dateToReadableString(it) },
+              text = "End Time: " + event.endTime?.let { dateFormatter.format(it) },
               fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
               modifier = Modifier.padding(8.dp).testTag("EndTime"))
           Text(
