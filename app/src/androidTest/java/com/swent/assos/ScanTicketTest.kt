@@ -30,6 +30,7 @@ class ScanTicketTest : SuperTest() {
   private val eventId = "4sS18EaaF6qknAFqxHX2"
 
   override fun setup() {
+    super.setup()
     DataCache.currentUser.value =
         User(
             id = profileId,
@@ -40,7 +41,7 @@ class ScanTicketTest : SuperTest() {
             sciper = "330249",
             semester = "GM-BA6",
             tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
-    super.setup()
+
     composeTestRule.activity.setContent { ScanTicket(navigationActions = mockNavActions) }
   }
 
