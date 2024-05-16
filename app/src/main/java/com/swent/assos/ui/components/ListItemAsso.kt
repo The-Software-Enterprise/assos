@@ -49,13 +49,14 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface)
+            color = MaterialTheme.colorScheme.onBackground)
       },
       supportingContent = {
         Text(
             text = asso.fullname,
             fontSize = 14.sp,
-            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            color = MaterialTheme.colorScheme.onBackground)
       },
       leadingContent = {
         Image(

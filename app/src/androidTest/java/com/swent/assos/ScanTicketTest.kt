@@ -43,6 +43,7 @@ class ScanTicketTest : SuperTest() {
             sciper = "330249",
             semester = "GM-BA6",
             tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
+
     composeTestRule.activity.setContent { ScanTicket(navigationActions = mockNavActions) }
   }
 
