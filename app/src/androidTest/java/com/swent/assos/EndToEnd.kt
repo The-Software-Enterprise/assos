@@ -25,7 +25,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import java.lang.Thread.sleep
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -77,7 +76,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          Thread.sleep(2000)
+          composeTestRule.waitForIdle()
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
@@ -178,7 +177,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          Thread.sleep(2000)
+          composeTestRule.waitForIdle()
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
