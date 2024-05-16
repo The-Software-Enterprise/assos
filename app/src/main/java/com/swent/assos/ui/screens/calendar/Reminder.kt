@@ -92,102 +92,100 @@ fun Reminder(calendarViewModel: CalendarViewModel, navigationActions: Navigation
         userScrollEnabled = true,
         state = listState,
         modifier = Modifier.testTag("ReminderList")) {
-          repeat(4) {
-            items(tomorrowEvents) { event ->
-              Box(
-                  modifier =
-                      Modifier.fillMaxWidth()
-                          .height(64.dp)
-                          .background(
-                              color = Color(0xFF8572FF), shape = RoundedCornerShape(size = 10.dp))
-                          .clickable {
-                            navigationActions.navigateTo(
-                                Destinations.EVENT_DETAILS.route +
-                                    "/${event.second.id}" +
-                                    "/${event.second.associationId}")
-                          }
-                          .testTag("Item")) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
-                      Box(
-                          modifier =
-                              Modifier.padding(start = 10.dp, top = 8.dp)
-                                  .width(48.dp)
-                                  .height(48.dp)
-                                  .background(
-                                      color = Color(0xFFBAB0F9),
-                                      shape = RoundedCornerShape(size = 10.dp)),
-                          contentAlignment = Alignment.Center) {
-                            Image(
-                                painter = painterResource(R.drawable.calendar),
-                                contentDescription = null)
-                          }
-                      Column {
+          items(tomorrowEvents) { event ->
+            Box(
+                modifier =
+                    Modifier.fillMaxWidth()
+                        .height(64.dp)
+                        .background(
+                            color = Color(0xFF8572FF), shape = RoundedCornerShape(size = 10.dp))
+                        .clickable {
+                          navigationActions.navigateTo(
+                              Destinations.EVENT_DETAILS.route +
+                                  "/${event.second.id}" +
+                                  "/${event.second.associationId}")
+                        }
+                        .testTag("Item")) {
+                  Row(modifier = Modifier.fillMaxWidth()) {
+                    Box(
+                        modifier =
+                            Modifier.padding(start = 10.dp, top = 8.dp)
+                                .width(48.dp)
+                                .height(48.dp)
+                                .background(
+                                    color = Color(0xFFBAB0F9),
+                                    shape = RoundedCornerShape(size = 10.dp)),
+                        contentAlignment = Alignment.Center) {
+                          Image(
+                              painter = painterResource(R.drawable.calendar),
+                              contentDescription = null)
+                        }
+                    Column {
+                      Text(
+                          modifier = Modifier.padding(start = 27.dp, top = 8.dp).fillMaxWidth(),
+                          text = "${event.second.title} - ${event.first}",
+                          style =
+                              TextStyle(
+                                  fontSize = 12.sp,
+                                  lineHeight = 26.sp,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight(400),
+                                  color = Color(0xFFFFFFFF),
+                                  letterSpacing = 0.5.sp,
+                              ))
+                      Row(
+                          modifier = Modifier.padding(start = 27.dp, top = 8.dp).fillMaxWidth(),
+                      ) {
+                        Image(painterResource(R.drawable.time_circle), contentDescription = null)
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            modifier = Modifier.padding(start = 27.dp, top = 8.dp).fillMaxWidth(),
-                            text = "${event.second.title} - ${event.first}",
-                            style =
-                                TextStyle(
-                                    fontSize = 12.sp,
-                                    lineHeight = 26.sp,
-                                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                                    fontWeight = FontWeight(400),
-                                    color = Color(0xFFFFFFFF),
-                                    letterSpacing = 0.5.sp,
-                                ))
-                        Row(
-                            modifier = Modifier.padding(start = 27.dp, top = 8.dp).fillMaxWidth(),
-                        ) {
-                          Image(painterResource(R.drawable.time_circle), contentDescription = null)
-                          Spacer(modifier = Modifier.width(6.dp))
-                          Text(
-                              modifier = Modifier.padding(top = 2.dp),
-                              text =
-                                  "${
+                            modifier = Modifier.padding(top = 2.dp),
+                            text =
+                                "${
                                           event.second.startTime?.format(
                                               DateTimeFormatter.ofPattern(
                                                   "HH"
                                               )
                                           )
                                       }" +
-                                      "." +
-                                      "${
+                                    "." +
+                                    "${
                                                   event.second.startTime?.format(
                                                       DateTimeFormatter.ofPattern(
                                                           "mm"
                                                       )
                                                   )
                                               }" +
-                                      " - " +
-                                      "${
+                                    " - " +
+                                    "${
                                                   event.second.endTime?.format(
                                                       DateTimeFormatter.ofPattern(
                                                           "HH"
                                                       )
                                                   )
                                               }" +
-                                      "." +
-                                      "${
+                                    "." +
+                                    "${
                                                   event.second.endTime?.format(
                                                       DateTimeFormatter.ofPattern(
                                                           "mm"
                                                       )
                                                   )
                                               }",
-                              style =
-                                  TextStyle(
-                                      fontSize = 10.sp,
-                                      lineHeight = 26.sp,
-                                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                                      fontWeight = FontWeight(400),
-                                      color = Color(0xFFFFFFFF),
-                                      letterSpacing = 0.5.sp,
-                                  ))
-                        }
+                            style =
+                                TextStyle(
+                                    fontSize = 10.sp,
+                                    lineHeight = 26.sp,
+                                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                    fontWeight = FontWeight(400),
+                                    color = Color(0xFFFFFFFF),
+                                    letterSpacing = 0.5.sp,
+                                ))
                       }
                     }
                   }
-              Spacer(Modifier.height(14.dp))
-            }
+                }
+            Spacer(Modifier.height(14.dp))
           }
         }
   }
