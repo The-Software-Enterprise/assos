@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -49,7 +48,6 @@ import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
-import com.swent.assos.ui.theme.VeryLightGray
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -130,7 +128,8 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
             shape = RoundedCornerShape(15.dp),
-            colors = SearchBarDefaults.colors(containerColor = VeryLightGray),
+            colors =
+                SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             trailingIcon = {},
             leadingIcon = {
               if (isSearching) {

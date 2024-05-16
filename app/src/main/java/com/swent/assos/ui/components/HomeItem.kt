@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -37,15 +36,11 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(10.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(10.dp))
-              .background(MaterialTheme.colorScheme.background)
           Modifier
               // .shadow(2.dp, RoundedCornerShape(2.dp))
               .background(
-                  color = MaterialTheme.colorScheme.surface,
+                  color = MaterialTheme.colorScheme.surfaceVariant,
                   shape = RoundedCornerShape(size = 15.dp))
-              .fillMaxWidth()
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
