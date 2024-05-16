@@ -17,8 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.Font
@@ -36,8 +35,7 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(4.dp, RoundedCornerShape(12.dp))
-              .background(MaterialTheme.colorScheme.background)
+          Modifier.background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
               .clickable {
@@ -52,36 +50,36 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                 AsyncImage(
                     model = news.images[0],
                     contentDescription = "news image",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
+                )
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = "news image",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)))
               }
               Column(
                   modifier =
-                      Modifier.padding(start = 16.dp)
+                      Modifier.padding(start = 16.dp, top = 20.dp)
                           .align(Alignment.CenterVertically)
                           .testTag("NewsItemColumn"),
-                  verticalArrangement = Arrangement.spacedBy(10.dp),
+                  verticalArrangement = Arrangement.spacedBy(5.dp),
                   horizontalAlignment = Alignment.Start) {
                     Text(
-                        modifier = Modifier.width(173.dp).testTag("NewsItemsTitle"),
+                        modifier = Modifier.testTag("NewsItemsTitle"),
                         text = news.title,
-                        fontSize = 16.sp,
+                        fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black)
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onBackground)
                     Text(
-                        modifier =
-                            Modifier.width(173.dp).weight(1f).testTag("NewsItemsDescription"),
+                        modifier = Modifier.weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light)
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
             }
       }
