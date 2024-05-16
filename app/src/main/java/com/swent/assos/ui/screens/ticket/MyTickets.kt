@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -69,7 +70,10 @@ fun MyTickets(navigationActions: NavigationActions) {
             contentColor = MaterialTheme.colorScheme.onTertiary,
             onClick = { navigationActions.navigateTo(Destinations.SCAN_TICKET.route) },
             shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.CameraAlt, contentDescription = null)
+              Image(
+                  imageVector = Icons.Default.CameraAlt,
+                  contentDescription = null,
+                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
             }
       }) { paddingValues ->
         LazyColumn(
@@ -104,7 +108,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
   LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
   Card(
-      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
+      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("TicketItem")

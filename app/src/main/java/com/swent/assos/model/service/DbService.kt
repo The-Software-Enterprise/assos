@@ -6,12 +6,15 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 
 interface DbService {
   // Users --------------------------------------------------------------------
   suspend fun getUser(userId: String): User
+
+  suspend fun getUserByEmail(email: String, onSuccess: () -> Unit, onFailure: () -> Unit): User
 
   // Associations ---------------------------------------------------------------
   suspend fun getAllAssociations(lastDocumentSnapshot: DocumentSnapshot?): List<Association>
@@ -87,10 +90,15 @@ interface DbService {
   )
 
   suspend fun addTicketToUser(
-      email: String,
+      applicantId: String,
       eventId: String,
-      onSuccess: () -> Unit,
-      onFailure: () -> Unit
+      status: ParticipationStatus,
+  )
+
+  suspend fun removeTicketFromUser(
+      applicantId: String,
+      eventId: String,
+      status: ParticipationStatus
   )
 
   suspend fun joinAssociation(
