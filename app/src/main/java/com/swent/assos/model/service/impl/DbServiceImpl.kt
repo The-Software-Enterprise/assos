@@ -159,25 +159,25 @@ constructor(
     return applicants
   }
 
-    override suspend fun acceptApplicant(applicantId: String, assoId: String) {
-        firestore
-            .collection("associations")
-            .document(assoId)
-            .collection("applicants")
-            .document(applicantId)
-            .update("status", "accepted")
-    }
+  override suspend fun acceptApplicant(applicantId: String, assoId: String) {
+    firestore
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "accepted")
+  }
 
-    override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
-        firestore
-            .collection("associations")
-            .document(assoId)
-            .collection("applicants")
-            .document(applicantId)
-            .update("status", "pending")
-    }
+  override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
+    firestore
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "pending")
+  }
 
-    override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
+  override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
 
     firestore
         .collection("events")
@@ -411,49 +411,53 @@ constructor(
     }
   }
 
-    override suspend fun joinAssociation(
-        triple: Triple<String, String, Int>,
-        userId: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-            firestore
-                .collection("users")
-                .document(userId)
-                .update(
-                    "associations",
-                    FieldValue.arrayUnion(
-                        mapOf(
-                            "assoId" to triple.first,
-                            "position" to triple.second,
-                            "rank" to triple.third)))
-                .addOnSuccessListener { onSuccess() }
-                .addOnFailureListener { onError(it.message ?: "") }
-    }
+  override suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("users")
+        .document(userId)
+        .update(
+            "associations",
+            FieldValue.arrayUnion(
+                mapOf(
+                    "assoId" to triple.first, "position" to triple.second, "rank" to triple.third)))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError(it.message ?: "") }
+  }
 
-    override suspend fun quitAssociation(
-        assoId: String,
-        userId: String,
-        onSuccess: () -> Unit,
-        onError: (String) -> Unit
-    ) {
-        val userRef = firestore.collection("users").document(userId)
+  override suspend fun quitAssociation(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val userRef = firestore.collection("users").document(userId)
 
-        userRef.get().addOnSuccessListener { document ->
-            if (document.exists()) {
-                val associations = document.get("associations") as List<Map<String, Any>>?
-                associations?.find { it["assoId"] == assoId }?.let { associationToQuit ->
-                    userRef.update("associations", FieldValue.arrayRemove(associationToQuit))
-                        .addOnSuccessListener { onSuccess() }
-                        .addOnFailureListener { onError(it.message ?: "Failed to remove association") }
+    userRef
+        .get()
+        .addOnSuccessListener { document ->
+          if (document.exists()) {
+            val associations = document.get("associations") as List<Map<String, Any>>?
+            associations
+                ?.find { it["assoId"] == assoId }
+                ?.let { associationToQuit ->
+                  userRef
+                      .update("associations", FieldValue.arrayRemove(associationToQuit))
+                      .addOnSuccessListener { onSuccess() }
+                      .addOnFailureListener {
+                        onError(it.message ?: "Failed to remove association")
+                      }
                 } ?: onError("Association not found")
-            } else {
-                onError("User not found")
-            }
-        }.addOnFailureListener {
-            onError(it.message ?: "Error fetching user details")
+          } else {
+            onError("User not found")
+          }
         }
-    }
+        .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
+  }
 
   override suspend fun updateBanner(associationId: String, banner: Uri) {
     firestore

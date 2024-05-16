@@ -113,24 +113,22 @@ constructor(
 
   fun joinAssociation(associationId: String, userId: String) {
     val triple =
-      Triple(associationId, AssociationPosition.MEMBER.string, AssociationPosition.MEMBER.rank)
+        Triple(associationId, AssociationPosition.MEMBER.string, AssociationPosition.MEMBER.rank)
     DataCache.currentUser.value =
-      DataCache.currentUser.value.copy(
-        associations = DataCache.currentUser.value.associations + triple)
-    viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, userId,{}, {}) }
+        DataCache.currentUser.value.copy(
+            associations = DataCache.currentUser.value.associations + triple)
+    viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, userId, {}, {}) }
   }
 
-    fun applyToAssociation(userId: String, onSuccess: () -> Unit) {
+  fun applyToAssociation(userId: String, onSuccess: () -> Unit) {
 
-      viewModelScope.launch(ioDispatcher) {
-        dbService.applyJoinAsso(
-          assoId = _association.value.id, userId = userId, onSuccess = onSuccess, onError = {}
-        )
-      }
-
+    viewModelScope.launch(ioDispatcher) {
+      dbService.applyJoinAsso(
+          assoId = _association.value.id, userId = userId, onSuccess = onSuccess, onError = {})
     }
+  }
 
   fun quitAssociation(assoId: String, userId: String) {
-    viewModelScope.launch(ioDispatcher) { dbService.quitAssociation(assoId, userId,{}, {}) }
+    viewModelScope.launch(ioDispatcher) { dbService.quitAssociation(assoId, userId, {}, {}) }
   }
 }

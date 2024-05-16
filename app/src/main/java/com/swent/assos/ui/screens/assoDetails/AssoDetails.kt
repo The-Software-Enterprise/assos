@@ -105,7 +105,8 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
       },
       floatingActionButton = {
         if (!currentUser.associations.map { it.first }.contains(assoId))
-            JoinUsButton(onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
+            JoinUsButton(
+                onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
         else null
       },
       floatingActionButtonPosition = FabPosition.Center,

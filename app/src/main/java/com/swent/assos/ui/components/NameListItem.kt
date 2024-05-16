@@ -52,16 +52,12 @@ fun NameListItem(
   val applicantsViewModel: ApplicantViewModel = hiltViewModel()
   val applicants by applicantsViewModel.applicants.collectAsState()
 
-    val assoViewModel: AssoViewModel = hiltViewModel()
-
+  val assoViewModel: AssoViewModel = hiltViewModel()
 
   val applicant: Applicant =
       applicants.find { it.userId == userId } ?: Applicant("", "", LocalDateTime.now(), "")
 
-  LaunchedEffect(key1 = Unit) {
-      userViewModel.getUser(userId)
-
-  }
+  LaunchedEffect(key1 = Unit) { userViewModel.getUser(userId) }
 
   var status by remember { mutableStateOf(applicant.status) }
   val scope = rememberCoroutineScope()
@@ -107,20 +103,18 @@ fun NameListItem(
                           status = "accepted"
                         }
                       } else {
-                          if (status == "accepted") {
-                              assoViewModel.quitAssociation(eventId, userId)
-                              applicantsViewModel.unAcceptApplicant(applicantId =  applicant.id, assoId = eventId)
-                              status = "pending"
-                          } else {
+                        if (status == "accepted") {
+                          assoViewModel.quitAssociation(eventId, userId)
+                          applicantsViewModel.unAcceptApplicant(
+                              applicantId = applicant.id, assoId = eventId)
+                          status = "pending"
+                        } else {
 
-                              assoViewModel.joinAssociation(eventId, userId)
-                              applicantsViewModel.acceptApplicant(
-                                  applicantId = applicant.id,
-                                  assoId = eventId
-                              )
-                              status = "accepted"
-
-                          }
+                          assoViewModel.joinAssociation(eventId, userId)
+                          applicantsViewModel.acceptApplicant(
+                              applicantId = applicant.id, assoId = eventId)
+                          status = "accepted"
+                        }
                       }
                     }
                   },
