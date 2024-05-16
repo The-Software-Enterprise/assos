@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ApplicantViewModel
-import com.swent.assos.ui.components.NameListItem
+import com.swent.assos.ui.components.ApplicationListItem
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @Composable
@@ -53,7 +53,8 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
             state = listState) {
               if (sortedApplicants.isNotEmpty()) {
                 items(sortedApplicants) { applicant ->
-                  NameListItem(userId = applicant.userId, eventId = eventId, isStaffing = true)
+                  ApplicationListItem(
+                      userId = applicant.userId, eventId = eventId, isStaffing = true)
                 }
               }
             }

@@ -11,5 +11,9 @@ class StaffManagementScreen(semanticsProvider: SemanticsNodeInteractionsProvider
 
   val staffList: KNode = onNode { hasTestTag("StaffList") }
 
-  val staffItem: KNode = staffList.child { hasTestTag("NameListItem") }
+  val staffItem: KNode = staffList.child { hasTestTag("ApplicationListItem") }
+
+  val staffItemName: KNode = staffItem.child { hasTestTag("ApplicationListItemFullName") }
+
+  val staffItemAcceptButton: KNode = staffItem.child { hasTestTag("AcceptApplicationButton") }
 }
