@@ -34,7 +34,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("NewsItem")
+          Modifier.testTag("EventItem")
               .padding(0.dp)
               .background(
                   color = MaterialTheme.colorScheme.surfaceVariant,
@@ -63,7 +63,10 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
           Text(
               text = event.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .wrapContentSize(Alignment.Center)
+                      .testTag("EventItemTitle"))
           Spacer(modifier = Modifier.height(8.dp))
           Text(
               text = event.description,

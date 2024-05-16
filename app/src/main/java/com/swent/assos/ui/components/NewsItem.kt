@@ -63,7 +63,10 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
           Text(
               text = news.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
+              modifier =
+                  Modifier.fillMaxWidth()
+                      .wrapContentSize(Alignment.Center)
+                      .testTag("NewsItemTitle"))
           Spacer(modifier = Modifier.height(8.dp))
           Text(
               text = news.description,
