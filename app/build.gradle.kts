@@ -67,9 +67,10 @@ android {
       }
     }
   }
-  configurations {
-    all {
-      exclude(group = "androidx.appcompat", module = "appcompat")
+  configurations.all {
+    resolutionStrategy {
+      force("androidx.appcompat:appcompat:1.4.1")
+      force("androidx.appcompat:appcompat-resources:1.4.1")
     }
   }
 }
