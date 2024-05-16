@@ -108,7 +108,11 @@ class NFCReader : ComponentActivity() {
       validIDs.value.clear()
       messages.forEach {
         if (it.records.size > 1) {
-          validIDs.value += String(it.records[1].payload)
+          for (i in it.records.indices) {
+            if (i != 0) {
+              validIDs.value += String(it.records[i].payload)
+            }
+          }
         } else {
           validIDs.value += String(it.records[0].payload)
         }
