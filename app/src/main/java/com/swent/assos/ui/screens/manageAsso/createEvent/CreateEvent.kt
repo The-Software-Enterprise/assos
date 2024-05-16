@@ -64,7 +64,6 @@ import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.DateTimePickers
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.FloatingButtons
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.Input
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -175,29 +174,32 @@ fun CreateEvent(
                           launcherBanner.launch(pickImageIntent)
                         },
                 contentAlignment = Alignment.Center) {
-                  if (event.image == Uri.EMPTY) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.padding(bottom = 40.dp)) {
-                          Image(
-                              imageVector = Icons.Outlined.AddPhotoAlternate,
-                              contentDescription = "add an image",
-                              colorFilter =
-                                  ColorFilter.tint(
-                                      MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)))
-                          Spacer(modifier = Modifier.width(10.dp))
-                          Text(
-                              "add an image",
-                              fontSize = 15.sp,
-                              color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
-                        }
-                  } else {
-                    Image(
-                        modifier = Modifier.fillMaxSize().testTag("ImageBanner"),
-                        painter = rememberAsyncImagePainter(event.image),
-                        contentDescription = "image",
-                        contentScale = ContentScale.Crop)
+                  when (event.image) {
+                    Uri.EMPTY -> {
+                      Row(
+                          verticalAlignment = Alignment.CenterVertically,
+                          horizontalArrangement = Arrangement.Center,
+                          modifier = Modifier.padding(bottom = 40.dp)) {
+                            Image(
+                                imageVector = Icons.Outlined.AddPhotoAlternate,
+                                contentDescription = "add an image",
+                                colorFilter =
+                                    ColorFilter.tint(
+                                        MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)))
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                "add an image",
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f))
+                          }
+                    }
+                    else -> {
+                      Image(
+                          modifier = Modifier.fillMaxSize().testTag("ImageBanner"),
+                          painter = rememberAsyncImagePainter(event.image),
+                          contentDescription = "image",
+                          contentScale = ContentScale.Crop)
+                    }
                   }
 
                   Box(modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter)) {
@@ -221,71 +223,74 @@ fun CreateEvent(
           }
 
           itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->
-            if (field is Event.Field.Text) {
-              Input(
-                  viewModel = viewModel,
-                  value = field.title,
-                  onValueChange = { viewModel.updateFieldTitle(index, it) },
-                  placeholder = "Title",
-                  fontSize = 16.sp,
-                  lineHeight = 16.sp,
-                  singleLine = true,
-                  paddingValues = PaddingValues(horizontal = 10.dp),
-                  testTag = "InputFieldTitle" + index,
-              )
-              Box(
-                  modifier =
-                      Modifier.height(2.dp)
-                          .fillMaxWidth()
-                          .padding(horizontal = 16.dp)
-                          .background(color = MaterialTheme.colorScheme.surface))
-              Input(
-                  viewModel = viewModel,
-                  value = field.text,
-                  onValueChange = { viewModel.updateFieldText(index, it) },
-                  placeholder = "Here, write a short description of the event...",
-                  fontSize = 13.sp,
-                  lineHeight = 13.sp,
-                  singleLine = false,
-                  paddingValues = PaddingValues(horizontal = 16.dp),
-                  testTag = "InputFieldDescription" + index,
-              )
-            } else if (field is Event.Field.Image) {
-              LazyRow(
-                  modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
-                  horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    item {
-                      Row(
-                          modifier =
-                              Modifier.fillMaxHeight(0.9f)
-                                  .padding(start = 10.dp)
-                                  .clip(RoundedCornerShape(8.dp))
-                                  .background(MaterialTheme.colorScheme.surface)
-                                  .clickable {
-                                    fieldIndex = index
-                                    launcherImagesField.launch("image/*")
-                                  }
-                                  .testTag("InputFieldImage" + index),
-                          verticalAlignment = Alignment.CenterVertically,
-                          horizontalArrangement = Arrangement.Center) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 30.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                            ) {
-                              Image(
-                                  imageVector = Icons.Outlined.AddPhotoAlternate,
-                                  contentDescription = "add an image",
-                                  colorFilter =
-                                      ColorFilter.tint(MaterialTheme.colorScheme.onSurface))
+            when (field) {
+              is Event.Field.Text -> {
+                Input(
+                    viewModel = viewModel,
+                    value = field.title,
+                    onValueChange = { viewModel.updateFieldTitle(index, it) },
+                    placeholder = "Title",
+                    fontSize = 16.sp,
+                    lineHeight = 16.sp,
+                    singleLine = true,
+                    paddingValues = PaddingValues(horizontal = 10.dp),
+                    testTag = "InputFieldTitle" + index,
+                )
+                Box(
+                    modifier =
+                        Modifier.height(2.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .background(color = MaterialTheme.colorScheme.surface))
+                Input(
+                    viewModel = viewModel,
+                    value = field.text,
+                    onValueChange = { viewModel.updateFieldText(index, it) },
+                    placeholder = "Here, write a short description of the event...",
+                    fontSize = 13.sp,
+                    lineHeight = 13.sp,
+                    singleLine = false,
+                    paddingValues = PaddingValues(horizontal = 16.dp),
+                    testTag = "InputFieldDescription" + index,
+                )
+              }
+              is Event.Field.Image -> {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                      item {
+                        Row(
+                            modifier =
+                                Modifier.fillMaxHeight(0.9f)
+                                    .padding(start = 10.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(MaterialTheme.colorScheme.surface)
+                                    .clickable {
+                                      fieldIndex = index
+                                      launcherImagesField.launch("image/*")
+                                    }
+                                    .testTag("InputFieldImage" + index),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center) {
+                              Row(
+                                  modifier = Modifier.padding(horizontal = 30.dp),
+                                  verticalAlignment = Alignment.CenterVertically,
+                                  horizontalArrangement = Arrangement.Center,
+                              ) {
+                                Image(
+                                    imageVector = Icons.Outlined.AddPhotoAlternate,
+                                    contentDescription = "add an image",
+                                    colorFilter =
+                                        ColorFilter.tint(MaterialTheme.colorScheme.onSurface))
+                              }
                             }
-                          }
+                      }
+                      items(field.uris) {
+                        ImageListItem(uri = it) { viewModel.removeImageFromField(index, it) }
+                      }
+                      item { Spacer(modifier = Modifier.width(12.dp)) }
                     }
-                    items(field.uris) {
-                      ImageListItem(uri = it) { viewModel.removeImageFromField(index, it) }
-                    }
-                    item { Spacer(modifier = Modifier.width(12.dp)) }
-                  }
+              }
             }
           }
 

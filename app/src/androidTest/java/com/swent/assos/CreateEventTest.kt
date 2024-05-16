@@ -104,6 +104,20 @@ class CreateEventTest : SuperTest() {
   }
 
   @Test
+  fun createEventDisabled() {
+    eventViewModel.clear()
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        step("Try create the event empty") {
+          createButton { performClick() }
+          verify(exactly = 0) { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
   fun testImageBannerLauncher() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
