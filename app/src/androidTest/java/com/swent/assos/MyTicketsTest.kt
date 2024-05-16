@@ -32,11 +32,23 @@ class MyTicketsTest : SuperTest() {
     FirebaseFirestore.getInstance()
         .collection("tickets")
         .document("le85estunbeaudepartment")
-        .set(Ticket(id = ticketId, eventId = eventId, userId = profileId, status = ParticipationStatus.Participant))
+        .set(
+            Ticket(
+                id = ticketId,
+                eventId = eventId,
+                userId = profileId,
+                status = ParticipationStatus.Participant))
     FirebaseFirestore.getInstance()
         .collection("users")
         .document(profileId)
-      .collection("tickets").document(ticketId).set(Ticket(id = ticketId, eventId = eventId, userId = profileId, status = ParticipationStatus.Participant))
+        .collection("tickets")
+        .document(ticketId)
+        .set(
+            Ticket(
+                id = ticketId,
+                eventId = eventId,
+                userId = profileId,
+                status = ParticipationStatus.Participant))
 
     composeTestRule.activity.setContent { MyTickets(navigationActions = mockNavActions) }
   }
