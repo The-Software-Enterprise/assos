@@ -35,6 +35,10 @@ constructor(
   val loading = _loadingDisplay.asStateFlow()
 
   init {
+    loadNews()
+  }
+
+  fun loadNews() {
     viewModelScope.launch(ioDispatcher) {
       if (DataCache.currentUser.value.id.isNotEmpty()) {
         dbService.filterNewsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
