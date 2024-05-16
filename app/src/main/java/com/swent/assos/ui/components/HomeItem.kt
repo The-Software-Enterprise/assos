@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -36,6 +37,9 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
+          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(10.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(10.dp))
+              .background(MaterialTheme.colorScheme.background)
           Modifier
               // .shadow(2.dp, RoundedCornerShape(2.dp))
               .background(
@@ -63,13 +67,13 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     model = news.images[0],
                     contentDescription = "news image",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    modifier = Modifier.width(80.dp).fillMaxWidth().padding(6.dp))
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = "news image",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    modifier = Modifier.width(80.dp).fillMaxWidth().padding(6.dp))
               }
               Column(
                   modifier =

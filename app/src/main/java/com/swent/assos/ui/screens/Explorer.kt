@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -47,6 +49,7 @@ import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
+import com.swent.assos.ui.theme.VeryLightGray
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -94,6 +97,7 @@ fun Explorer(navigationActions: NavigationActions) {
                         color = MaterialTheme.colorScheme.onBackground)
                   }
                 } else {
+                  item { Spacer(modifier = Modifier.height(6.dp)) }
                   items(items = associations, key = { it.id }) {
                     ListItemAsso(
                         asso = it,
@@ -121,13 +125,14 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
               .padding(10.dp)
               .background(
                   color = MaterialTheme.colorScheme.background,
-                  shape = RoundedCornerShape(size = 28.dp)),
+                  shape = RoundedCornerShape(size = 15.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
-            colors =
-                SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-            trailingIcon = {
+            shape = RoundedCornerShape(15.dp),
+            colors = SearchBarDefaults.colors(containerColor = VeryLightGray),
+            trailingIcon = {},
+            leadingIcon = {
               if (isSearching) {
                 Image(
                     imageVector = Icons.Default.Close,
@@ -146,15 +151,7 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
               }
             },
-            leadingIcon = {
-              Image(
-                  imageVector = Icons.Default.Menu,
-                  contentDescription = null,
-                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
-            },
-            placeholder = {
-              Text(text = "Search an Association", color = MaterialTheme.colorScheme.onBackground)
-            },
+            placeholder = { Text(text = "Search an Association") },
             query = query,
             onQueryChange = { explorerViewModel.filterOnSearch(it) },
             onSearch = {},

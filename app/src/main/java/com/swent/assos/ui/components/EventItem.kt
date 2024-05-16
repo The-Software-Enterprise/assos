@@ -48,11 +48,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
               }) {
         Column(
-            modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(true) {
-                  navigationActions.navigateTo(
-                      Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
-                },
+            modifier = Modifier.width(200.dp).padding(vertical = 0.dp),
         ) {
           Image(
               painter = rememberAsyncImagePainter(event.image),

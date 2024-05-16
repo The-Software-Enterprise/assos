@@ -2,6 +2,8 @@ package com.swent.assos.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -33,33 +35,28 @@ fun News(navigationActions: NavigationActions) {
   val listState = rememberLazyListState()
   val loading = viewModel.loading.collectAsState()
 
-  Scaffold(
-      modifier = Modifier.background(Color.Transparent).testTag("NewsScreen"),
-      topBar = { PageTitle(title = "Home") }) { paddingValues ->
-        LazyColumn(
-            modifier =
-                Modifier.padding(paddingValues)
-                    .padding(horizontal = 15.dp)
-                    .padding(vertical = 5.dp)
-                    .background(Color.Transparent)
-                    .testTag("NewsList"),
-            verticalArrangement = Arrangement.spacedBy(15.dp),
-            userScrollEnabled = true,
-            state = listState) {
-              if (loading.value) {
-                item { LoadingCircle() }
-              } else {
-                if (news.isEmpty()) {
-                  item {
-                    Text(
-                        text = stringResource(R.string.NoResult),
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onBackground)
-                  }
-                } else {
-                  items(news) { news -> HomeItem(news = news, navigationActions) }
-                }
-              }
+  Scaffold(modifier = Modifier.testTag("NewsScreen"), topBar = { PageTitle(title = "Home") }) {
+      paddingValues ->
+    LazyColumn(
+        modifier =
+            Modifier.padding(paddingValues)
+                .padding(horizontal = 15.dp)
+                .padding(vertical = 5.dp)
+                .testTag("NewsList"),
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        userScrollEnabled = true,
+        state = listState) {
+          if (loading.value) {
+            item { LoadingCircle() }
+          } else {
+            if (news.isEmpty()) {
+              item { Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center) }
+            } else {
+              item { Spacer(modifier = Modifier.height(10.dp)) }
+              items(news) { news -> HomeItem(news = news, navigationActions) }
+              item { Spacer(modifier = Modifier.height(10.dp)) }
             }
-      }
+          }
+        }
+  }
 }
