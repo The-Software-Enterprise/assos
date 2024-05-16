@@ -51,4 +51,16 @@ constructor(
           applicantId = applicantId, eventId = eventId, status = ParticipationStatus.Staff)
     }
   }
+
+  fun acceptApplicant(assoId: String, applicantId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.acceptApplicant(applicantId = applicantId, assoId = assoId)
+    }
+  }
+
+  fun unAcceptApplicant(applicantId: String, assoId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unAcceptApplicant(applicantId = applicantId, assoId = assoId)
+    }
+  }
 }
