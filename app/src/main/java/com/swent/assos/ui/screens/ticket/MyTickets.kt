@@ -77,7 +77,7 @@ fun MyTickets(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-          items(items = myTickets) {
+          items(items = myTickets, key = { it.id }) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }
         }
@@ -87,9 +87,10 @@ fun MyTickets(navigationActions: NavigationActions) {
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
-  val viewModel: EventViewModel = hiltViewModel()
+  val viewModel: EventViewModel = hiltViewModel(key = ticket.id)
   val event by viewModel.event.collectAsState()
   val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu, HH:mm")
+
   val launcher =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.StartActivityForResult()) { result ->
