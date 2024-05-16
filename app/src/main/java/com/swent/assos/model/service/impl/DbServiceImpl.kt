@@ -38,9 +38,13 @@ constructor(
         firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
+        following =
+            when (snapshot["following"]) {
+              is MutableList<*> -> snapshot["following"] as MutableList<String>
+              else -> mutableListOf()
+            },
         associations =
-            snapshot.get("associations")?.let { associations ->
+            snapshot["associations"]?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
                 val assoId = it["assoId"] as? String
                 val position = it["position"] as? String
@@ -523,6 +527,40 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+
+      fields =
+          when (doc["fields"]) {
+            is List<*> -> {
+              (doc["fields"] as List<*>).mapNotNull { field ->
+                when (field) {
+                  is Map<*, *> -> {
+                    val type = field["type"] as? String
+                    when (type) {
+                      "text" -> {
+                        val title = field["title"] as? String ?: ""
+                        val text = field["text"] as? String ?: ""
+                        Event.Field.Text(title, text)
+                      }
+                      "image" -> {
+                        val uris =
+                            (field["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                              Uri.parse(it)
+                            }
+                        when (uris) {
+                          null -> null
+                          else -> Event.Field.Image(uris)
+                        }
+                      }
+                      else -> null
+                    }
+                  }
+                  else -> null
+                }
+              }
+            }
+            else -> emptyList()
+          },
+
       documentSnapshot = doc)
 }
 
