@@ -1,15 +1,11 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,38 +31,38 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(Color.White),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier
-            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
-            .testTag("NewsItem")) {
+          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+              .testTag("NewsItem")) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
-          horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          if (news.images.isNotEmpty()) {
-            AsyncImage(
-                model = news.images[0],
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
-          } else {
-            AsyncImage(
-                model = R.drawable.ic_launcher_foreground,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
-          }
-          Text(
-              text = news.title,
-              style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.padding(8.dp))
-          Text(
-              text = news.description,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(5.dp))
-        }
+            horizontalAlignment = Alignment.CenterHorizontally) {
+              if (news.images.isNotEmpty()) {
+                AsyncImage(
+                    model = news.images[0],
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier =
+                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
+              } else {
+                AsyncImage(
+                    model = R.drawable.ic_launcher_foreground,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier =
+                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
+              }
+              Text(
+                  text = news.title,
+                  style = MaterialTheme.typography.titleMedium,
+                  modifier = Modifier.padding(8.dp))
+              Text(
+                  text = news.description,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(5.dp))
+            }
       }
 }

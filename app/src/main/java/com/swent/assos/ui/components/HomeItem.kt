@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -37,8 +36,7 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier
-              .background(MaterialTheme.colorScheme.background)
+          Modifier.background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
               .clickable {
@@ -54,7 +52,8 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     model = news.images[0],
                     contentDescription = "news image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),)
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
+                )
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
@@ -77,8 +76,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontWeight = FontWeight.SemiBold,
                         color = Color.Black)
                     Text(
-                        modifier =
-                            Modifier.weight(1f).testTag("NewsItemsDescription"),
+                        modifier = Modifier.weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))

@@ -2,15 +2,11 @@ package com.swent.assos.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,33 +30,27 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier
-            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
               .clickable {
                 navigationActions.navigateTo(
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
               }) {
         Column(
-            modifier = Modifier.width(200.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-          Image(
-              painter = rememberAsyncImagePainter(event.image),
-              contentDescription = null,
-              contentScale = ContentScale.Crop,
-              modifier =
-                  Modifier
-                      .height(100.dp)
-                      .background(MaterialTheme.colorScheme.outline))
-          Text(
-              text = event.title,
-              style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.padding(8.dp))
-          Text(
-              text = event.description,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.padding(5.dp))
-        }
+            modifier = Modifier.width(200.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+              Image(
+                  painter = rememberAsyncImagePainter(event.image),
+                  contentDescription = null,
+                  contentScale = ContentScale.Crop,
+                  modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.outline))
+              Text(
+                  text = event.title,
+                  style = MaterialTheme.typography.titleMedium,
+                  modifier = Modifier.padding(8.dp))
+              Text(
+                  text = event.description,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(5.dp))
+            }
       }
 }
