@@ -23,9 +23,4 @@ data class Event(
 
     data class Image(val uris: List<Uri>) : Field()
   }
-
-  enum class FieldType(val type: String) {
-    TEXT("text"),
-    IMAGE("image"),
-  }
 }
