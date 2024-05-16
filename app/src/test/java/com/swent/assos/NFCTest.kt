@@ -25,10 +25,6 @@ class NFCTest {
   private val readPayload: String = "Hello !"
   private val writePayload: String = "Test"
 
-  init {
-    readActivity.ticketId = "a2yHSEnKrvdWEClidKEa"
-  }
-
   @Test
   fun testReadNFC() {
     every { mockTag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
@@ -46,7 +42,7 @@ class NFCTest {
 
     readActivity.onNewIntent(mockIntent)
     val res = readActivity.validIDs.value
-    assert(res.contains(readPayload))
+    assert(res.contains("Message: $readPayload"))
   }
 
   @Test
