@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,7 @@ import com.swent.assos.model.navigation.NavigationActions
 @Composable
 fun NewsItem(news: News, navigationActions: NavigationActions) {
   Card(
-      colors = CardDefaults.cardColors(Color.White),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.outlineVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
