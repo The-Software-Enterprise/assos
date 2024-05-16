@@ -131,7 +131,6 @@ dependencies {
   testImplementation("io.mockk:mockk:1.12.0")
   testImplementation("io.mockk:mockk-android:1.13.7")
   testImplementation("io.mockk:mockk-agent:1.13.7")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.1")
   testImplementation("androidx.test.ext:junit:1.1.5")
   testImplementation("androidx.test.espresso:espresso-core:3.5.1")
   testImplementation("org.robolectric:robolectric:4.11.1")
@@ -146,6 +145,18 @@ dependencies {
 
   //Images
   implementation ("io.coil-kt:coil-compose:2.1.0")
+
+  // CameraX core library
+  implementation("androidx.camera:camera-camera2:1.1.0-alpha06")
+  implementation("androidx.camera:camera-lifecycle:1.1.0-alpha06")
+  implementation("androidx.camera:camera-view:1.0.0-alpha27")
+
+  // Compose-specific dependencies
+  implementation("androidx.compose.ui:ui:1.3.0")
+  // Si vous utilisez Kotlin coroutines pour le multithreading
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
+
+
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
@@ -187,4 +198,8 @@ sonar {
     property("sonar.androidLint.reportPaths", "${project.layout.buildDirectory.get()}/reports/lint-results-debug.xml")
     property("sonar.coverage.jacoco.xmlReportPaths", "${project.layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
   }
+
+
+
+
 }

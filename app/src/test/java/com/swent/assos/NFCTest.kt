@@ -6,14 +6,14 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class NFCTest {
 
   private val mockTag = mockk<Tag>()
@@ -21,6 +21,8 @@ class NFCTest {
   private val mockMessage = mockk<NdefMessage>()
   private val mockNDEF = mockk<Ndef>()
   private val activity = NFCActivity()
+  private val readPayload: String = "Hello !"
+  private val writePayload: String = "Test"
 
   @Test
   fun testReadNFC() {
@@ -29,18 +31,17 @@ class NFCTest {
     every { mockIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) } returns
         arrayOf(mockMessage)
     val pathPrefix = "swent.com:nfcapp"
-    val payload = "Hello !"
     val nfcRecord =
         NdefRecord(
             NdefRecord.TNF_EXTERNAL_TYPE,
             pathPrefix.toByteArray(),
             ByteArray(0),
-            payload.toByteArray())
+            readPayload.toByteArray())
     every { mockMessage.records } returns arrayOf(nfcRecord)
 
     activity.onNewIntent(mockIntent)
-    val res = activity._msgList.value
-    assert(res.contains("Message: $payload"))
+    val res = activity.msgList.value
+    assert(res.contains("Message: $readPayload"))
   }
 
   @Test
@@ -59,9 +60,9 @@ class NFCTest {
         }
     every { mockNDEF.close() } returns Unit
 
-    assert(activity.createNFCMessage("Test", mockIntent))
+    assert(activity.createNFCMessage(writePayload, mockIntent))
     val str = String(res.records[0].payload)
-    assert(str.contains("Test"))
+    assert(str.contains(writePayload))
   }
 
   companion object {

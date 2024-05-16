@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class NFCActivity : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
-  val _msgList = MutableStateFlow(emptyList<String>())
+  val msgList = MutableStateFlow(emptyList<String>())
   private val _mode = MutableStateFlow(NFCMode.READ)
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -45,7 +45,7 @@ class NFCActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       AssosTheme {
-        NFCDisplay(msgListState = _msgList, modeState = _mode, onSwitch = { switchMode() })
+        NFCDisplay(msgListState = msgList, modeState = _mode, onSwitch = { switchMode() })
       }
     }
 
@@ -152,9 +152,9 @@ class NFCActivity : ComponentActivity() {
         // Setup the views
         messages.forEach {
           if (it.records.size > 1) {
-            _msgList.value += "Message: ${String(it.records[1].payload)}"
+            msgList.value += "Message: ${String(it.records[1].payload)}"
           } else {
-            _msgList.value += "Message: ${String(it.records[0].payload)}"
+            msgList.value += "Message: ${String(it.records[0].payload)}"
           }
         }
       }
@@ -164,10 +164,10 @@ class NFCActivity : ComponentActivity() {
   private fun dumpTagData(tag: Tag): String {
     val sb = StringBuilder()
     val id = tag.id
-    sb.append("ID (hex): ").append(toHex(id)).append('\n')
-    sb.append("ID (reversed hex): ").append(toReversedHex(id)).append('\n')
-    sb.append("ID (dec): ").append(toDec(id)).append('\n')
-    sb.append("ID (reversed dec): ").append(toReversedDec(id)).append('\n')
+    sb.append("ID (hex): ").append(toHex(id, reversed = false)).append('\n')
+    sb.append("ID (reversed hex): ").append(toHex(id, reversed = true)).append('\n')
+    sb.append("ID (dec): ").append(toDec(id, reversed = false)).append('\n')
+    sb.append("ID (reversed dec): ").append(toDec(id, reversed = true)).append('\n')
     val prefix = "android.nfc.tech."
     sb.append("Technologies: ")
     for (tech in tag.techList) {
@@ -210,47 +210,28 @@ class NFCActivity : ComponentActivity() {
     return sb.toString()
   }
 
-  private fun toHex(bytes: ByteArray): String {
+  private fun toHex(bytes: ByteArray, reversed: Boolean): String {
     val sb = StringBuilder()
-    for (i in bytes.indices.reversed()) {
+    val indices = if (reversed) bytes.indices else bytes.indices.reversed()
+    for (i in indices) {
+      if (i > 0 && reversed) {
+        sb.append(" ")
+      }
       val b = bytes[i].toInt() and 0xff
       if (b < 0x10) sb.append('0')
       sb.append(Integer.toHexString(b))
-      if (i > 0) {
+      if (i > 0 && !reversed) {
         sb.append(" ")
       }
     }
     return sb.toString()
   }
 
-  private fun toReversedHex(bytes: ByteArray): String {
-    val sb = StringBuilder()
-    for (i in bytes.indices) {
-      if (i > 0) {
-        sb.append(" ")
-      }
-      val b = bytes[i].toInt() and 0xff
-      if (b < 0x10) sb.append('0')
-      sb.append(Integer.toHexString(b))
-    }
-    return sb.toString()
-  }
-
-  private fun toDec(bytes: ByteArray): Long {
+  private fun toDec(bytes: ByteArray, reversed: Boolean): Long {
     var result: Long = 0
     var factor: Long = 1
-    for (i in bytes.indices) {
-      val value = bytes[i].toLong() and 0xffL
-      result += value * factor
-      factor *= 256L
-    }
-    return result
-  }
-
-  private fun toReversedDec(bytes: ByteArray): Long {
-    var result: Long = 0
-    var factor: Long = 1
-    for (i in bytes.indices.reversed()) {
+    val indices = if (reversed) bytes.indices.reversed() else bytes.indices
+    for (i in indices) {
       val value = bytes[i].toLong() and 0xffL
       result += value * factor
       factor *= 256L
@@ -314,7 +295,6 @@ class NFCActivity : ComponentActivity() {
       return false
     } catch (e: Exception) {
       // Write operation has failed
-      throw e
     }
     return false
   }
