@@ -10,7 +10,17 @@ data class Event(
     var associationId: String = "",
     var image: Uri = Uri.EMPTY,
     val description: String = "",
-    var startTime: LocalDateTime? = null,
-    var endTime: LocalDateTime? = null,
-    val documentSnapshot: DocumentSnapshot? = null,
-)
+    var startTime: LocalDateTime = LocalDateTime.now(),
+    var endTime: LocalDateTime = LocalDateTime.now().plusHours(1),
+    var fields: List<Field> = emptyList(),
+    var documentSnapshot: DocumentSnapshot? = null,
+
+    // Use to listen change in state
+    val _unused: Boolean = false,
+) {
+  sealed class Field {
+    data class Text(var title: String, var text: String) : Field()
+
+    data class Image(val uris: List<Uri>) : Field()
+  }
+}

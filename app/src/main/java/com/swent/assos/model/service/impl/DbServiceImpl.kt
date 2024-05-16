@@ -17,7 +17,6 @@ import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.timestampToLocalDateTime
-import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -174,17 +173,7 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot =
-        query.get().await()
-            ?: return Event(
-                "",
-                "",
-                "",
-                Uri.EMPTY,
-                "",
-                null,
-                null,
-            )
+    val snapshot = query.get().await() ?: return Event("")
     return deserializeEvent(snapshot)
   }
 
@@ -481,19 +470,25 @@ constructor(
   }
 }
 
-private fun serialize(event: Event): Map<String, Any> {
-
+fun serialize(event: Event): Map<String, Any> {
   return mapOf(
       "title" to event.title,
       "description" to event.description,
       "associationId" to event.associationId,
       "image" to event.image.toString(),
-      "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
-      "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-  )
+      "startTime" to localDateTimeToTimestamp(event.startTime),
+      "endTime" to localDateTimeToTimestamp(event.endTime),
+      "fields" to
+          event.fields.map {
+            when (it) {
+              is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
+              is Event.Field.Image ->
+                  mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
+            }
+          })
 }
 
-private fun deserializeEvent(doc: DocumentSnapshot): Event {
+fun deserializeEvent(doc: DocumentSnapshot): Event {
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -502,6 +497,39 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+      fields =
+          if (doc["fields"] is List<*>) {
+            (doc["fields"] as List<*>)
+                .mapNotNull {
+                  if (it is Map<*, *>) {
+                    val type = it["type"] as? String
+                    when (type) {
+                      "text" -> {
+                        val title = it["title"] as? String ?: ""
+                        val text = it["text"] as? String ?: ""
+                        Event.Field.Text(title, text)
+                      }
+                      "image" -> {
+                        val uris =
+                            (it["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                              Uri.parse(it)
+                            }
+                        if (uris != null) {
+                          Event.Field.Image(uris)
+                        } else {
+                          null
+                        }
+                      }
+                      else -> null
+                    }
+                  } else {
+                    null
+                  }
+                }
+                .filterNotNull()
+          } else {
+            emptyList()
+          },
       documentSnapshot = doc)
 }
 
@@ -510,7 +538,7 @@ private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-private fun serialize(news: News): Map<String, Any> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,
@@ -520,7 +548,7 @@ private fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
-private fun deserializeNews(doc: DocumentSnapshot): News {
+fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -542,7 +570,7 @@ private fun deserializeNews(doc: DocumentSnapshot): News {
       documentSnapshot = doc)
 }
 
-private fun deserializeAssociation(doc: DocumentSnapshot): Association {
+fun deserializeAssociation(doc: DocumentSnapshot): Association {
   return Association(
       id = doc.id,
       acronym = doc.getString("acronym") ?: "",
