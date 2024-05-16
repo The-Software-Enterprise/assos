@@ -90,6 +90,20 @@ constructor(
     return deserialiazeUser(snapshot.documents[0])
   }
 
+  override suspend fun getTicketsUser(userId: String): List<Ticket> {
+    val query = firestore.collection("users").document(userId).collection("tickets")
+    // get all the tickets from the user from the ids of tickets in the user collection
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { doc ->
+      val ticketId = doc.id
+      val ticketQuery = firestore.collection("tickets").document(ticketId)
+      deserializeTicket(ticketQuery.get().await())
+    }
+  }
+
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {

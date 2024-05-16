@@ -5,6 +5,7 @@ import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
@@ -21,19 +22,22 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class MyTicketsTest : SuperTest() {
 
-  private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
-  private val eventId = "4sS18EaaF6qknAFqxHX2"
+  private val profileId = "liddejsp"
+  private val eventId = "soireeVendee"
+  private val ticketId = "le85estunbeaudepartment"
 
   override fun setup() {
-    DataCache.currentUser.value = User(id = profileId, tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
+
+    DataCache.currentUser.value = User(id = profileId, tickets = listOf(ticketId))
     FirebaseFirestore.getInstance()
         .collection("tickets")
-        .add(
-            Ticket(
-                id = "1",
-                eventId = eventId,
-                userId = profileId,
-            ))
+        .document("le85estunbeaudepartment")
+        .set(Ticket(id = ticketId, eventId = eventId, userId = profileId, status = ParticipationStatus.Participant))
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(profileId)
+      .collection("tickets").document(ticketId).set(Ticket(id = ticketId, eventId = eventId, userId = profileId, status = ParticipationStatus.Participant))
+
     composeTestRule.activity.setContent { MyTickets(navigationActions = mockNavActions) }
   }
 
