@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.NFCReader
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -57,7 +58,7 @@ fun MyTickets(navigationActions: NavigationActions) {
   val viewModel: TicketViewModel = hiltViewModel()
   val myTickets by viewModel.tickets.collectAsState()
 
-  LaunchedEffect(key1 = Unit) { viewModel.getTickets() }
+  LaunchedEffect(key1 = Unit) { viewModel.getUserTickets(userId = DataCache.currentUser.value.id) }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("MyTicketsScreen"),

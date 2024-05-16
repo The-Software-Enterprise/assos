@@ -105,6 +105,8 @@ interface DbService {
 
   suspend fun getTickets(userId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Ticket>
 
+  suspend fun getTicketsUser(userId: String): List<Ticket>
+
   suspend fun getTicketFromId(ticketId: String): Ticket
 
   suspend fun getTicketsFromEventId(eventId: String): List<Ticket>
