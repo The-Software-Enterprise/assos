@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ApplicantViewModel
-import com.swent.assos.ui.components.NameListItem
+import com.swent.assos.ui.components.ApplicationListItem
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @Composable
@@ -49,11 +49,10 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = true,
             state = listState) {
-              if (applicants.isEmpty()) {
-                item { NameListItem(userId = "0000", eventId = assoId, isStaffing = false) }
-              } else {
+              if (applicants.isNotEmpty()) {
                 items(applicants) { applicant ->
-                  NameListItem(userId = applicant.userId, eventId = assoId, isStaffing = false)
+                  ApplicationListItem(
+                      userId = applicant.userId, eventId = assoId, isStaffing = true)
                 }
               }
             }
