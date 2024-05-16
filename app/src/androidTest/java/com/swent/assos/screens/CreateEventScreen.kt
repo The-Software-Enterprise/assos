@@ -39,7 +39,9 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   }
 
   val inputFieldImage1: KNode = onNode { hasTestTag("InputFieldImage1") }
+  val listImagesField0: KNode = onNode { hasTestTag("ListImagesField0") }
   val imageListItem: KNode = onNode { hasTestTag("ImageListItem") }
+  val deleteImageListItem: KNode = onNode { hasTestTag("DeleteImageListItem") }
 
   val inputFieldTitle2: KNode = onNode {
     hasTestTag("InputFieldTitle2")

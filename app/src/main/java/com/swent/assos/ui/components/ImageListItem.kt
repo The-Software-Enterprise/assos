@@ -33,7 +33,7 @@ fun ImageListItem(uri: Uri, onDelete: (() -> Unit)? = null) {
         painter = rememberAsyncImagePainter(uri),
         contentDescription = null,
         contentScale = ContentScale.Crop,
-        modifier = Modifier.fillMaxSize().align(Alignment.Center),
+        modifier = Modifier.fillMaxSize().align(Alignment.Center).testTag("ImageListItem"),
     )
     if (onDelete != null) {
       Image(
@@ -48,7 +48,7 @@ fun ImageListItem(uri: Uri, onDelete: (() -> Unit)? = null) {
                       RoundedCornerShape(5.dp))
                   .clickable { onDelete() }
                   .padding(3.dp)
-                  .testTag("ImageListItem"),
+                  .testTag("DeleteImageListItem"),
           colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
       )
     }

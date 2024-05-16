@@ -256,7 +256,9 @@ fun CreateEvent(
               }
               is Event.Field.Image -> {
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp).testTag(
+                        "ListImagesField$index"
+                    ),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                       item {
                         Row(

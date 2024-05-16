@@ -1,7 +1,9 @@
 package com.swent.assos
 
 import android.net.Uri
+import android.os.SystemClock.sleep
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -139,6 +141,7 @@ class CreateEventTest : SuperTest() {
     }
   }
 
+  @OptIn(ExperimentalTestApi::class)
   @Test
   fun testImages() {
     eventViewModel.clear()
@@ -149,6 +152,11 @@ class CreateEventTest : SuperTest() {
         step("add image field") { addImageFieldButton { performClick() } }
         eventViewModel.addImagesToField(listOf(Uri.parse("https://picsum.photos/200/300")), 0)
         step("test the image field is present") { imageListItem { assertIsDisplayed() } }
+        step("remove the image") {
+          listImagesField0 { performScrollToIndex(1) }
+          deleteImageListItem { performClick() }
+          imageListItem { assertIsNotDisplayed() }
+        }
       }
     }
   }
