@@ -194,7 +194,7 @@ fun CreateEvent(
                         }
                   } else {
                     Image(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().testTag("ImageBanner"),
                         painter = rememberAsyncImagePainter(event.image),
                         contentDescription = "image",
                         contentScale = ContentScale.Crop)

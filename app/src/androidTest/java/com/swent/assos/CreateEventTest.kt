@@ -2,7 +2,6 @@ package com.swent.assos
 
 import android.net.Uri
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -105,16 +104,16 @@ class CreateEventTest : SuperTest() {
   }
 
   @Test
-  fun testImageBanner() {
+  fun testImageBannerLauncher() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
-        step("test the image") { image { performClick() } }
+        step("test the image") { inputBanner { performClick() } }
       }
     }
   }
 
   @Test
-  fun testImageField() {
+  fun testImageFieldLauncher() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("add text field") { addTextFieldButton { performClick() } }
@@ -122,6 +121,20 @@ class CreateEventTest : SuperTest() {
           addImageFieldButton { performClick() }
           inputFieldImage1 { performClick() }
         }
+      }
+    }
+  }
+
+  @Test
+  fun testImages() {
+    eventViewModel.clear()
+    run {
+      ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
+        eventViewModel.setImage(Uri.parse("https://picsum.photos/200/300"))
+        step("test the image is present") { inputBanner { assertIsDisplayed() } }
+        step("add image field") { addImageFieldButton { performClick() } }
+        eventViewModel.addImagesToField(listOf(Uri.parse("https://picsum.photos/200/300")), 0)
+        step("test the image field is present") { imageListItem { assertIsDisplayed() } }
       }
     }
   }
@@ -258,12 +271,42 @@ class CreateEventTest : SuperTest() {
             title = "title",
             description = "description",
             image = Uri.parse("https://www.google.com"),
-            fields = listOf())
+            fields =
+                listOf(
+                    Event.Field.Text("title1", "description1"),
+                    Event.Field.Image(
+                        listOf(
+                            Uri.parse("https://www.google.com"),
+                            Uri.parse("https://www.google.com"))),
+                    Event.Field.Text("title2", "description2")))
     val serialized = serialize(event)
     FirebaseFirestore.getInstance().collection("events").document(event.id).set(serialized).await()
     val documentSnapshot =
         FirebaseFirestore.getInstance().collection("events").document(event.id).get().await()
     val deserialized = deserializeEvent(documentSnapshot)
-    deserialized.documentSnapshot = null
+
+    assert(event.id == deserialized.id)
+    assert(event.title == deserialized.title)
+    assert(event.description == deserialized.description)
+    assert(event.image == deserialized.image)
+    assert(event.fields.size == deserialized.fields.size)
+    assert(
+        (event.fields[0] as Event.Field.Text).title ==
+            (deserialized.fields[0] as Event.Field.Text).title)
+    assert(
+        (event.fields[0] as Event.Field.Text).text ==
+            (deserialized.fields[0] as Event.Field.Text).text)
+    assert(
+        (event.fields[1] as Event.Field.Image).uris[0] ==
+            (deserialized.fields[1] as Event.Field.Image).uris[0])
+    assert(
+        (event.fields[1] as Event.Field.Image).uris[1] ==
+            (deserialized.fields[1] as Event.Field.Image).uris[1])
+    assert(
+        (event.fields[2] as Event.Field.Text).title ==
+            (deserialized.fields[2] as Event.Field.Text).title)
+    assert(
+        (event.fields[2] as Event.Field.Text).text ==
+            (deserialized.fields[2] as Event.Field.Text).text)
   }
 }

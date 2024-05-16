@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 
@@ -46,7 +47,8 @@ fun ImageListItem(uri: Uri, onDelete: (() -> Unit)? = null) {
                       MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
                       RoundedCornerShape(5.dp))
                   .clickable { onDelete() }
-                  .padding(3.dp),
+                  .padding(3.dp)
+                  .testTag("ImageListItem"),
           colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
       )
     }

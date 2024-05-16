@@ -20,9 +20,11 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     hasSetTextAction()
   }
 
-  val image: KNode = onNode { hasTestTag("InputImage") }
+  val inputBanner: KNode = onNode { hasTestTag("InputImage") }
   val startTimePicker: KNode = onNode { hasTestTag("StartTimePicker") }
   val endTimePicker: KNode = onNode { hasTestTag("EndTimePicker") }
+
+  val imageBanner: KNode = onNode { hasTestTag("ImageBanner") }
 
   val addTextFieldButton: KNode = onNode { hasTestTag("AddTextFieldButton") }
   val addImageFieldButton: KNode = onNode { hasTestTag("AddImageFieldButton") }
@@ -37,6 +39,7 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   }
 
   val inputFieldImage1: KNode = onNode { hasTestTag("InputFieldImage1") }
+  val imageListItem: KNode = onNode { hasTestTag("ImageListItem") }
 
   val inputFieldTitle2: KNode = onNode {
     hasTestTag("InputFieldTitle2")
