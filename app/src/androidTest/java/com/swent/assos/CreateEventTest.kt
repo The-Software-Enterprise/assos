@@ -1,7 +1,6 @@
 package com.swent.assos
 
 import android.net.Uri
-import android.os.SystemClock.sleep
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.onNodeWithText
