@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.AuthService
@@ -30,42 +29,36 @@ constructor(
   private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
   val event = _event.asStateFlow()
 
+  private val _hourFormat = MutableStateFlow(HourFormat.AM)
+  val hourFormat = _hourFormat.asStateFlow()
+
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
   init {
-    getEvent(_event.value.id)
-  }
-
-  fun clear() {
-    _event.value = Event(id = generateUniqueID(), associationId = "")
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(_event.value.id) }
   }
 
   fun getEvent(eventId: String) {
     viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
   }
 
-  fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
+  fun switchHourFormat() {
+    _hourFormat.value =
+        when (_hourFormat.value) {
+          HourFormat.AM -> HourFormat.PM
+          HourFormat.PM -> HourFormat.AM
+        }
+  }
+
+  fun createEvent(onSuccess: () -> Unit) {
     val event = _event.value
     viewModelScope.launch(ioDispatcher) {
-      storageService.uploadFiles(
-          listOf(event.image) +
-              event.fields.filterIsInstance<Event.Field.Image>().flatMap { it.uris },
+      storageService.uploadFile(
+          event.image,
           "events/${event.id}",
-          onSuccess = { uris ->
-            event.image = uris[0]
-            event.fields =
-                event.fields.mapIndexed { index, field ->
-                  if (field is Event.Field.Image) {
-                    val uriIndex =
-                        event.fields.subList(0, index).filterIsInstance<Event.Field.Image>().sumOf {
-                          it.uris.size
-                        }
-                    Event.Field.Image(uris.subList(uriIndex + 1, uriIndex + field.uris.size + 1))
-                  } else {
-                    field
-                  }
-                }
+          onSuccess = {
+            event.image = it
             viewModelScope.launch(ioDispatcher) {
               dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
             }
@@ -88,57 +81,25 @@ constructor(
     }
   }
 
-  fun createTicket(
-      email: String,
-      onSuccess: () -> Unit,
-      onFailure: () -> Unit,
-      status: ParticipationStatus
-  ) {
+  fun createTicket(email: String, onSuccess: () -> Unit, onFailure: () -> Unit) {
 
     viewModelScope.launch(ioDispatcher) {
-      val user = dbService.getUserByEmail(email, onSuccess = onSuccess, onFailure = onFailure)
-      if (user.id != "") {
-        dbService.addTicketToUser(user.id, _event.value.id, status)
-      } else {
-        onFailure()
-      }
+      dbService.addTicketToUser(
+          email, eventId = _event.value.id, onSuccess = onSuccess, onFailure = onFailure)
     }
   }
 
   fun applyStaffing(id: String, onSuccess: () -> Unit) {
+    // get user ID
+
     viewModelScope.launch(ioDispatcher) {
       dbService.applyStaffing(
           eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
     }
   }
+}
 
-  fun addField(field: Event.Field) {
-    val fields = _event.value.fields.toMutableList()
-    fields.add(field)
-    _event.value = _event.value.copy(fields = fields)
-  }
-
-  fun addImagesToField(uris: List<Uri>, index: Int) {
-    val fields = _event.value.fields.toMutableList()
-    fields[index] = Event.Field.Image((fields[index] as Event.Field.Image).uris + uris)
-    _event.value = _event.value.copy(fields = fields)
-  }
-
-  fun removeImageFromField(index: Int, uri: Uri) {
-    val fields = _event.value.fields.toMutableList()
-    fields[index] = Event.Field.Image((fields[index] as Event.Field.Image).uris - uri)
-    _event.value = _event.value.copy(fields = fields)
-  }
-
-  fun updateFieldTitle(index: Int, title: String) {
-    val fields = _event.value.fields.toMutableList()
-    (fields[index] as Event.Field.Text).title = title
-    _event.value = _event.value.copy(fields = fields, _unused = !_event.value._unused)
-  }
-
-  fun updateFieldText(index: Int, text: String) {
-    val fields = _event.value.fields.toMutableList()
-    (fields[index] as Event.Field.Text).text = text
-    _event.value = _event.value.copy(fields = fields, _unused = !_event.value._unused)
-  }
+enum class HourFormat {
+  AM,
+  PM
 }

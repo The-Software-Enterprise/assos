@@ -15,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -81,7 +80,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                       lineHeight = 32.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.SemiBold,
-                      color = MaterialTheme.colorScheme.onBackground))
+                      color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -94,17 +93,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.badCredentials.value = false
             loginViewModel.firebaseError.value = false
           },
-          textStyle =
-              TextStyle(
-                  fontSize = 16.sp,
-                  lineHeight = 32.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  color = MaterialTheme.colorScheme.onBackground),
-          colors =
-              OutlinedTextFieldDefaults.colors(
-                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Email",
@@ -113,8 +101,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onBackground),
-            )
+                        color = MaterialTheme.colorScheme.onSurface))
           },
           modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("EmailField"))
 
@@ -127,17 +114,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.firebaseError.value = false
             password = it
           },
-          textStyle =
-              TextStyle(
-                  fontSize = 16.sp,
-                  lineHeight = 32.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  color = MaterialTheme.colorScheme.onBackground),
-          colors =
-              OutlinedTextFieldDefaults.colors(
-                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Password",
@@ -146,7 +122,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onBackground))
+                        color = MaterialTheme.colorScheme.onSurface))
           },
           visualTransformation = PasswordVisualTransformation(),
           modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).testTag("PasswordField"))
@@ -159,17 +135,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
             loginViewModel.badCredentials.value = false
             loginViewModel.firebaseError.value = false
           },
-          textStyle =
-              TextStyle(
-                  fontSize = 16.sp,
-                  lineHeight = 32.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  color = MaterialTheme.colorScheme.onBackground),
-          colors =
-              OutlinedTextFieldDefaults.colors(
-                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Confirm Password",
@@ -178,7 +143,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onBackground))
+                        color = MaterialTheme.colorScheme.onSurface))
           },
           visualTransformation = PasswordVisualTransformation(),
           modifier =
@@ -236,10 +201,9 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                   .width(105.dp)
                   .height(42.dp)
                   .background(
-                      color = MaterialTheme.colorScheme.secondary,
+                      color = MaterialTheme.colorScheme.primary,
                       shape = MaterialTheme.shapes.small),
-          colors =
-              ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
       ) {
         Text(
