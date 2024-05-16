@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.view.ApplicantViewModel
+import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.UserViewModel
 import java.time.LocalDateTime
 import kotlinx.coroutines.launch
@@ -49,8 +50,9 @@ fun ApplicationListItem(
   val user by userViewModel.user.collectAsState()
 
   val applicantsViewModel: ApplicantViewModel = hiltViewModel()
-
   val applicants by applicantsViewModel.applicants.collectAsState()
+
+  val assoViewModel: AssoViewModel = hiltViewModel()
 
   val applicant: Applicant =
       applicants.find { it.userId == userId } ?: Applicant("", "", LocalDateTime.now(), "")
@@ -103,7 +105,18 @@ fun ApplicationListItem(
                           status = "accepted"
                         }
                       } else {
-                        // TODO IN CASE OF AN APPLICATION TO JOIN THE COMMITTEE OF AN ASSOCIATION
+                        if (status == "accepted") {
+                          assoViewModel.quitAssociation(eventId, userId)
+                          applicantsViewModel.unAcceptApplicant(
+                              applicantId = applicant.id, assoId = eventId)
+                          status = "pending"
+                        } else {
+
+                          assoViewModel.joinAssociation(eventId, userId)
+                          applicantsViewModel.acceptApplicant(
+                              applicantId = applicant.id, assoId = eventId)
+                          status = "accepted"
+                        }
                       }
                     }
                   },

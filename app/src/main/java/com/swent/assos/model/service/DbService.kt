@@ -107,6 +107,13 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+  suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
   suspend fun updateBanner(associationId: String, banner: Uri)
 
   // Tickets ---------------------------------------------------------------
@@ -118,4 +125,15 @@ interface DbService {
   suspend fun getApplicantsByEventId(eventId: String): List<Applicant>
 
   suspend fun getApplicantsByAssoId(assoId: String): List<Applicant>
+
+  suspend fun acceptApplicant(applicantId: String, assoId: String)
+
+  suspend fun unAcceptApplicant(applicantId: String, assoId: String)
+
+  suspend fun quitAssociation(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 }
