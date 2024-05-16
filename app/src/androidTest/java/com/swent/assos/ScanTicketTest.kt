@@ -3,6 +3,7 @@ package com.swent.assos
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performClick
 import androidx.core.content.ContextCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
