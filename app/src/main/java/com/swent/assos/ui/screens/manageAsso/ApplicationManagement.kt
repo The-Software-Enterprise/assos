@@ -49,12 +49,10 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = true,
             state = listState) {
-              if (applicants.isEmpty()) {
-                item { ApplicationListItem(userId = "0000", eventId = assoId, isStaffing = false) }
-              } else {
+              if (applicants.isNotEmpty()) {
                 items(applicants) { applicant ->
                   ApplicationListItem(
-                      userId = applicant.userId, eventId = assoId, isStaffing = false)
+                      userId = applicant.userId, eventId = assoId, isStaffing = true)
                 }
               }
             }
