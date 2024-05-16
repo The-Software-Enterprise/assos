@@ -38,7 +38,7 @@ private val LightColorScheme =
         errorContainer = ErrorBackground,
         onErrorContainer = MrBlack,
         outline = GraySeparator,
-        outlineVariant = Periwinkle)
+        outlineVariant = MrWhite)
 
 private val DarkColorScheme =
     darkColorScheme(
@@ -67,7 +67,7 @@ private val DarkColorScheme =
         errorContainer = ErrorBackground,
         onErrorContainer = MrBlack,
         outline = GreySpector,
-        outlineVariant = LightCyan)
+        outlineVariant = MrBlack)
 
 @Composable
 fun AssosTheme(

@@ -121,7 +121,7 @@ fun UserNameDisplay(name: String) {
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
-      containerColor = MaterialTheme.colorScheme.surfaceVariant,
+      containerColor = MaterialTheme.colorScheme.outlineVariant,
       modifier = Modifier.testTag("LogoutDialog").semantics { testTagsAsResourceId = true },
       onDismissRequest = onDismiss,
       title = {

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -32,32 +33,33 @@ fun News(navigationActions: NavigationActions) {
   val listState = rememberLazyListState()
   val loading = viewModel.loading.collectAsState()
 
-  Scaffold(modifier = Modifier.testTag("NewsScreen"), topBar = { PageTitle(title = "Home") }) {
-      paddingValues ->
-    LazyColumn(
-        modifier =
-            Modifier.padding(paddingValues)
-                .padding(horizontal = 15.dp)
-                .padding(vertical = 5.dp)
-                .background(MaterialTheme.colorScheme.surface)
-                .testTag("NewsList"),
-        verticalArrangement = Arrangement.spacedBy(15.dp),
-        userScrollEnabled = true,
-        state = listState) {
-          if (loading.value) {
-            item { LoadingCircle() }
-          } else {
-            if (news.isEmpty()) {
-              item {
-                Text(
-                    text = stringResource(R.string.NoResult),
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onBackground)
+  Scaffold(
+      modifier = Modifier.background(Color.Transparent).testTag("NewsScreen"),
+      topBar = { PageTitle(title = "Home") }) { paddingValues ->
+        LazyColumn(
+            modifier =
+                Modifier.padding(paddingValues)
+                    .padding(horizontal = 15.dp)
+                    .padding(vertical = 5.dp)
+                    .background(Color.Transparent)
+                    .testTag("NewsList"),
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            userScrollEnabled = true,
+            state = listState) {
+              if (loading.value) {
+                item { LoadingCircle() }
+              } else {
+                if (news.isEmpty()) {
+                  item {
+                    Text(
+                        text = stringResource(R.string.NoResult),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground)
+                  }
+                } else {
+                  items(news) { news -> HomeItem(news = news, navigationActions) }
+                }
               }
-            } else {
-              items(news) { news -> HomeItem(news = news, navigationActions) }
             }
-          }
-        }
-  }
+      }
 }
