@@ -2,8 +2,6 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.firestore.FirebaseFirestore
-import com.swent.assos.model.AssociationPosition
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
