@@ -32,6 +32,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -47,7 +48,6 @@ import com.swent.assos.model.view.ExplorerViewModel
 import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
-import com.swent.assos.ui.theme.VeryLightGray
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -76,7 +76,11 @@ fun Explorer(navigationActions: NavigationActions) {
         }
       }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("AssoList"),
+            modifier =
+                Modifier.fillMaxWidth()
+                    .padding(paddingValues)
+                    .testTag("AssoList")
+                    .background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
@@ -85,7 +89,10 @@ fun Explorer(navigationActions: NavigationActions) {
               } else {
                 if (associations.isEmpty()) {
                   item {
-                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                    Text(
+                        text = stringResource(R.string.NoResult),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
                 } else {
                   item { Spacer(modifier = Modifier.height(6.dp)) }
@@ -121,12 +128,14 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
             shape = RoundedCornerShape(15.dp),
-            colors = SearchBarDefaults.colors(containerColor = VeryLightGray),
+            colors =
+                SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             trailingIcon = {},
             leadingIcon = {
               if (isSearching) {
                 Image(
                     imageVector = Icons.Default.Close,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                     contentDescription = null,
                     modifier =
                         Modifier.clickable {
@@ -135,7 +144,10 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
                           isSearching = false
                         })
               } else {
-                Image(imageVector = Icons.Default.Search, contentDescription = null)
+                Image(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
               }
             },
             placeholder = { Text(text = "Search an Association") },

@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -36,10 +35,8 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
-              .shadow(elevation = 6.dp, shape = RoundedCornerShape(15.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(15.dp))
               .background(
-                  color = MaterialTheme.colorScheme.onPrimary,
+                  color = MaterialTheme.colorScheme.surface,
                   shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable { callback() },
@@ -49,13 +46,14 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface)
+            color = MaterialTheme.colorScheme.onBackground)
       },
       supportingContent = {
         Text(
             text = asso.fullname,
             fontSize = 14.sp,
-            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            color = MaterialTheme.colorScheme.onBackground)
       },
       leadingContent = {
         Image(

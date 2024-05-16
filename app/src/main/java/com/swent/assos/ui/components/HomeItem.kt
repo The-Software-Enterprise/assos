@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -36,17 +36,23 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(10.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(10.dp))
-              .background(MaterialTheme.colorScheme.background)
-              .fillMaxWidth()
+          Modifier.background(
+                  color = MaterialTheme.colorScheme.surfaceVariant,
+                  shape = RoundedCornerShape(size = 15.dp))
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
               }
               .testTag("NewsListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
+            modifier =
+                Modifier.fillMaxSize()
+                    .border(
+                        width = 0.5.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(15.dp))
+                    .background(color = Color.Transparent, shape = RoundedCornerShape(15.dp))
+                    .testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               if (news.images.isNotEmpty()) {
@@ -75,14 +81,15 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black)
+                        color = MaterialTheme.colorScheme.onBackground)
                     Text(
                         modifier =
                             Modifier.width(173.dp).weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 12.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        fontWeight = FontWeight.Light)
+                        fontWeight = FontWeight.Light,
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
             }
       }
