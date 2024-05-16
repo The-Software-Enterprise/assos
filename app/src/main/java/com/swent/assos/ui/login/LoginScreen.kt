@@ -15,7 +15,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -74,7 +73,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                       lineHeight = 32.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.SemiBold,
-                      color = MaterialTheme.colorScheme.onBackground))
+                      color = MaterialTheme.colorScheme.onSurface))
         }
     Column(
         verticalArrangement = Arrangement.Center,
@@ -86,17 +85,6 @@ fun LoginScreen(navigationActions: NavigationActions) {
             email = it
             loginViewModel.userNotFound.value = false
           },
-          textStyle =
-              TextStyle(
-                  fontSize = 16.sp,
-                  lineHeight = 32.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  color = MaterialTheme.colorScheme.onBackground),
-          colors =
-              OutlinedTextFieldDefaults.colors(
-                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Email",
@@ -105,7 +93,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onBackground))
+                        color = MaterialTheme.colorScheme.onSurface))
           },
           modifier = Modifier.padding(horizontal = 16.dp).fillMaxWidth().testTag("EmailField"))
 
@@ -117,17 +105,6 @@ fun LoginScreen(navigationActions: NavigationActions) {
             password = it
             loginViewModel.userNotFound.value = false
           },
-          textStyle =
-              TextStyle(
-                  fontSize = 16.sp,
-                  lineHeight = 32.sp,
-                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                  color = MaterialTheme.colorScheme.onBackground),
-          colors =
-              OutlinedTextFieldDefaults.colors(
-                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
-                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
-                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Password",
@@ -136,7 +113,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
                         fontSize = 16.sp,
                         lineHeight = 32.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                        color = MaterialTheme.colorScheme.onBackground))
+                        color = MaterialTheme.colorScheme.onSurface))
           },
           modifier = Modifier.fillMaxWidth().testTag("PasswordField").padding(horizontal = 16.dp),
           visualTransformation = PasswordVisualTransformation(),
@@ -153,10 +130,9 @@ fun LoginScreen(navigationActions: NavigationActions) {
                   .width(100.dp)
                   .height(42.dp)
                   .background(
-                      color = MaterialTheme.colorScheme.secondary,
+                      color = MaterialTheme.colorScheme.primary,
                       shape = MaterialTheme.shapes.small),
-          colors =
-              ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
           // allow the child composable to be full sized
 
           onClick = {

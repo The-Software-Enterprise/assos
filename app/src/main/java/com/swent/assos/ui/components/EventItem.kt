@@ -31,24 +31,25 @@ import com.swent.assos.model.navigation.NavigationActions
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions, asso: Association) {
   Card(
-      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("NewsItem")
               .padding(0.dp)
-              .background(
-                  color = MaterialTheme.colorScheme.surfaceVariant,
-                  shape = RoundedCornerShape(size = 15.dp))
               .border(
                   width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.surfaceVariant,
+                  color = MaterialTheme.colorScheme.outline,
                   shape = RoundedCornerShape(12.dp))
               .clickable {
                 navigationActions.navigateTo(
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
               }) {
         Column(
-            modifier = Modifier.width(200.dp).padding(vertical = 0.dp),
+            modifier =
+                Modifier.width(200.dp).padding(vertical = 0.dp).clickable(true) {
+                  navigationActions.navigateTo(
+                      Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
+                },
         ) {
           Image(
               painter = rememberAsyncImagePainter(event.image),

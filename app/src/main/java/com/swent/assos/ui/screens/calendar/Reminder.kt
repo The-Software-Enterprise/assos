@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,7 +65,7 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
                 lineHeight = 26.sp,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                 fontWeight = FontWeight(600),
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color(0xFF1E293B),
                 letterSpacing = 0.3.sp,
             ))
     Spacer(modifier = Modifier.height(14.dp))
@@ -79,7 +78,7 @@ fun Reminder(calendarViewModel: CalendarViewModel) {
                 lineHeight = 26.sp,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                 fontWeight = FontWeight(400),
-                color = MaterialTheme.colorScheme.onBackground,
+                color = Color(0xFF575A61),
                 letterSpacing = 0.5.sp,
             ))
     Spacer(modifier = Modifier.height(14.dp))

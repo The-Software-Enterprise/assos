@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -83,7 +82,7 @@ fun Calendar(
                         },
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground)
+                    color = Color(0xFF1E293B))
 
                 Spacer(modifier = Modifier.height(32.dp))
                 DailySchedule(
@@ -171,7 +170,7 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
                   } else {
                     FontWeight.SemiBold
                   },
-              color = if (selected) Color(0xFFDE496E) else MaterialTheme.colorScheme.onBackground)
+              color = if (selected) Color(0xFFDE496E) else Color(0xFF1E293B))
           Text(
               text =
                   when (date.dayOfWeek) {
@@ -189,7 +188,7 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
                   } else {
                     12.sp
                   },
-              color = if (selected) Color(0xFFDE496E) else MaterialTheme.colorScheme.onBackground,
+              color = if (selected) Color(0xFFDE496E) else Color(0xFF94A3B8),
               fontWeight =
                   if (selected) {
                     FontWeight.Medium

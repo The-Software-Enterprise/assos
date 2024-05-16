@@ -9,46 +9,23 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("CreateEvent") }) {
 
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
-  val createButton: KNode = onNode { hasTestTag("CreateButton") }
+  val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
 
-  val inputTitle: KNode = onNode {
-    hasTestTag("InputTitle")
-    hasSetTextAction()
-  }
-  val inputDescription: KNode = onNode {
-    hasTestTag("InputDescription")
-    hasSetTextAction()
-  }
+  val form: KNode = child { hasTestTag("Form") }
 
-  val inputBanner: KNode = onNode { hasTestTag("InputImage") }
-  val startTimePicker: KNode = onNode { hasTestTag("StartTimePicker") }
-  val endTimePicker: KNode = onNode { hasTestTag("EndTimePicker") }
+  val inputTitle: KNode =
+      form.child {
+        hasTestTag("InputTitle")
+        hasSetTextAction()
+      }
+  val inputDescription: KNode =
+      form.child {
+        hasTestTag("InputDescription")
+        hasSetTextAction()
+      }
 
-  val imageBanner: KNode = onNode { hasTestTag("ImageBanner") }
+  val image: KNode = form.child { hasTestTag("InputImage") }
 
-  val addTextFieldButton: KNode = onNode { hasTestTag("AddTextFieldButton") }
-  val addImageFieldButton: KNode = onNode { hasTestTag("AddImageFieldButton") }
-
-  val inputFieldTitle0: KNode = onNode {
-    hasTestTag("InputFieldTitle0")
-    hasSetTextAction()
-  }
-  val inputFieldDescription0: KNode = onNode {
-    hasTestTag("InputFieldDescription0")
-    hasSetTextAction()
-  }
-
-  val inputFieldImage1: KNode = onNode { hasTestTag("InputFieldImage1") }
-  val listImagesField0: KNode = onNode { hasTestTag("ListImagesField0") }
-  val imageListItem: KNode = onNode { hasTestTag("ImageListItem") }
-  val deleteImageListItem: KNode = onNode { hasTestTag("DeleteImageListItem") }
-
-  val inputFieldTitle2: KNode = onNode {
-    hasTestTag("InputFieldTitle2")
-    hasSetTextAction()
-  }
-  val inputFieldDescription2: KNode = onNode {
-    hasTestTag("InputFieldDescription2")
-    hasSetTextAction()
-  }
+  val startTimePicker: KNode = form.child { hasTestTag("StartTimePicker") }
+  val endTimePicker: KNode = form.child { hasTestTag("EndTimePicker") }
 }

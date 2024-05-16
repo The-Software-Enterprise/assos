@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
@@ -110,7 +110,7 @@ fun UserNameDisplay(name: String) {
                     lineHeight = 20.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(500),
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = Color(0xFF49454F),
                     letterSpacing = 0.1.sp,
                 ),
             modifier = Modifier.height(20.dp).testTag("Name"))
@@ -121,7 +121,6 @@ fun UserNameDisplay(name: String) {
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
-      containerColor = MaterialTheme.colorScheme.outlineVariant,
       modifier = Modifier.testTag("LogoutDialog").semantics { testTagsAsResourceId = true },
       onDismissRequest = onDismiss,
       title = {
@@ -134,9 +133,10 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     lineHeight = 32.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(400),
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = Color(0xFF1D1B20),
                 ))
       },
+      containerColor = Color.White,
       text = {
         Text(
             modifier = Modifier.testTag("LogoutText"),
@@ -147,7 +147,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     lineHeight = 20.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(400),
-                    color = MaterialTheme.colorScheme.onBackground,
+                    color = Color(0xFF49454F),
                     letterSpacing = 0.25.sp,
                 ))
       },
@@ -161,7 +161,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                       lineHeight = 20.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(500),
-                      color = MaterialTheme.colorScheme.primary,
+                      color = Color(0xFF6750A4),
                       textAlign = TextAlign.Center,
                       letterSpacing = 0.1.sp,
                   ))
@@ -177,7 +177,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                       lineHeight = 20.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(600),
-                      color = MaterialTheme.colorScheme.tertiary,
+                      color = Color(0xFF6750A4),
                       textAlign = TextAlign.Center,
                       letterSpacing = 0.1.sp,
                   ))

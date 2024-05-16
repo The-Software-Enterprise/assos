@@ -22,7 +22,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
@@ -74,11 +73,7 @@ fun CreateTicket(navigationActions: NavigationActions, eventId: String) {
       floatingActionButton = {
         EmailSubmit(
             onClick = {
-              eventViewModel.createTicket(
-                  email,
-                  { showingSuccess = true },
-                  { showingError = true },
-                  ParticipationStatus.Participant)
+              eventViewModel.createTicket(email, { showingSuccess = true }, { showingError = true })
             })
       },
       floatingActionButtonPosition = FabPosition.Center,

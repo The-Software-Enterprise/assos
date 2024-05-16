@@ -36,7 +36,7 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
           Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
               .background(
-                  color = MaterialTheme.colorScheme.surface,
+                  color = MaterialTheme.colorScheme.onPrimary,
                   shape = RoundedCornerShape(size = 15.dp))
               .testTag("AssoListItem")
               .clickable { callback() },
@@ -46,14 +46,13 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
             fontSize = 16.sp,
             fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground)
+            color = MaterialTheme.colorScheme.onSurface)
       },
       supportingContent = {
         Text(
             text = asso.fullname,
             fontSize = 14.sp,
-            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-            color = MaterialTheme.colorScheme.onBackground)
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
       },
       leadingContent = {
         Image(
