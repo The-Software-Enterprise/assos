@@ -55,7 +55,8 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
                 item { ApplicationListItem(userId = "0000", eventId = eventId, isStaffing = false) }
               } else {
                 items(sortedApplicants) { applicant ->
-                  ApplicationListItem(userId = applicant.userId, eventId = eventId, isStaffing = true)
+                  ApplicationListItem(
+                      userId = applicant.userId, eventId = eventId, isStaffing = true)
                 }
               }
             }

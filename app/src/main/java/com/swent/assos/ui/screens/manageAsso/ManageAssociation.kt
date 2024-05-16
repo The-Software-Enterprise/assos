@@ -185,9 +185,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                 Text(
                     text = "Applications",
                     modifier =
-                        Modifier
-                            .testTag("ApplicationsButton")
-                            .clickable {
+                        Modifier.testTag("ApplicationsButton").clickable {
                           navigationActions.navigateTo(
                               Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
                         },

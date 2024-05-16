@@ -53,7 +53,8 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
                 item { ApplicationListItem(userId = "0000", eventId = assoId, isStaffing = false) }
               } else {
                 items(applicants) { applicant ->
-                  ApplicationListItem(userId = applicant.userId, eventId = assoId, isStaffing = false)
+                  ApplicationListItem(
+                      userId = applicant.userId, eventId = assoId, isStaffing = false)
                 }
               }
             }

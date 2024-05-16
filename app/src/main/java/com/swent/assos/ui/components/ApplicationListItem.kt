@@ -70,7 +70,8 @@ fun ApplicationListItem(
               .height(30.dp)
               .testTag("ApplicationListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp).testTag("ApplicationItemRow"),
+            modifier =
+                Modifier.fillMaxSize().padding(horizontal = 8.dp).testTag("ApplicationItemRow"),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
               Text(
@@ -89,7 +90,8 @@ fun ApplicationListItem(
                           AssistChipDefaults.assistChipColors(
                               containerColor = MaterialTheme.colorScheme.primary),
                   border = null,
-                  modifier = Modifier.testTag("AcceptApplicationButton").padding(5.dp).fillMaxHeight(),
+                  modifier =
+                      Modifier.testTag("AcceptApplicationButton").padding(5.dp).fillMaxHeight(),
                   onClick = {
                     scope.launch {
                       if (isStaffing) {

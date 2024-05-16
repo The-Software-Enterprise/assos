@@ -9,14 +9,14 @@ class ApplicationManagementScreen(semanticsProvider: SemanticsNodeInteractionsPr
         semanticsProvider = semanticsProvider,
         viewBuilderAction = { hasTestTag("ApplicationManagementScreen") }) {
 
-    val applicationList: KNode = onNode { hasTestTag("ApplicationList") }
+  val applicationList: KNode = onNode { hasTestTag("ApplicationList") }
 
-    val applicationListItem: KNode = applicationList.child { hasTestTag("ApplicationListItem") }
+  val applicationListItem: KNode = applicationList.child { hasTestTag("ApplicationListItem") }
 
-    val applicationItemRow: KNode = applicationListItem.child { hasTestTag("ApplicationItemRow") }
+  val applicationItemRow: KNode = applicationListItem.child { hasTestTag("ApplicationItemRow") }
 
-    val applicationItemName: KNode = applicationItemRow.child { hasTestTag("ApplicationListItemFullName") }
+  val applicationItemName: KNode =
+      applicationItemRow.child { hasTestTag("ApplicationListItemFullName") }
 
-    val acceptButton: KNode = applicationItemRow.child { hasTestTag("AcceptApplicationButton") }
-
+  val acceptButton: KNode = applicationItemRow.child { hasTestTag("AcceptApplicationButton") }
 }

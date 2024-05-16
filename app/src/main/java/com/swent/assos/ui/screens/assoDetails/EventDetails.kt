@@ -65,7 +65,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val userId by assoViewModel.currentUser.collectAsState()
 
   val viewModel: ProfileViewModel = hiltViewModel()
-
   val myAssociations by viewModel.memberAssociations.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
@@ -142,7 +141,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                     navigationActions.navigateTo(
                         Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
                   },
-                  text = "Saff List")
+                  text = "Staff List")
             }
           }
         }
