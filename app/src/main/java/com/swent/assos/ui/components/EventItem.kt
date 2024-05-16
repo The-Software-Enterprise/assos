@@ -31,17 +31,17 @@ import com.swent.assos.model.navigation.NavigationActions
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions, asso: Association) {
   Card(
-      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("NewsItem")
               .padding(0.dp)
               .background(
-                  color = MaterialTheme.colorScheme.surface,
+                  color = MaterialTheme.colorScheme.surfaceVariant,
                   shape = RoundedCornerShape(size = 15.dp))
               .border(
                   width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.outline,
+                  color = MaterialTheme.colorScheme.surfaceVariant,
                   shape = RoundedCornerShape(12.dp))
               .clickable {
                 navigationActions.navigateTo(

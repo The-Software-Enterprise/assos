@@ -36,17 +36,16 @@ fun PageTitleWithGoBack(
     actionButton: @Composable RowScope.() -> Unit = {}
 ) {
   TopAppBar(
-
       title = {
         Text(
             text = title,
             style =
-            TextStyle(
-                fontSize = 30.sp,
-                lineHeight = 32.sp,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground),
+                TextStyle(
+                    fontSize = 30.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground),
             modifier = Modifier.testTag("PageTitle"))
       },
       navigationIcon = {
@@ -66,7 +65,6 @@ fun PageTitleWithGoBack(
       actions = actionButton,
       colors =
           TopAppBarDefaults.mediumTopAppBarColors(
-              containerColor = MaterialTheme.colorScheme.background
-          ),
+              containerColor = MaterialTheme.colorScheme.background),
   )
 }

@@ -66,7 +66,10 @@ fun MyTickets(navigationActions: NavigationActions) {
             contentColor = MaterialTheme.colorScheme.onTertiary,
             onClick = { navigationActions.navigateTo(Destinations.SCAN_TICKET.route) },
             shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.CameraAlt, contentDescription = null, colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
+              Image(
+                  imageVector = Icons.Default.CameraAlt,
+                  contentDescription = null,
+                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
             }
       }) { paddingValues ->
         LazyColumn(

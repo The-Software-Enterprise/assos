@@ -13,22 +13,22 @@ import androidx.core.view.WindowCompat
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = NeonBlue, //Important buttons such as Join, Apply...
+        primary = NeonBlue, // Important buttons such as Join, Apply...
         onPrimary = MrWhite,
         primaryContainer = MrWhite,
         inversePrimary = JordyBlue,
-        secondary = CornflowerBlue, //Buttons such as Follow...
+        secondary = CornflowerBlue, // Buttons such as Follow...
         onSecondary = MrWhite,
         secondaryContainer = BackgroundSecondary,
-        tertiary = JordyBlue, //Floating action button such as plus...
+        tertiary = JordyBlue, // Floating action button such as plus...
         onTertiary = MrWhite,
         tertiaryContainer = MrWhite,
         onTertiaryContainer = JordyBlue,
         background = MrWhite,
         onBackground = MrBlack,
-        surface = surfaceColor, //Background of a component
+        surface = surfaceColor, // Background of a component
         onSurface = MrBlack,
-        surfaceVariant = GreySpector, //Darker background of a component
+        surfaceVariant = GreySpector, // Darker background of a component
         onSurfaceVariant = MrBlack,
         surfaceTint = Periwinkle,
         inverseSurface = MrBlack,

@@ -48,7 +48,12 @@ fun News(navigationActions: NavigationActions) {
             item { LoadingCircle() }
           } else {
             if (news.isEmpty()) {
-              item { Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground) }
+              item {
+                Text(
+                    text = stringResource(R.string.NoResult),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onBackground)
+              }
             } else {
               items(news) { news -> HomeItem(news = news, navigationActions) }
             }

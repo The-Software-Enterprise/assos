@@ -17,7 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -87,16 +86,17 @@ fun LoginScreen(navigationActions: NavigationActions) {
             email = it
             loginViewModel.userNotFound.value = false
           },
-          textStyle = TextStyle(
-              fontSize = 16.sp,
-              lineHeight = 32.sp,
-              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              color = MaterialTheme.colorScheme.onBackground),
+          textStyle =
+              TextStyle(
+                  fontSize = 16.sp,
+                  lineHeight = 32.sp,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                  color = MaterialTheme.colorScheme.onBackground),
           colors =
-          OutlinedTextFieldDefaults.colors(
-              focusedBorderColor = MaterialTheme.colorScheme.secondary,
-              focusedLabelColor = MaterialTheme.colorScheme.secondary,
-              cursorColor = MaterialTheme.colorScheme.secondary),
+              OutlinedTextFieldDefaults.colors(
+                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Email",
@@ -117,16 +117,17 @@ fun LoginScreen(navigationActions: NavigationActions) {
             password = it
             loginViewModel.userNotFound.value = false
           },
-          textStyle = TextStyle(
-              fontSize = 16.sp,
-              lineHeight = 32.sp,
-              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-              color = MaterialTheme.colorScheme.onBackground),
+          textStyle =
+              TextStyle(
+                  fontSize = 16.sp,
+                  lineHeight = 32.sp,
+                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                  color = MaterialTheme.colorScheme.onBackground),
           colors =
-          OutlinedTextFieldDefaults.colors(
-              focusedBorderColor = MaterialTheme.colorScheme.secondary,
-              focusedLabelColor = MaterialTheme.colorScheme.secondary,
-              cursorColor = MaterialTheme.colorScheme.secondary),
+              OutlinedTextFieldDefaults.colors(
+                  focusedBorderColor = MaterialTheme.colorScheme.secondary,
+                  focusedLabelColor = MaterialTheme.colorScheme.secondary,
+                  cursorColor = MaterialTheme.colorScheme.secondary),
           label = {
             Text(
                 "Password",
@@ -154,7 +155,8 @@ fun LoginScreen(navigationActions: NavigationActions) {
                   .background(
                       color = MaterialTheme.colorScheme.secondary,
                       shape = MaterialTheme.shapes.small),
-          colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
+          colors =
+              ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
           // allow the child composable to be full sized
 
           onClick = {

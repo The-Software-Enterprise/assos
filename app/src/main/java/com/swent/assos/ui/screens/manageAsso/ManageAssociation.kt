@@ -234,12 +234,18 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions) {
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
-      title = { Text(asso.acronym, modifier = Modifier.testTag("Title"), style = TextStyle(
-          fontSize = 30.sp,
-          lineHeight = 32.sp,
-          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-          fontWeight = FontWeight.SemiBold,
-          color = MaterialTheme.colorScheme.onBackground)) },
+      title = {
+        Text(
+            asso.acronym,
+            modifier = Modifier.testTag("Title"),
+            style =
+                TextStyle(
+                    fontSize = 30.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground))
+      },
       navigationIcon = {
         Image(
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),

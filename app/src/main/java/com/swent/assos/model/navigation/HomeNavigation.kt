@@ -121,7 +121,10 @@ fun HomeNavigation(navigationActions: NavigationActions) {
                     else -> "Profile"
                   }
               if (pagerState.currentPage == index) {
-                Text(text = label, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+                Text(
+                    text = label,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground)
               } else {
                 Text(text = label, color = MaterialTheme.colorScheme.onBackground)
               }

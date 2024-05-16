@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -38,7 +37,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
           Modifier
-              //.shadow(2.dp, RoundedCornerShape(2.dp))
+              // .shadow(2.dp, RoundedCornerShape(2.dp))
               .background(
                   color = MaterialTheme.colorScheme.surface,
                   shape = RoundedCornerShape(size = 15.dp))
@@ -49,7 +48,14 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               }
               .testTag("NewsListItem")) {
         Row(
-            modifier = Modifier.fillMaxSize().border(width = 0.5.dp, color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(15.dp)).background(color = Color.Transparent, shape = RoundedCornerShape(15.dp)).testTag("NewsItemRow"),
+            modifier =
+                Modifier.fillMaxSize()
+                    .border(
+                        width = 0.5.dp,
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(15.dp))
+                    .background(color = Color.Transparent, shape = RoundedCornerShape(15.dp))
+                    .testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               if (news.images.isNotEmpty()) {

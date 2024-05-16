@@ -59,19 +59,16 @@ fun Calendar(
   LaunchedEffect(events.value, selectedDate.value) { calendarViewModel.filterEvents() }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("CalendarScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CalendarScreen"),
       topBar = { PageTitle(title = "Calendar - ${selectedDate.value.format(dateFormatter)}") }) {
         if (loading.value) {
           LoadingCircle()
         } else {
           Column(
               modifier =
-              Modifier
-                  .padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
-                  .padding(it)
-                  .fillMaxSize()) {
+                  Modifier.padding(start = 16.dp, bottom = 16.dp, end = 16.dp)
+                      .padding(it)
+                      .fillMaxSize()) {
                 InfiniteScrollableDaysList(
                     selectedDate = selectedDate,
                     onDateSelected = { newDate -> calendarViewModel.updateSelectedDate(newDate) })
@@ -136,16 +133,12 @@ fun DayItem(date: LocalDate, selected: Boolean, onDateSelected: (LocalDate) -> U
   Surface(
       modifier =
           if (selected) {
-              Modifier
-                  .width(53.dp)
-                  .height(79.dp)
-                  .testTag("DayItemSelected")
+            Modifier.width(53.dp).height(79.dp).testTag("DayItemSelected")
           } else {
-              Modifier
-                  .width(32.dp)
-                  .height(79.dp)
-                  .clickable(onClick = { onDateSelected(date) })
-                  .testTag("DayItem")
+            Modifier.width(32.dp)
+                .height(79.dp)
+                .clickable(onClick = { onDateSelected(date) })
+                .testTag("DayItem")
           },
       color =
           if (selected) {
@@ -221,9 +214,7 @@ fun DailySchedule(
     verticalScrollState: ScrollState,
     eventContent: @Composable (event: Event) -> Unit
 ) {
-  Row(modifier = Modifier
-      .testTag("EventUI")
-      .height(208.dp)) {
+  Row(modifier = Modifier.testTag("EventUI").height(208.dp)) {
     TimeSidebar(hourHeight = hourHeight, modifier = Modifier.verticalScroll(verticalScrollState))
 
     Schedule(
@@ -231,8 +222,6 @@ fun DailySchedule(
         eventContent = eventContent,
         dayWidth = dayWidth,
         hourHeight = hourHeight,
-        modifier = Modifier
-            .weight(1f)
-            .verticalScroll(verticalScrollState))
+        modifier = Modifier.weight(1f).verticalScroll(verticalScrollState))
   }
 }

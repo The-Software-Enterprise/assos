@@ -20,7 +20,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,7 +31,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
@@ -90,7 +88,10 @@ fun Explorer(navigationActions: NavigationActions) {
               } else {
                 if (associations.isEmpty()) {
                   item {
-                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center, color = MaterialTheme.colorScheme.onBackground)
+                    Text(
+                        text = stringResource(R.string.NoResult),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
                 } else {
                   items(items = associations, key = { it.id }) {
@@ -124,7 +125,8 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
-            colors = SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            colors =
+                SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
             trailingIcon = {
               if (isSearching) {
                 Image(
@@ -138,11 +140,21 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
                           isSearching = false
                         })
               } else {
-                Image(imageVector = Icons.Default.Search, contentDescription = null, colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
+                Image(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
               }
             },
-            leadingIcon = { Image(imageVector = Icons.Default.Menu, contentDescription = null, colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)) },
-            placeholder = { Text(text = "Search an Association", color = MaterialTheme.colorScheme.onBackground) },
+            leadingIcon = {
+              Image(
+                  imageVector = Icons.Default.Menu,
+                  contentDescription = null,
+                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
+            },
+            placeholder = {
+              Text(text = "Search an Association", color = MaterialTheme.colorScheme.onBackground)
+            },
             query = query,
             onQueryChange = { explorerViewModel.filterOnSearch(it) },
             onSearch = {},
