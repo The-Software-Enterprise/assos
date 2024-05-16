@@ -47,7 +47,7 @@ class ReminderTest : SuperTest() {
 
     composeTestRule.activity.setContent {
       val calendarViewModel: CalendarViewModel = hiltViewModel()
-      Reminder(calendarViewModel)
+      Reminder(calendarViewModel, mockNavActions)
     }
 
     run {
