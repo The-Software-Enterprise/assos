@@ -13,9 +13,9 @@ import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.ticket.MyTickets
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
