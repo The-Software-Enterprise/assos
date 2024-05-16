@@ -1,6 +1,5 @@
 package com.swent.assos.ui.screens.manageAsso.createEvent.components
 
-import android.app.TimePickerDialog
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -121,17 +120,12 @@ fun DateTimePickers(viewModel: EventViewModel) {
                       Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
                     }
                 val currentDate = LocalDate.now()
-                if (selectedDate != null) {
-                  if (selectedDate.isBefore(currentDate)) {
-                    Toast.makeText(
-                            context,
-                            "Selected date should be after today, please select again",
-                            Toast.LENGTH_SHORT)
-                        .show()
-                  } else {
-                    showStartDatePicker = false
-                    showStartTimePicker = true
-                  }
+                if (selectedDate != null && selectedDate.isBefore(currentDate)) {
+                  Toast.makeText(
+                          context,
+                          "Selected date should be after today, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
                 } else {
                   showStartDatePicker = false
                   showStartTimePicker = true
@@ -201,18 +195,12 @@ fun DateTimePickers(viewModel: EventViewModel) {
                     endDatePickerState.selectedDateMillis?.let {
                       Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault()).toLocalDate()
                     }
-                if (selectedEndDate != null) {
-                  if (selectedEndDate.isBefore(startDate)) {
-                    Toast.makeText(
-                            context,
-                            "Selected end date should be after start date, please select again",
-                            Toast.LENGTH_SHORT)
-                        .show()
-                  } else {
-
-                    showEndDatePicker = false
-                    showEndTimePicker = true
-                  }
+                if (selectedEndDate != null && selectedEndDate.isBefore(startDate)) {
+                  Toast.makeText(
+                          context,
+                          "Selected end date should be after start date, please select again",
+                          Toast.LENGTH_SHORT)
+                      .show()
                 } else {
                   showEndDatePicker = false
                   showEndTimePicker = true
