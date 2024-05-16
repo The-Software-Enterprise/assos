@@ -51,9 +51,7 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
             verticalArrangement = Arrangement.spacedBy(15.dp),
             userScrollEnabled = true,
             state = listState) {
-              if (sortedApplicants.isEmpty()) {
-                item { ApplicationListItem(userId = "0000", eventId = eventId, isStaffing = false) }
-              } else {
+              if (sortedApplicants.isNotEmpty()) {
                 items(sortedApplicants) { applicant ->
                   ApplicationListItem(
                       userId = applicant.userId, eventId = eventId, isStaffing = true)

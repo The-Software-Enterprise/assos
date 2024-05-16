@@ -41,11 +41,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -201,9 +203,21 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
-      title = { Text(asso.acronym, modifier = Modifier.testTag("Title")) },
+      title = {
+        Text(
+            asso.acronym,
+            modifier = Modifier.testTag("Title"),
+            style =
+                TextStyle(
+                    fontSize = 30.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground))
+      },
       navigationIcon = {
         Image(
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
@@ -214,10 +228,10 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
               colors =
                   if (associationFollowed.value)
                       AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.surface)
+                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
                   else
                       AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.primary),
+                          containerColor = MaterialTheme.colorScheme.secondary),
               border = null,
               modifier = Modifier.testTag("FollowButton").padding(5.dp),
               onClick = {
@@ -231,14 +245,14 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
                 if (associationFollowed.value) {
                   Text(
                       text = "Following",
-                      color = MaterialTheme.colorScheme.onSurface,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.Medium,
                   )
                 } else {
                   Text(
                       text = "Follow",
-                      color = MaterialTheme.colorScheme.onPrimary,
+                      color = MaterialTheme.colorScheme.onSecondary,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.Medium,
                   )
@@ -263,7 +277,7 @@ fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
                 .then(Modifier.widthIn(min = 92.dp))
                 .height(42.dp)
                 .testTag("JoinButton"),
-        containerColor = Color(0xFF5465FF),
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
       Text(
           text = text,
