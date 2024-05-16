@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,7 +24,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
@@ -40,9 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -52,10 +48,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.CreateNewsViewModel
+import com.swent.assos.ui.components.ImageListItem
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,7 +73,7 @@ fun CreateNews(
       modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(
-            title = "Back",
+            title = "Create news",
             navigationActions = navigationActions,
             actionButton = {
               Box(
@@ -105,10 +101,14 @@ fun CreateNews(
       },
       floatingActionButton = {
         FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.testTag("AddImages"),
             onClick = { launcher.launch("image/*") },
             shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.Add, contentDescription = null)
+              Image(
+                  imageVector = Icons.Default.Add,
+                  contentDescription = null,
+                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
             }
       }) { paddingValues ->
         LazyColumn(
@@ -119,6 +119,12 @@ fun CreateNews(
         ) {
           item {
             OutlinedTextField(
+                textStyle =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onBackground),
                 value = news.title,
                 onValueChange = { viewModel.setTitle(it) },
                 modifier =
@@ -126,10 +132,6 @@ fun CreateNews(
                         .fillMaxWidth()
                         .height(64.dp)
                         .testTag("InputTitle"),
-                textStyle =
-                    TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
                 label = { Text(text = "Title") },
                 placeholder = { Text(text = "Title of the news") },
                 colors =
@@ -163,7 +165,9 @@ fun CreateNews(
                 textStyle =
                     TextStyle(
                         fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onBackground),
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.background,
@@ -205,38 +209,7 @@ fun CreateNews(
                   modifier = Modifier.fillMaxWidth().aspectRatio(1f).padding(top = 10.dp),
                   horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     item { Spacer(modifier = Modifier.width(12.dp)) }
-                    items(news.images) {
-                      Box(
-                          modifier =
-                              Modifier.fillMaxHeight(0.9f)
-                                  .aspectRatio(1f)
-                                  .clip(RoundedCornerShape(8.dp))
-                                  .background(Color.Gray),
-                      ) {
-                        Image(
-                            painter = rememberAsyncImagePainter(it),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize().align(Alignment.Center),
-                        )
-                        Image(
-                            imageVector = Icons.Default.DeleteForever,
-                            contentDescription = "Trash",
-                            modifier =
-                                Modifier.align(Alignment.TopEnd)
-                                    .padding(6.dp)
-                                    .size(30.dp)
-                                    .background(
-                                        MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-                                        RoundedCornerShape(5.dp))
-                                    .clickable { viewModel.removeImage(it) }
-                                    .padding(3.dp),
-                            colorFilter =
-                                ColorFilter.tint(
-                                    MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)),
-                        )
-                      }
-                    }
+                    items(news.images) { ImageListItem(uri = it) { viewModel.removeImage(it) } }
                     item { Spacer(modifier = Modifier.width(12.dp)) }
                   }
             }

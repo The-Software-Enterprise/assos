@@ -17,10 +17,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,12 +39,18 @@ fun PageTitleWithGoBack(
       title = {
         Text(
             text = title,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Normal,
+            style =
+                TextStyle(
+                    fontSize = 30.sp,
+                    lineHeight = 32.sp,
+                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground),
             modifier = Modifier.testTag("PageTitle"))
       },
       navigationIcon = {
         Image(
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             imageVector = Icons.Default.ArrowBackIos,
             contentDescription = null,
             modifier =
@@ -54,7 +65,6 @@ fun PageTitleWithGoBack(
       actions = actionButton,
       colors =
           TopAppBarDefaults.mediumTopAppBarColors(
-              containerColor = MaterialTheme.colorScheme.background,
-          ),
+              containerColor = MaterialTheme.colorScheme.background),
   )
 }
