@@ -223,10 +223,10 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
               colors =
                   if (associationFollowed.value)
                       AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.surface)
+                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
                   else
                       AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.primary),
+                          containerColor = MaterialTheme.colorScheme.secondary),
               border = null,
               modifier = Modifier.testTag("FollowButton").padding(5.dp),
               onClick = {
@@ -240,14 +240,14 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
                 if (associationFollowed.value) {
                   Text(
                       text = "Following",
-                      color = MaterialTheme.colorScheme.onSurface,
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.Medium,
                   )
                 } else {
                   Text(
                       text = "Follow",
-                      color = MaterialTheme.colorScheme.onPrimary,
+                      color = MaterialTheme.colorScheme.onSecondary,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight.Medium,
                   )
@@ -272,7 +272,7 @@ fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
                 .then(Modifier.widthIn(min = 92.dp))
                 .height(42.dp)
                 .testTag("JoinButton"),
-        containerColor = Color(0xFF5465FF),
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
       Text(
           text = text,

@@ -43,7 +43,7 @@ fun Following(navigationActions: NavigationActions) {
         contentPadding = paddingValues,
         modifier =
             Modifier.testTag("ContentSection")
-                .background(MaterialTheme.colorScheme.surface)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)) {
           if (loading) {
             item { LoadingCircle() }

@@ -122,6 +122,7 @@ fun UserNameDisplay(name: String) {
 @Composable
 fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
   AlertDialog(
+      containerColor = MaterialTheme.colorScheme.surfaceVariant,
       modifier = Modifier.testTag("LogoutDialog").semantics { testTagsAsResourceId = true },
       onDismissRequest = onDismiss,
       title = {
@@ -134,10 +135,9 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     lineHeight = 32.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(400),
-                    color = Color(0xFF1D1B20),
+                    color = MaterialTheme.colorScheme.onBackground,
                 ))
       },
-      containerColor = Color.White,
       text = {
         Text(
             modifier = Modifier.testTag("LogoutText"),
@@ -148,7 +148,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                     lineHeight = 20.sp,
                     fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                     fontWeight = FontWeight(400),
-                    color = Color(0xFF49454F),
+                    color = MaterialTheme.colorScheme.onBackground,
                     letterSpacing = 0.25.sp,
                 ))
       },
@@ -162,7 +162,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                       lineHeight = 20.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(500),
-                      color = Color(0xFF6750A4),
+                      color = MaterialTheme.colorScheme.primary,
                       textAlign = TextAlign.Center,
                       letterSpacing = 0.1.sp,
                   ))
@@ -178,7 +178,7 @@ fun Logout(onConfirm: () -> Unit, onDismiss: () -> Unit) {
                       lineHeight = 20.sp,
                       fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       fontWeight = FontWeight(600),
-                      color = Color(0xFF6750A4),
+                      color = MaterialTheme.colorScheme.tertiary,
                       textAlign = TextAlign.Center,
                       letterSpacing = 0.1.sp,
                   ))

@@ -13,14 +13,14 @@ import androidx.core.view.WindowCompat
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = NeonBlue,
+        primary = NeonBlue, //Important buttons such as Join, Apply...
         onPrimary = MrWhite,
         primaryContainer = MrWhite,
         inversePrimary = JordyBlue,
-        secondary = CornflowerBlue,
+        secondary = CornflowerBlue, //Buttons such as Follow...
         onSecondary = MrWhite,
         secondaryContainer = BackgroundSecondary,
-        tertiary = JordyBlue,
+        tertiary = JordyBlue, //Floating action button such as plus...
         onTertiary = MrWhite,
         tertiaryContainer = MrWhite,
         onTertiaryContainer = JordyBlue,
@@ -28,7 +28,7 @@ private val LightColorScheme =
         onBackground = MrBlack,
         surface = surfaceColor, //Background of a component
         onSurface = MrBlack,
-        surfaceVariant = GreySpector,
+        surfaceVariant = GreySpector, //Darker background of a component
         onSurfaceVariant = MrBlack,
         surfaceTint = Periwinkle,
         inverseSurface = MrBlack,
@@ -42,15 +42,15 @@ private val LightColorScheme =
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = JordyBlue,
-        onPrimary = MrBlack,
+        primary = NeonBlue,
+        onPrimary = MrWhite,
         primaryContainer = MrBlack,
         inversePrimary = NeonBlue,
         secondary = CornflowerBlue,
-        onSecondary = MrBlack,
+        onSecondary = MrWhite,
         secondaryContainer = MrBlack,
-        tertiary = NeonBlue,
-        onTertiary = MrBlack,
+        tertiary = JordyBlue,
+        onTertiary = MrWhite,
         tertiaryContainer = MrBlack,
         onTertiaryContainer = JordyBlue,
         background = MrBlack,
@@ -58,7 +58,7 @@ private val DarkColorScheme =
         surface = surfaceColor,
         onSurface = MrBlack,
         surfaceVariant = surfaceColor2,
-        onSurfaceVariant = MrBlack,
+        onSurfaceVariant = MrWhite,
         surfaceTint = CornflowerBlue,
         inverseSurface = MrWhite,
         inverseOnSurface = MrBlack,
