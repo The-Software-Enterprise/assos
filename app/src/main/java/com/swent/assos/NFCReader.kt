@@ -27,7 +27,7 @@ class NFCReader : ComponentActivity() {
 
   private var nfcAdapter: NfcAdapter? = null
   val validIDs = MutableStateFlow(mutableListOf<String>())
-  private lateinit var ticketId: String
+  lateinit var ticketId: String
 
   @RequiresApi(Build.VERSION_CODES.TIRAMISU)
   override fun onCreate(savedInstanceState: Bundle?) {
