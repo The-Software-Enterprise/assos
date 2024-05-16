@@ -109,6 +109,14 @@ class StaffManagementTest : SuperTest() {
 
           staffItem { assertIsDisplayed() }
         }
+          step("Check the accept button") {
+              composeTestRule.onNodeWithText("Accept").performClick()
+          }
+
+          step ("Check if the staff is accepted") {
+              composeTestRule.onNodeWithText("Un-Accept").assertIsDisplayed()
+              composeTestRule.onNodeWithText("Un-Accept").performClick()
+          }
       }
     }
   }
