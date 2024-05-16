@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -35,6 +36,8 @@ fun ListItemAsso(asso: Association, callback: () -> Unit) {
       modifier =
           Modifier.fillMaxWidth()
               .padding(bottom = 12.dp, start = 16.dp, end = 16.dp)
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(15.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(15.dp))
               .background(
                   color = MaterialTheme.colorScheme.onPrimary,
                   shape = RoundedCornerShape(size = 15.dp))

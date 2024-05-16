@@ -1,10 +1,8 @@
 package com.swent.assos.ui.screens.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,10 +39,7 @@ fun Following(navigationActions: NavigationActions) {
   ) { paddingValues ->
     LazyColumn(
         contentPadding = paddingValues,
-        modifier =
-            Modifier.testTag("ContentSection")
-                .background(MaterialTheme.colorScheme.surface)
-                .padding(16.dp)) {
+        modifier = Modifier.testTag("ContentSection").padding(16.dp)) {
           if (loading) {
             item { LoadingCircle() }
           } else {

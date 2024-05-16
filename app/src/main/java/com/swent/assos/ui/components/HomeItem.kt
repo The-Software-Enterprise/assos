@@ -36,7 +36,8 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier.shadow(4.dp, RoundedCornerShape(12.dp))
+          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(10.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(10.dp))
               .background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
@@ -53,13 +54,13 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                     model = news.images[0],
                     contentDescription = "news image",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    modifier = Modifier.width(80.dp).fillMaxWidth().padding(6.dp))
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = "news image",
                     contentScale = ContentScale.Fit,
-                    modifier = Modifier.width(80.dp).fillMaxWidth())
+                    modifier = Modifier.width(80.dp).fillMaxWidth().padding(6.dp))
               }
               Column(
                   modifier =
