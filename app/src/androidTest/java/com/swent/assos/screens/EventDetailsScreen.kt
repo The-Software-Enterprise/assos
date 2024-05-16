@@ -10,5 +10,5 @@ class EventDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         viewBuilderAction = { hasTestTag("ExplorerScreen") }) {
 
   val eventDetails: KNode = child { hasTestTag("EventDetails") }
-    val setupNFCTag: KNode = eventDetails.child { hasTestTag("SetupNFCTag") }
+  val setupNFCTag: KNode = eventDetails.child { hasTestTag("SetupNFCTag") }
 }

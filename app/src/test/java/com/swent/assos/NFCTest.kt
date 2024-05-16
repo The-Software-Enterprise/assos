@@ -16,61 +16,61 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class NFCTest {
 
-    private val mockTag = mockk<Tag>()
-    private val mockIntent = mockk<Intent>()
-    private val mockMessage = mockk<NdefMessage>()
-    private val mockNDEF = mockk<Ndef>()
-    private val readActivity = NFCReader()
-    private val writeActivity = NFCWriter()
-    private val readPayload: String = "Hello !"
-    private val writePayload: String = "Test"
+  private val mockTag = mockk<Tag>()
+  private val mockIntent = mockk<Intent>()
+  private val mockMessage = mockk<NdefMessage>()
+  private val mockNDEF = mockk<Ndef>()
+  private val readActivity = NFCReader()
+  private val writeActivity = NFCWriter()
+  private val readPayload: String = "Hello !"
+  private val writePayload: String = "Test"
 
-    init {
-        readActivity.ticketId = "a2yHSEnKrvdWEClidKEa"
-    }
+  init {
+    readActivity.ticketId = "a2yHSEnKrvdWEClidKEa"
+  }
 
-    @Test
-    fun testReadNFC() {
-        every { mockTag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
-        every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
-        every { mockIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) } returns
-                arrayOf(mockMessage)
-        val pathPrefix = "swent.com:nfcapp"
-        val nfcRecord =
-            NdefRecord(
-                NdefRecord.TNF_EXTERNAL_TYPE,
-                pathPrefix.toByteArray(),
-                ByteArray(0),
-                readPayload.toByteArray())
-        every { mockMessage.records } returns arrayOf(nfcRecord)
+  @Test
+  fun testReadNFC() {
+    every { mockTag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
+    every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
+    every { mockIntent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES) } returns
+        arrayOf(mockMessage)
+    val pathPrefix = "swent.com:nfcapp"
+    val nfcRecord =
+        NdefRecord(
+            NdefRecord.TNF_EXTERNAL_TYPE,
+            pathPrefix.toByteArray(),
+            ByteArray(0),
+            readPayload.toByteArray())
+    every { mockMessage.records } returns arrayOf(nfcRecord)
 
-        readActivity.onNewIntent(mockIntent)
-        val res = readActivity.validIDs.value
-        assert(res.contains(readPayload))
-    }
+    readActivity.onNewIntent(mockIntent)
+    val res = readActivity.validIDs.value
+    assert(res.contains(readPayload))
+  }
 
-    @Test
-    fun testWriteNFC() {
-        every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
-        every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
-        mockkStatic(Ndef::class)
-        every { Ndef.get(mockTag) } returns mockNDEF
-        every { mockNDEF.maxSize } returns NDEF_MAX_SIZE
-        every { mockNDEF.connect() } returns Unit
-        every { mockNDEF.isWritable } returns true
-        var res = mockMessage
-        every { mockNDEF.writeNdefMessage(any()) } answers
-                { msg ->
-                    res = msg.invocation.args[0] as NdefMessage
-                }
-        every { mockNDEF.close() } returns Unit
+  @Test
+  fun testWriteNFC() {
+    every { mockIntent.action } returns NfcAdapter.ACTION_TAG_DISCOVERED
+    every { mockIntent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG) } returns mockTag
+    mockkStatic(Ndef::class)
+    every { Ndef.get(mockTag) } returns mockNDEF
+    every { mockNDEF.maxSize } returns NDEF_MAX_SIZE
+    every { mockNDEF.connect() } returns Unit
+    every { mockNDEF.isWritable } returns true
+    var res = mockMessage
+    every { mockNDEF.writeNdefMessage(any()) } answers
+        { msg ->
+          res = msg.invocation.args[0] as NdefMessage
+        }
+    every { mockNDEF.close() } returns Unit
 
-        assert(writeActivity.createNFCMessage(listOf(writePayload), mockIntent))
-        val str = String(res.records[0].payload)
-        assert(str.contains(writePayload))
-    }
+    assert(writeActivity.createNFCMessage(listOf(writePayload), mockIntent))
+    val str = String(res.records[0].payload)
+    assert(str.contains(writePayload))
+  }
 
-    companion object {
-        private const val NDEF_MAX_SIZE = 100
-    }
+  companion object {
+    private const val NDEF_MAX_SIZE = 100
+  }
 }
