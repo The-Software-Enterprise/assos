@@ -503,8 +503,7 @@ constructor(
   }
 }
 
-private fun serialize(event: Event): Map<String, Any> {
-
+fun serialize(event: Event): Map<String, Any> {
   return mapOf(
       "title" to event.title,
       "description" to event.description,
@@ -532,7 +531,7 @@ private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-private fun serialize(news: News): Map<String, Any> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,

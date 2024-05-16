@@ -3,10 +3,9 @@ package com.swent.assos
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performClick
 import androidx.core.content.ContextCompat
-import androidx.activity.compose.setContent
-import androidx.compose.ui.test.hasText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
