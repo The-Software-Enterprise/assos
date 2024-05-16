@@ -36,9 +36,7 @@ import com.swent.assos.model.navigation.NavigationActions
 fun HomeItem(news: News, navigationActions: NavigationActions) {
   Box(
       modifier =
-          Modifier
-              // .shadow(2.dp, RoundedCornerShape(2.dp))
-              .background(
+          Modifier.background(
                   color = MaterialTheme.colorScheme.surfaceVariant,
                   shape = RoundedCornerShape(size = 15.dp))
               .height(100.dp)
