@@ -79,7 +79,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         text = news.description,
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                      color = MaterialTheme.colorScheme.onBackground)
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
             }
       }
