@@ -92,6 +92,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
   val viewModel: EventViewModel = hiltViewModel(key = ticket.id)
   val event by viewModel.event.collectAsState()
   val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu, HH:mm")
+
   val launcher =
       rememberLauncherForActivityResult(
           contract = ActivityResultContracts.StartActivityForResult()) { result ->
