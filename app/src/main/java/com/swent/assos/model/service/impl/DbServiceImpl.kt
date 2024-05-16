@@ -37,9 +37,13 @@ constructor(
         firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
+        following =
+            when (snapshot["following"]) {
+              is MutableList<*> -> snapshot["following"] as MutableList<String>
+              else -> mutableListOf()
+            },
         associations =
-            snapshot.get("associations")?.let { associations ->
+            snapshot["associations"]?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
                 val assoId = it["assoId"] as? String
                 val position = it["position"] as? String
@@ -564,37 +568,36 @@ fun deserializeEvent(doc: DocumentSnapshot): Event {
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       fields =
-          if (doc["fields"] is List<*>) {
-            (doc["fields"] as List<*>)
-                .mapNotNull {
-                  if (it is Map<*, *>) {
-                    val type = it["type"] as? String
+          when (doc["fields"]) {
+            is List<*> -> {
+              (doc["fields"] as List<*>).mapNotNull { field ->
+                when (field) {
+                  is Map<*, *> -> {
+                    val type = field["type"] as? String
                     when (type) {
                       "text" -> {
-                        val title = it["title"] as? String ?: ""
-                        val text = it["text"] as? String ?: ""
+                        val title = field["title"] as? String ?: ""
+                        val text = field["text"] as? String ?: ""
                         Event.Field.Text(title, text)
                       }
                       "image" -> {
                         val uris =
-                            (it["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                            (field["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
                               Uri.parse(it)
                             }
-                        if (uris != null) {
-                          Event.Field.Image(uris)
-                        } else {
-                          null
+                        when (uris) {
+                          null -> null
+                          else -> Event.Field.Image(uris)
                         }
                       }
                       else -> null
                     }
-                  } else {
-                    null
                   }
+                  else -> null
                 }
-                .filterNotNull()
-          } else {
-            emptyList()
+              }
+            }
+            else -> emptyList()
           },
       documentSnapshot = doc)
 }
