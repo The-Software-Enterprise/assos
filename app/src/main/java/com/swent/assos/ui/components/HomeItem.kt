@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.Font
@@ -63,7 +62,7 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
               }
               Column(
                   modifier =
-                      Modifier.padding(start = 16.dp, top = 25.dp)
+                      Modifier.padding(start = 16.dp, top = 20.dp)
                           .align(Alignment.CenterVertically)
                           .testTag("NewsItemColumn"),
                   verticalArrangement = Arrangement.spacedBy(5.dp),
