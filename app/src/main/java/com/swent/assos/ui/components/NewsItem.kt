@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
@@ -31,12 +30,15 @@ import com.swent.assos.model.navigation.NavigationActions
 @Composable
 fun NewsItem(news: News, navigationActions: NavigationActions) {
   Card(
-      colors = CardDefaults.cardColors(Color.White),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("NewsItem")
               .padding(0.dp)
-              .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
+              .border(
+                  width = 0.5.dp,
+                  color = MaterialTheme.colorScheme.surfaceVariant,
+                  shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.width(200.dp).padding(vertical = 0.dp).clickable {

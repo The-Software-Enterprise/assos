@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,7 +14,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +32,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -79,7 +80,7 @@ fun Explorer(navigationActions: NavigationActions) {
                 Modifier.fillMaxWidth()
                     .padding(paddingValues)
                     .testTag("AssoList")
-                    .background(color = MaterialTheme.colorScheme.surface),
+                    .background(color = MaterialTheme.colorScheme.background),
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
             state = listState) {
@@ -88,9 +89,13 @@ fun Explorer(navigationActions: NavigationActions) {
               } else {
                 if (associations.isEmpty()) {
                   item {
-                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                    Text(
+                        text = stringResource(R.string.NoResult),
+                        textAlign = TextAlign.Center,
+                        color = MaterialTheme.colorScheme.onBackground)
                   }
                 } else {
+                  item { Spacer(modifier = Modifier.height(6.dp)) }
                   items(items = associations, key = { it.id }) {
                     ListItemAsso(
                         asso = it,
@@ -118,15 +123,19 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
               .padding(10.dp)
               .background(
                   color = MaterialTheme.colorScheme.background,
-                  shape = RoundedCornerShape(size = 28.dp)),
+                  shape = RoundedCornerShape(size = 15.dp)),
       horizontalAlignment = Alignment.CenterHorizontally) {
         DockedSearchBar(
             modifier = Modifier.fillMaxWidth().testTag("SearchAsso"),
-            colors = SearchBarDefaults.colors(containerColor = Color(0x50C9CAD9)),
-            trailingIcon = {
+            shape = RoundedCornerShape(15.dp),
+            colors =
+                SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+            trailingIcon = {},
+            leadingIcon = {
               if (isSearching) {
                 Image(
                     imageVector = Icons.Default.Close,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
                     contentDescription = null,
                     modifier =
                         Modifier.clickable {
@@ -135,10 +144,12 @@ fun TopResearchBar(explorerViewModel: ExplorerViewModel) {
                           isSearching = false
                         })
               } else {
-                Image(imageVector = Icons.Default.Search, contentDescription = null)
+                Image(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground))
               }
             },
-            leadingIcon = { Image(imageVector = Icons.Default.Menu, contentDescription = null) },
             placeholder = { Text(text = "Search an Association") },
             query = query,
             onQueryChange = { explorerViewModel.filterOnSearch(it) },
