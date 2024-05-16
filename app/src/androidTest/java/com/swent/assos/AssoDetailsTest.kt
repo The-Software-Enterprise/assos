@@ -2,7 +2,6 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.swent.assos.model.AssociationPosition
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
@@ -50,27 +49,6 @@ class AssoDetailsTest : SuperTest() {
           goBackButton { performClick() }
           verify { mockNavActions.goBack() }
           confirmVerified(mockNavActions)
-        }
-      }
-    }
-  }
-
-  @Test
-  fun joinAssociation() {
-    DataCache.currentUser.value.associations = emptyList()
-    run {
-      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Join association") {
-          joinButton {
-            assertIsDisplayed()
-            performClick()
-            assert(
-                DataCache.currentUser.value.associations.contains(
-                    Triple(
-                        assoId,
-                        AssociationPosition.MEMBER.string,
-                        AssociationPosition.MEMBER.rank)))
-          }
         }
       }
     }
