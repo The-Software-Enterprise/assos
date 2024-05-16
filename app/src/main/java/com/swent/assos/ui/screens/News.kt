@@ -49,7 +49,6 @@ fun News(navigationActions: NavigationActions) {
             if (news.isEmpty()) {
               item { Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center) }
             } else {
-              item { Spacer(modifier = Modifier.height(10.dp)) }
               items(news) { news -> HomeItem(news = news, navigationActions) }
               item { Spacer(modifier = Modifier.height(10.dp)) }
             }
