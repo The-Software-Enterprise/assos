@@ -1,6 +1,8 @@
 package com.swent.assos.ui.screens.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -21,6 +24,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.navigation.NavigationActions
 import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import kotlin.math.max
@@ -29,14 +34,19 @@ import kotlin.math.roundToInt
 private const val NUMBER_OF_HOURS = 24
 
 @Composable
-fun BasicEvent(event: Event) {
+fun BasicEvent(event: Event, navigationActions: NavigationActions) {
   Column(
       modifier =
           Modifier.fillMaxSize()
-              .padding(end = 2.dp, bottom = 2.dp)
               .background(Color(0xFFDE496E), shape = RoundedCornerShape(14.dp))
+              .clickable {
+                navigationActions.navigateTo(
+                    Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${event.associationId}")
+              }
               .padding(4.dp)
-              .testTag("EventItem")) {
+              .testTag("EventItem"),
+      verticalArrangement = Arrangement.Center,
+      horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             text = event.title,
             fontWeight = FontWeight.SemiBold,
@@ -49,7 +59,7 @@ fun BasicEvent(event: Event) {
 fun Schedule(
     events: State<List<Event>>,
     modifier: Modifier = Modifier,
-    eventContent: @Composable (event: Event) -> Unit = { BasicEvent(event = it) },
+    eventContent: @Composable (event: Event) -> Unit,
     dayWidth: Dp,
     hourHeight: Dp
 ) {
@@ -63,11 +73,11 @@ fun Schedule(
       },
       modifier =
           modifier.drawBehind {
-            repeat(NUMBER_OF_HOURS - 1) {
+            repeat(NUMBER_OF_HOURS) {
               drawLine(
                   dividerColor,
-                  start = Offset(0f, offsetYHour + (it + 1) * hourHeight.toPx()),
-                  end = Offset(size.width, offsetYHour + (it + 1) * hourHeight.toPx()),
+                  start = Offset(0f, offsetYHour + (it) * hourHeight.toPx()),
+                  end = Offset(size.width, offsetYHour + (it) * hourHeight.toPx()),
                   strokeWidth = 1.dp.toPx())
             }
           }) { measureables, constraints ->
