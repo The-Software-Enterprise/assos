@@ -13,22 +13,22 @@ import androidx.core.view.WindowCompat
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = NeonBlue,
+        primary = NeonBlue, // Important buttons such as Join, Apply...
         onPrimary = MrWhite,
         primaryContainer = MrWhite,
         inversePrimary = JordyBlue,
-        secondary = CornflowerBlue,
+        secondary = CornflowerBlue, // Buttons such as Follow...
         onSecondary = MrWhite,
         secondaryContainer = BackgroundSecondary,
-        tertiary = JordyBlue,
+        tertiary = JordyBlue, // Floating action button such as plus...
         onTertiary = MrWhite,
         tertiaryContainer = MrWhite,
         onTertiaryContainer = JordyBlue,
         background = MrWhite,
         onBackground = MrBlack,
-        surface = surfaceColor,
+        surface = surfaceColor, // Background of a component
         onSurface = MrBlack,
-        surfaceVariant = GreySpector,
+        surfaceVariant = surface, // Darker background of a component
         onSurfaceVariant = MrBlack,
         surfaceTint = Periwinkle,
         inverseSurface = MrBlack,
@@ -38,27 +38,27 @@ private val LightColorScheme =
         errorContainer = ErrorBackground,
         onErrorContainer = MrBlack,
         outline = GraySeparator,
-        outlineVariant = Periwinkle)
+        outlineVariant = MrWhite)
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = JordyBlue,
-        onPrimary = MrBlack,
+        primary = NeonBlue,
+        onPrimary = MrWhite,
         primaryContainer = MrBlack,
         inversePrimary = NeonBlue,
         secondary = CornflowerBlue,
-        onSecondary = MrBlack,
-        secondaryContainer = MrBlack,
-        tertiary = NeonBlue,
-        onTertiary = MrBlack,
-        tertiaryContainer = MrBlack,
+        onSecondary = MrWhite,
+        secondaryContainer = CornflowerBlue,
+        tertiary = JordyBlue,
+        onTertiary = MrWhite,
+        tertiaryContainer = Periwinkle,
         onTertiaryContainer = JordyBlue,
         background = MrBlack,
         onBackground = MrWhite,
-        surface = GreySpector,
+        surface = surfaceColor,
         onSurface = MrBlack,
-        surfaceVariant = LightCyan,
-        onSurfaceVariant = MrBlack,
+        surfaceVariant = surfaceColor2,
+        onSurfaceVariant = MrWhite,
         surfaceTint = CornflowerBlue,
         inverseSurface = MrWhite,
         inverseOnSurface = MrBlack,
@@ -67,7 +67,7 @@ private val DarkColorScheme =
         errorContainer = ErrorBackground,
         onErrorContainer = MrBlack,
         outline = GreySpector,
-        outlineVariant = LightCyan)
+        outlineVariant = MrBlack)
 
 @Composable
 fun AssosTheme(
