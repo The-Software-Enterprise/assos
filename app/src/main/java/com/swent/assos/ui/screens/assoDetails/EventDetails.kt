@@ -101,7 +101,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("ExplorerScreen").semantics { contentDescription = "ExplorerScreen" },
+      modifier =
+          Modifier.testTag("ExplorerScreen").semantics { contentDescription = "ExplorerScreen" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
@@ -165,8 +166,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
             if (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
               Button(
                   modifier = Modifier.testTag("SetupNFCTag"),
-                  onClick = { launcher.launch(intent) }
-              ) { Text("Setup NFC Tag") }
+                  onClick = { launcher.launch(intent) }) {
+                    Text("Setup NFC Tag")
+                  }
             }
           }
         }
