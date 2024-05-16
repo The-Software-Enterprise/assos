@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -34,40 +35,38 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(Color.White),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("NewsItem")
-              .padding(0.dp)
-              .border(width = 0.5.dp, color = Color.LightGray, shape = RoundedCornerShape(12.dp))) {
+          Modifier
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+            .testTag("NewsItem")) {
         Column(
             modifier =
-                Modifier.width(200.dp).padding(vertical = 0.dp).clickable {
+                Modifier.width(200.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
+          horizontalAlignment = Alignment.CenterHorizontally
         ) {
           if (news.images.isNotEmpty()) {
             AsyncImage(
                 model = news.images[0],
                 contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface))
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
           } else {
             AsyncImage(
                 model = R.drawable.ic_launcher_foreground,
                 contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier = Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surface))
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
           }
-
-          Spacer(modifier = Modifier.height(8.dp))
           Text(
               text = news.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(8.dp))
+              modifier = Modifier.padding(8.dp))
           Text(
               text = news.description,
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(5.dp))
+              modifier = Modifier.padding(5.dp))
         }
       }
 }

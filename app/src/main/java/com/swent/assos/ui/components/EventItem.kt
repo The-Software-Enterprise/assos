@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
@@ -33,38 +34,33 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.padding(0.dp)
-              .border(
-                  width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.outline,
-                  shape = RoundedCornerShape(12.dp))
+          Modifier
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
               .clickable {
                 navigationActions.navigateTo(
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
               }) {
         Column(
-            modifier = Modifier.width(200.dp).padding(vertical = 0.dp),
+            modifier = Modifier.width(200.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
           Image(
               painter = rememberAsyncImagePainter(event.image),
               contentDescription = null,
               contentScale = ContentScale.Crop,
               modifier =
-                  Modifier.fillMaxWidth()
-                      .height(84.dp)
+                  Modifier
+                      .height(100.dp)
                       .background(MaterialTheme.colorScheme.outline))
-
-          Spacer(modifier = Modifier.height(8.dp))
           Text(
               text = event.title,
               style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(8.dp))
+              modifier = Modifier.padding(8.dp))
           Text(
               text = event.description,
               style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(5.dp))
+              modifier = Modifier.padding(5.dp))
         }
       }
 }
