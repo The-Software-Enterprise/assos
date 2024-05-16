@@ -71,7 +71,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val userId by assoViewModel.currentUser.collectAsState()
 
   val viewModel: ProfileViewModel = hiltViewModel()
-
   val myAssociations by viewModel.memberAssociations.collectAsState()
 
   val launcher =
@@ -102,7 +101,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
+      modifier =
+          Modifier.testTag("ExplorerScreen").semantics { contentDescription = "ExplorerScreen" },
       topBar = { TopNewsBar(asso, navigationActions, event) },
       floatingActionButton = {
         if (eventId != "") {
@@ -119,7 +119,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         LazyColumn(
-            modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
+            modifier = Modifier.testTag("EventDetails").padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           item {
@@ -158,13 +158,17 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                     navigationActions.navigateTo(
                         Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
                   },
-                  text = "Saff List")
+                  text = "Staff List")
             }
           }
 
           item {
             if (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
-              Button(onClick = { launcher.launch(intent) }) { Text("Setup NFC Tag") }
+              Button(
+                  modifier = Modifier.testTag("SetupNFCTag"),
+                  onClick = { launcher.launch(intent) }) {
+                    Text("Setup NFC Tag")
+                  }
             }
           }
         }

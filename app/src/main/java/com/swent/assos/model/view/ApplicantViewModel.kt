@@ -46,4 +46,16 @@ constructor(
       dbService.unAcceptStaff(applicantId = applicantId, eventId = eventId)
     }
   }
+
+  fun acceptApplicant(assoId: String, applicantId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.acceptApplicant(applicantId = applicantId, assoId = assoId)
+    }
+  }
+
+  fun unAcceptApplicant(applicantId: String, assoId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unAcceptApplicant(applicantId = applicantId, assoId = assoId)
+    }
+  }
 }
