@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -72,7 +73,7 @@ fun CreateNews(
       modifier = Modifier.fillMaxSize().testTag("CreateNewsScreen"),
       topBar = {
         PageTitleWithGoBack(
-            title = "Back",
+            title = "Create news",
             navigationActions = navigationActions,
             actionButton = {
               Box(
@@ -100,10 +101,14 @@ fun CreateNews(
       },
       floatingActionButton = {
         FloatingActionButton(
+            containerColor = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.testTag("AddImages"),
             onClick = { launcher.launch("image/*") },
             shape = RoundedCornerShape(size = 16.dp)) {
-              Image(imageVector = Icons.Default.Add, contentDescription = null)
+              Image(
+                  imageVector = Icons.Default.Add,
+                  contentDescription = null,
+                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
             }
       }) { paddingValues ->
         LazyColumn(
@@ -114,6 +119,12 @@ fun CreateNews(
         ) {
           item {
             OutlinedTextField(
+                textStyle =
+                    TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onBackground),
                 value = news.title,
                 onValueChange = { viewModel.setTitle(it) },
                 modifier =
@@ -121,10 +132,6 @@ fun CreateNews(
                         .fillMaxWidth()
                         .height(64.dp)
                         .testTag("InputTitle"),
-                textStyle =
-                    TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
                 label = { Text(text = "Title") },
                 placeholder = { Text(text = "Title of the news") },
                 colors =
@@ -158,7 +165,9 @@ fun CreateNews(
                 textStyle =
                     TextStyle(
                         fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular))),
+                        lineHeight = 32.sp,
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                        color = MaterialTheme.colorScheme.onBackground),
                 colors =
                     OutlinedTextFieldDefaults.colors(
                         focusedContainerColor = MaterialTheme.colorScheme.background,

@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Association
@@ -27,11 +29,16 @@ import com.swent.assos.model.navigation.NavigationActions
 @Composable
 fun EventItem(event: Event, navigationActions: NavigationActions, asso: Association) {
   Card(
-      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.surfaceVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+          Modifier
+            .testTag("NewsItem")
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
               .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
+            .background(
+              color = MaterialTheme.colorScheme.surfaceVariant,
+              shape = RoundedCornerShape(size = 12.dp))
               .clickable {
                 navigationActions.navigateTo(
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")

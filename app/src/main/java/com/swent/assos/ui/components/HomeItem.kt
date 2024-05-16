@@ -74,12 +74,13 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.Black)
+                        color = MaterialTheme.colorScheme.onBackground)
                     Text(
                         modifier = Modifier.weight(1f).testTag("NewsItemsDescription"),
                         text = news.description,
                         fontSize = 14.sp,
-                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)))
+                        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      color = MaterialTheme.colorScheme.onBackground)
                   }
             }
       }
