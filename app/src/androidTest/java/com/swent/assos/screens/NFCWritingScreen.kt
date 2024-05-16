@@ -5,4 +5,7 @@ import io.github.kakaocup.compose.node.element.ComposeScreen
 
 class NFCWritingScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<NFCWritingScreen>(
-        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NFCWriter") }) {}
+        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NFCWriter") }) {
+
+
+}

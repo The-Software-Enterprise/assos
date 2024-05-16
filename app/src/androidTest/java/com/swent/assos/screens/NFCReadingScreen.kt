@@ -5,4 +5,8 @@ import io.github.kakaocup.compose.node.element.ComposeScreen
 
 class NFCReadingScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
     ComposeScreen<NFCReadingScreen>(
-        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NFCReader") }) {}
+        semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NFCReader") }) {
+
+
+}
+
