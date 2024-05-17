@@ -4,7 +4,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -57,6 +56,7 @@ fun Calendar(
         if (loading.value) {
           LoadingCircle()
         } else {
+
           Column(modifier = Modifier.padding(it).fillMaxSize()) {
             InfiniteScrollableDaysList(
                 selectedDate = selectedDate,

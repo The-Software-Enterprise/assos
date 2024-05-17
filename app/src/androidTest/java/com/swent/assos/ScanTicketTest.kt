@@ -47,6 +47,20 @@ class ScanTicketTest : SuperTest() {
   }
 
   @Test
+  fun myTicketsDisplaysTheCorrectPageTitle() {
+    run {
+      ComposeScreen.onComposeScreen<ScanTicketScreen>(composeTestRule) {
+        step("Check if page title is displayed") {
+          pageTitle {
+            assertIsDisplayed()
+            assert(hasText("Scan a ticket", substring = true, ignoreCase = true))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
   fun goBackButtonNavigatesToMyTickets() {
     // Mock the permission result to be granted
     mockkStatic(ContextCompat::class)
