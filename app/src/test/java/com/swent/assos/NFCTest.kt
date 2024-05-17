@@ -20,9 +20,14 @@ class NFCTest {
   private val mockIntent = mockk<Intent>()
   private val mockMessage = mockk<NdefMessage>()
   private val mockNDEF = mockk<Ndef>()
-  private val activity = NFCActivity()
+  private val readActivity = NFCReader()
+  private val writeActivity = NFCWriter()
   private val readPayload: String = "Hello !"
   private val writePayload: String = "Test"
+
+  init {
+    readActivity.ticketId = "a2yHSEnKrvdWEClidKEa"
+  }
 
   @Test
   fun testReadNFC() {
@@ -39,9 +44,9 @@ class NFCTest {
             readPayload.toByteArray())
     every { mockMessage.records } returns arrayOf(nfcRecord)
 
-    activity.onNewIntent(mockIntent)
-    val res = activity.msgList.value
-    assert(res.contains("Message: $readPayload"))
+    readActivity.onNewIntent(mockIntent)
+    val res = readActivity.validIDs.value
+    assert(res.contains(readPayload))
   }
 
   @Test
@@ -60,7 +65,7 @@ class NFCTest {
         }
     every { mockNDEF.close() } returns Unit
 
-    assert(activity.createNFCMessage(writePayload, mockIntent))
+    assert(writeActivity.createNFCMessage(listOf(writePayload), mockIntent))
     val str = String(res.records[0].payload)
     assert(str.contains(writePayload))
   }
