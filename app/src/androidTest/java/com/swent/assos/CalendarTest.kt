@@ -19,7 +19,7 @@ class CalendarTest : SuperTest() {
 
   override fun setup() {
     super.setup()
-    composeTestRule.activity.setContent { Calendar() }
+    composeTestRule.activity.setContent { Calendar(mockNavActions) }
   }
 
   @Test

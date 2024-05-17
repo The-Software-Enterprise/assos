@@ -11,12 +11,12 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.timestampToLocalDateTime
-import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -26,7 +26,6 @@ constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
 ) : DbService {
-
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
@@ -38,9 +37,13 @@ constructor(
         firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
+        following =
+            when (snapshot["following"]) {
+              is MutableList<*> -> snapshot["following"] as MutableList<String>
+              else -> mutableListOf()
+            },
         associations =
-            snapshot.get("associations")?.let { associations ->
+            snapshot["associations"]?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
                 val assoId = it["assoId"] as? String
                 val position = it["position"] as? String
@@ -52,6 +55,43 @@ constructor(
                 }
               } ?: emptyList()
             } ?: emptyList())
+  }
+
+  private fun deserialiazeUser(doc: DocumentSnapshot): User {
+    return User(
+        id = doc.id,
+        firstName = doc.getString("firstname") ?: "",
+        lastName = doc.getString("name") ?: "",
+        email = doc.getString("email") ?: "",
+        following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
+        associations =
+            doc.get("associations")?.let { associations ->
+              (associations as? List<Map<String, Any>>)?.mapNotNull {
+                val assoId = it["assoId"] as? String
+                val position = it["position"] as? String
+                val rank = (it["rank"] as? Long)?.toInt()
+                if (assoId != null && position != null && rank != null) {
+                  Triple(assoId, position, rank)
+                } else {
+                  null
+                }
+              } ?: emptyList()
+            } ?: emptyList())
+  }
+
+  override suspend fun getUserByEmail(
+      email: String,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
+  ): User {
+    val query = firestore.collection("users").whereEqualTo("email", email)
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      onFailure()
+      return User()
+    }
+    onSuccess()
+    return deserialiazeUser(snapshot.documents[0])
   }
 
   override suspend fun getAllAssociations(
@@ -71,33 +111,49 @@ constructor(
     return snapshot.documents.map { deserializeAssociation(it) }
   }
 
-  override suspend fun addTicketToUser(
-      email: String,
+  override suspend fun removeTicketFromUser(
+      applicantId: String,
       eventId: String,
-      onSuccess: () -> Unit,
-      onFailure: () -> Unit
+      status: ParticipationStatus
   ) {
+    // remove ticket from ticket collection
+    firestore
+        .collection("tickets")
+        .whereEqualTo("userId", applicantId)
+        .whereEqualTo("eventId", eventId)
+        .whereEqualTo("participantStatus", status)
+        .get()
+        .addOnSuccessListener {
+          for (document in it.documents) {
+            firestore.collection("tickets").document(document.id).delete()
+          }
+        }
+  }
 
-    val user = firestore.collection("users").whereEqualTo("email", email).get().await()
-    when {
-      // if the user does not exist
-      user.documents.isEmpty() -> {
-        onFailure()
-        return
-      }
-    }
-    val userId = user.documents[0].id
-    val ticket = mapOf("eventId" to eventId, "userId" to userId)
-    // add the ticket to the ticket collection and get the id created
-    val ticketId = firestore.collection("tickets").add(ticket).await().id
-    // and add the ticket to the ticket collection in user
+  override suspend fun addTicketToUser(
+      applicantId: String,
+      eventId: String,
+      status: ParticipationStatus,
+  ) {
+    // add ticket to ticket collection and get the ticket id
+    val ticketId =
+        firestore
+            .collection("tickets")
+            .add(
+                mapOf(
+                    "userId" to applicantId,
+                    "eventId" to eventId,
+                    "participantStatus" to status.name))
+            .await()
+            .id
+    // add ticket id to user collection tickets
     firestore
         .collection("users")
-        .document(userId)
+        .document(applicantId)
         .collection("tickets")
         .document(ticketId)
-        .set(ticket)
-    onSuccess()
+        .set(mapOf("ticketId" to ticketId))
+        .await()
   }
 
   override suspend fun applyStaffing(
@@ -121,17 +177,7 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot =
-        query.get().await()
-            ?: return Event(
-                "",
-                "",
-                "",
-                Uri.EMPTY,
-                "",
-                null,
-                null,
-            )
+    val snapshot = query.get().await() ?: return Event("")
     return deserializeEvent(snapshot)
   }
 
@@ -492,30 +538,27 @@ constructor(
     val snapshot = query.get().await() ?: return Ticket("", "", "")
     return deserializeTicket(snapshot)
   }
-
-  override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> {
-    val query = firestore.collection("tickets").whereEqualTo("eventId", eventId)
-    val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map { deserializeTicket(it) }
-  }
 }
 
-private fun serialize(event: Event): Map<String, Any> {
-
+fun serialize(event: Event): Map<String, Any> {
   return mapOf(
       "title" to event.title,
       "description" to event.description,
       "associationId" to event.associationId,
       "image" to event.image.toString(),
-      "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
-      "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
-  )
+      "startTime" to localDateTimeToTimestamp(event.startTime),
+      "endTime" to localDateTimeToTimestamp(event.endTime),
+      "fields" to
+          event.fields.map {
+            when (it) {
+              is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
+              is Event.Field.Image ->
+                  mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
+            }
+          })
 }
 
-private fun deserializeEvent(doc: DocumentSnapshot): Event {
+fun deserializeEvent(doc: DocumentSnapshot): Event {
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -524,6 +567,38 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+      fields =
+          when (doc["fields"]) {
+            is List<*> -> {
+              (doc["fields"] as List<*>).mapNotNull { field ->
+                when (field) {
+                  is Map<*, *> -> {
+                    val type = field["type"] as? String
+                    when (type) {
+                      "text" -> {
+                        val title = field["title"] as? String ?: ""
+                        val text = field["text"] as? String ?: ""
+                        Event.Field.Text(title, text)
+                      }
+                      "image" -> {
+                        val uris =
+                            (field["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                              Uri.parse(it)
+                            }
+                        when (uris) {
+                          null -> null
+                          else -> Event.Field.Image(uris)
+                        }
+                      }
+                      else -> null
+                    }
+                  }
+                  else -> null
+                }
+              }
+            }
+            else -> emptyList()
+          },
       documentSnapshot = doc)
 }
 
@@ -532,7 +607,7 @@ private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-private fun serialize(news: News): Map<String, Any> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,
@@ -542,7 +617,7 @@ private fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
-private fun deserializeNews(doc: DocumentSnapshot): News {
+fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -564,7 +639,7 @@ private fun deserializeNews(doc: DocumentSnapshot): News {
       documentSnapshot = doc)
 }
 
-private fun deserializeAssociation(doc: DocumentSnapshot): Association {
+fun deserializeAssociation(doc: DocumentSnapshot): Association {
   return Association(
       id = doc.id,
       acronym = doc.getString("acronym") ?: "",
