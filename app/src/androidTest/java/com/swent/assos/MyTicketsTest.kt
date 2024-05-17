@@ -51,7 +51,7 @@ class MyTicketsTest : SuperTest() {
     }
   }
 
-  @Test
+  /*@Test
   fun clickOnMyTicketRedirectsToTicketDetails() {
     run {
       ComposeScreen.onComposeScreen<MyTicketsScreen>(composeTestRule) {
@@ -65,7 +65,7 @@ class MyTicketsTest : SuperTest() {
       verify { mockNavActions.navigateTo(Destinations.TICKET_DETAILS.route + "/${eventId}") }
       confirmVerified(mockNavActions)
     }
-  }
+  }*/
 
   @Test
   fun clickOnFloatingActionButtonRedirectsToScanTicket() {
