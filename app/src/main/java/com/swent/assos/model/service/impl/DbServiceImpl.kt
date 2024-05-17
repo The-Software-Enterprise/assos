@@ -11,12 +11,12 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
-import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.timestampToLocalDateTime
+import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -26,6 +26,7 @@ constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
 ) : DbService {
+
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
@@ -57,43 +58,6 @@ constructor(
             } ?: emptyList())
   }
 
-  private fun deserialiazeUser(doc: DocumentSnapshot): User {
-    return User(
-        id = doc.id,
-        firstName = doc.getString("firstname") ?: "",
-        lastName = doc.getString("name") ?: "",
-        email = doc.getString("email") ?: "",
-        following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
-        associations =
-            doc.get("associations")?.let { associations ->
-              (associations as? List<Map<String, Any>>)?.mapNotNull {
-                val assoId = it["assoId"] as? String
-                val position = it["position"] as? String
-                val rank = (it["rank"] as? Long)?.toInt()
-                if (assoId != null && position != null && rank != null) {
-                  Triple(assoId, position, rank)
-                } else {
-                  null
-                }
-              } ?: emptyList()
-            } ?: emptyList())
-  }
-
-  override suspend fun getUserByEmail(
-      email: String,
-      onSuccess: () -> Unit,
-      onFailure: () -> Unit
-  ): User {
-    val query = firestore.collection("users").whereEqualTo("email", email)
-    val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      onFailure()
-      return User()
-    }
-    onSuccess()
-    return deserialiazeUser(snapshot.documents[0])
-  }
-
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
@@ -111,49 +75,33 @@ constructor(
     return snapshot.documents.map { deserializeAssociation(it) }
   }
 
-  override suspend fun removeTicketFromUser(
-      applicantId: String,
-      eventId: String,
-      status: ParticipationStatus
-  ) {
-    // remove ticket from ticket collection
-    firestore
-        .collection("tickets")
-        .whereEqualTo("userId", applicantId)
-        .whereEqualTo("eventId", eventId)
-        .whereEqualTo("participantStatus", status)
-        .get()
-        .addOnSuccessListener {
-          for (document in it.documents) {
-            firestore.collection("tickets").document(document.id).delete()
-          }
-        }
-  }
-
   override suspend fun addTicketToUser(
-      applicantId: String,
+      email: String,
       eventId: String,
-      status: ParticipationStatus,
+      onSuccess: () -> Unit,
+      onFailure: () -> Unit
   ) {
-    // add ticket to ticket collection and get the ticket id
-    val ticketId =
-        firestore
-            .collection("tickets")
-            .add(
-                mapOf(
-                    "userId" to applicantId,
-                    "eventId" to eventId,
-                    "participantStatus" to status.name))
-            .await()
-            .id
-    // add ticket id to user collection tickets
+
+    val user = firestore.collection("users").whereEqualTo("email", email).get().await()
+    when {
+      // if the user does not exist
+      user.documents.isEmpty() -> {
+        onFailure()
+        return
+      }
+    }
+    val userId = user.documents[0].id
+    val ticket = mapOf("eventId" to eventId, "userId" to userId)
+    // add the ticket to the ticket collection and get the id created
+    val ticketId = firestore.collection("tickets").add(ticket).await().id
+    // and add the ticket to the ticket collection in user
     firestore
         .collection("users")
-        .document(applicantId)
+        .document(userId)
         .collection("tickets")
         .document(ticketId)
-        .set(mapOf("ticketId" to ticketId))
-        .await()
+        .set(ticket)
+    onSuccess()
   }
 
   override suspend fun applyStaffing(
@@ -177,7 +125,17 @@ constructor(
 
   override suspend fun getEventById(eventId: String): Event {
     val query = firestore.collection("events").document(eventId)
-    val snapshot = query.get().await() ?: return Event("")
+    val snapshot =
+        query.get().await()
+            ?: return Event(
+                "",
+                "",
+                "",
+                Uri.EMPTY,
+                "",
+                null,
+                null,
+            )
     return deserializeEvent(snapshot)
   }
 
@@ -555,19 +513,12 @@ fun serialize(event: Event): Map<String, Any> {
       "description" to event.description,
       "associationId" to event.associationId,
       "image" to event.image.toString(),
-      "startTime" to localDateTimeToTimestamp(event.startTime),
-      "endTime" to localDateTimeToTimestamp(event.endTime),
-      "fields" to
-          event.fields.map {
-            when (it) {
-              is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
-              is Event.Field.Image ->
-                  mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
-            }
-          })
+      "startTime" to localDateTimeToTimestamp(event.startTime ?: LocalDateTime.now()),
+      "endTime" to localDateTimeToTimestamp(event.endTime ?: LocalDateTime.now()),
+  )
 }
 
-fun deserializeEvent(doc: DocumentSnapshot): Event {
+private fun deserializeEvent(doc: DocumentSnapshot): Event {
   return Event(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -626,7 +577,7 @@ fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
-fun deserializeNews(doc: DocumentSnapshot): News {
+private fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,
       title = doc.getString("title") ?: "",
@@ -648,7 +599,7 @@ fun deserializeNews(doc: DocumentSnapshot): News {
       documentSnapshot = doc)
 }
 
-fun deserializeAssociation(doc: DocumentSnapshot): Association {
+private fun deserializeAssociation(doc: DocumentSnapshot): Association {
   return Association(
       id = doc.id,
       acronym = doc.getString("acronym") ?: "",
