@@ -48,11 +48,11 @@ class NFCWriter : ComponentActivity() {
       openNfcSettings()
     }
     val pendingIntent =
-      PendingIntent.getActivity(
-        this,
-        0,
-        Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
-        PendingIntent_Mutable)
+        PendingIntent.getActivity(
+            this,
+            0,
+            Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+            PendingIntent_Mutable)
     nfcAdapter?.enableForegroundDispatch(this, pendingIntent, null, null)
   }
 
@@ -73,11 +73,11 @@ class NFCWriter : ComponentActivity() {
 
   private fun openNfcSettings() {
     val intent =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        Intent(Settings.Panel.ACTION_NFC)
-      } else {
-        Intent(Settings.ACTION_WIRELESS_SETTINGS)
-      }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          Intent(Settings.Panel.ACTION_NFC)
+        } else {
+          Intent(Settings.ACTION_WIRELESS_SETTINGS)
+        }
     startActivity(intent)
   }
 }

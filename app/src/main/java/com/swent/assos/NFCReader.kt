@@ -43,12 +43,12 @@ class NFCReader : ComponentActivity() {
 
   private fun openNfcSettings() {
     val intent =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        Intent(Settings.Panel.ACTION_NFC)
-      } else {
-        Intent(Settings.ACTION_WIRELESS_SETTINGS)
-      }
-      startActivity(intent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          Intent(Settings.Panel.ACTION_NFC)
+        } else {
+          Intent(Settings.ACTION_WIRELESS_SETTINGS)
+        }
+    startActivity(intent)
   }
 
   override fun onResume() {

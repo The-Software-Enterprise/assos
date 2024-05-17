@@ -6,6 +6,7 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
+import com.swent.assos.model.NFC.createNFCMessage
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -65,7 +66,7 @@ class NFCTest {
         }
     every { mockNDEF.close() } returns Unit
 
-    assert(writeActivity.createNFCMessage(listOf(writePayload), mockIntent))
+    assert(createNFCMessage(listOf(writePayload), mockIntent))
     val str = String(res.records[0].payload)
     assert(str.contains(writePayload))
   }

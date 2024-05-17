@@ -165,7 +165,7 @@ dependencies {
   // Si vous utilisez Kotlin coroutines pour le multithreading
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
-
+  testImplementation("org.mockito:mockito-core:3.12.4")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
