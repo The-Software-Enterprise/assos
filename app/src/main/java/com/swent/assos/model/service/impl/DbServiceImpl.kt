@@ -91,7 +91,8 @@ constructor(
   }
 
   override suspend fun getTicketsUser(userId: String): List<Ticket> {
-    val query = firestore.collection("users").document(userId).collection("tickets")
+    // get all the tickets from the user from the ids of tickets in the user collection
+    val query = firestore.collection("users/$userId/tickets")
     // get all the tickets from the user from the ids of tickets in the user collection
     val snapshot = query.get().await()
     if (snapshot.isEmpty) {

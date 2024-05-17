@@ -4,6 +4,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -76,7 +77,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          composeTestRule.waitForIdle()
+          Thread.sleep(3000)
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
@@ -107,7 +108,9 @@ class EndToEnd : SuperTest() {
             }
           }
 
-          composeTestRule.waitForIdle()
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithTag("LogoutDialog").isDisplayed() },
+              timeoutMillis = 5000)
 
           // check if we are on the logout dialog
           step("is alert out ?") {
@@ -177,7 +180,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          composeTestRule.waitForIdle()
+          Thread.sleep(3000)
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
