@@ -202,14 +202,15 @@ class EndToEnd : SuperTest() {
             // click on child
           }
           composeTestRule.onNodeWithTag("NavigationBarItem1").performClick()
-          // check if we are on the profile screen
-
         }
       }
     }
     composeTestRule.activity.setContent { Explorer(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+        composeTestRule.waitUntil(
+            condition = { composeTestRule.onNodeWithTag("AssoList").isDisplayed() },
+            timeoutMillis = 5000)
         step("Click on follow") { composeTestRule.onNodeWithTag("AssoList").performClick() }
         step("click on association") {
           assoListoneEighty {
