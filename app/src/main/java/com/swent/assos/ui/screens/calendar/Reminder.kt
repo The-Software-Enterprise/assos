@@ -80,10 +80,8 @@ fun Reminder(calendarViewModel: CalendarViewModel, navigationActions: Navigation
                 fontSize = 12.sp,
                 lineHeight = 26.sp,
                 fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-
                 fontWeight = FontWeight.Light,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-
                 letterSpacing = 0.5.sp,
             ))
     Spacer(modifier = Modifier.height(14.dp))

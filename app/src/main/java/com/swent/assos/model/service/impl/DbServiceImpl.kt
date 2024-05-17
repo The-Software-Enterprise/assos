@@ -527,7 +527,6 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
-
       fields =
           when (doc["fields"]) {
             is List<*> -> {
@@ -560,7 +559,6 @@ private fun deserializeEvent(doc: DocumentSnapshot): Event {
             }
             else -> emptyList()
           },
-
       documentSnapshot = doc)
 }
 
