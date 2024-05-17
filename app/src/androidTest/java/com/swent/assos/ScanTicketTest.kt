@@ -3,6 +3,7 @@ package com.swent.assos
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.performClick
 import androidx.core.content.ContextCompat
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -43,6 +44,20 @@ class ScanTicketTest : SuperTest() {
             tickets = listOf("aY826AKyHh6DOjbsI1Vi"))
 
     composeTestRule.activity.setContent { ScanTicket(navigationActions = mockNavActions) }
+  }
+
+  @Test
+  fun myTicketsDisplaysTheCorrectPageTitle() {
+    run {
+      ComposeScreen.onComposeScreen<ScanTicketScreen>(composeTestRule) {
+        step("Check if page title is displayed") {
+          pageTitle {
+            assertIsDisplayed()
+            assert(hasText("Scan a ticket", substring = true, ignoreCase = true))
+          }
+        }
+      }
+    }
   }
 
   @Test
