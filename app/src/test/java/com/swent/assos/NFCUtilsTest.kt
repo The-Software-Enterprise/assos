@@ -15,6 +15,7 @@ import com.swent.assos.model.NFC.writeMessageToTag
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -27,90 +28,99 @@ class NFCUtilsTest {
 
   @Test
   fun testWriteMessageToTag() {
-    run {
+    runBlocking {
       val nfcMessage = mock(NdefMessage::class.java)
       val tag = mock(Tag::class.java)
 
       val result = writeMessageToTag(nfcMessage, tag)
       // Add assertions here based on the expected behavior of writeMessageToTag
       assertFalse(result) // for example, assuming that writeMessageToTag should always return true
+      return@runBlocking
     }
   }
 
   @Test
   fun testCreateNFCMessage() {
-    run {
+    runBlocking {
       val intent = mock(Intent::class.java)
       val result = createNFCMessage(listOf("test"), intent)
       assertFalse(result)
+      return@runBlocking
     }
   }
 
   @Test
   fun testResolveWritingIntent() {
-    run {
+    runBlocking {
       val intent = mock(Intent::class.java)
       val context = mock(Context::class.java)
       val result = resolveWritingIntent(intent, MutableStateFlow(emptyList()), context)
       assertFalse(result)
+      return@runBlocking
     }
   }
 
   @Test
   fun testResolveReadingIntent() {
-    run {
+    runBlocking {
       val intent = mock(Intent::class.java)
       val context = mock(Context::class.java)
 
       val result = resolveWritingIntent(intent, MutableStateFlow(emptyList()), context)
       assertFalse(result)
+      return@runBlocking
     }
   }
 
   @Test
   fun testDumpTagData() {
-    run {
+    runBlocking {
       val tag = mockk<Tag>()
       every { tag.id } returns byteArrayOf(0x01, 0x02, 0x03, 0x04)
       every { tag.techList } returns arrayOf("android.nfc.tech.Ndef")
       val result = dumpTagData(tag)
       assertFalse(result.isEmpty())
+      return@runBlocking
     }
   }
 
   @Test
   fun testToHex() {
-    run {
+    runBlocking {
       val bytes = byteArrayOf(0x01, 0x02, 0x03, 0x04)
       val result = toHex(bytes)
       assertFalse(result.isEmpty())
+      return@runBlocking
     }
   }
 
   @Test
   fun testToReversedHex() {
-    run {
+    runBlocking {
       val bytes = byteArrayOf(0x01, 0x02, 0x03, 0x04)
       val result = toReversedHex(bytes)
       assertFalse(result.isEmpty())
+      return@runBlocking
     }
   }
 
   @Test
   fun testToDec() {
-    run {
+    runBlocking {
       val bytes = byteArrayOf(0x01, 0x02, 0x03, 0x04)
       val result = toDec(bytes)
       assertTrue(result != 0L)
+      return@runBlocking
     }
   }
 
   @Test
   fun testToReversedDec() {
-    run {
+    runBlocking {
       val bytes = byteArrayOf(0x01, 0x02, 0x03, 0x04)
       val result = toReversedDec(bytes)
       assertTrue(result != 0L)
+      return@runBlocking
     }
   }
 }

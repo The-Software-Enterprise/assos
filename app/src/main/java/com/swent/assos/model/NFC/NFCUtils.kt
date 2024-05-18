@@ -14,8 +14,8 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.swent.assos.model.parcelable
-import kotlinx.coroutines.flow.MutableStateFlow
 import java.io.IOException
+import kotlinx.coroutines.flow.MutableStateFlow
 
 fun writeMessageToTag(nfcMessage: NdefMessage, tag: Tag?): Boolean {
 
@@ -69,8 +69,8 @@ fun createNFCMessage(payload: List<String>, intent: Intent): Boolean {
   val messageList = mutableListOf<NdefRecord>()
   payload.forEach {
     messageList +=
-      NdefRecord(
-        NdefRecord.TNF_EXTERNAL_TYPE, pathPrefix.toByteArray(), ByteArray(0), it.toByteArray())
+        NdefRecord(
+            NdefRecord.TNF_EXTERNAL_TYPE, pathPrefix.toByteArray(), ByteArray(0), it.toByteArray())
   }
 
   val nfcMessage = NdefMessage(messageList.toTypedArray())
@@ -82,22 +82,22 @@ fun createNFCMessage(payload: List<String>, intent: Intent): Boolean {
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun resolveWritingIntent(
-  intent: Intent,
-  ticketList: MutableStateFlow<List<String>>,
-  context: Context
+    intent: Intent,
+    ticketList: MutableStateFlow<List<String>>,
+    context: Context
 ): Boolean {
   var finishActivity = false
   val validActions =
-    listOf(
-      NfcAdapter.ACTION_TAG_DISCOVERED,
-      NfcAdapter.ACTION_TECH_DISCOVERED,
-      NfcAdapter.ACTION_NDEF_DISCOVERED)
+      listOf(
+          NfcAdapter.ACTION_TAG_DISCOVERED,
+          NfcAdapter.ACTION_TECH_DISCOVERED,
+          NfcAdapter.ACTION_NDEF_DISCOVERED)
   if (intent.action in validActions) {
     if (ticketList.value.isEmpty()) {
       /* TODO = Manage if an event has no ticket to write*/
       Toast.makeText(
-        context, "We could not write your tickets, wait a few seconds...", Toast.LENGTH_SHORT)
-        .show()
+              context, "We could not write your tickets, wait a few seconds...", Toast.LENGTH_SHORT)
+          .show()
     } else {
       val messageWrittenSuccessfully = createNFCMessage(ticketList.value, intent)
       if (messageWrittenSuccessfully) {
@@ -118,16 +118,16 @@ fun resolveWritingIntent(
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 fun resolveReadingIntent(
-  intent: Intent,
-  validIDs: MutableStateFlow<MutableList<String>>,
-  ticketId: String,
-  context: Context
+    intent: Intent,
+    validIDs: MutableStateFlow<MutableList<String>>,
+    ticketId: String,
+    context: Context
 ) {
   val validActions =
-    listOf(
-      NfcAdapter.ACTION_TAG_DISCOVERED,
-      NfcAdapter.ACTION_TECH_DISCOVERED,
-      NfcAdapter.ACTION_NDEF_DISCOVERED)
+      listOf(
+          NfcAdapter.ACTION_TAG_DISCOVERED,
+          NfcAdapter.ACTION_TECH_DISCOVERED,
+          NfcAdapter.ACTION_NDEF_DISCOVERED)
   if (intent.action in validActions) {
     val rawMsgs = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
     val messages = mutableListOf<NdefMessage>()
