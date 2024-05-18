@@ -555,7 +555,9 @@ fun serialize(event: Event): Map<String, Any> {
               is Event.Field.Image ->
                   mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
             }
-          })
+          },
+      "isStaffingEnabled" to event.isStaffingEnabled,
+  )
 }
 
 fun deserializeEvent(doc: DocumentSnapshot): Event {
@@ -599,6 +601,7 @@ fun deserializeEvent(doc: DocumentSnapshot): Event {
             }
             else -> emptyList()
           },
+      isStaffingEnabled = doc.getBoolean("isStaffingEnabled") ?: false,
       documentSnapshot = doc)
 }
 
