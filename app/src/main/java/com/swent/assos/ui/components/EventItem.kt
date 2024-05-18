@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Association
@@ -48,14 +49,20 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                   contentDescription = null,
                   contentScale = ContentScale.Crop,
                   modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.outline))
-              Text(
-                  text = event.title,
-                  style = MaterialTheme.typography.titleMedium,
-                  modifier = Modifier.padding(8.dp))
-              Text(
-                  text = event.description,
-                  style = MaterialTheme.typography.bodyMedium,
-                  modifier = Modifier.padding(5.dp))
+            Text(
+                text = event.title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(8.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = event.description,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(5.dp),
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis
+            )
             }
       }
 }
