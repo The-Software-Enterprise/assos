@@ -14,8 +14,8 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.swent.assos.model.parcelable
-import java.io.IOException
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.IOException
 
 fun writeMessageToTag(nfcMessage: NdefMessage, tag: Tag?): Boolean {
 
