@@ -4,9 +4,7 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -266,21 +263,18 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
 @Composable
 fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
   FloatingActionButton(
-        onClick = onClick,
-        modifier =
-            Modifier
-                .height(42.dp)
-                .testTag("JoinButton"),
+      onClick = onClick,
+      modifier = Modifier.height(42.dp).testTag("JoinButton"),
       elevation = FloatingActionButtonDefaults.elevation(5.dp),
       containerColor = MaterialTheme.colorScheme.primary,
-    ) {
-      Text(
-          modifier = Modifier.padding(horizontal = 10.dp),
-          text = text,
-          fontSize = 16.sp,
-          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-          fontWeight = FontWeight.SemiBold,
-          color = MaterialTheme.colorScheme.onPrimary,
-          style = MaterialTheme.typography.bodyMedium)
-    }
+  ) {
+    Text(
+        modifier = Modifier.padding(horizontal = 10.dp),
+        text = text,
+        fontSize = 16.sp,
+        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.onPrimary,
+        style = MaterialTheme.typography.bodyMedium)
+  }
 }

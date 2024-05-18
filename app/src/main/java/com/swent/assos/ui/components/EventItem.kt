@@ -49,20 +49,18 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                   contentDescription = null,
                   contentScale = ContentScale.Crop,
                   modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.outline))
-            Text(
-                text = event.title,
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(8.dp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = event.description,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(5.dp),
-                maxLines = 5,
-                overflow = TextOverflow.Ellipsis
-            )
+              Text(
+                  text = event.title,
+                  style = MaterialTheme.typography.titleMedium,
+                  modifier = Modifier.padding(8.dp),
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis)
+              Text(
+                  text = event.description,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(5.dp),
+                  maxLines = 5,
+                  overflow = TextOverflow.Ellipsis)
             }
       }
 }

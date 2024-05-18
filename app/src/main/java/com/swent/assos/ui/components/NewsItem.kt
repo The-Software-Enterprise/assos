@@ -60,15 +60,13 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                   style = MaterialTheme.typography.titleMedium,
                   modifier = Modifier.padding(8.dp),
                   maxLines = 1,
-                  overflow = TextOverflow.Ellipsis
-              )
+                  overflow = TextOverflow.Ellipsis)
               Text(
                   text = news.description,
                   style = MaterialTheme.typography.bodyMedium,
                   modifier = Modifier.padding(5.dp),
                   maxLines = 5,
-                    overflow = TextOverflow.Ellipsis
-              )
+                  overflow = TextOverflow.Ellipsis)
             }
       }
 }
