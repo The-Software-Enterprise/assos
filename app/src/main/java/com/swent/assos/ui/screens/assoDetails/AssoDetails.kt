@@ -24,6 +24,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -108,7 +109,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         if (!currentUser.associations.map { it.first }.contains(assoId))
             JoinUsButton(
                 onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
-        else null
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
@@ -265,21 +265,17 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
 
 @Composable
 fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
-  Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
-  ) {
-    FloatingActionButton(
+  FloatingActionButton(
         onClick = onClick,
         modifier =
-            Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
-                .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
+            Modifier
                 .height(42.dp)
-                .padding(horizontal = 8.dp)
                 .testTag("JoinButton"),
-        containerColor = MaterialTheme.colorScheme.primary,
+      elevation = FloatingActionButtonDefaults.elevation(5.dp),
+      containerColor = MaterialTheme.colorScheme.primary,
     ) {
       Text(
+          modifier = Modifier.padding(horizontal = 10.dp),
           text = text,
           fontSize = 16.sp,
           fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
@@ -287,5 +283,4 @@ fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
           color = MaterialTheme.colorScheme.onPrimary,
           style = MaterialTheme.typography.bodyMedium)
     }
-  }
 }

@@ -52,6 +52,6 @@ fun Input(
               disabledBorderColor = Color.Transparent,
           ),
       singleLine = singleLine,
-      enabled = true,
+      enabled = enabled,
   )
 }

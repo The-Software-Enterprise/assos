@@ -3,8 +3,10 @@ package com.swent.assos.ui.screens.assoDetails
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -37,6 +39,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
 @Composable
@@ -72,20 +75,26 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
-      topBar = { TopNewsBar(asso, navigationActions, event) },
+      modifier = Modifier
+          .testTag("EventDetails")
+          .semantics { contentDescription = "EventDetails" },
+      topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
         if (eventId != "") {
           when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
             true ->
-                Row {
-                  JoinUsButton(
-                      onClick = {
-                        navigationActions.navigateTo(
-                            Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
-                      },
-                      text = "Staff List")
-                  Spacer(modifier = Modifier.width(10.dp))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    if (event.isStaffingEnabled) {
+                        JoinUsButton(
+                            onClick = {
+                                navigationActions.navigateTo(
+                                    Destinations.STAFF_MANAGEMENT.route + "/${eventId}"
+                                )
+                            },
+                            text = "Staff List"
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                    }
                   JoinUsButton(
                       onClick = {
                         navigationActions.navigateTo(
@@ -121,27 +130,6 @@ fun ConfirmDialog(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         dismissButton = { ConfirmButton(onDismissRequest, "No") })
   }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopNewsBar(
-    asso: Association,
-    navigationActions: NavigationActions,
-    event: Event,
-) {
-
-  MediumTopAppBar(
-      colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
-      modifier = Modifier.testTag("Header"),
-      title = { Text(event.title, modifier = Modifier.testTag("Title")) },
-      navigationIcon = {
-        Image(
-            imageVector = Icons.Default.ArrowBack,
-            contentDescription = null,
-            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
-      },
-      actions = {})
 }
 
 @Composable

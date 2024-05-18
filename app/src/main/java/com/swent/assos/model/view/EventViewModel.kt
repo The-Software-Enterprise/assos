@@ -27,7 +27,7 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-  private val _event = MutableStateFlow(Event(id = generateUniqueID(), associationId = ""))
+  private val _event = MutableStateFlow(Event(id = generateUniqueID()))
   val event = _event.asStateFlow()
 
   private var _loadingDisplay = MutableStateFlow(true)
@@ -53,19 +53,21 @@ constructor(
               event.fields.filterIsInstance<Event.Field.Image>().flatMap { it.uris },
           "events/${event.id}",
           onSuccess = { uris ->
-            event.image = uris[0]
-            event.fields =
+            if (uris.isNotEmpty()) {
+              event.image = uris[0]
+              event.fields =
                 event.fields.mapIndexed { index, field ->
                   if (field is Event.Field.Image) {
                     val uriIndex =
-                        event.fields.subList(0, index).filterIsInstance<Event.Field.Image>().sumOf {
-                          it.uris.size
-                        }
+                      event.fields.subList(0, index).filterIsInstance<Event.Field.Image>().sumOf {
+                        it.uris.size
+                      }
                     Event.Field.Image(uris.subList(uriIndex + 1, uriIndex + field.uris.size + 1))
                   } else {
                     field
                   }
                 }
+            }
             viewModelScope.launch(ioDispatcher) {
               dbService.createEvent(event = event, onSuccess = onSuccess, onError = {})
             }
