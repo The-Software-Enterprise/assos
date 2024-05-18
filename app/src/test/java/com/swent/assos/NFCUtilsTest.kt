@@ -59,7 +59,6 @@ class NFCUtilsTest {
   @Test
   fun testResolveReadingIntent() {
     run {
-
       val intent = mock(Intent::class.java)
       val context = mock(Context::class.java)
 
