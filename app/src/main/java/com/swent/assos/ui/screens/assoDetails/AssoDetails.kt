@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -275,8 +274,8 @@ fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
         modifier =
             Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
                 .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
-                .then(Modifier.widthIn(min = 92.dp))
                 .height(42.dp)
+                .padding(horizontal = 8.dp)
                 .testTag("JoinButton"),
         containerColor = MaterialTheme.colorScheme.primary,
     ) {

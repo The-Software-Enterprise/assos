@@ -1,16 +1,11 @@
 package com.swent.assos.ui.screens.assoDetails
 
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.AlertDialog
@@ -28,22 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.rememberAsyncImagePainter
-import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.navigation.Destinations
@@ -51,6 +37,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
@@ -91,60 +78,30 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         if (eventId != "") {
           when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
             true ->
-                JoinUsButton(
-                    onClick = {
-                      navigationActions.navigateTo(Destinations.CREATE_TICKET.route + "/${eventId}")
-                    },
-                    text = "Create ticket")
-            false -> JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+                Row {
+                  JoinUsButton(
+                      onClick = {
+                        navigationActions.navigateTo(
+                            Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                      },
+                      text = "Staff List")
+                  Spacer(modifier = Modifier.width(10.dp))
+                  JoinUsButton(
+                      onClick = {
+                        navigationActions.navigateTo(
+                            Destinations.CREATE_TICKET.route + "/${eventId}")
+                      },
+                      text = "Create ticket")
+                }
+            false ->
+                if (event.isStaffingEnabled) {
+                  JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+                }
           }
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier.testTag("EventDetailsList").padding(paddingValues),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-          item {
-            Image(
-                painter =
-                    if (event.image != Uri.EMPTY) {
-                      rememberAsyncImagePainter(event.image)
-                    } else {
-                      painterResource(id = R.drawable.ic_launcher_foreground)
-                    },
-                contentDescription = null,
-                modifier =
-                    Modifier.padding(10.dp)
-                        .height(200.dp)
-                        .clip(shape = RoundedCornerShape(20.dp))
-                        .background(MaterialTheme.colorScheme.background)
-                        .fillMaxWidth(),
-                alignment = Alignment.Center,
-                contentScale = ContentScale.Crop)
-          }
-
-          item {
-            Text(
-                text = event.description,
-                style = MaterialTheme.typography.bodyMedium,
-                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(all = 8.dp).testTag("eventDescriptionText"))
-          }
-
-          if (myAssociations.find { it.id == assoId } != null) {
-            item {
-              Spacer(modifier = Modifier.padding(top = 15.dp))
-              JoinUsButton(
-                  onClick = {
-                    navigationActions.navigateTo(
-                        Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
-                  },
-                  text = "Staff List")
-            }
-          }
-        }
+        EventContent(viewModel = eventViewModel, paddingValues = paddingValues)
       }
 }
 

@@ -141,4 +141,8 @@ constructor(
     (fields[index] as Event.Field.Text).text = text
     _event.value = _event.value.copy(fields = fields, _unused = !_event.value._unused)
   }
+
+  fun setStaffingEnabled(isEnabled: Boolean) {
+    _event.value = _event.value.copy(isStaffingEnabled = isEnabled)
+  }
 }

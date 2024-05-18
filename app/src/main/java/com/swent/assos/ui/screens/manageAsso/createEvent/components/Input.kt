@@ -14,11 +14,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.TextUnit
-import com.swent.assos.model.view.EventViewModel
 
 @Composable
 fun Input(
-    viewModel: EventViewModel,
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
@@ -26,7 +24,8 @@ fun Input(
     lineHeight: TextUnit,
     singleLine: Boolean,
     paddingValues: PaddingValues,
-    testTag: String
+    testTag: String,
+    enabled: Boolean = true,
 ) {
   OutlinedTextField(
       modifier = Modifier.fillMaxSize().padding(paddingValues).testTag(testTag),
@@ -49,6 +48,10 @@ fun Input(
               focusedBorderColor = Color.Transparent,
               unfocusedBorderColor = Color.Transparent,
               cursorColor = MaterialTheme.colorScheme.secondary,
+              disabledContainerColor = Color.Transparent,
+              disabledBorderColor = Color.Transparent,
           ),
-      singleLine = singleLine)
+      singleLine = singleLine,
+      enabled = true,
+  )
 }
