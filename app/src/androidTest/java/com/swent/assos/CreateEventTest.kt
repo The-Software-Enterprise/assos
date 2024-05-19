@@ -10,12 +10,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.generateUniqueID
+import com.swent.assos.model.serialize
 import com.swent.assos.model.service.impl.AuthServiceImpl
 import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.model.service.impl.StorageServiceImpl
-import com.swent.assos.model.service.impl.deserializeEvent
-import com.swent.assos.model.service.impl.serialize
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.screens.CreateEventScreen
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent

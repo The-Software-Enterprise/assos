@@ -12,7 +12,7 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
-import com.swent.assos.model.service.impl.serialize
+import com.swent.assos.model.serialize
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import dagger.hilt.android.testing.HiltAndroidTest
