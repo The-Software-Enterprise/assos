@@ -31,6 +31,7 @@ constructor(
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
+
     if (!snapshot.exists()) {
       return User()
     }
@@ -58,8 +59,24 @@ constructor(
               } ?: emptyList()
             } ?: emptyList())
   }
+    override fun serialize(user: User): Map<String, Any>{
+        return mapOf(
+            "firstname" to user.firstName,
+            "name" to user.lastName,
+            "email" to user.email,
+            "following" to  user.following,
+            "tickets" to user.tickets,
+            "associations" to user.associations.map {
+                mapOf(
+                    "assoId" to it.first,
+                    "position" to it.second,
+                    "rank" to it.third
+                )
+            }
+        )
+    }
 
-  private fun deserialiazeUser(doc: DocumentSnapshot): User {
+  private fun deserializeUser(doc: DocumentSnapshot): User {
     return User(
         id = doc.id,
         firstName = doc.getString("firstname") ?: "",
@@ -101,7 +118,7 @@ constructor(
       return User()
     }
     onSuccess()
-    return deserialiazeUser(snapshot.documents[0])
+    return deserializeUser(snapshot.documents[0])
   }
 
   override suspend fun getTicketsUser(userId: String): List<Ticket> {

@@ -112,7 +112,7 @@ jobs:
       - name: run unit tests
         run: |
           # To run the CI with debug information, add --info
-          firebase emulators:exec "./gradlew check --parallel --build-cache" --import ./emulatorFiles/.emulator-data/firestore_export
+          firebase emulators:exec --import ./emulatorFiles/.emulator-data/firestore_export "./gradlew check --parallel --build-cache"
 
       # Run connected tests on the emulator
       - name: run connected tests
