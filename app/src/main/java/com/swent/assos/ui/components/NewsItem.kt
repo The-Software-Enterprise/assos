@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.swent.assos.R
@@ -57,11 +58,15 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
               Text(
                   text = news.title,
                   style = MaterialTheme.typography.titleMedium,
-                  modifier = Modifier.padding(8.dp))
+                  modifier = Modifier.padding(8.dp),
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis)
               Text(
                   text = news.description,
                   style = MaterialTheme.typography.bodyMedium,
-                  modifier = Modifier.padding(5.dp))
+                  modifier = Modifier.padding(5.dp),
+                  maxLines = 5,
+                  overflow = TextOverflow.Ellipsis)
             }
       }
 }
