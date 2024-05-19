@@ -53,7 +53,7 @@ fun HomeNavigation(navigationActions: NavigationActions) {
       when (page) {
         0 -> News(navigationActions = navigationActions)
         1 -> Explorer(navigationActions = navigationActions)
-        2 -> Calendar()
+        2 -> Calendar(navigationActions = navigationActions)
         3 -> MyTickets(navigationActions = navigationActions)
         4 -> Profile(navigationActions = navigationActions)
       }
