@@ -560,6 +560,7 @@ fun deserializeEvent(doc: DocumentSnapshot): Event {
       image = Uri.parse(doc.getString("image") ?: ""),
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
+      isStaffingEnabled = doc.getBoolean("isStaffingEnabled") ?: false,
       fields =
           when (doc["fields"]) {
             is List<*> -> {
