@@ -36,7 +36,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("NewsItem")
+          Modifier.testTag("EventItem")
               .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
               .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
               .background(
