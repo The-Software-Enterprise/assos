@@ -12,6 +12,7 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
+import com.swent.assos.model.service.impl.serialize
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -55,8 +56,8 @@ class EventDetailsTest : SuperTest() {
 
   override fun setup() {
     DataCache.currentUser.value = user
-    FirebaseFirestore.getInstance().collection("events").add(event1)
-    FirebaseFirestore.getInstance().collection("events").add(event2)
+    FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
+    FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
   }
 
   @Test
@@ -67,12 +68,16 @@ class EventDetailsTest : SuperTest() {
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("I want to join") { composeTestRule.onNodeWithText("Become Staff").performClick() }
+        step("I want to join") {
+          composeTestRule.waitUntil { composeTestRule.onNodeWithText("Become Staff").isDisplayed() }
+          composeTestRule.onNodeWithText("Become Staff").performClick()
+        }
+        step("I changed my mind") { composeTestRule.onNodeWithText("No").performClick() }
+        step("I want to join again") {
+          composeTestRule.onNodeWithText("Become Staff").performClick()
+        }
+        step("Confirm") { composeTestRule.onNodeWithText("Yes").performClick() }
       }
-      step("I changed my mind") { composeTestRule.onNodeWithText("No").performClick() }
-
-      step("I want to join again") { composeTestRule.onNodeWithText("Become Staff").performClick() }
-      step("Confirm") { composeTestRule.onNodeWithText("Yes").performClick() }
     }
   }
 
