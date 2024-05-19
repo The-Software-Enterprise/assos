@@ -1,12 +1,18 @@
 package com.swent.assos
 
+import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
+import com.swent.assos.screens.EventDetailsScreen
+import com.swent.assos.screens.MyTicketsScreen
+import com.swent.assos.ui.screens.assoDetails.EventDetails
+import com.swent.assos.ui.screens.ticket.MyTickets
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.github.kakaocup.compose.node.element.ComposeScreen
 import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -79,28 +85,25 @@ class NFCTest : SuperTest() {
 
   @Test
   fun testRead() {
-    /*composeTestRule.activity.setContent { MyTickets(navigationActions = mockNavActions) }
+    composeTestRule.activity.setContent { MyTickets(navigationActions = mockNavActions) }
     run {
       step("Check if the ticket is displayed") {
         ComposeScreen.onComposeScreen<MyTicketsScreen>(composeTestRule) {
-          ticketList { assertIsDisplayed() }
-          ticketItem { performClick() }
+          ticketItem { assertIsDisplayed() }
         }
       }
-    }*/
+    }
   }
 
   @Test
   fun testWrite() {
-    /*composeTestRule.activity.setContent { EventDetails(eventId, mockNavActions, rocketTeamId) }
+    composeTestRule.activity.setContent { EventDetails(eventId, mockNavActions, rocketTeamId) }
     run {
-      step("assert ny associations display correctly") {
+      step("assert my associations display correctly") {
         ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-          eventDetails { assertIsDisplayed() }
-          // setupNFCTag { assertIsDisplayed() }
+          setupNFCTag { assertIsDisplayed() }
         }
       }
     }
-     */
   }
 }
