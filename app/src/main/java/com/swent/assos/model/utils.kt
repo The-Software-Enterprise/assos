@@ -17,6 +17,7 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.Ticket
+import com.swent.assos.model.data.User
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -196,4 +197,39 @@ fun deserializeApplicant(doc: DocumentSnapshot): Applicant {
       userId = doc.getString("userId") ?: "",
       status = doc.getString("status") ?: "unknown",
       createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")))
+}
+
+fun serialize(user: User): Map<String, Any> {
+  return mapOf(
+      "firstname" to user.firstName,
+      "name" to user.lastName,
+      "email" to user.email,
+      "following" to user.following,
+      "tickets" to user.tickets,
+      "associations" to
+          user.associations.map {
+            mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
+          })
+}
+
+fun deserializeUser(doc: DocumentSnapshot): User {
+  return User(
+      id = doc.id,
+      firstName = doc.getString("firstname") ?: "",
+      lastName = doc.getString("name") ?: "",
+      email = doc.getString("email") ?: "",
+      following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
+      associations =
+          doc.get("associations")?.let { associations ->
+            (associations as? List<Map<String, Any>>)?.mapNotNull {
+              val assoId = it["assoId"] as? String
+              val position = it["position"] as? String
+              val rank = (it["rank"] as? Long)?.toInt()
+              if (assoId != null && position != null && rank != null) {
+                Triple(assoId, position, rank)
+              } else {
+                null
+              }
+            } ?: emptyList()
+          } ?: emptyList())
 }
