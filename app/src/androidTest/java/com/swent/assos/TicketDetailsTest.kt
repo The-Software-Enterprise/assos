@@ -35,6 +35,7 @@ class TicketDetailsTest : SuperTest() {
                 description = "Rocket team meeting",
                 startTime = LocalDateTime.of(2024, 5, 4, 16, 44),
                 endTime = LocalDateTime.of(2024, 5, 4, 16, 44),
+                isStaffingEnabled = true,
             ))
     composeTestRule.activity.setContent {
       TicketDetails(eventId = eventId, navigationActions = mockNavActions)

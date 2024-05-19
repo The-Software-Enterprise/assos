@@ -96,7 +96,7 @@ constructor(
   ): User {
     val query = firestore.collection("users").whereEqualTo("email", email)
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
+    if (snapshot.isEmpty || snapshot.documents.isEmpty()) {
       onFailure()
       return User()
     }
@@ -164,7 +164,7 @@ constructor(
       status: ParticipationStatus,
   ) {
     // add ticket to ticket collection and get the ticket id
-    val ticketId =
+    val ticket =
         firestore
             .collection("tickets")
             .add(
@@ -173,12 +173,10 @@ constructor(
                     "eventId" to eventId,
                     "participantStatus" to status.name))
             .await()
-            .id
+    val ticketId = ticket?.id ?: return
     // add ticket id to user collection tickets
     firestore
-        .collection("users")
-        .document(applicantId)
-        .collection("tickets")
+        .collection("users/$applicantId/tickets")
         .document(ticketId)
         .set(mapOf("ticketId" to ticketId))
         .await()
@@ -211,8 +209,8 @@ constructor(
 
   override suspend fun getApplicantsByEventId(eventId: String): List<Applicant> {
     val applicants = mutableListOf<Applicant>()
-    val querySnapshot =
-        firestore.collection("events").document(eventId).collection("applicants").get().await()
+    val querySnapshot = firestore.collection("events/$eventId/applicants").get().await()
+
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))
     }
@@ -221,8 +219,7 @@ constructor(
 
   override suspend fun getApplicantsByAssoId(assoId: String): List<Applicant> {
     val applicants = mutableListOf<Applicant>()
-    val querySnapshot =
-        firestore.collection("associations").document(assoId).collection("applicants").get().await()
+    val querySnapshot = firestore.collection("associations/$assoId/applicants").get().await()
 
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))
@@ -232,41 +229,19 @@ constructor(
   }
 
   override suspend fun acceptApplicant(applicantId: String, assoId: String) {
-    firestore
-        .collection("associations")
-        .document(assoId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "accepted")
+    firestore.document("associations/$assoId/applicants/$applicantId").update("status", "accepted")
   }
 
   override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
-    firestore
-        .collection("associations")
-        .document(assoId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "pending")
+    firestore.document("associations/$assoId/applicants/$applicantId").update("status", "pending")
   }
 
   override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
-
-    firestore
-        .collection("events")
-        .document(eventId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "pending")
+    firestore.document("events/$eventId/applicants/$applicantId").update("status", "pending")
   }
 
   override suspend fun acceptStaff(applicantId: String, eventId: String) {
-
-    firestore
-        .collection("events")
-        .document(eventId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "accepted")
+    firestore.document("events/$eventId/applicants/$applicantId").update("status", "accepted")
   }
 
   override suspend fun addApplicant(
@@ -279,9 +254,7 @@ constructor(
     val user = auth.currentUser
     if (user != null) {
       firestore
-          .collection(toWhat)
-          .document(id)
-          .collection("applicants")
+          .collection("$toWhat/$id/applicants")
           .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError(it.message ?: "") }
@@ -365,18 +338,6 @@ constructor(
       return emptyList()
     }
     return snapshot.documents.map { deserializeNews(it) }
-  }
-
-  override fun serialize(user: User): Map<String, Any> {
-    return mapOf(
-        "firstname" to user.firstName,
-        "name" to user.lastName,
-        "email" to user.email,
-        "following" to user.following,
-        "associations" to
-            user.associations.map {
-              mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
-            })
   }
 
   override suspend fun getEventsFromAnAssociation(
@@ -470,28 +431,6 @@ constructor(
           .update("following", FieldValue.arrayRemove(associationId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Unfollow Error") }
-    }
-  }
-
-  override suspend fun joinAssociation(
-      triple: Triple<String, String, Int>,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("users")
-          .document(user.uid)
-          .update(
-              "associations",
-              FieldValue.arrayUnion(
-                  mapOf(
-                      "assoId" to triple.first,
-                      "position" to triple.second,
-                      "rank" to triple.third)))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
     }
   }
 
@@ -593,7 +532,9 @@ fun serialize(event: Event): Map<String, Any> {
               is Event.Field.Image ->
                   mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
             }
-          })
+          },
+      "isStaffingEnabled" to event.isStaffingEnabled,
+  )
 }
 
 fun deserializeEvent(doc: DocumentSnapshot): Event {
