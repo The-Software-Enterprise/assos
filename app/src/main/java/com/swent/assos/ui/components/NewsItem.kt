@@ -4,12 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -57,14 +54,18 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface).testTag("NewsItemImage"))
+                        Modifier.height(100.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .testTag("NewsItemImage"))
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface).testTag("NewsItemImage"))
+                        Modifier.height(100.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .testTag("NewsItemImage"))
               }
               Text(
                   text = news.title,
