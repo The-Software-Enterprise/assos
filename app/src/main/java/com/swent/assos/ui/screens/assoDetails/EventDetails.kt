@@ -68,8 +68,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-        if (eventId != "") {
-          when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+        if (event.id != "") {
+          when (isMember(myAssociations = myAssociations, currentAsso = assoId)) {
             true ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),

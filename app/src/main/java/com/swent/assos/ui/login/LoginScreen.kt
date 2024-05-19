@@ -82,6 +82,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
     ) {
       OutlinedTextField(
           value = email,
+          singleLine = true,
           onValueChange = {
             email = it
             loginViewModel.userNotFound.value = false
@@ -112,6 +113,7 @@ fun LoginScreen(navigationActions: NavigationActions) {
       Spacer(modifier = Modifier.height(16.dp))
 
       OutlinedTextField(
+          singleLine = true,
           value = password,
           onValueChange = {
             password = it

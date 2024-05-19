@@ -34,7 +34,7 @@ constructor(
   val loading = _loadingDisplay.asStateFlow()
 
   fun clear() {
-    _event.value = Event(id = generateUniqueID())
+    _event.value = Event(id = "CLEARED")
   }
 
   fun getEvent(eventId: String) {

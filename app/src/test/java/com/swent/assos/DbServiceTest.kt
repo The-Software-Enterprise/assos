@@ -179,9 +179,13 @@ class DbServiceTest {
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
 
+    coEvery { mockFirestore.collection(any()).whereEqualTo(any<String>(), any()).get() } returns
+        Tasks.forResult(mockQuerySnapshot)
+
     val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()
-
+    coEvery { mockQuerySnapshot.documents[0] } returns mockDocumentSnapshot
+    coEvery { mockDocumentSnapshot.id } returns "id"
     coEvery { mockAuth.currentUser } returns mockUser
     coEvery { mockUser.uid } returns "id"
 
@@ -225,6 +229,8 @@ class DbServiceTest {
     dbService.acceptApplicant("id", "id")
     dbService.unAcceptApplicant("id", "id")
     dbService.quitAssociation("id", "id", { null }, { null })
+
+    dbService.getUserByEmail("someone.weno@epfl.ch", {}, {})
 
     return@runBlocking
   }

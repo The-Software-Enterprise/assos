@@ -82,7 +82,6 @@ class StaffManagementTest : SuperTest() {
 
   @Test
   fun testStaffList() {
-
     composeTestRule.activity.setContent {
       EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
     }

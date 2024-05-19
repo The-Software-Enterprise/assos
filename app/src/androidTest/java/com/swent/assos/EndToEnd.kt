@@ -4,6 +4,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -25,7 +26,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import java.lang.Thread.sleep
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -77,7 +77,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          Thread.sleep(2000)
+          Thread.sleep(3000)
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
@@ -108,7 +108,9 @@ class EndToEnd : SuperTest() {
             }
           }
 
-          composeTestRule.waitForIdle()
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithTag("LogoutDialog").isDisplayed() },
+              timeoutMillis = 5000)
 
           // check if we are on the logout dialog
           step("is alert out ?") {
@@ -178,7 +180,7 @@ class EndToEnd : SuperTest() {
             performClick()
           }
 
-          Thread.sleep(2000)
+          Thread.sleep(3000)
           // check if we are on the Home screen
           verify { mockNavActions.navigateTo(Destinations.HOME) }
           confirmVerified(mockNavActions)
@@ -200,14 +202,15 @@ class EndToEnd : SuperTest() {
             // click on child
           }
           composeTestRule.onNodeWithTag("NavigationBarItem1").performClick()
-          // check if we are on the profile screen
-
         }
       }
     }
     composeTestRule.activity.setContent { Explorer(navigationActions = mockNavActions) }
     run {
       ComposeScreen.onComposeScreen<ExplorerScreen>(composeTestRule) {
+        composeTestRule.waitUntil(
+            condition = { composeTestRule.onNodeWithTag("AssoList").isDisplayed() },
+            timeoutMillis = 5000)
         step("Click on follow") { composeTestRule.onNodeWithTag("AssoList").performClick() }
         step("click on association") {
           assoListoneEighty {

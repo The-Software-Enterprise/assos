@@ -112,6 +112,8 @@ interface DbService {
 
   // Tickets ---------------------------------------------------------------
 
+  suspend fun getTicketsUser(userId: String): List<Ticket>
+
   suspend fun getTickets(userId: String, lastDocumentSnapshot: DocumentSnapshot?): List<Ticket>
 
   suspend fun getTicketFromId(ticketId: String): Ticket
@@ -125,6 +127,10 @@ interface DbService {
   suspend fun acceptApplicant(applicantId: String, assoId: String)
 
   suspend fun unAcceptApplicant(applicantId: String, assoId: String)
+
+  fun serialize(user: User): Map<String, Any>
+
+  suspend fun addUser(users: User)
 
   suspend fun quitAssociation(
       assoId: String,

@@ -39,10 +39,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.functions.FirebaseFunctions
-import com.google.firebase.functions.functions
 import com.swent.assos.R
-import com.swent.assos.config.Config
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
@@ -88,6 +85,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
       OutlinedTextField(
+          singleLine = true,
           value = email,
           onValueChange = {
             email = it
@@ -122,6 +120,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
       OutlinedTextField(
           value = password,
+          singleLine = true,
           onValueChange = {
             loginViewModel.badCredentials.value = false
             loginViewModel.firebaseError.value = false
@@ -154,6 +153,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
 
       OutlinedTextField(
           value = confirmPassword,
+          singleLine = true,
           onValueChange = {
             confirmPassword = it
             loginViewModel.badCredentials.value = false
@@ -208,22 +208,6 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 } catch (e: Exception) {
                   throw e
                 }
-                // call the firebasefunction -> oncallFind.py
-                val data = hashMapOf("email" to email)
-                // wait for user to be created
-                val functions = FirebaseFunctions.getInstance("europe-west6")
-                val config = Config()
-                config.get_all { onlineServices ->
-                  val emu = onlineServices.contains("functions")
-                  if (emu) {
-                    functions.useEmulator("10.0.2.2", 5001)
-                  }
-                }
-                // change the region of the function to europe-west6
-                functions.getHttpsCallable("oncallFind").call(data).addOnFailureListener {
-                  throw it
-                }
-                navigationActions.navigateTo(Destinations.HOME)
               }
             }
           },
