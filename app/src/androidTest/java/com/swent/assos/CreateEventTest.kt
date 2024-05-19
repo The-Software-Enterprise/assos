@@ -190,6 +190,10 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
+          switch {
+            assertIsDisplayed()
+            performClick()
+          }
           inputTitle {
             assertIsDisplayed()
             performClick()

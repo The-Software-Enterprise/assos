@@ -38,7 +38,7 @@ constructor(
   }
 
   fun clear() {
-    _event.value = Event(id = generateUniqueID(), associationId = "")
+    _event.value = Event(id = generateUniqueID())
   }
 
   fun getEvent(eventId: String) {
