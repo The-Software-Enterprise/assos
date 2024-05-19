@@ -37,6 +37,7 @@ class StaffManagementTest : SuperTest() {
           associationId = assoID,
           image = Uri.EMPTY,
           description = "Description",
+          isStaffingEnabled = true,
       )
 
   val user1 =

@@ -190,6 +190,10 @@ class CreateEventTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<CreateEventScreen>(composeTestRule) {
         step("Fill the form") {
+          switch {
+            assertIsDisplayed()
+            performClick()
+          }
           inputTitle {
             assertIsDisplayed()
             performClick()
@@ -299,7 +303,9 @@ class CreateEventTest : SuperTest() {
                         listOf(
                             Uri.parse("https://www.google.com"),
                             Uri.parse("https://www.google.com"))),
-                    Event.Field.Text("title2", "description2")))
+                    Event.Field.Text("title2", "description2")),
+            isStaffingEnabled = true,
+        )
     val serialized = serialize(event)
     FirebaseFirestore.getInstance().collection("events").document(event.id).set(serialized).await()
     val documentSnapshot =
