@@ -37,9 +37,13 @@ constructor(
         firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
         email = snapshot.getString("email") ?: "",
-        following = (snapshot.get("following") as? MutableList<String>) ?: mutableListOf(),
+        following =
+            when (snapshot["following"]) {
+              is MutableList<*> -> snapshot["following"] as MutableList<String>
+              else -> mutableListOf()
+            },
         associations =
-            snapshot.get("associations")?.let { associations ->
+            snapshot["associations"]?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
                 val assoId = it["assoId"] as? String
                 val position = it["position"] as? String
@@ -199,6 +203,24 @@ constructor(
     }
 
     return applicants
+  }
+
+  override suspend fun acceptApplicant(applicantId: String, assoId: String) {
+    firestore
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "accepted")
+  }
+
+  override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
+    firestore
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document(applicantId)
+        .update("status", "pending")
   }
 
   override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
@@ -435,6 +457,54 @@ constructor(
     }
   }
 
+  override suspend fun joinAssociation(
+      triple: Triple<String, String, Int>,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("users")
+        .document(userId)
+        .update(
+            "associations",
+            FieldValue.arrayUnion(
+                mapOf(
+                    "assoId" to triple.first, "position" to triple.second, "rank" to triple.third)))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError(it.message ?: "") }
+  }
+
+  override suspend fun quitAssociation(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val userRef = firestore.collection("users").document(userId)
+
+    userRef
+        .get()
+        .addOnSuccessListener { document ->
+          if (document.exists()) {
+            val associations = document.get("associations") as List<Map<String, Any>>?
+            associations
+                ?.find { it["assoId"] == assoId }
+                ?.let { associationToQuit ->
+                  userRef
+                      .update("associations", FieldValue.arrayRemove(associationToQuit))
+                      .addOnSuccessListener { onSuccess() }
+                      .addOnFailureListener {
+                        onError(it.message ?: "Failed to remove association")
+                      }
+                } ?: onError("Association not found")
+          } else {
+            onError("User not found")
+          }
+        }
+        .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
+  }
+
   override suspend fun updateBanner(associationId: String, banner: Uri) {
     firestore
         .collection("associations")
@@ -498,37 +568,36 @@ fun deserializeEvent(doc: DocumentSnapshot): Event {
       startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
       endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
       fields =
-          if (doc["fields"] is List<*>) {
-            (doc["fields"] as List<*>)
-                .mapNotNull {
-                  if (it is Map<*, *>) {
-                    val type = it["type"] as? String
+          when (doc["fields"]) {
+            is List<*> -> {
+              (doc["fields"] as List<*>).mapNotNull { field ->
+                when (field) {
+                  is Map<*, *> -> {
+                    val type = field["type"] as? String
                     when (type) {
                       "text" -> {
-                        val title = it["title"] as? String ?: ""
-                        val text = it["text"] as? String ?: ""
+                        val title = field["title"] as? String ?: ""
+                        val text = field["text"] as? String ?: ""
                         Event.Field.Text(title, text)
                       }
                       "image" -> {
                         val uris =
-                            (it["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
+                            (field["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
                               Uri.parse(it)
                             }
-                        if (uris != null) {
-                          Event.Field.Image(uris)
-                        } else {
-                          null
+                        when (uris) {
+                          null -> null
+                          else -> Event.Field.Image(uris)
                         }
                       }
                       else -> null
                     }
-                  } else {
-                    null
                   }
+                  else -> null
                 }
-                .filterNotNull()
-          } else {
-            emptyList()
+              }
+            }
+            else -> emptyList()
           },
       documentSnapshot = doc)
 }
