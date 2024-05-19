@@ -59,22 +59,19 @@ constructor(
               } ?: emptyList()
             } ?: emptyList())
   }
-    override fun serialize(user: User): Map<String, Any>{
-        return mapOf(
-            "firstname" to user.firstName,
-            "name" to user.lastName,
-            "email" to user.email,
-            "following" to  user.following,
-            "tickets" to user.tickets,
-            "associations" to user.associations.map {
-                mapOf(
-                    "assoId" to it.first,
-                    "position" to it.second,
-                    "rank" to it.third
-                )
-            }
-        )
-    }
+
+  override fun serialize(user: User): Map<String, Any> {
+    return mapOf(
+        "firstname" to user.firstName,
+        "name" to user.lastName,
+        "email" to user.email,
+        "following" to user.following,
+        "tickets" to user.tickets,
+        "associations" to
+            user.associations.map {
+              mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
+            })
+  }
 
   private fun deserializeUser(doc: DocumentSnapshot): User {
     return User(
