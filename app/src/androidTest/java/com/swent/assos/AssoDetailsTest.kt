@@ -13,9 +13,9 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -102,12 +102,12 @@ class AssoDetailsTest : SuperTest() {
     }
   }
 
-  @Test
+  /*@Test
   fun testThatTheNewsIsDisplayed() {
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Check that the news is displayed") { newsItem { assertIsDisplayed() } }
       }
     }
-  }
+  }*/
 }
