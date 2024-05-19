@@ -160,7 +160,7 @@ class DbServiceTest {
     val mockAuth = mockk<FirebaseAuth>()
     val mockUser = mockk<FirebaseUser>()
     coEvery { mockQuerySnapshot.documents[0] } returns mockDocumentSnapshot
-    coEvery { mockDocumentSnapshot.id } returns ""
+    coEvery { mockDocumentSnapshot.id } returns "id"
     coEvery { mockAuth.currentUser } returns mockUser
     coEvery { mockUser.uid } returns "id"
 
