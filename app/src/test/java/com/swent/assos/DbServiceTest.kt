@@ -192,64 +192,43 @@ class DbServiceTest {
     val dbService = DbServiceImpl(mockFirestore, mockAuth)
 
     dbService.getUser("id")
-    dbService.getUserByEmail("email", {}, {})
-
+    dbService.getUserByEmail("email", { null }, { null })
     dbService.getAllAssociations(null)
     dbService.getAllAssociations(mockDocumentSnapshot)
     dbService.getAssociationById("id")
-
     dbService.getEventById("id")
-
-    dbService.applyStaffing("id", "id", {}, {})
-    dbService.applyJoinAsso("id", "id", {}, {})
-
+    dbService.applyStaffing("id", "id", { null }, { null })
+    dbService.applyJoinAsso("id", "id", { null }, { null })
     dbService.getAllNews(null)
     dbService.getAllNews(mockDocumentSnapshot)
-
     dbService.filterNewsBasedOnAssociations(null, "id")
     dbService.filterNewsBasedOnAssociations(mockDocumentSnapshot, "id")
-
-    dbService.addApplicant("toWhat", "id", "id", {}, {})
-
+    dbService.addApplicant("toWhat", "id", "id", { null }, { null })
     dbService.unAcceptStaff("applicantId", "eventId")
     dbService.acceptStaff("applicantId", "eventId")
-
-    dbService.createNews(News(), {}, {})
-
+    dbService.createNews(News(), { null }, { null })
     dbService.getNews("id", null)
     dbService.getNews("id", mockDocumentSnapshot)
-
     dbService.getEventsFromAnAssociation("id", null)
     dbService.getEventsFromAnAssociation("id", mockDocumentSnapshot)
-
     dbService.getEventsFromAssociations(listOf("id"), null)
     dbService.getEventsFromAssociations(listOf("id"), mockDocumentSnapshot)
-
-    dbService.createEvent(Event(id = "id"), {}, {})
-
+    dbService.createEvent(Event(id = "id"), { null }, { null })
     dbService.getEventFromId("id")
-
-    dbService.followAssociation("id", {}, {})
-    dbService.unfollowAssociation("id", {}, {})
-
+    dbService.followAssociation("id", { null }, { null })
+    dbService.unfollowAssociation("id", { null }, { null })
     dbService.addTicketToUser("id", "id", ParticipationStatus.Staff)
     dbService.removeTicketFromUser("id", "id", ParticipationStatus.Staff)
-
-    dbService.joinAssociation(Triple("id", "id", 0), "id", {}, {})
-
+    dbService.joinAssociation(Triple("id", "id", 0), "id", { null }, { null })
     dbService.updateBanner("id", Uri.EMPTY)
-
     dbService.getTickets("id", null)
     dbService.getTickets("id", mockDocumentSnapshot)
-
     dbService.getTicketFromId("id")
-
     dbService.getApplicantsByEventId("id")
     dbService.getApplicantsByAssoId("id")
     dbService.acceptApplicant("id", "id")
     dbService.unAcceptApplicant("id", "id")
-
-    dbService.quitAssociation("id", "id", {}, {})
+    dbService.quitAssociation("id", "id", { null }, { null })
 
     dbService.getUserByEmail("someone.weno@epfl.ch", {}, {})
 

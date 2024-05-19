@@ -2,7 +2,6 @@ package com.swent.assos
 
 import android.net.Uri
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
@@ -14,7 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
-import com.swent.assos.model.service.impl.serialize
+import com.swent.assos.model.serialize
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.screens.StaffManagementScreen
 import com.swent.assos.ui.screens.assoDetails.EventDetails
