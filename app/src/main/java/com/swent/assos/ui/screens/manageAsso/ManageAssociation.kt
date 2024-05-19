@@ -178,12 +178,14 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                       navigationActions.navigateTo(Destinations.CREATE_NEWS.route + "/${assoId}")
                     },
                     modifierButton = Modifier.testTag("AddPostButton"))
-                LazyRow(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                  items(news) {
-                    NewsItem(it, navigationActions)
-                    Spacer(modifier = Modifier.width(8.dp))
-                  }
-                }
+                LazyRow(
+                    modifier = Modifier.testTag("NewsItem"),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                      items(news) {
+                        NewsItem(it, navigationActions)
+                        Spacer(modifier = Modifier.width(8.dp))
+                      }
+                    }
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
