@@ -10,6 +10,7 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
+import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,6 +24,7 @@ class AssoViewModel
 @Inject
 constructor(
     private val dbService: DbService,
+    private val storageService: StorageService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
   val currentUser = DataCache.currentUser.asStateFlow()
@@ -96,8 +98,9 @@ constructor(
   fun setBanner(banner: Uri?) {
     if (banner != null) {
       viewModelScope.launch(ioDispatcher) {
-        dbService.updateBanner(_association.value.id, banner)
-        _association.value = _association.value.copy(banner = banner)
+        val uri = storageService.uploadFile(banner, "associations/${_association.value.id}/banner")
+        dbService.updateBanner(_association.value.id, uri)
+        _association.value = _association.value.copy(banner = uri)
       }
     }
   }
