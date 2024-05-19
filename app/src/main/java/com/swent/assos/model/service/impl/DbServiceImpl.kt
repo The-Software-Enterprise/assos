@@ -40,29 +40,7 @@ constructor(
     if (!snapshot.exists()) {
       return User(id = userId)
     }
-    return User(
-        id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "",
-        lastName = snapshot.getString("name") ?: "",
-        email = snapshot.getString("email") ?: "",
-        following =
-            when (snapshot["following"]) {
-              is MutableList<*> -> snapshot["following"] as MutableList<String>
-              else -> mutableListOf()
-            },
-        associations =
-            snapshot["associations"]?.let { associations ->
-              (associations as? List<Map<String, Any>>)?.mapNotNull {
-                val assoId = it["assoId"] as? String
-                val position = it["position"] as? String
-                val rank = (it["rank"] as? Long)?.toInt()
-                if (assoId != null && position != null && rank != null) {
-                  Triple(assoId, position, rank)
-                } else {
-                  null
-                }
-              } ?: emptyList()
-            } ?: emptyList())
+    return deserializeUser(snapshot)
   }
 
   override suspend fun addUser(user: User) {
@@ -272,16 +250,16 @@ constructor(
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return emptyList()
     val followedAssociations: List<String> =
-        if (snapshot.get("following") is List<*>) {
-          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
+        when (snapshot["following"]) {
+          is List<*> ->
+              (snapshot["following"] as List<*>).filterIsInstance<String>().toMutableList()
+          else -> emptyList()
         }
     val associationsTheUserBelongsTo: List<String> =
-        if (snapshot.get("associations") is List<*>) {
-          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
+        when (snapshot["associations"]) {
+          is List<*> ->
+              (snapshot["associations"] as List<*>).filterIsInstance<String>().toMutableList()
+          else -> emptyList()
         }
     if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
       return getAllNews(lastDocumentSnapshot)
