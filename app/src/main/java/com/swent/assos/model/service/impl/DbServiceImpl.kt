@@ -14,9 +14,13 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
-import com.swent.assos.model.localDateTimeToTimestamp
+import com.swent.assos.model.deserializeApplicant
+import com.swent.assos.model.deserializeAssociation
+import com.swent.assos.model.deserializeEvent
+import com.swent.assos.model.deserializeNews
+import com.swent.assos.model.deserializeTicket
+import com.swent.assos.model.serialize
 import com.swent.assos.model.service.DbService
-import com.swent.assos.model.timestampToLocalDateTime
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
@@ -30,7 +34,7 @@ constructor(
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
     if (!snapshot.exists()) {
-      return User()
+      return User(id = userId)
     }
     return User(
         id = snapshot.id,
@@ -86,9 +90,9 @@ constructor(
   ): User {
     val query = firestore.collection("users").whereEqualTo("email", email)
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
+    if (snapshot.isEmpty || snapshot.documents.isEmpty()) {
       onFailure()
-      return User()
+      return User(email = email)
     }
     onSuccess()
     return deserialiazeUser(snapshot.documents[0])
@@ -136,7 +140,7 @@ constructor(
       status: ParticipationStatus,
   ) {
     // add ticket to ticket collection and get the ticket id
-    val ticketId =
+    val ticket =
         firestore
             .collection("tickets")
             .add(
@@ -145,12 +149,10 @@ constructor(
                     "eventId" to eventId,
                     "participantStatus" to status.name))
             .await()
-            .id
+    val ticketId = ticket?.id ?: return
     // add ticket id to user collection tickets
     firestore
-        .collection("users")
-        .document(applicantId)
-        .collection("tickets")
+        .collection("users/$applicantId/tickets")
         .document(ticketId)
         .set(mapOf("ticketId" to ticketId))
         .await()
@@ -183,8 +185,7 @@ constructor(
 
   override suspend fun getApplicantsByEventId(eventId: String): List<Applicant> {
     val applicants = mutableListOf<Applicant>()
-    val querySnapshot =
-        firestore.collection("events").document(eventId).collection("applicants").get().await()
+    val querySnapshot = firestore.collection("events/$eventId/applicants").get().await()
 
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))
@@ -195,8 +196,7 @@ constructor(
 
   override suspend fun getApplicantsByAssoId(assoId: String): List<Applicant> {
     val applicants = mutableListOf<Applicant>()
-    val querySnapshot =
-        firestore.collection("associations").document(assoId).collection("applicants").get().await()
+    val querySnapshot = firestore.collection("associations/$assoId/applicants").get().await()
 
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))
@@ -206,41 +206,19 @@ constructor(
   }
 
   override suspend fun acceptApplicant(applicantId: String, assoId: String) {
-    firestore
-        .collection("associations")
-        .document(assoId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "accepted")
+    firestore.document("associations/$assoId/applicants/$applicantId").update("status", "accepted")
   }
 
   override suspend fun unAcceptApplicant(applicantId: String, assoId: String) {
-    firestore
-        .collection("associations")
-        .document(assoId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "pending")
+    firestore.document("associations/$assoId/applicants/$applicantId").update("status", "pending")
   }
 
   override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
-
-    firestore
-        .collection("events")
-        .document(eventId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "pending")
+    firestore.document("events/$eventId/applicants/$applicantId").update("status", "pending")
   }
 
   override suspend fun acceptStaff(applicantId: String, eventId: String) {
-
-    firestore
-        .collection("events")
-        .document(eventId)
-        .collection("applicants")
-        .document(applicantId)
-        .update("status", "accepted")
+    firestore.document("events/$eventId/applicants/$applicantId").update("status", "accepted")
   }
 
   override suspend fun addApplicant(
@@ -253,9 +231,7 @@ constructor(
     val user = auth.currentUser
     if (user != null) {
       firestore
-          .collection(toWhat)
-          .document(id)
-          .collection("applicants")
+          .collection("$toWhat/$id/applicants")
           .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError(it.message ?: "") }
@@ -437,28 +413,6 @@ constructor(
 
   override suspend fun joinAssociation(
       triple: Triple<String, String, Int>,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("users")
-          .document(user.uid)
-          .update(
-              "associations",
-              FieldValue.arrayUnion(
-                  mapOf(
-                      "assoId" to triple.first,
-                      "position" to triple.second,
-                      "rank" to triple.third)))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
-    }
-  }
-
-  override suspend fun joinAssociation(
-      triple: Triple<String, String, Int>,
       userId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
@@ -538,123 +492,4 @@ constructor(
     val snapshot = query.get().await() ?: return Ticket("", "", "")
     return deserializeTicket(snapshot)
   }
-}
-
-fun serialize(event: Event): Map<String, Any> {
-  return mapOf(
-      "title" to event.title,
-      "description" to event.description,
-      "associationId" to event.associationId,
-      "image" to event.image.toString(),
-      "startTime" to localDateTimeToTimestamp(event.startTime),
-      "endTime" to localDateTimeToTimestamp(event.endTime),
-      "fields" to
-          event.fields.map {
-            when (it) {
-              is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
-              is Event.Field.Image ->
-                  mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
-            }
-          })
-}
-
-fun deserializeEvent(doc: DocumentSnapshot): Event {
-  return Event(
-      id = doc.id,
-      title = doc.getString("title") ?: "",
-      description = doc.getString("description") ?: "",
-      associationId = doc.getString("associationId") ?: "",
-      image = Uri.parse(doc.getString("image") ?: ""),
-      startTime = timestampToLocalDateTime(doc.getTimestamp("startTime")),
-      endTime = timestampToLocalDateTime(doc.getTimestamp("endTime")),
-      fields =
-          when (doc["fields"]) {
-            is List<*> -> {
-              (doc["fields"] as List<*>).mapNotNull { field ->
-                when (field) {
-                  is Map<*, *> -> {
-                    val type = field["type"] as? String
-                    when (type) {
-                      "text" -> {
-                        val title = field["title"] as? String ?: ""
-                        val text = field["text"] as? String ?: ""
-                        Event.Field.Text(title, text)
-                      }
-                      "image" -> {
-                        val uris =
-                            (field["uris"] as? List<*>)?.filterIsInstance<String>()?.map {
-                              Uri.parse(it)
-                            }
-                        when (uris) {
-                          null -> null
-                          else -> Event.Field.Image(uris)
-                        }
-                      }
-                      else -> null
-                    }
-                  }
-                  else -> null
-                }
-              }
-            }
-            else -> emptyList()
-          },
-      documentSnapshot = doc)
-}
-
-private fun deserializeTicket(doc: DocumentSnapshot): Ticket {
-  return Ticket(
-      id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
-}
-
-fun serialize(news: News): Map<String, Any> {
-  return mapOf(
-      "title" to news.title,
-      "description" to news.description,
-      "createdAt" to localDateTimeToTimestamp(news.createdAt),
-      "associationId" to news.associationId,
-      "images" to news.images,
-      "eventIds" to news.eventIds)
-}
-
-fun deserializeNews(doc: DocumentSnapshot): News {
-  return News(
-      id = doc.id,
-      title = doc.getString("title") ?: "",
-      description = doc.getString("description") ?: "",
-      createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")),
-      associationId = doc.getString("associationId") ?: "",
-      images =
-          if (doc["images"] is List<*>) {
-            (doc["images"] as List<*>).filterIsInstance<String>().toList().map { Uri.parse(it) }
-          } else {
-            listOf()
-          },
-      eventIds =
-          if (doc["eventIds"] is List<*>) {
-            (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
-          } else {
-            mutableListOf()
-          },
-      documentSnapshot = doc)
-}
-
-fun deserializeAssociation(doc: DocumentSnapshot): Association {
-  return Association(
-      id = doc.id,
-      acronym = doc.getString("acronym") ?: "",
-      fullname = doc.getString("fullname") ?: "",
-      url = doc.getString("url") ?: "",
-      description = doc.getString("description") ?: "",
-      logo = doc.getString("logo")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
-      banner = doc.getString("banner")?.let { url -> Uri.parse(url) } ?: Uri.EMPTY,
-      documentSnapshot = doc)
-}
-
-private fun deserializeApplicant(doc: DocumentSnapshot): Applicant {
-  return Applicant(
-      id = doc.id,
-      userId = doc.getString("userId") ?: "",
-      status = doc.getString("status") ?: "unknown",
-      createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")))
 }

@@ -11,6 +11,8 @@ class CreateEventScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
   val createButton: KNode = onNode { hasTestTag("CreateButton") }
 
+  val switch: KNode = onNode { hasTestTag("Switch") }
+
   val inputTitle: KNode = onNode {
     hasTestTag("InputTitle")
     hasSetTextAction()

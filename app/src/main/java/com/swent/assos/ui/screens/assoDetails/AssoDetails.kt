@@ -4,15 +4,12 @@ import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -25,6 +22,7 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -39,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -109,7 +106,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         if (!currentUser.associations.map { it.first }.contains(assoId))
             JoinUsButton(
                 onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
-        else null
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
@@ -266,27 +262,19 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
 
 @Composable
 fun JoinUsButton(onClick: () -> Unit, text: String = "Join us") {
-  Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
+  FloatingActionButton(
+      onClick = onClick,
+      modifier = Modifier.height(42.dp).testTag("JoinButton"),
+      elevation = FloatingActionButtonDefaults.elevation(5.dp),
+      containerColor = MaterialTheme.colorScheme.primary,
   ) {
-    FloatingActionButton(
-        onClick = onClick,
-        modifier =
-            Modifier.shadow(8.dp, shape = RoundedCornerShape(25), clip = false)
-                .background(color = Color(0xFF5465FF), shape = RoundedCornerShape(size = 16.dp))
-                .then(Modifier.widthIn(min = 92.dp))
-                .height(42.dp)
-                .testTag("JoinButton"),
-        containerColor = MaterialTheme.colorScheme.primary,
-    ) {
-      Text(
-          text = text,
-          fontSize = 16.sp,
-          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-          fontWeight = FontWeight.SemiBold,
-          color = MaterialTheme.colorScheme.onPrimary,
-          style = MaterialTheme.typography.bodyMedium)
-    }
+    Text(
+        modifier = Modifier.padding(horizontal = 10.dp),
+        text = text,
+        fontSize = 16.sp,
+        fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+        fontWeight = FontWeight.SemiBold,
+        color = MaterialTheme.colorScheme.onPrimary,
+        style = MaterialTheme.typography.bodyMedium)
   }
 }

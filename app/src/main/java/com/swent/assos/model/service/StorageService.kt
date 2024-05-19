@@ -2,14 +2,15 @@ package com.swent.assos.model.service
 
 import android.net.Uri
 import java.lang.Exception
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 interface StorageService {
   suspend fun uploadFile(
       uri: Uri,
       ref: String,
-      onSuccess: (Uri) -> Unit,
-      onError: (Exception) -> Unit
-  )
+  ): Uri
 
   suspend fun uploadFiles(
       uris: List<Uri>,
@@ -20,8 +21,19 @@ interface StorageService {
     val urls = mutableListOf<Uri>()
     val errors = mutableListOf<Exception>()
 
-    uris.forEach { uri ->
-      uploadFile(uri, ref, { url -> urls.add(url) }, { error -> errors.add(error) })
+    coroutineScope {
+      val jobs =
+          uris.map { uri ->
+            async {
+              try {
+                val url = uploadFile(uri, ref)
+                synchronized(urls) { urls.add(url) }
+              } catch (e: Exception) {
+                synchronized(errors) { errors.add(e) }
+              }
+            }
+          }
+      jobs.awaitAll()
     }
 
     if (errors.isEmpty()) {

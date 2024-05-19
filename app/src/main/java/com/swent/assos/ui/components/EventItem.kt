@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.model.data.Association
@@ -47,30 +48,28 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
               .clickable {
                 navigationActions.navigateTo(
                     Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${asso.id}")
-              }
               .semantics { testTagsAsResourceId = true }
               .testTag("EventItem")) {
-        Column(modifier = Modifier.width(200.dp).padding(vertical = 0.dp)) {
-          Image(
-              painter = rememberAsyncImagePainter(event.image),
-              contentDescription = null,
-              contentScale = ContentScale.Crop,
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .height(84.dp)
-                      .background(MaterialTheme.colorScheme.outline)
-                      .testTag("EventItemImage"))
-          Spacer(modifier = Modifier.height(8.dp))
-          Text(
-              text = event.title,
-              style = MaterialTheme.typography.titleMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(8.dp))
-          Text(
-              text = event.description,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(5.dp))
-        }
+              }) {
+        Column(
+            modifier = Modifier.width(200.dp).testTag, horizontalAlignment = Alignment.CenterHorizontally) {
+              Image(
+                  painter = rememberAsyncImagePainter(event.image),
+                  contentDescription = null,
+                  contentScale = ContentScale.Crop,
+                  modifier = Modifier.height(100.dp).background(MaterialTheme.colorScheme.outline).testTag("EventItemImage"))
+              Text(
+                  text = event.title,
+                  style = MaterialTheme.typography.titleMedium,
+                  modifier = Modifier.padding(8.dp),
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis)
+              Text(
+                  text = event.description,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(5.dp),
+                  maxLines = 5,
+                  overflow = TextOverflow.Ellipsis)
+            }
       }
 }

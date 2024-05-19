@@ -53,7 +53,7 @@ import java.time.format.FormatStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DateTimePickers(viewModel: EventViewModel) {
+fun DateTimePickers(viewModel: EventViewModel, isEdition: Boolean = false) {
   val context = LocalContext.current
 
   val event by viewModel.event.collectAsState()
@@ -79,9 +79,10 @@ fun DateTimePickers(viewModel: EventViewModel) {
       verticalAlignment = Alignment.CenterVertically) {
         Box(
             modifier =
-                Modifier.testTag("StartTimePicker").fillMaxSize().weight(1f).clickable {
-                  showStartDatePicker = true
-                },
+                Modifier.testTag("StartTimePicker").fillMaxSize().weight(1f).clickable(
+                    enabled = isEdition) {
+                      showStartDatePicker = true
+                    },
             contentAlignment = Alignment.Center) {
               Text(
                   event.startTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),
@@ -95,9 +96,10 @@ fun DateTimePickers(viewModel: EventViewModel) {
                     .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)))
         Box(
             modifier =
-                Modifier.testTag("EndTimePicker").fillMaxSize().weight(1f).clickable {
-                  showEndDatePicker = true
-                },
+                Modifier.testTag("EndTimePicker").fillMaxSize().weight(1f).clickable(
+                    enabled = isEdition) {
+                      showEndDatePicker = true
+                    },
             contentAlignment = Alignment.Center) {
               Text(
                   event.endTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)),

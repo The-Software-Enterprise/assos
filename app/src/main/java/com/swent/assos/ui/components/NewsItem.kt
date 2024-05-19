@@ -23,6 +23,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.swent.assos.R
@@ -49,41 +50,34 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                 Modifier.width(200.dp).clickable {
                   navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
                 },
-        ) {
-          if (news.images.isNotEmpty()) {
-            AsyncImage(
-                model = news.images[0],
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surface)
-                        .testTag("NewsItemImage"))
-          } else {
-            AsyncImage(
-                model = R.drawable.ic_launcher_foreground,
-                contentDescription = null,
-                contentScale = ContentScale.FillHeight,
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surface)
-                        .testTag("NewsItemImage"))
-          }
-
-          Spacer(modifier = Modifier.height(8.dp))
-          Text(
-              text = news.title,
-              style = MaterialTheme.typography.titleMedium,
-              modifier =
-                  Modifier.fillMaxWidth()
-                      .wrapContentSize(Alignment.Center)
-                      .testTag("NewsItemTitle"))
-          Spacer(modifier = Modifier.height(8.dp))
-          Text(
-              text = news.description,
-              style = MaterialTheme.typography.bodyMedium,
-              modifier = Modifier.fillMaxWidth().wrapContentSize(Alignment.Center))
-          Spacer(modifier = Modifier.height(5.dp))
-        }
+            horizontalAlignment = Alignment.CenterHorizontally) {
+              if (news.images.isNotEmpty()) {
+                AsyncImage(
+                    model = news.images[0],
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier =
+                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface).testTag("NewsItemImage"))
+              } else {
+                AsyncImage(
+                    model = R.drawable.ic_launcher_foreground,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier =
+                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface).testTag("NewsItemImage"))
+              }
+              Text(
+                  text = news.title,
+                  style = MaterialTheme.typography.titleMedium,
+                  modifier = Modifier.padding(8.dp).testTag("NewsItemTitle"),
+                  maxLines = 1,
+                  overflow = TextOverflow.Ellipsis)
+              Text(
+                  text = news.description,
+                  style = MaterialTheme.typography.bodyMedium,
+                  modifier = Modifier.padding(5.dp),
+                  maxLines = 5,
+                  overflow = TextOverflow.Ellipsis)
+            }
       }
 }
