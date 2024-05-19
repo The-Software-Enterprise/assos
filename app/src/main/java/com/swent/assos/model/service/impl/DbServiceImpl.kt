@@ -30,7 +30,7 @@ constructor(
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
     if (!snapshot.exists()) {
-      return User()
+      return User(id = userId)
     }
     return User(
         id = snapshot.id,
@@ -88,7 +88,7 @@ constructor(
     val snapshot = query.get().await()
     if (snapshot.isEmpty || snapshot.documents.isEmpty()) {
       onFailure()
-      return User()
+      return User(email = email)
     }
     onSuccess()
     return deserialiazeUser(snapshot.documents[0])
