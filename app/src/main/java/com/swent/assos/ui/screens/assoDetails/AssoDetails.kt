@@ -58,7 +58,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
-import org.w3c.dom.Text
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -146,6 +145,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 
         if (events.isNotEmpty()) {
           LazyRow(
+              modifier = Modifier.testTag("EventItem"),
               state = listStateEvents,
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(events) {
@@ -173,6 +173,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 
         if (news.isNotEmpty()) {
           LazyRow(
+              modifier = Modifier.testTag("Newsitem"),
               state = listStateNews,
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(news) {

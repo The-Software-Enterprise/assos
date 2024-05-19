@@ -1,6 +1,7 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -13,10 +14,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -25,15 +28,20 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewsItem(news: News, navigationActions: NavigationActions) {
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.outlineVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
-              .testTag("NewsItem")) {
+          Modifier.semantics { testTagsAsResourceId = true }
+              .testTag("NewsItem")
+              .padding(0.dp)
+              .border(
+                  width = 0.5.dp,
+                  color = MaterialTheme.colorScheme.surfaceVariant,
+                  shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {
@@ -46,19 +54,23 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
+                        Modifier.height(100.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .testTag("NewsItemImage"))
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp).background(MaterialTheme.colorScheme.surface))
+                        Modifier.height(100.dp)
+                            .background(MaterialTheme.colorScheme.surface)
+                            .testTag("NewsItemImage"))
               }
               Text(
                   text = news.title,
                   style = MaterialTheme.typography.titleMedium,
-                  modifier = Modifier.padding(8.dp),
+                  modifier = Modifier.padding(8.dp).testTag("NewsItemTitle"),
                   maxLines = 1,
                   overflow = TextOverflow.Ellipsis)
               Text(
