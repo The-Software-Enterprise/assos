@@ -25,7 +25,8 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class EventDetailsTest : SuperTest() {
   private val assoID = "02s16UZba2Bsx5opTcQb"
-  private val event1 = Event("123456", "description", assoID, Uri.EMPTY, "assoId")
+  private val event1 =
+      Event("123456", "description", assoID, Uri.EMPTY, "assoId", isStaffingEnabled = true)
 
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
   private val firstName = "Antoine"
@@ -43,20 +44,23 @@ class EventDetailsTest : SuperTest() {
           sciper = "330249",
           semester = "GM-BA6")
 
-  private val event2 = Event("123457", "title", memberAssociation.id, Uri.EMPTY, "description")
+  private val event2 =
+      Event(
+          "123457",
+          "title",
+          memberAssociation.id,
+          Uri.EMPTY,
+          "description",
+          isStaffingEnabled = true)
 
   override fun setup() {
-
     DataCache.currentUser.value = user
-
     FirebaseFirestore.getInstance().collection("events").add(event1)
     FirebaseFirestore.getInstance().collection("events").add(event2)
-    // FirebaseFirestore.getInstance().collection("users").add(user)
   }
 
   @Test
   fun testEventDetails() {
-
     composeTestRule.activity.setContent {
       EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
     }
@@ -74,7 +78,6 @@ class EventDetailsTest : SuperTest() {
 
   @Test
   fun testCreateTicketButton() {
-
     composeTestRule.activity.setContent {
       EventDetails(
           eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociation.id)
