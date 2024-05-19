@@ -1,5 +1,6 @@
 package com.swent.assos
 
+import android.net.Uri
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -9,6 +10,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.service.impl.DbServiceImpl
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -45,6 +47,8 @@ class DbServiceTest {
         Tasks.forResult(null)
     coEvery { mockFirestore.collection(any()).document(any()).delete() } returns
         Tasks.forResult(null)
+    coEvery { mockFirestore.document(any()).update(any<String>(), any()) } returns
+        Tasks.forResult(null)
     coEvery {
       mockFirestore
           .collection(any())
@@ -149,6 +153,27 @@ class DbServiceTest {
           .whereEqualTo(any<String>(), any())
           .whereGreaterThan(any<String>(), any())
           .orderBy(any<String>(), Query.Direction.ASCENDING)
+          .startAfter(any())
+          .limit(any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery { mockFirestore.collection(any()).whereEqualTo(any<String>(), any()).get() } returns
+        Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
+          .whereEqualTo(any<String>(), any())
+          .whereEqualTo(any<String>(), any())
+          .get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore.collection(any()).whereEqualTo(any<String>(), any()).limit(any()).get()
+    } returns Tasks.forResult(mockQuerySnapshot)
+    coEvery {
+      mockFirestore
+          .collection(any())
+          .whereEqualTo(any<String>(), any())
           .startAfter(any())
           .limit(any())
           .get()
@@ -163,11 +188,16 @@ class DbServiceTest {
     val dbService = DbServiceImpl(mockFirestore, mockAuth)
 
     dbService.getUser("id")
+    dbService.getUserByEmail("email", {}, {})
 
     dbService.getAllAssociations(null)
     dbService.getAllAssociations(mockDocumentSnapshot)
-
     dbService.getAssociationById("id")
+
+    dbService.getEventById("id")
+
+    dbService.applyStaffing("id", "id", {}, {})
+    dbService.applyJoinAsso("id", "id", {}, {})
 
     dbService.getAllNews(null)
     dbService.getAllNews(mockDocumentSnapshot)
@@ -175,10 +205,15 @@ class DbServiceTest {
     dbService.filterNewsBasedOnAssociations(null, "id")
     dbService.filterNewsBasedOnAssociations(mockDocumentSnapshot, "id")
 
-    dbService.getNews("id", null)
-    dbService.getNews("id", mockDocumentSnapshot)
+    dbService.addApplicant("toWhat", "id", "id", {}, {})
+
+    dbService.unAcceptStaff("applicantId", "eventId")
+    dbService.acceptStaff("applicantId", "eventId")
 
     dbService.createNews(News(), {}, {})
+
+    dbService.getNews("id", null)
+    dbService.getNews("id", mockDocumentSnapshot)
 
     dbService.getEventsFromAnAssociation("id", null)
     dbService.getEventsFromAnAssociation("id", mockDocumentSnapshot)
@@ -188,9 +223,30 @@ class DbServiceTest {
 
     dbService.createEvent(Event(id = "id"), {}, {})
 
-    dbService.followAssociation("id", {}, {})
+    dbService.getEventFromId("id")
 
+    dbService.followAssociation("id", {}, {})
     dbService.unfollowAssociation("id", {}, {})
+
+    dbService.addTicketToUser("id", "id", ParticipationStatus.Staff)
+    dbService.removeTicketFromUser("id", "id", ParticipationStatus.Staff)
+
+    dbService.joinAssociation(Triple("id", "id", 0), {}, {})
+    dbService.joinAssociation(Triple("id", "id", 0), "id", {}, {})
+
+    dbService.updateBanner("id", Uri.EMPTY)
+
+    dbService.getTickets("id", null)
+    dbService.getTickets("id", mockDocumentSnapshot)
+
+    dbService.getTicketFromId("id")
+
+    dbService.getApplicantsByEventId("id")
+    dbService.getApplicantsByAssoId("id")
+    dbService.acceptApplicant("id", "id")
+    dbService.unAcceptApplicant("id", "id")
+
+    dbService.quitAssociation("id", "id", {}, {})
 
     return@runBlocking
   }
