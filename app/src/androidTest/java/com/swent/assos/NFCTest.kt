@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.User
 import com.swent.assos.model.localDateTimeToTimestamp
 import com.swent.assos.screens.EventDetailsScreen
@@ -81,6 +82,20 @@ class NFCTest : SuperTest() {
         .collection("tickets")
         .document(ticketId)
         .set(mapOf("eventId" to eventId, "id" to ticketId, "userId" to userId))
+    val ticket =
+        Firebase.firestore
+            .collection("tickets")
+            .document(ticketId)
+            .set(
+                mapOf(
+                    "userId" to userId,
+                    "eventId" to eventId,
+                    "participantStatus" to ParticipationStatus.Participant.name))
+    // add ticket id to user collection tickets
+    Firebase.firestore
+        .collection("users/$userId/tickets")
+        .document(ticketId)
+        .set(mapOf("ticketId" to ticketId))
   }
 
   @Test

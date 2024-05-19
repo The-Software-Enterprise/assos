@@ -18,10 +18,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.Association
@@ -33,6 +34,7 @@ import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: String) {
 
@@ -65,7 +67,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       showing = confirming)
 
   Scaffold(
-      modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
         if (event.id != "") {

@@ -93,7 +93,7 @@ fun EventContent(
 
   LazyColumn(
       state = lazyListState,
-      modifier = Modifier.padding(paddingValues).fillMaxWidth(),
+      modifier = Modifier.padding(paddingValues).fillMaxWidth().testTag("EventContent"),
       horizontalAlignment = Alignment.CenterHorizontally) {
         if (isEdition) {
           item {
@@ -184,7 +184,7 @@ fun EventContent(
         if (!isEdition && isMember) {
           item {
             Button(
-                modifier = Modifier.testTag("SetupNFTag"), onClick = { launcher.launch(intent) }) {
+                modifier = Modifier.testTag("SetupNFCTag"), onClick = { launcher.launch(intent) }) {
                   Text("Setup NFC Tag")
                 }
           }
