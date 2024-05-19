@@ -2,6 +2,8 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.User
 import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
@@ -19,6 +21,11 @@ class NewsTest : SuperTest() {
   private val randomInt = Random.nextInt()
   private val newsTitle = "Test news $randomInt"
   private val newsDescription = "Test description $randomInt"
+
+  override fun setup() {
+    super.setup()
+    DataCache.currentUser.value = User("", "", "", "", listOf(), listOf(), "", "")
+  }
 
   @Test
   fun createNewsAndVerifyCreation() {
