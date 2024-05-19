@@ -30,13 +30,8 @@ constructor(
 
   fun getTickets() {
     viewModelScope.launch(ioDispatcher) {
-      _tickets.value = dbService.getTickets(currentUser.value.id, lastDocumentSnapshot = null)
-    }
-  }
-
-  fun getTicket(ticketId: String) {
-    viewModelScope.launch(ioDispatcher) {
-      _currentTicket.value = dbService.getTicketFromId(ticketId)
+      _tickets.value = dbService.getTicketsUser(currentUser.value.id)
+      DataCache.currentUser.value.tickets = _tickets.value.map { it.id }
     }
   }
 }

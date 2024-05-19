@@ -70,8 +70,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       modifier = Modifier.testTag("EventDetails").semantics { contentDescription = "EventDetails" },
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-        if (eventId != "") {
-          when (isMember(myAssociations = myAssociations, currentAsso = asso.id)) {
+        if (event.id != "") {
+          when (isMember(myAssociations = myAssociations, currentAsso = assoId)) {
             true ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -127,7 +127,6 @@ fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }
 
-@Composable
 fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
   for (asso in myAssociations) {
     if (asso.id == currentAsso) {
