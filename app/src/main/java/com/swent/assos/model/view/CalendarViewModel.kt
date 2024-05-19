@@ -99,12 +99,8 @@ constructor(val dbService: DbService, @IoDispatcher private val ioDispatcher: Co
   fun filterEvents() {
     _selectedEvents.value =
         _events.value.filter {
-          if (it.startTime == null || it.endTime == null) {
-            false
-          } else {
-            it.startTime!!.isAfter(selectedDate.value.atStartOfDay()) &&
-                it.endTime!!.isBefore(selectedDate.value.atStartOfDay().plusDays(1))
-          }
+          it.startTime!!.isAfter(selectedDate.value.atStartOfDay()) &&
+              it.endTime!!.isBefore(selectedDate.value.atStartOfDay().plusDays(1))
         }
   }
 }

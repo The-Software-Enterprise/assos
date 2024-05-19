@@ -34,11 +34,11 @@ constructor(
   val loading = _loadingDisplay.asStateFlow()
 
   init {
-    getEvent(_event.value.id)
+    _event.value = Event(id = "")
   }
 
   fun clear() {
-    _event.value = Event(id = generateUniqueID())
+    _event.value = Event(id = "CLEARED")
   }
 
   fun getEvent(eventId: String) {

@@ -7,8 +7,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.ParticipationStatus
@@ -33,6 +35,7 @@ constructor(
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
+
     if (!snapshot.exists()) {
       return User(id = userId)
     }
@@ -61,7 +64,20 @@ constructor(
             } ?: emptyList())
   }
 
-  private fun deserialiazeUser(doc: DocumentSnapshot): User {
+  override fun serialize(user: User): Map<String, Any> {
+    return mapOf(
+        "firstname" to user.firstName,
+        "name" to user.lastName,
+        "email" to user.email,
+        "following" to user.following,
+        "tickets" to user.tickets,
+        "associations" to
+            user.associations.map {
+              mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
+            })
+  }
+
+  private fun deserializeUser(doc: DocumentSnapshot): User {
     return User(
         id = doc.id,
         firstName = doc.getString("firstname") ?: "",
@@ -83,6 +99,14 @@ constructor(
             } ?: emptyList())
   }
 
+  override suspend fun addUser(user: User) {
+    // get the id of the user
+    val id = firestore.collection("users").add(serialize(user)).await().id
+    // set the id of the user
+    firestore.collection("users").document(id).set(mapOf("id" to id), SetOptions.merge()).await()
+    DataCache.currentUser.value = user.copy(id = id)
+  }
+
   override suspend fun getUserByEmail(
       email: String,
       onSuccess: () -> Unit,
@@ -95,7 +119,25 @@ constructor(
       return User(email = email)
     }
     onSuccess()
-    return deserialiazeUser(snapshot.documents[0])
+    return deserializeUser(snapshot.documents[0])
+  }
+
+  override suspend fun getTicketsUser(userId: String): List<Ticket> {
+    // get all the tickets from the user from the ids of tickets in the user collection
+    when {
+      userId.isEmpty() -> return emptyList()
+    }
+    val query = firestore.collection("users/$userId/tickets")
+    // get all the tickets from the user from the ids of tickets in the user collection
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { doc ->
+      val ticketId = doc.id
+      val ticketQuery = firestore.collection("tickets").document(ticketId)
+      deserializeTicket(ticketQuery.get().await())
+    }
   }
 
   override suspend fun getAllAssociations(
@@ -190,7 +232,6 @@ constructor(
     for (document in querySnapshot.documents) {
       applicants.add(deserializeApplicant(document))
     }
-
     return applicants
   }
 
