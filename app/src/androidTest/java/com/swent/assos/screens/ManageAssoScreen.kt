@@ -21,6 +21,5 @@ class ManageAssoScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val topBar: KNode = child { hasTestTag("Header") }
   val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }
 
-  val newsItem: KNode = onNode { hasTestTag("NewsItem") }
   val eventItem: KNode = onNode { hasTestTag("EventItem") }
 }

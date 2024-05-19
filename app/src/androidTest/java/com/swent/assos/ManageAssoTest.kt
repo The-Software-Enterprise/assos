@@ -6,16 +6,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
-import com.swent.assos.model.service.impl.serialize
+import com.swent.assos.model.serialize
 import com.swent.assos.screens.ManageAssoScreen
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
-import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
