@@ -21,100 +21,100 @@ import java.time.LocalDateTime
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class AssoDetailsTest : SuperTest() {
-    val assoId = "jMWo6NgngIS2hCq054TF"
-    val acronym = "180°C"
+  val assoId = "jMWo6NgngIS2hCq054TF"
+  val acronym = "180°C"
 
-    val testEvent =
-        Event(
-            id = "1",
-            title = "Test event",
-            description = "Test event description",
-            associationId = assoId,
-            startTime = LocalDateTime.of(2025, 1, 1, 0, 0),
-            endTime = LocalDateTime.of(2025, 1, 1, 0, 1))
+  val testEvent =
+      Event(
+          id = "1",
+          title = "Test event",
+          description = "Test event description",
+          associationId = assoId,
+          startTime = LocalDateTime.of(2025, 1, 1, 0, 0),
+          endTime = LocalDateTime.of(2025, 1, 1, 0, 1))
 
-    val testNews =
-        News(
-            id = "2",
-            title = "Test news",
-            description = "Test news description",
-            associationId = assoId,
-        )
+  val testNews =
+      News(
+          id = "2",
+          title = "Test news",
+          description = "Test news description",
+          associationId = assoId,
+      )
 
-    override fun setup() {
-        super.setup()
-        FirebaseFirestore.getInstance().collection("events").add(serialize(testEvent))
-        FirebaseFirestore.getInstance().collection("news").add(serialize(testNews))
-        composeTestRule.activity.setContent {
-            AssoDetails(assoId = assoId, navigationActions = mockNavActions)
-        }
+  override fun setup() {
+    super.setup()
+    FirebaseFirestore.getInstance().collection("events").add(serialize(testEvent))
+    FirebaseFirestore.getInstance().collection("news").add(serialize(testNews))
+    composeTestRule.activity.setContent {
+      AssoDetails(assoId = assoId, navigationActions = mockNavActions)
     }
+  }
 
-    @Test
-    fun followAsso() {
-        DataCache.currentUser.value.following = emptyList()
-        run {
-            ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-                step("Follow association") {
-                    followButton {
-                        assertIsDisplayed()
-                        performClick()
-                        assert(DataCache.currentUser.value.following.contains(assoId))
-                    }
-                }
-            }
+  @Test
+  fun followAsso() {
+    DataCache.currentUser.value.following = emptyList()
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Follow association") {
+          followButton {
+            assertIsDisplayed()
+            performClick()
+            assert(DataCache.currentUser.value.following.contains(assoId))
+          }
         }
+      }
     }
+  }
 
-    @Test
-    fun goBack() {
-        run {
-            ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-                step("Go back") {
-                    goBackButton { performClick() }
-                    verify { mockNavActions.goBack() }
-                    confirmVerified(mockNavActions)
-                }
-            }
+  @Test
+  fun goBack() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Go back") {
+          goBackButton { performClick() }
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
         }
+      }
     }
+  }
 
-    @Test
-    fun joinAssociation() {
-        DataCache.currentUser.value.associations = emptyList()
-        run {
-            ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-                step("Join association") {
-                    joinButton {
-                        assertIsDisplayed()
-                        performClick()
-                        assert(
-                            DataCache.currentUser.value.associations.contains(
-                                Triple(
-                                    assoId,
-                                    AssociationPosition.MEMBER.string,
-                                    AssociationPosition.MEMBER.rank)))
-                    }
-                }
-            }
+  @Test
+  fun joinAssociation() {
+    DataCache.currentUser.value.associations = emptyList()
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Join association") {
+          joinButton {
+            assertIsDisplayed()
+            performClick()
+            assert(
+                DataCache.currentUser.value.associations.contains(
+                    Triple(
+                        assoId,
+                        AssociationPosition.MEMBER.string,
+                        AssociationPosition.MEMBER.rank)))
+          }
         }
+      }
     }
+  }
 
-    @Test
-    fun testThatTheEventIsDisplayed() {
-        run {
-            ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-                step("Check that the event is displayed") { eventItem { assertIsDisplayed() } }
-            }
-        }
+  @Test
+  fun testThatTheEventIsDisplayed() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Check that the event is displayed") { eventItem { assertIsDisplayed() } }
+      }
     }
+  }
 
-    @Test
-    fun testThatTheNewsIsDisplayed() {
-        run {
-            ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-                step("Check that the news is displayed") { newsItem { assertIsDisplayed() } }
-            }
-        }
+  @Test
+  fun testThatTheNewsIsDisplayed() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Check that the news is displayed") { newsItem { assertIsDisplayed() } }
+      }
     }
+  }
 }
