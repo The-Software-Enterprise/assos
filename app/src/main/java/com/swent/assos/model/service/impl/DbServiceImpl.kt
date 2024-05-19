@@ -21,6 +21,7 @@ import com.swent.assos.model.deserializeAssociation
 import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.deserializeNews
 import com.swent.assos.model.deserializeTicket
+import com.swent.assos.model.deserializeUser
 import com.swent.assos.model.serialize
 import com.swent.assos.model.service.DbService
 import javax.inject.Inject
@@ -51,41 +52,6 @@ constructor(
             },
         associations =
             snapshot["associations"]?.let { associations ->
-              (associations as? List<Map<String, Any>>)?.mapNotNull {
-                val assoId = it["assoId"] as? String
-                val position = it["position"] as? String
-                val rank = (it["rank"] as? Long)?.toInt()
-                if (assoId != null && position != null && rank != null) {
-                  Triple(assoId, position, rank)
-                } else {
-                  null
-                }
-              } ?: emptyList()
-            } ?: emptyList())
-  }
-
-  override fun serialize(user: User): Map<String, Any> {
-    return mapOf(
-        "firstname" to user.firstName,
-        "name" to user.lastName,
-        "email" to user.email,
-        "following" to user.following,
-        "tickets" to user.tickets,
-        "associations" to
-            user.associations.map {
-              mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
-            })
-  }
-
-  private fun deserializeUser(doc: DocumentSnapshot): User {
-    return User(
-        id = doc.id,
-        firstName = doc.getString("firstname") ?: "",
-        lastName = doc.getString("name") ?: "",
-        email = doc.getString("email") ?: "",
-        following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
-        associations =
-            doc.get("associations")?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
                 val assoId = it["assoId"] as? String
                 val position = it["position"] as? String

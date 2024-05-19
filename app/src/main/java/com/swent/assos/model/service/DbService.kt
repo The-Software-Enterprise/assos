@@ -128,8 +128,6 @@ interface DbService {
 
   suspend fun unAcceptApplicant(applicantId: String, assoId: String)
 
-  fun serialize(user: User): Map<String, Any>
-
   suspend fun addUser(users: User)
 
   suspend fun quitAssociation(
