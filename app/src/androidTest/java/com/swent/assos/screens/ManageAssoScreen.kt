@@ -15,10 +15,8 @@ class ManageAssoScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val addEventButton: KNode = content.child { hasTestTag("AddEventButton") }
   val addPostButton: KNode = content.child { hasTestTag("AddPostButton") }
 
-
   val newsItem: KNode = content.child { hasTestTag("NewsItem") }
   val applicationsButton: KNode = content.child { hasTestTag("ApplicationsButton") }
-
 
   val topBar: KNode = child { hasTestTag("Header") }
   val goBackButton: KNode = topBar.child { hasTestTag("GoBackButton") }

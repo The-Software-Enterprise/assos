@@ -38,7 +38,6 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
           Modifier.testTag("NewsItem")
               .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
               .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
-
               .background(
                   color = MaterialTheme.colorScheme.background,
                   shape = RoundedCornerShape(size = 12.dp))
