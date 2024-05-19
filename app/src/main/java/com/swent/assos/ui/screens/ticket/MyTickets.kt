@@ -2,6 +2,9 @@
 
 package com.swent.assos.ui.screens.ticket
 
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,18 +30,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import com.swent.assos.NFCReader
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -46,6 +49,7 @@ import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -66,10 +70,7 @@ fun MyTickets(navigationActions: NavigationActions) {
             contentColor = MaterialTheme.colorScheme.onTertiary,
             onClick = { navigationActions.navigateTo(Destinations.SCAN_TICKET.route) },
             shape = RoundedCornerShape(size = 16.dp)) {
-              Image(
-                  imageVector = Icons.Default.CameraAlt,
-                  contentDescription = null,
-                  colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onTertiary))
+              Image(imageVector = Icons.Default.CameraAlt, contentDescription = null)
             }
       }) { paddingValues ->
         LazyColumn(
@@ -77,7 +78,7 @@ fun MyTickets(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
-          items(items = myTickets) {
+          items(items = myTickets, key = { it.id }) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }
         }
@@ -87,13 +88,24 @@ fun MyTickets(navigationActions: NavigationActions) {
 @Composable
 fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
 
-  val viewModel: EventViewModel = hiltViewModel()
+  val viewModel: EventViewModel = hiltViewModel(key = ticket.id)
   val event by viewModel.event.collectAsState()
+  val dateFormatter = DateTimeFormatter.ofPattern("dd LLL uuuu, HH:mm")
+
+  val launcher =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            // Handle the result of the activity here
+            // For example, you can retrieve data from the activity result
+            val data = result.data
+            // Handle the data accordingly
+          }
+  val intent = Intent(LocalContext.current, NFCReader::class.java).putExtra("ticketId", ticket.id)
 
   LaunchedEffect(key1 = Unit) { viewModel.getEvent(ticket.eventId) }
 
   Card(
-      colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+      colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
           Modifier.testTag("TicketItem")
@@ -105,8 +117,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
-                  navigationActions.navigateTo(
-                      Destinations.TICKET_DETAILS.route + "/${ticket.eventId}")
+                  launcher.launch(intent)
                 },
         ) {
           Image(
@@ -126,7 +137,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text = event.startTime?.let { dateToReadableString(it) } ?: "",
+              text = event.startTime?.let { dateFormatter.format(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
