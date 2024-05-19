@@ -126,7 +126,7 @@ fun EventContent(
                         modifier = Modifier.padding(bottom = 40.dp)) {
                           Image(
                               imageVector = Icons.Outlined.AddPhotoAlternate,
-                              contentDescription = "add an image",
+                              contentDescription = "",
                               colorFilter =
                                   ColorFilter.tint(
                                       MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)))
@@ -228,7 +228,7 @@ fun EventContent(
                               ) {
                                 Image(
                                     imageVector = Icons.Outlined.AddPhotoAlternate,
-                                    contentDescription = "add an image",
+                                    contentDescription = "",
                                     colorFilter =
                                         ColorFilter.tint(MaterialTheme.colorScheme.onSurface))
                               }
