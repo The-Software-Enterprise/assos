@@ -105,15 +105,6 @@ constructor(
     }
   }
 
-  fun joinAssociation(associationId: String) {
-    val triple =
-        Triple(associationId, AssociationPosition.MEMBER.string, AssociationPosition.MEMBER.rank)
-    DataCache.currentUser.value =
-        DataCache.currentUser.value.copy(
-            associations = DataCache.currentUser.value.associations + triple)
-    viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, {}, {}) }
-  }
-
   fun joinAssociation(associationId: String, userId: String) {
     val triple =
         Triple(associationId, AssociationPosition.MEMBER.string, AssociationPosition.MEMBER.rank)

@@ -409,28 +409,6 @@ constructor(
 
   override suspend fun joinAssociation(
       triple: Triple<String, String, Int>,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("users")
-          .document(user.uid)
-          .update(
-              "associations",
-              FieldValue.arrayUnion(
-                  mapOf(
-                      "assoId" to triple.first,
-                      "position" to triple.second,
-                      "rank" to triple.third)))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
-    }
-  }
-
-  override suspend fun joinAssociation(
-      triple: Triple<String, String, Int>,
       userId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit

@@ -231,7 +231,6 @@ class DbServiceTest {
     dbService.addTicketToUser("id", "id", ParticipationStatus.Staff)
     dbService.removeTicketFromUser("id", "id", ParticipationStatus.Staff)
 
-    dbService.joinAssociation(Triple("id", "id", 0), {}, {})
     dbService.joinAssociation(Triple("id", "id", 0), "id", {}, {})
 
     dbService.updateBanner("id", Uri.EMPTY)
