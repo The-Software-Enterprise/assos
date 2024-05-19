@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,10 +44,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.swent.assos.NFCWriter
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.ImageListItem
@@ -57,7 +60,9 @@ fun EventContent(
     viewModel: EventViewModel,
     paddingValues: PaddingValues,
     isEdition: Boolean = false,
-    lazyListState: LazyListState = rememberLazyListState()
+    isMember: Boolean = false,
+    lazyListState: LazyListState = rememberLazyListState(),
+    eventId: String = ""
 ) {
   val event by viewModel.event.collectAsState()
   var fieldIndex by remember { mutableIntStateOf(-1) }
@@ -76,9 +81,19 @@ fun EventContent(
         viewModel.addImagesToField(uris, fieldIndex)
       }
 
+  val launcher =
+      rememberLauncherForActivityResult(
+          contract = ActivityResultContracts.StartActivityForResult()) { result ->
+            // Handle the result of the activity here
+            // For example, you can retrieve data from the activity result
+            val data = result.data
+            // Handle the data accordingly
+          }
+  val intent = Intent(LocalContext.current, NFCWriter::class.java).putExtra("eventID", eventId)
+
   LazyColumn(
       state = lazyListState,
-      modifier = androidx.compose.ui.Modifier.padding(paddingValues).fillMaxWidth(),
+      modifier = Modifier.padding(paddingValues).fillMaxWidth(),
       horizontalAlignment = Alignment.CenterHorizontally) {
         if (isEdition) {
           item {
@@ -164,6 +179,15 @@ fun EventContent(
               testTag = "InputDescription",
               enabled = isEdition,
           )
+        }
+
+        if (!isEdition && isMember) {
+          item {
+            Button(
+                modifier = Modifier.testTag("SetupNFTag"), onClick = { launcher.launch(intent) }) {
+                  Text("Setup NFC Tag")
+                }
+          }
         }
 
         itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->

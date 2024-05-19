@@ -1,6 +1,5 @@
 package com.swent.assos.ui.screens.assoDetails
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -52,7 +51,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
-    Log.d("EventDetails", "EventDetails: ${event.image}")
   }
   ConfirmDialog(
       onDismissRequest = { confirming = false },
@@ -100,7 +98,11 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-        EventContent(viewModel = eventViewModel, paddingValues = paddingValues)
+        EventContent(
+            viewModel = eventViewModel,
+            paddingValues = paddingValues,
+            isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
+            eventId = eventId)
       }
 }
 
@@ -127,12 +129,6 @@ fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
   Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }
 
-@Composable
-fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
-  for (asso in myAssociations) {
-    if (asso.id == currentAsso) {
-      return true
-    }
-  }
-  return false
+private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
+  return myAssociations.map { it.id }.contains(currentAsso)
 }
