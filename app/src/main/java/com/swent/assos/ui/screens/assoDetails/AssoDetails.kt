@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
@@ -71,6 +73,8 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 
   val listStateNews = rememberLazyListState()
   val listStateEvents = rememberLazyListState()
+
+  val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) {
     viewModel.getAssociation(assoId)
@@ -104,7 +108,19 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
       floatingActionButton = {
         if (!currentUser.associations.map { it.first }.contains(assoId))
             JoinUsButton(
-                onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
+                onClick = {
+                  viewModel.applyToAssociation(
+                      currentUser.id,
+                      onSuccess = {
+                        Toast.makeText(
+                                context,
+                                "You have successfully applied to join the association",
+                                Toast.LENGTH_SHORT)
+                            .show()
+                      },
+                  )
+                },
+                text = "Join us")
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
