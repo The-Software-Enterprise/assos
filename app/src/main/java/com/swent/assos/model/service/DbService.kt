@@ -37,6 +37,13 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+  suspend fun removeJoinApplication(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 

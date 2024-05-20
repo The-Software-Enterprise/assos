@@ -91,6 +91,7 @@ fun serialize(event: Event): Map<String, Any> {
               is Event.Field.Text -> mapOf("type" to "text", "title" to it.title, "text" to it.text)
               is Event.Field.Image ->
                   mapOf("type" to "image", "uris" to it.uris.map { uri -> uri.toString() })
+              else -> {}
             }
           },
       "isStaffingEnabled" to event.isStaffingEnabled,
@@ -205,6 +206,7 @@ fun serialize(user: User): Map<String, Any> {
       "name" to user.lastName,
       "email" to user.email,
       "following" to user.following,
+      "appliedAssociation" to user.appliedAssociation,
       "tickets" to user.tickets,
       "associations" to
           user.associations.map {
@@ -219,6 +221,8 @@ fun deserializeUser(doc: DocumentSnapshot): User {
       lastName = doc.getString("name") ?: "",
       email = doc.getString("email") ?: "",
       following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
+      appliedAssociation =
+          (doc.get("appliedAssociation") as? MutableList<String>) ?: mutableListOf(),
       associations =
           doc.get("associations")?.let { associations ->
             (associations as? List<Map<String, Any>>)?.mapNotNull {

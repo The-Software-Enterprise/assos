@@ -50,6 +50,9 @@ constructor(
       _associationFollowed.update {
         DataCache.currentUser.value.following.contains(_association.value.id)
       }
+      _applied.update {
+        DataCache.currentUser.value.appliedAssociation.contains(_association.value.id)
+      }
     }
   }
 
@@ -118,12 +121,31 @@ constructor(
   }
 
   fun applyToAssociation(userId: String) {
-
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedAssociation =
+                DataCache.currentUser.value.appliedAssociation + _association.value.id)
     viewModelScope.launch(ioDispatcher) {
       dbService.applyJoinAsso(
           assoId = _association.value.id,
           userId = userId,
           onSuccess = { _applied.update { true } },
+          onError = {})
+    }
+  }
+
+  fun removeRequestToJoin(userId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedAssociation =
+                DataCache.currentUser.value.appliedAssociation.filter {
+                  it != _association.value.id
+                })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.applyJoinAsso(
+          assoId = _association.value.id,
+          userId = userId,
+          onSuccess = { _applied.update { false } },
           onError = {})
     }
   }

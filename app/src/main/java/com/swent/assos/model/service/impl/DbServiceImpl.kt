@@ -50,6 +50,11 @@ constructor(
               is MutableList<*> -> snapshot["following"] as MutableList<String>
               else -> mutableListOf()
             },
+        appliedAssociation =
+            when (snapshot["appliedAssociation"]) {
+              is MutableList<*> -> snapshot["appliedAssociation"] as MutableList<String>
+              else -> mutableListOf()
+            },
         associations =
             snapshot["associations"]?.let { associations ->
               (associations as? List<Map<String, Any>>)?.mapNotNull {
@@ -183,6 +188,26 @@ constructor(
       onError: (String) -> Unit
   ) {
     this.addApplicant("associations", assoId, userId, onSuccess, onError)
+  }
+
+  override suspend fun removeJoinApplication(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("associations/$assoId/applicants")
+        .whereEqualTo("userId", userId)
+        .whereEqualTo("participantStatus", "pending")
+        .get()
+        .addOnSuccessListener {
+          for (document in it.documents) {
+            firestore.collection("associations/$assoId/applicants").document(document.id).delete()
+          }
+          onSuccess()
+        }
+        .addOnFailureListener { onError(it.message ?: "") }
   }
 
   override suspend fun getEventById(eventId: String): Event {

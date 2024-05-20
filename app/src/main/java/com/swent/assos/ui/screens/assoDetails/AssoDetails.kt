@@ -118,7 +118,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
               onClick = {
                 if (applied.value) {
-                  // TODO: Implement UnApplyFromAssociation
+                  viewModel.removeRequestToJoin(currentUser.id)
                 } else {
                   viewModel.applyToAssociation(currentUser.id)
                 }
