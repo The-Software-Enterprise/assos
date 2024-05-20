@@ -102,9 +102,46 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
       },
       floatingActionButton = {
-        if (!currentUser.associations.map { it.first }.contains(assoId))
-            JoinUsButton(
-                onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
+        if (!currentUser.associations.map { it.first }.contains(assoId)) {
+
+          val applied = viewModel.applied.collectAsState()
+
+          AssistChip(
+              colors =
+                  if (applied.value)
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                  else
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.secondary),
+              border = null,
+              modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
+              onClick = {
+                if (applied.value) {
+                  // TODO: Implement UnApplyFromAssociation
+                } else {
+                  viewModel.applyToAssociation(currentUser.id)
+                }
+              },
+              label = {
+                if (applied.value) {
+                  Text(
+                      text = "Remove application",
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                } else {
+                  Text(
+                      text = "Join Us",
+                      color = MaterialTheme.colorScheme.onSecondary,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                }
+              },
+          )
+        }
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->

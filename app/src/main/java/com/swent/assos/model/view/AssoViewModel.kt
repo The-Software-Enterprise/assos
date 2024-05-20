@@ -41,6 +41,9 @@ constructor(
   private val _events = MutableStateFlow<List<Event>>(emptyList())
   val events = _events.asStateFlow()
 
+  private val _applied = MutableStateFlow(false)
+  val applied = _applied.asStateFlow()
+
   fun getAssociation(associationId: String) {
     viewModelScope.launch(ioDispatcher) {
       _association.value = dbService.getAssociationById(associationId)
@@ -114,11 +117,14 @@ constructor(
     viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, userId, {}, {}) }
   }
 
-  fun applyToAssociation(userId: String, onSuccess: () -> Unit) {
+  fun applyToAssociation(userId: String) {
 
     viewModelScope.launch(ioDispatcher) {
       dbService.applyJoinAsso(
-          assoId = _association.value.id, userId = userId, onSuccess = onSuccess, onError = {})
+          assoId = _association.value.id,
+          userId = userId,
+          onSuccess = { _applied.update { true } },
+          onError = {})
     }
   }
 
