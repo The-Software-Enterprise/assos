@@ -3,6 +3,7 @@ package com.swent.assos.model.view
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
@@ -29,6 +30,12 @@ constructor(
 
   private val _event = MutableStateFlow(Event(id = generateUniqueID()))
   val event = _event.asStateFlow()
+
+  private val _events = MutableStateFlow(emptyList<Event>())
+  val events = _events.asStateFlow()
+
+  private val _eventsOfAllAssociations = MutableStateFlow(emptyList<Event>())
+  val eventsOfAllAssociations = _eventsOfAllAssociations.asStateFlow()
 
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
@@ -70,6 +77,31 @@ constructor(
             }
           },
           onError = {})
+    }
+  }
+
+  fun getEventsForCurrentUser() {
+    viewModelScope.launch(ioDispatcher) {
+      if (DataCache.currentUser.value.id.isNotEmpty()) {
+        dbService.filterEventsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
+          _events.value = it
+          _loadingDisplay.value = false
+        }
+      } else {
+        dbService.getAllEvents(null).let {
+          _events.value = it
+          _loadingDisplay.value = false
+        }
+      }
+    }
+  }
+
+  fun loadAllEvents() {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.getAllEvents(null).let {
+        _eventsOfAllAssociations.value = it
+        _loadingDisplay.value = false
+      }
     }
   }
 
