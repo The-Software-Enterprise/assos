@@ -3,7 +3,6 @@
 package com.swent.assos.ui.screens.ticket
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
@@ -11,11 +10,9 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -44,19 +41,11 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.common.InputImage
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
-import com.swent.assos.model.view.ScannerViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -92,7 +81,6 @@ fun CameraPreview(
   val context = LocalContext.current
   val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
   val executor = remember { Executors.newSingleThreadExecutor() }
-  val scannerViewModel: ScannerViewModel = hiltViewModel()
 
   AndroidView(
       modifier = Modifier.fillMaxSize(),
@@ -101,17 +89,6 @@ fun CameraPreview(
             PreviewView(ctx).apply {
               implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
-
-        /*
-        * start scanner on the camera flux
-        */
-        scannerViewModel.startCamera(
-          viewLifecycleOwner = lifecycleOwner,
-          context = ctx,
-          previewView = previewView,
-          onResult = onResult
-        )
-
         val preview =
             Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
@@ -119,12 +96,21 @@ fun CameraPreview(
             {
               val cameraProvider = cameraProviderFuture.get()
               val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+              // setup analyzer
+              val imageAnalysis = ImageAnalysis.Builder().build()
+              imageAnalysis.setAnalyzer(
+                ContextCompat.getMainExecutor(ctx),
+                ScannerAnalyzer { state, barcode -> onResult(state, barcode) }
+              )
 
               cameraProvider.unbindAll()
 
               try {
                 cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview, imageCapture)
+                    lifecycleOwner,
+                  cameraSelector,
+                  preview,
+                  imageAnalysis)
               } catch (e: Exception) {
                 Log.e("CameraPreview", "Binding failed", e)
                 print("Binding failed")
