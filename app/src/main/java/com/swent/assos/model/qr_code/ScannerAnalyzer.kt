@@ -12,40 +12,34 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-/**
- *  This class scan the codes based on defined format(QR/Barcode) and deliver the result value.
- */
-class ScannerAnalyzer(
-  private val onResult: (state: ScannerViewState, barcode: String) -> Unit
-) : ImageAnalysis.Analyzer {
+/** This class scan the codes based on defined format(QR/Barcode) and deliver the result value. */
+class ScannerAnalyzer(private val onResult: (state: ScannerViewState, barcode: String) -> Unit) :
+    ImageAnalysis.Analyzer {
 
   private val delayForProcessingNextImage = 300L
 
   @androidx.annotation.OptIn(ExperimentalGetImage::class)
   override fun analyze(imageProxy: ImageProxy) {
-    val options =
-      BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_QR_CODE).build()
+    val options = BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_QR_CODE).build()
     val scanner = BarcodeScanning.getClient(options)
     val mediaImage = imageProxy.image
     if (mediaImage != null) {
-      InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-        .let { image ->
-          scanner.process(image)
+      InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees).let { image ->
+        scanner
+            .process(image)
             .addOnSuccessListener { barcodes ->
               for (barcode in barcodes) {
                 onResult(ScannerViewState.Success, barcode.rawValue ?: "")
               }
             }
-            .addOnFailureListener {
-              onResult(ScannerViewState.Error, it.message.toString())
-            }
+            .addOnFailureListener { onResult(ScannerViewState.Error, it.message.toString()) }
             .addOnCompleteListener {
               CoroutineScope(Dispatchers.IO).launch {
                 delay(delayForProcessingNextImage)
                 imageProxy.close()
               }
             }
-        }
+      }
     } else {
       onResult(ScannerViewState.Error, "Image is empty")
     }
@@ -54,5 +48,6 @@ class ScannerAnalyzer(
 
 sealed class ScannerViewState {
   data object Success : ScannerViewState()
+
   data object Error : ScannerViewState()
 }
