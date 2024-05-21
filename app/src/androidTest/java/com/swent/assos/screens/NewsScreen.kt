@@ -10,8 +10,8 @@ class NewsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
         semanticsProvider = semanticsProvider, viewBuilderAction = { hasTestTag("NewsScreen") }) {
 
   val newsList: KNode = onNode { hasTestTag("NewsList") }
-    val followActivityTitle: KNode = newsList.child { hasTestTag("FollowActivityTitle") }
-    val allActivityTitle: KNode = newsList.child { hasTestTag("AllActivityTitle") }
+  val followActivityTitle: KNode = newsList.child { hasTestTag("FollowActivityTitle") }
+  val allActivityTitle: KNode = newsList.child { hasTestTag("AllActivityTitle") }
   val newsListItem: KNode = newsList.child { hasTestTag("NewsListItem") }
   val newsItemRow: KNode = onNode { hasTestTag("NewsItemRow") }
   val newsItemColumn: KNode = newsItemRow.child { hasTestTag("NewsItemColumn") }

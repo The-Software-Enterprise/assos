@@ -26,7 +26,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.ui.components.HomeItem
-import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitle
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -69,22 +68,23 @@ fun News(navigationActions: NavigationActions) {
           /*if (loading.value) {
             item { LoadingCircle() }
           } else {*/
-            if (followingNews.isNotEmpty() || followingEvents.isNotEmpty())
-                item {
-                  Text(
-                      text = "Activity of associations you follow :",
-                      style = MaterialTheme.typography.headlineMedium,
-                      fontSize = 20.sp,
-                        modifier = Modifier.testTag("followActivityTitle"))
-                }
-            items(homeItemsFollowing) { item ->
-              when (item) {
-                is HomeItemType.EventHomeItem -> HomeItem(id = item.event.id, false, navigationActions)
-                is HomeItemType.NewsHomeItem -> HomeItem(id = item.news.id, true, navigationActions)
+          if (followingNews.isNotEmpty() || followingEvents.isNotEmpty())
+              item {
+                Text(
+                    text = "Activity of associations you follow :",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontSize = 20.sp,
+                    modifier = Modifier.testTag("followActivityTitle"))
               }
+          items(homeItemsFollowing) { item ->
+            when (item) {
+              is HomeItemType.EventHomeItem ->
+                  HomeItem(id = item.event.id, false, navigationActions)
+              is HomeItemType.NewsHomeItem -> HomeItem(id = item.news.id, true, navigationActions)
             }
-            item { Spacer(modifier = Modifier.height(10.dp)) }
-          //}
+          }
+          item { Spacer(modifier = Modifier.height(10.dp)) }
+          // }
           item {
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -96,7 +96,8 @@ fun News(navigationActions: NavigationActions) {
 
           items(homeItemsAllAssociation) { item ->
             when (item) {
-              is HomeItemType.EventHomeItem -> HomeItem(id = item.event.id, false, navigationActions)
+              is HomeItemType.EventHomeItem ->
+                  HomeItem(id = item.event.id, false, navigationActions)
               is HomeItemType.NewsHomeItem -> HomeItem(id = item.news.id, true, navigationActions)
             }
           }

@@ -37,7 +37,6 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.timestampToLocalDateTime
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.NewsViewModel
 import java.time.LocalDateTime
@@ -64,12 +63,12 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
           associationId = "",
           eventIds = mutableListOf())
 
-    var event = Event(
-        id = "0000",
-        title = "title",
-        description = "description",
-        associationId = "associationId")
-
+  var event =
+      Event(
+          id = "0000",
+          title = "title",
+          description = "description",
+          associationId = "associationId")
 
   if (isNews) {
     LaunchedEffect(key1 = Unit) { viewModel.loadNews() }
@@ -90,11 +89,13 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
 
     LaunchedEffect(key1 = Unit) { eventViewModel.getEvent(id) }
 
-      event = events.find { it.id == id } ?: Event(
-          id = "0000",
-          title = "title",
-          description = "description",
-          associationId = "associationId")
+    event =
+        events.find { it.id == id }
+            ?: Event(
+                id = "0000",
+                title = "title",
+                description = "description",
+                associationId = "associationId")
 
     title = event.title
     description = event.description
@@ -102,24 +103,20 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
 
   Box(
       modifier =
-      Modifier
-          .background(MaterialTheme.colorScheme.background)
-          .fillMaxWidth()
-          .height(100.dp)
-          .clickable {
-              navigationActions.navigateTo(
-                  if (isNews) {
+          Modifier.background(MaterialTheme.colorScheme.background)
+              .fillMaxWidth()
+              .height(100.dp)
+              .clickable {
+                navigationActions.navigateTo(
+                    if (isNews) {
                       Destinations.NEWS_DETAILS.route + "/${news.id}"
-                  } else {
+                    } else {
                       Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${event.associationId}"
-                  }
-              )
-          }
-          .testTag("NewsListItem")) {
+                    })
+              }
+              .testTag("NewsListItem")) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .testTag("NewsItemRow"),
+            modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               if (isNews && news.images.isNotEmpty()) {
@@ -127,37 +124,27 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
                     model = news.images[0],
                     contentDescription = "news image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(100.dp)
-                        .padding(6.dp)
-                        .clip(RoundedCornerShape(15.dp)),
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
                 )
               } else if (!isNews && event.image != Uri.EMPTY) {
                 AsyncImage(
                     model = event.image,
                     contentDescription = "news image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(100.dp)
-                        .padding(6.dp)
-                        .clip(RoundedCornerShape(15.dp)),
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
                 )
               } else {
                 AsyncImage(
                     model = R.drawable.ic_launcher_foreground,
                     contentDescription = "news image",
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(100.dp)
-                        .padding(6.dp)
-                        .clip(RoundedCornerShape(15.dp)))
+                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)))
               }
               Column(
                   modifier =
-                  Modifier
-                      .padding(start = 16.dp, top = 20.dp)
-                      .align(Alignment.CenterVertically)
-                      .testTag("NewsItemColumn"),
+                      Modifier.padding(start = 16.dp, top = 20.dp)
+                          .align(Alignment.CenterVertically)
+                          .testTag("NewsItemColumn"),
                   verticalArrangement = Arrangement.spacedBy(5.dp),
                   horizontalAlignment = Alignment.Start) {
                     Text(
@@ -168,9 +155,7 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground)
                     Text(
-                        modifier = Modifier
-                            .weight(1f)
-                            .testTag("NewsItemsDescription"),
+                        modifier = Modifier.weight(1f).testTag("NewsItemsDescription"),
                         text = description,
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
