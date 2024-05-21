@@ -70,6 +70,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                   modifier = Modifier.padding(5.dp),
                   maxLines = 5,
                   overflow = TextOverflow.Ellipsis)
+
             }
       }
 }

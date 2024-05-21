@@ -40,7 +40,8 @@ constructor(
     if (!snapshot.exists()) {
       return User(id = userId)
     }
-    return User(
+    return deserializeUser(snapshot)
+    /*return User(
         id = snapshot.id,
         firstName = snapshot.getString("firstname") ?: "",
         lastName = snapshot.getString("name") ?: "",
@@ -67,7 +68,7 @@ constructor(
                   null
                 }
               } ?: emptyList()
-            } ?: emptyList())
+            } ?: emptyList())*/
   }
 
   override suspend fun addUser(user: User) {
