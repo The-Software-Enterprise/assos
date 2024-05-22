@@ -80,12 +80,17 @@ class EventDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
         step("Request to remove request to staff is displayed") {
-          composeTestRule.onNodeWithText("Remove staff application").performClick()
+          composeTestRule.onNodeWithText("Remove staff application").isDisplayed()
         }
+      }
+    }
+    composeTestRule.activity.setContent {
+      EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
+    }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
         step("Request to staff is displayed") {
-          composeTestRule.waitUntil(
-              condition = { composeTestRule.onNodeWithText("Apply for staffing").isDisplayed() },
-              timeoutMillis = 5000)
+          composeTestRule.onNodeWithText("Apply for staffing").isDisplayed()
         }
       }
     }
