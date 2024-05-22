@@ -6,6 +6,7 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
@@ -61,22 +62,31 @@ class EventDetailsTest : SuperTest() {
   }
 
   @Test
-  fun testEventDetails() {
+  fun toggleRequestStaffingButtonWorksAsExpected() {
     composeTestRule.activity.setContent {
       EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
     }
+    val eventId = event1.id
+    DataCache.currentUser.value.associations = emptyList()
+    DataCache.currentUser.value.appliedStaffing = List(1) { event1.id }
+    FirebaseFirestore.getInstance()
+        .collection("events/$eventId/applicants")
+        .add(
+            mapOf(
+                "userId" to DataCache.currentUser.value.id,
+                "status" to "pending",
+                "createdAt" to Timestamp.now()))
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("I want to join") {
-          composeTestRule.waitUntil { composeTestRule.onNodeWithText("Become Staff").isDisplayed() }
-          composeTestRule.onNodeWithText("Become Staff").performClick()
+        step("Request to remove request to staff is displayed") {
+          composeTestRule.onNodeWithText("Remove staff application").performClick()
         }
-        step("I changed my mind") { composeTestRule.onNodeWithText("No").performClick() }
-        step("I want to join again") {
-          composeTestRule.onNodeWithText("Become Staff").performClick()
+        step("Request to staff is displayed") {
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithText("Apply for staffing").isDisplayed() },
+              timeoutMillis = 5000)
         }
-        step("Confirm") { composeTestRule.onNodeWithText("Yes").performClick() }
       }
     }
   }

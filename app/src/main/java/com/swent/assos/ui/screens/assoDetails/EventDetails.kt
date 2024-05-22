@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.FabPosition
@@ -133,24 +132,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
             isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
             eventId = eventId)
       }
-}
-
-@Composable
-fun ConfirmDialog(
-    onDismissRequest: () -> Unit,
-    confirmButton: @Composable () -> Unit,
-    text: String,
-    showing: Boolean
-) {
-  // create a dialog to confirm the action
-  if (showing) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        confirmButton = confirmButton,
-        text = { Text(text = text) },
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        dismissButton = { ConfirmButton(onDismissRequest, "No") })
-  }
 }
 
 @Composable
