@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -43,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -51,6 +53,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.NFCWriter
 import com.swent.assos.model.data.Event
+import com.swent.assos.model.generateQRCode
+import com.swent.assos.model.saveImageToGallery
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.ImageListItem
 import com.swent.assos.ui.components.LabeledSwitch
@@ -66,6 +70,7 @@ fun EventContent(
 ) {
   val event by viewModel.event.collectAsState()
   var fieldIndex by remember { mutableIntStateOf(-1) }
+    val context = LocalContext.current
 
   val launcherBanner =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
@@ -188,6 +193,14 @@ fun EventContent(
                   Text("Setup NFC Tag")
                 }
           }
+
+            item {
+                Button(
+                    modifier = Modifier.testTag("DownloadQRCode"), onClick = {saveImageToGallery(context, generateQRCode(event.id, 500).asImageBitmap())}) {
+                    Text("Download QRCode")
+                }
+            }
+
         }
 
         itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->
