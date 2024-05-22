@@ -30,7 +30,7 @@ import org.junit.runner.RunWith
 class StaffManagementTest : SuperTest() {
 
   private val assoID = "02s16UZba2Bsx5opTcQb"
-    private  val applicantId = "123456"
+  private val applicantId = "123456"
 
   private val event1 =
       Event(
@@ -107,9 +107,7 @@ class StaffManagementTest : SuperTest() {
 
     run {
       ComposeScreen.onComposeScreen<StaffManagementScreen>(composeTestRule) {
-        step("Check if the staff list is displayed") {
-          staffList { assertIsDisplayed() }
-        }
+        step("Check if the staff list is displayed") { staffList { assertIsDisplayed() } }
         step("Check the accept button") { composeTestRule.onNodeWithText("Accept").performClick() }
 
         step("Check if the staff is accepted") {
@@ -117,15 +115,15 @@ class StaffManagementTest : SuperTest() {
           composeTestRule.onNodeWithText("Un-Accept").performClick()
         }
 
-          step("Check if the garbage button is displayed") {
-              composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
-              composeTestRule.onNodeWithTag("GarbageIcon").performClick()
-          }
-          step("Check if the staff list is displayed") {
-              composeTestRule.waitUntil(
-                  condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
-                  timeoutMillis = 10000)
-          }
+        step("Check if the garbage button is displayed") {
+          composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
+          composeTestRule.onNodeWithTag("GarbageIcon").performClick()
+        }
+        step("Check if the staff list is displayed") {
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
+              timeoutMillis = 10000)
+        }
       }
     }
   }
