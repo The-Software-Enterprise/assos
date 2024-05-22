@@ -10,7 +10,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -70,7 +69,7 @@ fun EventContent(
 ) {
   val event by viewModel.event.collectAsState()
   var fieldIndex by remember { mutableIntStateOf(-1) }
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   val launcherBanner =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
@@ -194,13 +193,15 @@ fun EventContent(
                 }
           }
 
-            item {
-                Button(
-                    modifier = Modifier.testTag("DownloadQRCode"), onClick = {saveImageToGallery(context, generateQRCode(event.id, 500).asImageBitmap())}) {
-                    Text("Download QRCode")
+          item {
+            Button(
+                modifier = Modifier.testTag("DownloadQRCode"),
+                onClick = {
+                  saveImageToGallery(context, generateQRCode(event.id, 500).asImageBitmap())
+                }) {
+                  Text("Download QRCode")
                 }
-            }
-
+          }
         }
 
         itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->
