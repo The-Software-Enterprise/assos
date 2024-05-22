@@ -1,7 +1,13 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
@@ -13,6 +19,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
 import io.mockk.verify
+import okhttp3.internal.wait
 import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -41,9 +48,17 @@ class AssoDetailsTest : SuperTest() {
       )
 
   override fun setup() {
+
+    val user = DataCache.currentUser.value
     super.setup()
     FirebaseFirestore.getInstance().collection("events").add(serialize(testEvent))
     FirebaseFirestore.getInstance().collection("news").add(serialize(testNews))
+
+    /*FirebaseFirestore.getInstance()
+      .collection("users")
+      .document(user.id)
+      .update("appliedAssociation", FieldValue.arrayUnion(assoId))*/
+
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
     }
@@ -79,15 +94,39 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
-  fun joinAssociation() {
+  fun requestApplication() {
     DataCache.currentUser.value.associations = emptyList()
+    DataCache.currentUser.value.appliedAssociation = emptyList()
+
+
+    run {
+
+        step("Request to join association is displayed") {
+          composeTestRule.waitUntil(
+            condition = { composeTestRule.onNodeWithText("Join Us").isDisplayed() },
+            timeoutMillis = 5000)
+        }
+      }
+
+  }
+
+  @Test
+  fun toggleRequestButtonWorksAsExpected() {
+    DataCache.currentUser.value.associations = emptyList()
+    DataCache.currentUser.value.appliedAssociation = List(1) { assoId }
+    FirebaseFirestore.getInstance()
+      .collection("associations/$assoId/applicants")
+      .add(mapOf("userId" to DataCache.currentUser.value.id, "status" to "pending", "createdAt" to Timestamp.now()))
+
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Join association") {
-          joinButton {
-            assertIsDisplayed()
-            performClick()
-          }
+        step("Request to remove request to join association") {
+          composeTestRule.onNodeWithText("Remove application").isDisplayed()
+        }
+        step("Request to join association is displayed") {
+          composeTestRule.waitUntil(
+            condition = { composeTestRule.onNodeWithText("Join Us").isDisplayed() },
+            timeoutMillis = 5000)
         }
       }
     }
@@ -101,13 +140,4 @@ class AssoDetailsTest : SuperTest() {
       }
     }
   }
-
-  /*@Test
-  fun testThatTheNewsIsDisplayed() {
-    run {
-      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Check that the news is displayed") { newsItem { assertIsDisplayed() } }
-      }
-    }
-  }*/
 }
