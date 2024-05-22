@@ -1,6 +1,5 @@
 package com.swent.assos.ui.screens.assoDetails
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -132,11 +131,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
             isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
             eventId = eventId)
       }
-}
-
-@Composable
-fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
-  Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }
 
 private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {

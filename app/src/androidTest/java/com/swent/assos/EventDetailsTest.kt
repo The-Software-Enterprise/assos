@@ -6,7 +6,6 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
@@ -62,35 +61,19 @@ class EventDetailsTest : SuperTest() {
   }
 
   @Test
-  fun toggleRequestStaffingButtonWorksAsExpected() {
+  fun staffIsDisplayed() {
+
     composeTestRule.activity.setContent {
-      EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
+      EventDetails(event1.id, navigationActions = mockNavActions, assoId = event1.associationId)
     }
-    val eventId = event1.id
-    DataCache.currentUser.value.associations = emptyList()
-    DataCache.currentUser.value.appliedStaffing = List(1) { event1.id }
-    FirebaseFirestore.getInstance()
-        .collection("events/$eventId/applicants")
-        .add(
-            mapOf(
-                "userId" to DataCache.currentUser.value.id,
-                "status" to "pending",
-                "createdAt" to Timestamp.now()))
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("Request to remove request to staff is displayed") {
-          composeTestRule.onNodeWithText("Remove staff application").isDisplayed()
-        }
-      }
-    }
-    composeTestRule.activity.setContent {
-      EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
-    }
-    run {
-      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("Request to staff is displayed") {
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
           composeTestRule.onNodeWithText("Apply for staffing").isDisplayed()
+        }
+        step("I want to staff") {
+          composeTestRule.onNodeWithText("Apply for staffing").performClick()
         }
       }
     }
