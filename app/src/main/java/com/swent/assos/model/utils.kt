@@ -207,6 +207,7 @@ fun serialize(user: User): Map<String, Any> {
       "email" to user.email,
       "following" to user.following,
       "appliedAssociation" to user.appliedAssociation,
+      "appliedStaffing" to user.appliedStaffing,
       "tickets" to user.tickets,
       "associations" to
           user.associations.map {
@@ -223,6 +224,7 @@ fun deserializeUser(doc: DocumentSnapshot): User {
       following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
       appliedAssociation =
           (doc.get("appliedAssociation") as? MutableList<String>) ?: mutableListOf(),
+      appliedStaffing = (doc.get("appliedStaffing") as? MutableList<String>) ?: mutableListOf(),
       associations =
           doc.get("associations")?.let { associations ->
             (associations as? List<Map<String, Any>>)?.mapNotNull {

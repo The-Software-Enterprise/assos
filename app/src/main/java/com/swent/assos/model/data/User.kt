@@ -11,4 +11,5 @@ data class User(
     val semester: String = "",
     var tickets: List<String> = mutableListOf(),
     var appliedAssociation: List<String> = mutableListOf(),
+    var appliedStaffing: List<String> = mutableListOf(),
 )

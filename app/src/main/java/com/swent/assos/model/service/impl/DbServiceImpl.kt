@@ -41,34 +41,6 @@ constructor(
       return User(id = userId)
     }
     return deserializeUser(snapshot)
-    /*return User(
-        id = snapshot.id,
-        firstName = snapshot.getString("firstname") ?: "",
-        lastName = snapshot.getString("name") ?: "",
-        email = snapshot.getString("email") ?: "",
-        following =
-            when (snapshot["following"]) {
-              is MutableList<*> -> snapshot["following"] as MutableList<String>
-              else -> mutableListOf()
-            },
-        appliedAssociation =
-            when (snapshot["appliedAssociation"]) {
-              is MutableList<*> -> snapshot["appliedAssociation"] as MutableList<String>
-              else -> mutableListOf()
-            },
-        associations =
-            snapshot["associations"]?.let { associations ->
-              (associations as? List<Map<String, Any>>)?.mapNotNull {
-                val assoId = it["assoId"] as? String
-                val position = it["position"] as? String
-                val rank = (it["rank"] as? Long)?.toInt()
-                if (assoId != null && position != null && rank != null) {
-                  Triple(assoId, position, rank)
-                } else {
-                  null
-                }
-              } ?: emptyList()
-            } ?: emptyList())*/
   }
 
   override suspend fun addUser(user: User) {
@@ -172,6 +144,28 @@ constructor(
         .await()
   }
 
+  override suspend fun applyJoinAsso(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("associations/$assoId/applicants")
+          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("appliedAssociation", FieldValue.arrayUnion(assoId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
+  }
+
   override suspend fun applyStaffing(
       eventId: String,
       userId: String,
@@ -179,16 +173,21 @@ constructor(
       onError: (String) -> Unit
   ) {
 
-    this.addApplicant("events", eventId, userId, onSuccess, onError)
-  }
-
-  override suspend fun applyJoinAsso(
-      assoId: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    this.addApplicant("associations", assoId, userId, onSuccess, onError)
+    // this.addApplicant("events", eventId, userId, onSuccess, onError)
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("events/$eventId/applicants")
+          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
+      firestore
+          .collection("users")
+          .document(userId)
+          .update("appliedStaffing", FieldValue.arrayUnion(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
   }
 
   override suspend fun removeJoinApplication(
@@ -198,17 +197,43 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestore
-        .collection("associations/$assoId/applicants")
-        .whereEqualTo("userId", userId)
-        .whereEqualTo("participantStatus", "pending")
-        .get()
-        .addOnSuccessListener {
-          for (document in it.documents) {
-            firestore.collection("associations/$assoId/applicants").document(document.id).delete()
-          }
-          onSuccess()
-        }
-        .addOnFailureListener { onError(it.message ?: "") }
+        .collection("users")
+        .document(userId)
+        .update("appliedAssociation", FieldValue.arrayRemove(assoId))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError("Error") }
+
+    val querySnapshot = firestore.collection("associations/$assoId/applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      val applicant = deserializeApplicant(document)
+      if (applicant.userId == userId) {
+        firestore.collection("associations/$assoId/applicants").document(document.id).delete()
+      }
+    }
+  }
+
+  override suspend fun removeStaffingApplication(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("users")
+        .document(userId)
+        .update("appliedStaffing", FieldValue.arrayRemove(eventId))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError("Error") }
+
+    val querySnapshot = firestore.collection("events/$eventId/applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      val applicant = deserializeApplicant(document)
+      if (applicant.userId == userId) {
+        firestore.collection("events/$eventId/applicants").document(document.id).delete()
+      }
+    }
   }
 
   override suspend fun getEventById(eventId: String): Event {
