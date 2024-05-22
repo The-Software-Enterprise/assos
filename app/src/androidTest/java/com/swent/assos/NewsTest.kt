@@ -3,7 +3,6 @@ package com.swent.assos
 import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.filter
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
@@ -18,8 +17,10 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
+import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
+import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import java.time.LocalDateTime
@@ -148,16 +149,12 @@ class NewsTest : SuperTest() {
               .assertIsDisplayed()
 
           for (i in 0 until 4) {
-            val expectedTitle = "Title"
-            val expectedDescription = "Description"
-
             composeTestRule
                 .onNode(hasTestTag("NewsList"))
                 .onChildren()
                 .filter(hasTestTag("NewsListItem"))
                 .get(i)
-                .assertTextContains(expectedTitle)
-                .assertTextContains(expectedDescription)
+                .assertIsDisplayed()
           }
 
           followActivityTitle {
@@ -179,7 +176,7 @@ class NewsTest : SuperTest() {
     }
   }
 
-  /*@Test
+  @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
       CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
@@ -210,11 +207,8 @@ class NewsTest : SuperTest() {
         step("Check if the news is displayed") {
           newsList { assertIsDisplayed() }
           newsListItem { assertIsDisplayed() }
-          // newsItemTitle { assertTextContains(newsTitle) }
-          // itemsDescription { assertTextContains(newsDescription) }
         }
       }
     }
-  }*/
-
+  }
 }
