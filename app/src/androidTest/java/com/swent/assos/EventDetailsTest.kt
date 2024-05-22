@@ -6,6 +6,7 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
@@ -29,6 +30,9 @@ class EventDetailsTest : SuperTest() {
   private val event1 =
       Event("123456", "description", assoID, Uri.EMPTY, "assoId", isStaffingEnabled = true)
 
+  private val event3 =
+      Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
+
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
   private val firstName = "Antoine"
   private val lastName = "Marchand"
@@ -43,7 +47,8 @@ class EventDetailsTest : SuperTest() {
           email = "antoine.marchand@epfl.ch",
           associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
           sciper = "330249",
-          semester = "GM-BA6")
+          semester = "GM-BA6",
+          appliedStaffing = listOf(event3.id))
 
   private val event2 =
       Event(
@@ -56,8 +61,16 @@ class EventDetailsTest : SuperTest() {
 
   override fun setup() {
     DataCache.currentUser.value = user
+    FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
+    FirebaseFirestore.getInstance().collection("events").document(event3.id).set(serialize(event2))
+    FirebaseFirestore.getInstance()
+        .collection("events")
+        .document(event3.id)
+        .collection("applicants")
+        .document("323232")
+        .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
   }
 
   @Test
@@ -74,6 +87,25 @@ class EventDetailsTest : SuperTest() {
         }
         step("I want to staff") {
           composeTestRule.onNodeWithText("Apply for staffing").performClick()
+        }
+      }
+    }
+  }
+
+  @Test
+  fun unApplyStaffIsDisplayed() {
+
+    composeTestRule.activity.setContent {
+      EventDetails(event3.id, navigationActions = mockNavActions, assoId = event3.associationId)
+    }
+
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+          composeTestRule.onNodeWithText("Remove staff application").isDisplayed()
+        }
+        step("I want to staff") {
+          composeTestRule.onNodeWithText("Remove staff application").performClick()
         }
       }
     }
