@@ -74,13 +74,14 @@ constructor(
     val query = firestore.collection("users/$userId/tickets")
     // get all the tickets from the user from the ids of tickets in the user collection
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map { doc ->
-      val ticketId = doc.id
-      val ticketQuery = firestore.collection("tickets").document(ticketId)
-      deserializeTicket(ticketQuery.get().await())
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false ->
+          snapshot.documents.map { doc ->
+            val ticketId = doc.id
+            val ticketQuery = firestore.collection("tickets").document(ticketId)
+            deserializeTicket(ticketQuery.get().await())
+          }
     }
   }
 
@@ -150,7 +151,6 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-
     this.addApplicant("events", eventId, userId, onSuccess, onError)
   }
 
@@ -232,15 +232,14 @@ constructor(
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
     val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false -> snapshot.documents.map { deserializeNews(it) }
     }
-    return snapshot.documents.map { deserializeNews(it) }
   }
 
   override suspend fun filterNewsBasedOnAssociations(
