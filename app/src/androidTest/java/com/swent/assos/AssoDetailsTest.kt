@@ -2,14 +2,17 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
@@ -42,6 +45,15 @@ class AssoDetailsTest : SuperTest() {
           title = "Test news",
           description = "Test news description",
           associationId = assoId,
+      )
+
+  val user2 =
+      User(
+          id = "22222",
+          firstName = "Anna",
+          lastName = "Yildiran",
+          email = "anna.yildiran@epfl.ch",
+          appliedAssociation = List(1) { assoId },
       )
 
   override fun setup() {
@@ -79,6 +91,22 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
+  fun unfollowAsso() {
+    DataCache.currentUser.value.following = List(1) { assoId }
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("UnFollow association") {
+          followButton {
+            assertIsDisplayed()
+            performClick()
+            assert(!DataCache.currentUser.value.following.contains(assoId))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
   fun goBack() {
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
@@ -92,40 +120,60 @@ class AssoDetailsTest : SuperTest() {
   }
 
   @Test
-  fun requestApplication() {
-    DataCache.currentUser.value.associations = emptyList()
-    DataCache.currentUser.value.appliedAssociation = emptyList()
+  fun removeApplicationIsDisplayed() {
+
+    val id = "190719"
+
+    FirebaseFirestore.getInstance().collection("users").document(user2.id).set(user2)
+
+    FirebaseFirestore.getInstance()
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document(id)
+        .set(mapOf("userId" to user2.id, "status" to "pending", "createdAt" to Timestamp.now()))
+
+    DataCache.currentUser.value = user2
+
+    composeTestRule.activity.setContent {
+      AssoDetails(assoId = assoId, navigationActions = mockNavActions)
+    }
 
     run {
-      step("Request to join association is displayed") {
-        composeTestRule.waitUntil(
-            condition = { composeTestRule.onNodeWithText("Join Us").isDisplayed() },
-            timeoutMillis = 5000)
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Request to remove request to join association") {
+          composeTestRule.onNodeWithTag("JoinUsButton").isDisplayed()
+          composeTestRule.onNodeWithTag("JoinUsButton").performClick()
+        }
       }
     }
   }
 
   @Test
-  fun toggleRequestButtonWorksAsExpected() {
+  fun joinUsIsDisplayed() {
+
+    val id = "190719"
+
+    val user = DataCache.currentUser.value
+
     DataCache.currentUser.value.associations = emptyList()
-    DataCache.currentUser.value.appliedAssociation = List(1) { assoId }
+    DataCache.currentUser.value.appliedAssociation = emptyList()
+
     FirebaseFirestore.getInstance()
         .collection("associations/$assoId/applicants")
-        .add(
-            mapOf(
-                "userId" to DataCache.currentUser.value.id,
-                "status" to "pending",
-                "createdAt" to Timestamp.now()))
+        .document(id)
+        .delete()
+
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(user.id)
+        .update("appliedAssociation", FieldValue.arrayRemove(assoId))
 
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Request to remove request to join association") {
-          composeTestRule.onNodeWithText("Remove application").isDisplayed()
-        }
-        step("Request to join association is displayed") {
-          composeTestRule.waitUntil(
-              condition = { composeTestRule.onNodeWithText("Join Us").isDisplayed() },
-              timeoutMillis = 5000)
+          composeTestRule.onNodeWithText("Join Us").isDisplayed()
+          composeTestRule.onNodeWithText("Join Us").performClick()
         }
       }
     }
