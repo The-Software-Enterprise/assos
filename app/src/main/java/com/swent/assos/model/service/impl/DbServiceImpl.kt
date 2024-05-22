@@ -323,16 +323,16 @@ constructor(
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return emptyList()
     val followedAssociations: List<String> =
-        if (snapshot.get("following") is List<*>) {
-          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
+        when (snapshot["following"]) {
+          is List<*> ->
+              (snapshot["following"] as List<*>).filterIsInstance<String>().toMutableList()
+          else -> emptyList()
         }
     val associationsTheUserBelongsTo: List<String> =
-        if (snapshot.get("associations") is List<*>) {
-          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
+        when (snapshot["associations"]) {
+          is List<*> ->
+              (snapshot["associations"] as List<*>).filterIsInstance<String>().toMutableList()
+          else -> emptyList()
         }
     if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
       return getAllNews(lastDocumentSnapshot)
