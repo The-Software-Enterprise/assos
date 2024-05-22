@@ -144,7 +144,7 @@ fun ApplicationListItem(
                   imageVector = Icons.Default.Delete,
                   contentDescription = null,
                   modifier =
-                      Modifier.testTag("GoBackButton")
+                      Modifier.testTag("GarbageIcon")
                           .padding(start = 16.dp)
                           .clip(RoundedCornerShape(100))
                           .clickable {
