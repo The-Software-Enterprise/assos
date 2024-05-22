@@ -147,7 +147,13 @@ fun ApplicationListItem(
                       Modifier.testTag("GoBackButton")
                           .padding(start = 16.dp)
                           .clip(RoundedCornerShape(100))
-                          .clickable { applicantsViewModel.deleteRequest(user.id, assoId) }
+                          .clickable {
+                            if (isStaffing) {
+                              applicantsViewModel.deleteStaffRequest(userId, eventId)
+                            } else {
+                              applicantsViewModel.deleteRequest(user.id, assoId)
+                            }
+                          }
                           .padding(start = 10.dp, end = 5.dp, top = 7.dp, bottom = 7.dp)
                           .padding()
                           .size(20.dp))

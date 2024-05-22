@@ -27,6 +27,9 @@ constructor(
   private val _update = MutableStateFlow(false)
   val update = _update.asStateFlow()
 
+  private val _updateStaffing = MutableStateFlow(false)
+  val updateStaffing = _updateStaffing.asStateFlow()
+
   fun getApplicantsForStaffing(eventId: String) {
     viewModelScope.launch(ioDispatcher) {
       _applicants.value = dbService.getApplicantsByEventId(eventId)
@@ -68,7 +71,6 @@ constructor(
   }
 
   fun deleteRequest(userId: String, assoId: String) {
-    // TODO : Delete from data cache of the user
     viewModelScope.launch(ioDispatcher) {
       dbService.removeJoinApplication(
           assoId = assoId, userId = userId, onSuccess = {}, onError = {})
@@ -76,10 +78,25 @@ constructor(
     viewModelScope.launch(ioDispatcher) { _update.value = true }
   }
 
+  fun deleteStaffRequest(userId: String, eventId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.removeStaffingApplication(
+          eventId = eventId, userId = userId, onSuccess = {}, onError = {})
+    }
+    viewModelScope.launch(ioDispatcher) { _updateStaffing.value = true }
+  }
+
   fun updateApplicants(assoId: String) {
     viewModelScope.launch(ioDispatcher) {
       _applicants.value = dbService.getApplicantsByAssoId(assoId)
       _update.value = false
+    }
+  }
+
+  fun updateStaffing(eventId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _applicants.value = dbService.getApplicantsByEventId(eventId)
+      _updateStaffing.value = false
     }
   }
 }

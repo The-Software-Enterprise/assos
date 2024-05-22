@@ -30,7 +30,11 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
   val applicants by applicantsViewModel.applicants.collectAsState()
   val listState = rememberLazyListState()
 
+  val update = applicantsViewModel.updateStaffing.collectAsState()
+
   LaunchedEffect(key1 = Unit) { applicantsViewModel.getApplicantsForStaffing(eventId) }
+
+  LaunchedEffect(key1 = update.value) { applicantsViewModel.updateStaffing(eventId) }
 
   val sortedApplicants = applicants.sortedWith(compareBy { it.status != "pending" })
 

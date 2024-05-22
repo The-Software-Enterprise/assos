@@ -59,7 +59,7 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
                       userId = applicant.userId,
                       eventId = assoId,
                       assoId = assoId,
-                      isStaffing = true)
+                      isStaffing = false)
                 }
               }
             }
