@@ -17,9 +17,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ApplicantViewModel
 import com.swent.assos.ui.components.ApplicationListItem
@@ -76,6 +80,8 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
                               .padding(start = 16.dp, end = 16.dp),
                       text = "No applicants",
                       textAlign = TextAlign.Center,
+                      fontSize = 14.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                       color = MaterialTheme.colorScheme.onBackground)
                 }
               }
