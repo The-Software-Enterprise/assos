@@ -50,8 +50,8 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
   val viewModel: NewsViewModel = hiltViewModel()
   val allNews by viewModel.allNewsOfAllAssos.collectAsState()
 
-  var title: String = "title"
-  var description: String = "description"
+  var title: String
+  var description: String
 
   var news =
       News(

@@ -115,9 +115,11 @@ sealed class HomeItemType {
 fun combineAndSortItems(events: List<Event>, news: List<News>): List<HomeItemType> {
   val currentTime = LocalDateTime.now()
 
+    val eventss = events.filter { it.startTime.isAfter(currentTime) }
+
   // Convert both lists to a common list of HomeItemType
   val combinedItems =
-      events.map { HomeItemType.EventHomeItem(it) } + news.map { HomeItemType.NewsHomeItem(it) }
+      eventss.map { HomeItemType.EventHomeItem(it) } + news.map { HomeItemType.NewsHomeItem(it) }
 
   // Sort the combined list by the required time criteria
   return combinedItems.sortedBy {

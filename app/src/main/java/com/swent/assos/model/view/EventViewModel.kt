@@ -40,6 +40,11 @@ constructor(
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
+  init {
+    getEventsForCurrentUser()
+    loadAllEvents()
+  }
+
   fun clear() {
     _event.value = Event(id = "CLEARED")
   }

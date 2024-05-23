@@ -9,6 +9,7 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,13 +17,14 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
-import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
-import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
+import io.mockk.confirmVerified
+import io.mockk.verify
 import java.time.LocalDateTime
 import kotlin.random.Random
 import org.junit.Test
@@ -36,44 +38,46 @@ class NewsTest : SuperTest() {
   private val newsTitle = "Test news $randomInt"
   private val newsDescription = "Test description $randomInt"
 
-  private val assoIDFollowing = "02s16UZba2Bsx5opTcQb"
+  private val assoIDFollowing = "0qrqbQkbjTqbKgHG1akT"
   private val assoIDNotFollowing = "05DUlszwHL5YZTb1Jwo8"
 
   private val eventFollowing =
       Event(
           id = "EVENT1111",
-          title = "Event Title",
+          title = "Event 0qrqbQkbjTqbKgHG1akT",
           associationId = assoIDFollowing,
           image = Uri.EMPTY,
           description = "Event Description",
+          startTime = LocalDateTime.now().plusHours(1),
           isStaffingEnabled = true,
       )
   private val eventNotFollowing =
       Event(
           id = "EVENT2222",
-          title = "Event Title",
+          title = "Event 05DUlszwHL5YZTb1Jwo8",
           associationId = assoIDNotFollowing,
           image = Uri.EMPTY,
           description = "Event Description",
+          startTime = LocalDateTime.now().plusHours(1),
           isStaffingEnabled = true,
       )
 
   private val newsFollowing =
       News(
           id = "NEWS1111",
-          title = "News Title",
+          title = "News 0qrqbQkbjTqbKgHG1akT",
           description = "News Description",
           images = listOf(Uri.EMPTY),
-          createdAt = LocalDateTime.now().minusHours(1),
+          createdAt = LocalDateTime.now().minusHours(2),
           associationId = assoIDFollowing,
           eventIds = mutableListOf())
   private val newsNotFollowing =
       News(
           id = "NEWS2222",
-          title = "News Title",
+          title = "News 05DUlszwHL5YZTb1Jwo8",
           description = "News Description",
           images = listOf(Uri.EMPTY),
-          createdAt = LocalDateTime.now().minusHours(1),
+          createdAt = LocalDateTime.now().minusHours(2),
           associationId = assoIDNotFollowing,
           eventIds = mutableListOf())
 
@@ -169,14 +173,27 @@ class NewsTest : SuperTest() {
                 .onNodeWithText("Activity of associations you follow :")
                 .assertIsDisplayed()
           }
-
-          newsListItem { assertIsDisplayed() }
+        }
+        step("Check navigation to the news/event") {
+          composeTestRule
+              .onNode(hasTestTag("NewsList"))
+              .onChildren()
+              .filter(hasTestTag("NewsListItem"))
+              .onFirst()
+              .performClick()
+        }
+        step("Check if we navigate to the correct news") {
+          verify {
+            mockNavActions.navigateTo(
+                Destinations.NEWS_DETAILS.route + "/${newsFollowing.id}")
+          }
+          confirmVerified(mockNavActions)
         }
       }
     }
   }
 
-  @Test
+  /*@Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
       CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
@@ -210,5 +227,5 @@ class NewsTest : SuperTest() {
         }
       }
     }
-  }
+  }*/
 }

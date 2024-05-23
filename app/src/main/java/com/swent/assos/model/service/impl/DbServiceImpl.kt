@@ -282,12 +282,12 @@ constructor(
   }
 
   override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("startTime", Query.Direction.ASCENDING)
+    val query = firestore.collection("events").orderBy("startTime", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
+          query.limit(100).get().await()
         } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+          query.startAfter(lastDocumentSnapshot).limit(100).get().await()
         }
     if (snapshot.isEmpty) {
       return emptyList()
