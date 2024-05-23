@@ -16,9 +16,9 @@ import com.swent.assos.screens.ApplicationsScreen
 import com.swent.assos.ui.screens.profile.Applications
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
-import java.time.LocalDateTime
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.time.LocalDateTime
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
@@ -85,11 +85,11 @@ class ApplicationsTest : SuperTest() {
           staffingApplicationsTitle { assertIsDisplayed() }
         }
         composeTestRule.waitUntil {
-          composeTestRule.onNodeWithText("Polylan").isDisplayed() &&
+          composeTestRule.onNodeWithText("PolyLan").isDisplayed() &&
               composeTestRule.onNodeWithText("test event").isDisplayed()
         }
         step("Check if the association application is displayed") {
-          composeTestRule.onNodeWithText("Polylan").assertIsDisplayed()
+          composeTestRule.onNodeWithText("PolyLan").assertIsDisplayed()
           composeTestRule.onNodeWithText("Status: pending").assertIsDisplayed()
         }
         step("Check if the staffing application is displayed") {
