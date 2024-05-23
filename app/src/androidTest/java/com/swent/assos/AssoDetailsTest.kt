@@ -2,19 +2,19 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.isDisplayed
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.AssoDetailsScreen
+import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -28,6 +28,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class AssoDetailsTest : SuperTest() {
   val assoId = "jMWo6NgngIS2hCq054TF"
+  val polyLanId = "02s16UZba2Bsx5opTcQb"
   val acronym = "180°C"
 
   val testEvent =
@@ -47,18 +48,24 @@ class AssoDetailsTest : SuperTest() {
           associationId = assoId,
       )
 
-  val user2 =
+  private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
+  private val firstName = "Antoine"
+  private val lastName = "Marchand"
+  private val memberAssociation = Association("1GysfTi14xSiW4Te9fUH")
+
+  val user =
       User(
-          id = "22222",
-          firstName = "Anna",
-          lastName = "Yildiran",
-          email = "anna.yildiran@epfl.ch",
-          appliedAssociation = List(1) { assoId },
-      )
+          id = profileId,
+          firstName = firstName,
+          lastName = lastName,
+          email = "antoine.marchand@epfl.ch",
+          associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
+          sciper = "330249",
+          semester = "GM-BA6",
+          appliedAssociation = listOf(assoId))
 
   override fun setup() {
 
-    val user = DataCache.currentUser.value
     super.setup()
     FirebaseFirestore.getInstance()
         .collection("events")
@@ -68,6 +75,16 @@ class AssoDetailsTest : SuperTest() {
         .collection("news")
         .document(testNews.id)
         .set(serialize(testNews))
+
+    DataCache.currentUser.value = user
+    FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
+
+    FirebaseFirestore.getInstance()
+        .collection("associations")
+        .document(assoId)
+        .collection("applicants")
+        .document("323239")
+        .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
@@ -122,28 +139,17 @@ class AssoDetailsTest : SuperTest() {
   @Test
   fun removeApplicationIsDisplayed() {
 
-    val id = "190719"
-
-    FirebaseFirestore.getInstance().collection("users").document(user2.id).set(user2)
-
-    FirebaseFirestore.getInstance()
-        .collection("associations")
-        .document(assoId)
-        .collection("applicants")
-        .document(id)
-        .set(mapOf("userId" to user2.id, "status" to "pending", "createdAt" to Timestamp.now()))
-
-    DataCache.currentUser.value = user2
-
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
     }
 
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Request to remove request to join association") {
-          composeTestRule.onNodeWithTag("JoinUsButton").isDisplayed()
-          composeTestRule.onNodeWithTag("JoinUsButton").performClick()
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+          composeTestRule.onNodeWithText("Remove application").isDisplayed()
+        }
+        step("I want to remove my application") {
+          composeTestRule.onNodeWithText("Remove application").performClick()
         }
       }
     }
@@ -152,29 +158,16 @@ class AssoDetailsTest : SuperTest() {
   @Test
   fun joinUsIsDisplayed() {
 
-    val id = "190719"
-
-    val user = DataCache.currentUser.value
-
-    DataCache.currentUser.value.associations = emptyList()
-    DataCache.currentUser.value.appliedAssociation = emptyList()
-
-    FirebaseFirestore.getInstance()
-        .collection("associations/$assoId/applicants")
-        .document(id)
-        .delete()
-
-    FirebaseFirestore.getInstance()
-        .collection("users")
-        .document(user.id)
-        .update("appliedAssociation", FieldValue.arrayRemove(assoId))
+    composeTestRule.activity.setContent {
+      AssoDetails(assoId = polyLanId, navigationActions = mockNavActions)
+    }
 
     run {
-      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
-        step("Request to remove request to join association") {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
           composeTestRule.onNodeWithText("Join Us").isDisplayed()
-          composeTestRule.onNodeWithText("Join Us").performClick()
         }
+        step("I want to staff") { composeTestRule.onNodeWithText("Join Us").performClick() }
       }
     }
   }
