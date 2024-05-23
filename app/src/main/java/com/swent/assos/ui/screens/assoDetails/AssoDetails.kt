@@ -122,9 +122,22 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
               onClick = {
                 if (applied.value) {
-                  viewModel.removeRequestToJoin(currentUser.id, assoId)
+                  viewModel.removeRequestToJoin(
+                      currentUser.id,
+                      assoId,
+                      Toast.makeText(
+                              context,
+                              "You have successfully removed your request to join the association",
+                              Toast.LENGTH_SHORT)
+                          .show())
                 } else {
-                  viewModel.applyToAssociation(currentUser.id)
+                  viewModel.applyToAssociation(
+                      currentUser.id,
+                      Toast.makeText(
+                              context,
+                              "You have successfully applied to join the association",
+                              Toast.LENGTH_SHORT)
+                          .show())
                 }
               },
               label = {
