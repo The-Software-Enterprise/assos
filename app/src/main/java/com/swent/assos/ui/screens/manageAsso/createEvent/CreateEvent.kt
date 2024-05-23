@@ -40,9 +40,10 @@ fun CreateEvent(
     assoId: String,
     navigationActions: NavigationActions,
     viewModel: EventViewModel = hiltViewModel(),
-    createNewsViewModel: CreateNewsViewModel = hiltViewModel()
 ) {
   val context = LocalContext.current
+
+  val createNewsViewModel: CreateNewsViewModel = hiltViewModel()
 
   val news by createNewsViewModel.news.collectAsState()
 
