@@ -16,6 +16,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -39,6 +40,9 @@ constructor(
 
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
+
+  private var _appliedStaff = MutableStateFlow(false)
+  val appliedStaff = _appliedStaff.asStateFlow()
 
   init {
     getEventsForCurrentUser()
@@ -141,10 +145,29 @@ constructor(
     }
   }
 
-  fun applyStaffing(id: String, onSuccess: () -> Unit) {
+  fun applyStaffing(eventId: String, userId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedStaffing = DataCache.currentUser.value.appliedStaffing + _event.value.id)
     viewModelScope.launch(ioDispatcher) {
       dbService.applyStaffing(
-          eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
+          eventId = _event.value.id,
+          userId = userId,
+          onSuccess = { _appliedStaff.update { true } },
+          onError = {})
+    }
+  }
+
+  fun removeRequestToStaff(eventId: String, userId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedStaffing = DataCache.currentUser.value.appliedStaffing.filter { it != eventId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.removeStaffingApplication(
+          eventId = eventId,
+          userId = userId,
+          onSuccess = { _appliedStaff.update { false } },
+          onError = {})
     }
   }
 
