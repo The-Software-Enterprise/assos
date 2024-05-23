@@ -19,8 +19,10 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
+import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
+import com.swent.assos.ui.screens.manageAsso.CreateNews
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
@@ -220,7 +222,7 @@ class NewsTest : SuperTest() {
     }
   }
 
-  /*@Test
+  @Test
   fun createNewsAndVerifyCreation() {
     composeTestRule.activity.setContent {
       CreateNews(navigationActions = mockNavActions, assoId = "jMWo6NgngIS2hCq054TF")
@@ -254,5 +256,5 @@ class NewsTest : SuperTest() {
         }
       }
     }
-  }*/
+  }
 }
