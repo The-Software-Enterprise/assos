@@ -39,10 +39,14 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
+import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
+import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import java.io.File
 import java.text.SimpleDateFormat
@@ -148,6 +152,7 @@ fun CameraScreen(navigationActions: NavigationActions) {
   val context = LocalContext.current
   val lifecycleOwner = LocalLifecycleOwner.current
   val imageCapture = remember { ImageCapture.Builder().build() }
+  val eventViewModel: EventViewModel = hiltViewModel()
 
   val cameraPermissionLauncher =
       rememberLauncherForActivityResult(
@@ -176,8 +181,14 @@ fun CameraScreen(navigationActions: NavigationActions) {
           onResult = { state, result ->
             when (state) {
               is ScannerViewState.Success -> {
-                /*TODO: call ticketViewModel with the eventID stored in result*/
                 Log.d("CameraPreview", "Barcode scanned: $result")
+                eventViewModel.createTicket(
+                  email = DataCache.currentUser.value.email,
+                  eventId = result,
+                  onSuccess = { /*Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()*/ },
+                  onFailure = { /*Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()*/ },
+                  status = ParticipationStatus.Participant
+                )
                 navigationActions.goBack()
               }
               is ScannerViewState.Error -> {

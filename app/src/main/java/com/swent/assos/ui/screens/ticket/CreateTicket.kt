@@ -75,10 +75,10 @@ fun CreateTicket(navigationActions: NavigationActions, eventId: String) {
         EmailSubmit(
             onClick = {
               eventViewModel.createTicket(
-                  email,
-                  { showingSuccess = true },
-                  { showingError = true },
-                  ParticipationStatus.Participant)
+                  email = email,
+                  onSuccess = { showingSuccess = true },
+                  onFailure = { showingError = true },
+                  status = ParticipationStatus.Participant)
             })
       },
       floatingActionButtonPosition = FabPosition.Center,
