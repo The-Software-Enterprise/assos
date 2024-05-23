@@ -6,6 +6,7 @@ plugins {
   id("com.google.dagger.hilt.android")
   id("com.ncorti.ktfmt.gradle") version "0.16.0"
   id("org.sonarqube") version "4.4.1.3373"
+  id("jacoco")
 }
 
 android {
@@ -174,6 +175,10 @@ dependencies {
 
   // Bar code scanning
   implementation("com.google.mlkit:barcode-scanning:17.2.0")
+  // Mock for instrumented tests
+  androidTestImplementation("org.mockito:mockito-core:5.7.0")
+  androidTestImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+  androidTestImplementation("org.powermock:powermock-module-junit4:2.0.9")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
