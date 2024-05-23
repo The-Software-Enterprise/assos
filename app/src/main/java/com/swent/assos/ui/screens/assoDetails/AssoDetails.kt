@@ -106,21 +106,46 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
       },
       floatingActionButton = {
-        if (!currentUser.associations.map { it.first }.contains(assoId))
-            JoinUsButton(
-                onClick = {
-                  viewModel.applyToAssociation(
-                      currentUser.id,
-                      onSuccess = {
-                        Toast.makeText(
-                                context,
-                                "You have successfully applied to join the association",
-                                Toast.LENGTH_SHORT)
-                            .show()
-                      },
+        if (!currentUser.associations.map { it.first }.contains(assoId)) {
+
+          val applied = viewModel.applied.collectAsState()
+
+          AssistChip(
+              colors =
+                  if (applied.value)
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                  else
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.secondary),
+              border = null,
+              modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
+              onClick = {
+                if (applied.value) {
+                  viewModel.removeRequestToJoin(currentUser.id, assoId)
+                } else {
+                  viewModel.applyToAssociation(currentUser.id)
+                }
+              },
+              label = {
+                if (applied.value) {
+                  Text(
+                      text = "Remove application",
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
                   )
-                },
-                text = "Join us")
+                } else {
+                  Text(
+                      text = "Join Us",
+                      color = MaterialTheme.colorScheme.onSecondary,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                }
+              },
+          )
+        }
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
