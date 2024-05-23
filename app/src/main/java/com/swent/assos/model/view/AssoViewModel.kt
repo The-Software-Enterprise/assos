@@ -41,11 +41,17 @@ constructor(
   private val _events = MutableStateFlow<List<Event>>(emptyList())
   val events = _events.asStateFlow()
 
+  private val _applied = MutableStateFlow(false)
+  val applied = _applied.asStateFlow()
+
   fun getAssociation(associationId: String) {
     viewModelScope.launch(ioDispatcher) {
       _association.value = dbService.getAssociationById(associationId)
       _associationFollowed.update {
         DataCache.currentUser.value.following.contains(_association.value.id)
+      }
+      _applied.update {
+        DataCache.currentUser.value.appliedAssociation.contains(_association.value.id)
       }
     }
   }
@@ -114,11 +120,28 @@ constructor(
     viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, userId, {}, {}) }
   }
 
-  fun applyToAssociation(userId: String, onSuccess: () -> Unit) {
-
+  fun applyToAssociation(userId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedAssociation =
+                DataCache.currentUser.value.appliedAssociation + _association.value.id)
     viewModelScope.launch(ioDispatcher) {
       dbService.applyJoinAsso(
-          assoId = _association.value.id, userId = userId, onSuccess = onSuccess, onError = {})
+          assoId = _association.value.id,
+          userId = userId,
+          onSuccess = { _applied.update { true } },
+          onError = {})
+    }
+  }
+
+  fun removeRequestToJoin(userId: String, assoId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedAssociation =
+                DataCache.currentUser.value.appliedAssociation.filter { it != assoId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.removeJoinApplication(
+          assoId = assoId, userId = userId, onSuccess = { _applied.update { false } }, onError = {})
     }
   }
 

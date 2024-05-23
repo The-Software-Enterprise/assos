@@ -30,7 +30,11 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
   val applicants by applicantsViewModel.applicants.collectAsState()
   val listState = rememberLazyListState()
 
+  val update = applicantsViewModel.update.collectAsState()
+
   LaunchedEffect(key1 = Unit) { applicantsViewModel.getApplicantsForJoining(assoId) }
+
+  LaunchedEffect(key1 = update.value) { applicantsViewModel.updateApplicants(assoId) }
 
   Scaffold(
       modifier = Modifier.testTag("ApplicationManagementScreen"),
@@ -52,7 +56,10 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
               if (applicants.isNotEmpty()) {
                 items(applicants) { applicant ->
                   ApplicationListItem(
-                      userId = applicant.userId, eventId = assoId, isStaffing = true)
+                      userId = applicant.userId,
+                      eventId = assoId,
+                      assoId = assoId,
+                      isStaffing = false)
                 }
               }
             }
