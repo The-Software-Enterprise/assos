@@ -44,18 +44,6 @@ class ApplicationsTest : SuperTest() {
     super.setup()
     DataCache.currentUser.value = user
     Firebase.firestore
-        .collection("associations")
-        .document(assoId)
-        .set(
-            mapOf(
-                "acronym" to "Polylan",
-                "fullname" to "Polylan",
-                "url" to "https://polylan.ch",
-                "description" to "Polylan is the biggest lan party in Switzerland",
-                "logo" to "https://polylan.ch/logo.png",
-                "banner" to "https://polylan.ch/banner.png"))
-
-    Firebase.firestore
         .collection("associations/$assoId/applicants")
         .document(user.id)
         .set(

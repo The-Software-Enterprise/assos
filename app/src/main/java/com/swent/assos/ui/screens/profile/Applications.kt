@@ -62,7 +62,17 @@ fun Applications(navigationActions: NavigationActions) {
         Spacer(modifier = Modifier.padding(8.dp))
       }
       if (joiningApplications.value.isEmpty()) {
-        item { Text("No applications found.") }
+        item {
+          Text(
+              text = "No applications found.",
+              style =
+                  TextStyle(
+                      fontSize = 16.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Normal,
+                      color = MaterialTheme.colorScheme.onBackground))
+        }
       }
       for (application in joiningApplications.value) {
         item {
@@ -85,7 +95,17 @@ fun Applications(navigationActions: NavigationActions) {
         Spacer(modifier = Modifier.padding(8.dp))
       }
       if (staffingApplications.value.isEmpty()) {
-        item { Text("No applications found.") }
+        item {
+          Text(
+              text = "No applications found.",
+              style =
+                  TextStyle(
+                      fontSize = 16.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Normal,
+                      color = MaterialTheme.colorScheme.onBackground))
+        }
       }
       for (application in staffingApplications.value) {
         item {
