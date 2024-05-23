@@ -8,7 +8,6 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
@@ -37,7 +36,7 @@ class EventDetailsTest : SuperTest() {
   private val firstName = "Antoine"
   private val lastName = "Marchand"
 
-  private val memberAssociation = Association("1GysfTi14xSiW4Te9fUH")
+  private val memberAssociationId = "1GysfTi14xSiW4Te9fUH"
 
   val user =
       User(
@@ -45,7 +44,7 @@ class EventDetailsTest : SuperTest() {
           firstName = firstName,
           lastName = lastName,
           email = "antoine.marchand@epfl.ch",
-          associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
+          associations = listOf(Triple(memberAssociationId, "Chef de projet", 1)),
           sciper = "330249",
           semester = "GM-BA6",
           appliedStaffing = listOf(event3.id))
@@ -54,7 +53,7 @@ class EventDetailsTest : SuperTest() {
       Event(
           "123457",
           "title",
-          memberAssociation.id,
+          memberAssociationId,
           Uri.EMPTY,
           "description",
           isStaffingEnabled = true)
@@ -115,7 +114,7 @@ class EventDetailsTest : SuperTest() {
   fun testCreateTicketButton() {
     composeTestRule.activity.setContent {
       EventDetails(
-          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociation.id)
+          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociationId)
     }
 
     run {

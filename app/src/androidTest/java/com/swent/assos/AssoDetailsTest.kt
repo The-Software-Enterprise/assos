@@ -7,7 +7,6 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -51,7 +50,7 @@ class AssoDetailsTest : SuperTest() {
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
   private val firstName = "Antoine"
   private val lastName = "Marchand"
-  private val memberAssociation = Association("1GysfTi14xSiW4Te9fUH")
+  private val memberAssociationId = "1GysfTi14xSiW4Te9fUH"
 
   val user =
       User(
@@ -59,7 +58,7 @@ class AssoDetailsTest : SuperTest() {
           firstName = firstName,
           lastName = lastName,
           email = "antoine.marchand@epfl.ch",
-          associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
+          associations = listOf(Triple(memberAssociationId, "Chef de projet", 1)),
           sciper = "330249",
           semester = "GM-BA6",
           appliedAssociation = listOf(assoId))
