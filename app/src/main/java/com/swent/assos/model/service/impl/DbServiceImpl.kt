@@ -84,6 +84,15 @@ constructor(
     }
   }
 
+  override suspend fun getNews(newsId: String): News {
+    if (newsId.isEmpty()) {
+      return News()
+    }
+    val query = firestore.collection("news").document(newsId)
+    val snapshot = query.get().await() ?: return News()
+    return deserializeNews(snapshot)
+  }
+
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
@@ -297,9 +306,12 @@ constructor(
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
-    val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association()
-    return deserializeAssociation(snapshot)
+    if (associationId.isEmpty()) {
+      return Association()
+    }
+    val query =
+        firestore.document("associations/$associationId").get().await() ?: return Association()
+    return deserializeAssociation(query)
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
@@ -352,6 +364,10 @@ constructor(
         .set(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override suspend fun deleteNews(newsId: String) {
+    firestore.collection("news").document(newsId).delete().await()
   }
 
   override suspend fun getNews(

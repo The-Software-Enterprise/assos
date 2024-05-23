@@ -14,14 +14,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -39,36 +46,54 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
-import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
+import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val viewModel: NewsViewModel = hiltViewModel()
+  val specificNews by viewModel.news.collectAsState()
+  val assoViewModel: AssoViewModel = hiltViewModel()
+  val asso by assoViewModel.association.collectAsState()
+  val profileViewModel: ProfileViewModel = hiltViewModel()
+  val associations by profileViewModel.memberAssociations.collectAsState()
+  var conf by remember { mutableStateOf(false) }
 
-  val news by viewModel.allNews.collectAsState()
-
-  val specificNews =
-      news.find { it.id == newsId }
-          ?: News(
-              id = "0000",
-              title = "NO TITLE",
-              description = "NO DESCRIPTION",
-              images = listOf(Uri.EMPTY),
-              createdAt = LocalDateTime.now(),
-              associationId = "",
-              eventIds = mutableListOf())
+  LaunchedEffect(key1 = Unit) {
+    viewModel.loadNews(newsId)
+    profileViewModel.updateUser()
+  }
+  LaunchedEffect(key1 = specificNews.associationId) {
+    assoViewModel.getAssociation(specificNews.associationId)
+  }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
+      floatingActionButton = {
+        if (associations.map { it.id }.contains(asso.id)) {
+          DeleteButton { conf = true }
+        }
+      },
+      floatingActionButtonPosition = FabPosition.End,
       topBar = {
         PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
       }) { paddingValues ->
+        if (conf) {
+          ConfirmDialog(
+              { conf = false },
+              {
+                viewModel.deleteNews(newsId)
+                navigationActions.goBack()
+                conf = false
+              },
+              specificNews.title)
+        }
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
             Image(
@@ -88,7 +113,6 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                         .testTag("Main Image"),
                 contentScale = ContentScale.Crop,
                 alignment = Alignment.Center)
-
             Box(
                 modifier =
                     Modifier.fillMaxWidth()
@@ -142,4 +166,14 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
           }
         }
       }
+}
+
+@Composable
+fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
+  AlertDialog(
+      onDismissRequest = onDismiss,
+      title = { Text("DELETE?") },
+      text = { Text("Are you sure to delete news: $title ?") },
+      confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
+      dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }

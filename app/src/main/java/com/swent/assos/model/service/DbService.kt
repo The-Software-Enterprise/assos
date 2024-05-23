@@ -54,6 +54,8 @@ interface DbService {
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
+  suspend fun deleteNews(newsId: String)
+
   suspend fun filterNewsBasedOnAssociations(
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
@@ -74,6 +76,8 @@ interface DbService {
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
+
+  suspend fun getNews(newsId: String): News
 
   // Events -------------------------------------------------------------------
   suspend fun getEventsFromAnAssociation(
