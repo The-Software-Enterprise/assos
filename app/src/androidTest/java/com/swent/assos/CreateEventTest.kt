@@ -52,7 +52,6 @@ class CreateEventTest : SuperTest() {
         EventViewModel(
             DbServiceImpl(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()),
             StorageServiceImpl(FirebaseStorage.getInstance()),
-            AuthServiceImpl(FirebaseAuth.getInstance()),
             Dispatchers.IO)
     composeTestRule.activity.setContent {
       CreateEvent(assoId = assoId, navigationActions = mockNavActions, eventViewModel)

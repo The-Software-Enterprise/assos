@@ -3,6 +3,7 @@ package com.swent.assos
 import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -27,14 +28,14 @@ import org.junit.runner.RunWith
 class EventDetailsTest : SuperTest() {
   private val assoID = "02s16UZba2Bsx5opTcQb"
   private val event1 =
-      Event("123456", "description", assoID, Uri.EMPTY, "assoId", isStaffingEnabled = true)
+      Event("123456", "description", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
 
   private val event3 =
       Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
 
-  private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
-  private val firstName = "Antoine"
-  private val lastName = "Marchand"
+  private val profileId = "theIDofJoe"
+  private val firstName = "Joe"
+  private val lastName = "Rubber"
 
   private val memberAssociationId = "1GysfTi14xSiW4Te9fUH"
 
@@ -59,7 +60,7 @@ class EventDetailsTest : SuperTest() {
           isStaffingEnabled = true)
 
   override fun setup() {
-    DataCache.currentUser.value = user
+
     FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
@@ -70,6 +71,7 @@ class EventDetailsTest : SuperTest() {
         .collection("applicants")
         .document("323232")
         .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
+      DataCache.currentUser.value = user
   }
 
   @Test
@@ -132,4 +134,28 @@ class EventDetailsTest : SuperTest() {
       }
     }
   }
+
+    @Test
+    fun deleteEvent(){
+        composeTestRule.activity.setContent {
+            EventDetails(event2.id, navigationActions = mockNavActions, assoId = event2.associationId)
+        }
+        run {
+            ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+                step("Delete Event") {
+                    composeTestRule.waitUntil(10000) {
+                        composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
+                    }
+                    composeTestRule.onNodeWithTag("DeleteButton").performClick()
+                }
+                step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
+                step("Delete Event") { composeTestRule.onNodeWithTag("DeleteButton").performClick() }
+                step("confirm deletion") { composeTestRule.onNodeWithText("Yes").performClick() }
+                step("check if we really delete the event") {
+                    verify { mockNavActions.goBack() }
+                    confirmVerified(mockNavActions)
+                }
+            }
+        }
+    }
 }

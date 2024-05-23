@@ -25,7 +25,6 @@ class EventViewModel
 constructor(
     private val dbService: DbService,
     private val storageService: StorageService,
-    private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -48,6 +47,12 @@ constructor(
       _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
     }
   }
+
+    fun deleteEvent(eventId: String) {
+        viewModelScope.launch(ioDispatcher) {
+        dbService.deleteEvent(eventId)
+        }
+    }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
     val event = _event.value

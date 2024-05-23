@@ -173,7 +173,7 @@ fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
   AlertDialog(
       onDismissRequest = onDismiss,
       title = { Text("DELETE?") },
-      text = { Text("Are you sure to delete news: $title ?") },
+      text = { Text("Are you sure to delete $title ?") },
       confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
       dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }

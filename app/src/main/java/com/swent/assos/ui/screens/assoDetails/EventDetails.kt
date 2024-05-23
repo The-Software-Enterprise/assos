@@ -14,8 +14,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -27,12 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
@@ -45,23 +50,32 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val event by eventViewModel.event.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
-
+  val profileViewModel: ProfileViewModel = hiltViewModel()
+  val associations by profileViewModel.memberAssociations.collectAsState()
   val userId by assoViewModel.currentUser.collectAsState()
-
-  val viewModel: ProfileViewModel = hiltViewModel()
-  val myAssociations by viewModel.memberAssociations.collectAsState()
+    var conf by remember { mutableStateOf(false) }
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
+      profileViewModel.updateUser()
   }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
+      modifier = Modifier
+          .semantics { testTagsAsResourceId = true }
+          .testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
+          if(conf){
+              ConfirmDialog(onDismiss = { conf = false }, onConfirm = {
+                  conf = false
+                    eventViewModel.deleteEvent(eventId)
+                    navigationActions.goBack()
+                                                                      }, title = event.title)
+          }
         if (event.id != "") {
-          when (isMember(myAssociations = myAssociations, currentAsso = assoId)) {
+          when ((associations.map { it.id }.contains(assoId))) {
             true ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -94,7 +108,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                               AssistChipDefaults.assistChipColors(
                                   containerColor = MaterialTheme.colorScheme.secondary),
                       border = null,
-                      modifier = Modifier.testTag("StaffButton").padding(5.dp),
+                      modifier = Modifier
+                          .testTag("StaffButton")
+                          .padding(5.dp),
                       onClick = {
                         if (applied.value) {
                           eventViewModel.removeRequestToStaff(event.id, userId.id)
@@ -128,11 +144,17 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         EventContent(
             viewModel = eventViewModel,
             paddingValues = paddingValues,
-            isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
+            isMember = (associations.map { it.id }.contains(assoId)),
             eventId = eventId)
-      }
-}
 
-private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
-  return myAssociations.map { it.id }.contains(currentAsso)
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Start,
+        ) {
+          // if member of the association allow to delete
+            if (associations.map{ it.id }.contains(assoId)) {
+            DeleteButton {conf = true}
+            }
+        }
+      }
 }
