@@ -45,9 +45,9 @@ fun Applications(navigationActions: NavigationActions) {
           Modifier.semantics { testTagsAsResourceId = true }
               .padding(16.dp)
               .testTag("ApplicationsScreen"),
-      topBar = { PageTitleWithGoBack(title = "My Associations", navigationActions) },
+      topBar = { PageTitleWithGoBack(title = "Applications", navigationActions) },
   ) { paddingValues ->
-    LazyColumn(modifier = Modifier.padding(paddingValues)) {
+    LazyColumn(userScrollEnabled = true, modifier = Modifier.padding(paddingValues)) {
       item {
         Text(
             modifier = Modifier.testTag("AssociationsApplicationsTitle"),
@@ -65,7 +65,10 @@ fun Applications(navigationActions: NavigationActions) {
         item { Text("No applications found.") }
       }
       for (application in joiningApplications.value) {
-        item { ApplicationItem(application) }
+        item {
+          ApplicationItem(application)
+          Spacer(modifier = Modifier.padding(4.dp))
+        }
       }
       item {
         Spacer(modifier = Modifier.padding(8.dp))
@@ -85,7 +88,10 @@ fun Applications(navigationActions: NavigationActions) {
         item { Text("No applications found.") }
       }
       for (application in staffingApplications.value) {
-        item { ApplicationItem(application) }
+        item {
+          ApplicationItem(application)
+          Spacer(modifier = Modifier.padding(4.dp))
+        }
       }
     }
   }
