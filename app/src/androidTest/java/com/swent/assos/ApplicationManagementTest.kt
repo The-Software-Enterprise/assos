@@ -114,6 +114,9 @@ class ApplicationManagementTest : SuperTest() {
               condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
               timeoutMillis = 10000)
         }
+        step("Check if the message no applicants is displayed") {
+          composeTestRule.onNodeWithText("No applicants").assertIsDisplayed()
+        }
       }
     }
   }

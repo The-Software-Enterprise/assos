@@ -9,12 +9,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
@@ -62,6 +64,13 @@ fun StaffManagement(eventId: String, navigationActions: NavigationActions) {
                       eventId = eventId,
                       assoId = eventId,
                       isStaffing = true)
+                }
+              } else {
+                item {
+                  Text(
+                      text = "No applicants",
+                      textAlign = TextAlign.Center,
+                      color = MaterialTheme.colorScheme.onBackground)
                 }
               }
             }
