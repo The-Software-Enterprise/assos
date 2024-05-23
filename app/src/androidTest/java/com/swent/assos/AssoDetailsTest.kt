@@ -86,6 +86,8 @@ class AssoDetailsTest : SuperTest() {
         .document("323239")
         .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
+    DataCache.currentUser.value.appliedAssociation = listOf(assoId)
+
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
     }
@@ -167,7 +169,7 @@ class AssoDetailsTest : SuperTest() {
         composeTestRule.waitUntil(timeoutMillis = 5000) {
           composeTestRule.onNodeWithText("Join Us").isDisplayed()
         }
-        step("I want to staff") { composeTestRule.onNodeWithText("Join Us").performClick() }
+        step("I want to join") { composeTestRule.onNodeWithText("Join Us").performClick() }
       }
     }
   }
