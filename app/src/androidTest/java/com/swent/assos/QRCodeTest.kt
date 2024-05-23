@@ -2,7 +2,6 @@ package com.swent.assos
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.media.Image
 import androidx.camera.core.ImageInfo
@@ -11,31 +10,16 @@ import androidx.camera.core.impl.TagBundle
 import androidx.camera.core.impl.utils.ExifData
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.android.gms.tasks.Task
-import com.google.mlkit.vision.barcode.BarcodeScanner
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.barcode.internal.BarcodeScannerImpl
 import com.google.mlkit.vision.common.InputImage
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.runs
+import java.lang.Thread.sleep
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito.doAnswer
-import org.mockito.Mockito.doNothing
-import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import org.powermock.api.mockito.PowerMockito
-import java.lang.Thread.sleep
 
 @RunWith(AndroidJUnit4::class)
 class CodeScannerTest {
@@ -80,12 +64,13 @@ class CodeScannerTest {
     private const val BARCODE_VALUE = "123456"
   }
 
-  private class AndroidImageProxy(private val image: Image, private val info: ImageInfo) : ImageProxy {
+  private class AndroidImageProxy(private val image: Image, private val info: ImageInfo) :
+      ImageProxy {
 
     override fun close() {}
 
     override fun getCropRect(): Rect {
-        return Rect()
+      return Rect()
     }
 
     override fun setCropRect(rect: Rect?) {}
@@ -113,7 +98,6 @@ class CodeScannerTest {
     override fun getImage(): Image {
       return image
     }
-
   }
 
   private class CustomImageInfo : ImageInfo {
@@ -129,12 +113,10 @@ class CodeScannerTest {
       return 0
     }
 
-    override fun populateExifData(exifBuilder: ExifData.Builder) { }
-
-
+    override fun populateExifData(exifBuilder: ExifData.Builder) {}
   }
 
-  private class MockImageInfo: ImageInfo {
+  private class MockImageInfo : ImageInfo {
     override fun getTagBundle(): TagBundle {
       return TagBundle.emptyBundle()
     }
@@ -148,9 +130,5 @@ class CodeScannerTest {
     }
 
     override fun populateExifData(exifBuilder: ExifData.Builder) {}
-
   }
-
-
-
 }
