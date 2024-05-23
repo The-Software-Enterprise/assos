@@ -168,6 +168,9 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
   testImplementation("org.mockito:mockito-core:3.12.4")
+
+  // Bar code scanning
+  implementation("com.google.mlkit:barcode-scanning:17.2.0")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {
