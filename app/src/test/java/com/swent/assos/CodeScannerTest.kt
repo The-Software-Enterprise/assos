@@ -9,29 +9,24 @@ import androidx.camera.core.ImageInfo
 import androidx.camera.core.ImageProxy
 import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.common.internal.CommonComponentRegistrar
-import com.google.mlkit.common.internal.zzh
 import com.google.mlkit.common.sdkinternal.MlKitContext
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
-import com.google.mlkit.vision.barcode.common.internal.BarcodeSource
 import com.google.mlkit.vision.common.InputImage
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import org.junit.Before
 import java.nio.ByteBuffer
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import java.util.concurrent.Callable
-import java.util.concurrent.FutureTask
 
 @RunWith(RobolectricTestRunner::class)
 @Config(sdk = [28]) // Ensure the correct Android SDK version for Robolectric
@@ -41,9 +36,7 @@ class CodeScannerTest {
   fun setUp() {
     // Initialize ML Kit with required component registrars
     val context = ApplicationProvider.getApplicationContext<Context>()
-    val registrars = listOf(
-      CommonComponentRegistrar()
-    )
+    val registrars = listOf(CommonComponentRegistrar())
     MlKitContext.initialize(context, registrars)
   }
 
@@ -58,7 +51,7 @@ class CodeScannerTest {
 
     var resultState: ScannerViewState? = null
     var resultBarcode: String? = null
-    val onSuccess = { state:ScannerViewState, barcode: String? ->
+    val onSuccess = { state: ScannerViewState, barcode: String? ->
       resultState = state
       resultBarcode = barcode
     }
@@ -73,10 +66,11 @@ class CodeScannerTest {
     val mockBarcode = mockk<Barcode>()
     val mockResult = mockk<Task<List<Barcode>>>()
 
-    every { mockResult.addOnSuccessListener(any()) } answers {
-      onSuccess(ScannerViewState.Success, BARCODE_VALUE)
-      mockResult
-    }
+    every { mockResult.addOnSuccessListener(any()) } answers
+        {
+          onSuccess(ScannerViewState.Success, BARCODE_VALUE)
+          mockResult
+        }
     every { mockResult.addOnFailureListener(any()) } answers { mockResult }
     every { mockResult.addOnCompleteListener(any()) } answers { mockResult }
     every { mockScanner.process(any<InputImage>()) } returns mockResult
