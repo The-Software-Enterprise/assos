@@ -3,6 +3,8 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.isNotDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -25,6 +27,7 @@ import org.junit.runner.RunWith
 class ApplicationManagementTest : SuperTest() {
 
   private val assoID = "02s16UZba2Bsx5opTcQb"
+  private val applicantId = "123456"
 
   val user1 =
       User(
@@ -61,7 +64,8 @@ class ApplicationManagementTest : SuperTest() {
         .collection("associations")
         .document(assoID)
         .collection("applicants")
-        .add(mapOf("userId" to user1.id, "status" to "pending", "createdAt" to Timestamp.now()))
+        .document(applicantId)
+        .set(mapOf("userId" to user1.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
     DataCache.currentUser.value = user2
   }
@@ -100,6 +104,15 @@ class ApplicationManagementTest : SuperTest() {
         step("Check if the staff is accepted") {
           composeTestRule.onNodeWithText("Un-Accept").assertIsDisplayed()
           composeTestRule.onNodeWithText("Un-Accept").performClick()
+        }
+        step("Check if the garbage button is displayed") {
+          composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
+          composeTestRule.onNodeWithTag("GarbageIcon").performClick()
+        }
+        step("Check if the staff list is displayed") {
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
+              timeoutMillis = 10000)
         }
       }
     }
