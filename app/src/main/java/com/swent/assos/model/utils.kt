@@ -257,6 +257,7 @@ fun saveImageToGallery(context: Context, imageBitmap: ImageBitmap) {
 
   uri?.let {
     var outputStream: OutputStream? = null
+
     try {
       outputStream = resolver.openOutputStream(uri)
       bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream!!)
