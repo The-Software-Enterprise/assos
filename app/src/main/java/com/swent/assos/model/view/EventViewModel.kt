@@ -145,7 +145,7 @@ constructor(
     }
   }
 
-  fun applyStaffing(eventId: String, userId: String) {
+  fun applyStaffing(eventId: String, userId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedStaffing = DataCache.currentUser.value.appliedStaffing + _event.value.id)
@@ -153,12 +153,15 @@ constructor(
       dbService.applyStaffing(
           eventId = _event.value.id,
           userId = userId,
-          onSuccess = { _appliedStaff.update { true } },
+          onSuccess = {
+            _appliedStaff.update { true }
+            successToast
+          },
           onError = {})
     }
   }
 
-  fun removeRequestToStaff(eventId: String, userId: String) {
+  fun removeRequestToStaff(eventId: String, userId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedStaffing = DataCache.currentUser.value.appliedStaffing.filter { it != eventId })
@@ -166,7 +169,10 @@ constructor(
       dbService.removeStaffingApplication(
           eventId = eventId,
           userId = userId,
-          onSuccess = { _appliedStaff.update { false } },
+          onSuccess = {
+            _appliedStaff.update { false }
+            successToast
+          },
           onError = {})
     }
   }
