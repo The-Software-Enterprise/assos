@@ -3,6 +3,7 @@ package com.swent.assos.ui.screens.manageAsso
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -67,6 +68,12 @@ fun ApplicationManagement(assoId: String, navigationActions: NavigationActions) 
                 // Show a message if there are no applicants
                 item {
                   Text(
+                      modifier =
+                          Modifier.fillMaxWidth()
+                              .fillMaxHeight()
+                              .padding(horizontal = 10.dp)
+                              .padding(vertical = 7.dp)
+                              .padding(start = 16.dp, end = 16.dp),
                       text = "No applicants",
                       textAlign = TextAlign.Center,
                       color = MaterialTheme.colorScheme.onBackground)
