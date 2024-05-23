@@ -1,12 +1,17 @@
 package com.swent.assos.model
 
 import android.app.PendingIntent
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
+import android.provider.MediaStore
+import android.widget.Toast
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.zxing.BarcodeFormat
@@ -18,6 +23,7 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
+import java.io.OutputStream
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -31,17 +37,6 @@ enum class AssociationPosition(val string: String, val rank: Int) {
   PRESIDENT("president", 1),
   TREASURER("treasurer", 2),
   MEMBER("member", 3)
-}
-
-fun generateQRCodeBitmap(text: String, size: Int): ImageBitmap {
-  val bitMatrix: BitMatrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size)
-  val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565)
-  for (x in 0 until size) {
-    for (y in 0 until size) {
-      bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
-    }
-  }
-  return bitmap.asImageBitmap()
 }
 
 fun formatDateTime(date: LocalDateTime): String {
@@ -245,4 +240,48 @@ fun deserializeUser(doc: DocumentSnapshot): User {
               }
             } ?: emptyList()
           } ?: emptyList())
+}
+
+fun generateQRCode(text: String, size: Int): Bitmap {
+  val bitMatrix: BitMatrix = MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, size, size)
+  val width = bitMatrix.width
+  val height = bitMatrix.height
+  val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+  for (x in 0 until width) {
+    for (y in 0 until height) {
+      bitmap.setPixel(x, y, if (bitMatrix[x, y]) 0xFF000000.toInt() else 0xFFFFFFFF.toInt())
+    }
+  }
+  return bitmap
+}
+
+fun saveImageToGallery(context: Context, imageBitmap: ImageBitmap) {
+  val bitmap = imageBitmap.asAndroidBitmap()
+  val contentValues =
+      ContentValues().apply {
+        put(MediaStore.Images.Media.DISPLAY_NAME, "qrcode_${System.currentTimeMillis()}.png")
+        put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+        put(MediaStore.Images.Media.IS_PENDING, 1)
+      }
+
+  val resolver = context.contentResolver
+  val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+
+  uri?.let {
+    var outputStream: OutputStream? = null
+
+    try {
+      outputStream = resolver.openOutputStream(uri)
+      bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream!!)
+    } catch (e: Exception) {
+      e.printStackTrace()
+    } finally {
+      outputStream?.close()
+      contentValues.clear()
+      contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+      resolver.update(uri, contentValues, null, null)
+      Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show()
+    }
+  }
 }
