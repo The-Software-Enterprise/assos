@@ -4,35 +4,29 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
-import androidx.camera.core.ImageProxy
-import androidx.test.core.app.ApplicationProvider
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.robolectric.RobolectricTestRunner
 import android.media.Image
 import androidx.camera.core.ImageInfo
+import androidx.camera.core.ImageProxy
+import androidx.test.core.app.ApplicationProvider
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
-import org.mockito.Mockito
 import java.nio.ByteBuffer
-import java.io.FileInputStream
-import java.io.InputStream
-
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.Mockito
+import org.robolectric.RobolectricTestRunner
 
 @RunWith(RobolectricTestRunner::class)
 class CodeScannerTest {
-  
 
   @Test
   fun testScanImage() {
     // Load the PNG file from assets
     val context = ApplicationProvider.getApplicationContext<Context>()
     val assetManager = context.assets
-    val inputStream = assetManager.open("menuQRCode.jpg")
+    val inputStream = assetManager.open("menu.jpg")
     val bitmap = BitmapFactory.decodeStream(inputStream)
     inputStream.close()
-
-
 
     // Create a fake ImageProxy
     val imageProxy = createImageProxy(bitmap)
@@ -66,9 +60,7 @@ class CodeScannerTest {
 
     // Mock Image
     val image = Mockito.mock(Image::class.java)
-    val planes = arrayOf(
-      Mockito.mock(Image.Plane::class.java)
-    )
+    val planes = arrayOf(Mockito.mock(Image.Plane::class.java))
 
     val buffer = ByteBuffer.allocate(bitmap.byteCount)
     bitmap.copyPixelsToBuffer(buffer)
@@ -86,5 +78,4 @@ class CodeScannerTest {
 
     return imageProxy
   }
-
 }
