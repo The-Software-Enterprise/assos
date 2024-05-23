@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class News(
     val id: String = "",
     val title: String = "",
-    val associationId: String = "",
+    var associationId: String = "",
     var images: List<Uri> = mutableListOf(),
     val description: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(),

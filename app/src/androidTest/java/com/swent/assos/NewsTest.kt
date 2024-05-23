@@ -43,7 +43,7 @@ class NewsTest : SuperTest() {
 
   private val eventFollowing =
       Event(
-          id = "EVENT1111",
+          id = "1111EVENT",
           title = "Event 0qrqbQkbjTqbKgHG1akT",
           associationId = assoIDFollowing,
           image = Uri.EMPTY,
@@ -53,7 +53,7 @@ class NewsTest : SuperTest() {
       )
   private val eventNotFollowing =
       Event(
-          id = "EVENT2222",
+          id = "2222EVENT",
           title = "Event 05DUlszwHL5YZTb1Jwo8",
           associationId = assoIDNotFollowing,
           image = Uri.EMPTY,
@@ -62,18 +62,38 @@ class NewsTest : SuperTest() {
           isStaffingEnabled = true,
       )
 
+  private val newsOfTheEventFollowing =
+      News(
+          id = "0000NEWS",
+          title = "News 0qrqbQkbjTqbKgHG1akT",
+          description = "News Description",
+          images = listOf(Uri.EMPTY),
+          createdAt = LocalDateTime.now().minusHours(2),
+          associationId = assoIDFollowing,
+          eventIds = mutableListOf("1111EVENT"))
+
   private val newsFollowing =
       News(
-          id = "NEWS1111",
+          id = "1111NEWS",
           title = "News 0qrqbQkbjTqbKgHG1akT",
           description = "News Description",
           images = listOf(Uri.EMPTY),
           createdAt = LocalDateTime.now().minusHours(2),
           associationId = assoIDFollowing,
           eventIds = mutableListOf())
+
+  private val newsOfTheEventNotFollowing =
+      News(
+          id = "2222NEWS",
+          title = "News 05DUlszwHL5YZTb1Jwo8",
+          description = "News Description",
+          images = listOf(Uri.EMPTY),
+          createdAt = LocalDateTime.now().minusHours(2),
+          associationId = assoIDNotFollowing,
+          eventIds = mutableListOf("2222EVENT"))
   private val newsNotFollowing =
       News(
-          id = "NEWS2222",
+          id = "2222NEWS",
           title = "News 05DUlszwHL5YZTb1Jwo8",
           description = "News Description",
           images = listOf(Uri.EMPTY),
@@ -113,8 +133,16 @@ class NewsTest : SuperTest() {
         .set(serialize(eventNotFollowing))
     FirebaseFirestore.getInstance()
         .collection("news")
+        .document(newsOfTheEventFollowing.id)
+        .set(serialize(newsOfTheEventFollowing))
+    FirebaseFirestore.getInstance()
+        .collection("news")
         .document(newsFollowing.id)
         .set(serialize(newsFollowing))
+    FirebaseFirestore.getInstance()
+        .collection("news")
+        .document(newsOfTheEventNotFollowing.id)
+        .set(serialize(newsOfTheEventNotFollowing))
     FirebaseFirestore.getInstance()
         .collection("news")
         .document(newsNotFollowing.id)
@@ -152,7 +180,7 @@ class NewsTest : SuperTest() {
               .onFirst()
               .assertIsDisplayed()
 
-          for (i in 0 until 4) {
+          for (i in 0 until 6) {
             composeTestRule
                 .onNode(hasTestTag("NewsList"))
                 .onChildren()
@@ -184,8 +212,7 @@ class NewsTest : SuperTest() {
         }
         step("Check if we navigate to the correct news") {
           verify {
-            mockNavActions.navigateTo(
-                Destinations.NEWS_DETAILS.route + "/${newsFollowing.id}")
+            mockNavActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${newsFollowing.id}")
           }
           confirmVerified(mockNavActions)
         }

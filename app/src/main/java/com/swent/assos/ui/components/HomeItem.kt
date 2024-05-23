@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -33,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.swent.assos.R
-import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -42,64 +40,36 @@ import com.swent.assos.model.view.NewsViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) {
-
-  val eventViewModel: EventViewModel = hiltViewModel()
-  val events by eventViewModel.events.collectAsState()
+fun HomeItem(id: String, navigationActions: NavigationActions) {
 
   val viewModel: NewsViewModel = hiltViewModel()
   val allNews by viewModel.allNewsOfAllAssos.collectAsState()
 
-  var title: String
-  var description: String
+  val eventViewModel: EventViewModel = hiltViewModel()
+  val event by eventViewModel.event.collectAsState()
 
-  var news =
-      News(
-          id = "0000",
-          title = "NO TITLE",
-          description = "NO DESCRIPTION",
-          images = listOf(Uri.EMPTY),
-          createdAt = LocalDateTime.now(),
-          associationId = "",
-          eventIds = mutableListOf())
+  val title: String
+  val description: String
+  var assoId: String = ""
 
-  var event =
-      Event(
-          id = "0000",
-          title = "title",
-          description = "description",
-          associationId = "associationId")
+  val news =
+      allNews.find { it.id == id }
+          ?: News(
+              id = "0000",
+              title = "NO TITLE",
+              description = "NO DESCRIPTION",
+              images = listOf(Uri.EMPTY),
+              createdAt = LocalDateTime.now(),
+              associationId = "",
+              eventIds = mutableListOf("0000"))
 
-  if (isNews) {
-    LaunchedEffect(key1 = Unit) { viewModel.loadNews() }
-
-    news =
-        allNews.find { it.id == id }
-            ?: News(
-                id = "0000",
-                title = "NO TITLE",
-                description = "NO DESCRIPTION",
-                images = listOf(Uri.EMPTY),
-                createdAt = LocalDateTime.now(),
-                associationId = "",
-                eventIds = mutableListOf())
-    title = news.title
-    description = news.description
-  } else {
-
-    LaunchedEffect(key1 = Unit) { eventViewModel.getEvent(id) }
-
-    event =
-        events.find { it.id == id }
-            ?: Event(
-                id = "0000",
-                title = "title",
-                description = "description",
-                associationId = "associationId")
-
-    title = event.title
-    description = event.description
+  if (news.eventIds.isNotEmpty()) {
+    eventViewModel.getEvent(news.eventIds[0])
+    assoId = event.associationId
   }
+
+  title = news.title
+  description = news.description
 
   Box(
       modifier =
@@ -108,10 +78,10 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(
-                    if (isNews) {
+                    if (news.eventIds.isEmpty()) {
                       Destinations.NEWS_DETAILS.route + "/${news.id}"
                     } else {
-                      Destinations.EVENT_DETAILS.route + "/${event.id}" + "/${event.associationId}"
+                      Destinations.EVENT_DETAILS.route + "/${news.eventIds[0]}" + "/${assoId}"
                     })
               }
               .testTag("NewsListItem")) {
@@ -119,16 +89,9 @@ fun HomeItem(id: String, isNews: Boolean, navigationActions: NavigationActions) 
             modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
-              if (isNews && news.images.isNotEmpty()) {
+              if (news.images.isNotEmpty()) {
                 AsyncImage(
                     model = news.images[0],
-                    contentDescription = "news image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
-                )
-              } else if (!isNews && event.image != Uri.EMPTY) {
-                AsyncImage(
-                    model = event.image,
                     contentDescription = "news image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
