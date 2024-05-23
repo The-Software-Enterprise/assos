@@ -167,6 +167,9 @@ dependencies {
   // Si vous utilisez Kotlin coroutines pour le multithreading
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
+  // Generation QRCode
+  implementation("com.google.zxing:core:3.5.1")
+
   testImplementation("org.mockito:mockito-core:3.12.4")
 
   // Bar code scanning
