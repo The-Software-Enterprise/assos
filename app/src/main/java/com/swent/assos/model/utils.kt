@@ -158,6 +158,13 @@ fun serialize(news: News): Map<String, Any> {
       "eventIds" to news.eventIds)
 }
 
+fun serialize(applicant: Applicant): Map<String, Any> {
+  return mapOf(
+      "userId" to applicant.userId,
+      "status" to applicant.status,
+      "createdAt" to localDateTimeToTimestamp(applicant.createdAt))
+}
+
 fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,

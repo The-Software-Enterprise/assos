@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -74,6 +75,11 @@ fun Profile(navigationActions: NavigationActions) {
                   "Following Associations",
                   { navigationActions.navigateTo(Destinations.FOLLOWING) },
                   Icons.Default.Add)
+              BasicButtonWithIcon(
+                  buttonName = "Applications",
+                  callback = { navigationActions.navigateTo(Destinations.APPLICATIONS) },
+                  icon = Icons.Default.Inbox)
+
               BasicButtonWithIcon(
                   "Log Out",
                   { showLogOut = true },

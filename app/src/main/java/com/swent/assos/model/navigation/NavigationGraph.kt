@@ -22,6 +22,7 @@ import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 import com.swent.assos.ui.screens.manageAsso.StaffManagement
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
 import com.swent.assos.ui.screens.profile.Appearance
+import com.swent.assos.ui.screens.profile.Applications
 import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
@@ -122,6 +123,9 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
         composable(Destinations.MY_ASSOCIATIONS.route) {
           MyAssociations(navigationActions = navigationActions)
         }
+        composable(Destinations.APPLICATIONS.route) {
+          Applications(navigationActions = navigationActions)
+        }
         composable(Destinations.CREATE_TICKET.route + "/{eventId}") { backStackEntry ->
           CreateTicket(
               navigationActions = navigationActions,
@@ -149,5 +153,6 @@ enum class Destinations(val route: String) {
   APPLICATION_MANAGEMENT("ApplicationManagement"),
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
-  CREATE_TICKET("CreateTicket")
+  CREATE_TICKET("CreateTicket"),
+  APPLICATIONS("Applications")
 }
