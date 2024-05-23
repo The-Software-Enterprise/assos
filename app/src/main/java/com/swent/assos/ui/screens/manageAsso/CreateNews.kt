@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.manageAsso
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -67,6 +69,8 @@ fun CreateNews(
             }
 ) {
 
+  val context = LocalContext.current
+
   val news by viewModel.news.collectAsState()
 
   Scaffold(
@@ -88,7 +92,25 @@ fun CreateNews(
                                           news.images.isEmpty())
                                           0.5f
                                       else 1f))
-                          .clickable { viewModel.createNews(assoId, navigationActions) }
+                          .clickable {
+                            viewModel.createNews(
+                                assoId,
+                                onSuccess = {
+                                  navigationActions.goBack()
+                                  Toast.makeText(
+                                          context,
+                                          "The news has been successfully created!",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                },
+                                onError = {
+                                  Toast.makeText(
+                                          context,
+                                          "Unfortunately, the news could not be created. Please try again!",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                })
+                          }
                           .padding(vertical = 5.dp, horizontal = 10.dp)
                           .testTag("CreateButton")) {
                     Text(

@@ -120,7 +120,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) { dbService.joinAssociation(triple, userId, {}, {}) }
   }
 
-  fun applyToAssociation(userId: String) {
+  fun applyToAssociation(userId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedAssociation =
@@ -129,19 +129,28 @@ constructor(
       dbService.applyJoinAsso(
           assoId = _association.value.id,
           userId = userId,
-          onSuccess = { _applied.update { true } },
+          onSuccess = {
+            _applied.update { true }
+            successToast
+          },
           onError = {})
     }
   }
 
-  fun removeRequestToJoin(userId: String, assoId: String) {
+  fun removeRequestToJoin(userId: String, assoId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedAssociation =
                 DataCache.currentUser.value.appliedAssociation.filter { it != assoId })
     viewModelScope.launch(ioDispatcher) {
       dbService.removeJoinApplication(
-          assoId = assoId, userId = userId, onSuccess = { _applied.update { false } }, onError = {})
+          assoId = assoId,
+          userId = userId,
+          onSuccess = {
+            _applied.update { false }
+            successToast
+          },
+          onError = {})
     }
   }
 

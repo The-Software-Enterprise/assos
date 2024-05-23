@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
-import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +26,7 @@ constructor(
   private val _news = MutableStateFlow(News(id = generateUniqueID()))
   var news = _news.asStateFlow()
 
-  fun createNews(associationId: String, navigationActions: NavigationActions) {
+  fun createNews(associationId: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
     val news = _news.value.copy(associationId = associationId)
     if (news.title.isNotBlank() && news.description.isNotBlank()) {
       viewModelScope.launch(ioDispatcher) {
@@ -36,7 +35,7 @@ constructor(
             "news/${news.id}",
             { uris ->
               news.images = uris
-              dbService.createNews(news, { navigationActions.goBack() }, {})
+              dbService.createNews(news, onSuccess, onError)
             },
             {})
       }
