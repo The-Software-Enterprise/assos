@@ -64,8 +64,6 @@ class NewsTest : SuperTest() {
           }
           newsList { assertIsDisplayed() }
           composeTestRule.onNodeWithText(newsTitle).assertIsDisplayed()
-          // newsItemTitle { assertTextContains(newsTitle) }
-          // itemsDescription { assertTextContains(newsDescription) }
         }
       }
     }
