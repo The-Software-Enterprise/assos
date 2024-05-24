@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
@@ -27,11 +26,7 @@ import com.swent.assos.R
 @Composable
 fun BasicButtonWithIcon(buttonName: String, callback: () -> Unit, icon: ImageVector) {
   Row(
-      modifier =
-          Modifier
-              .height(56.dp)
-              .clickable { callback() }
-              .testTag(buttonName + "Button"),
+      modifier = Modifier.height(56.dp).clickable { callback() }.testTag(buttonName + "Button"),
       horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.Start),
       verticalAlignment = Alignment.CenterVertically) {
         Spacer(modifier = Modifier.width(16.dp))

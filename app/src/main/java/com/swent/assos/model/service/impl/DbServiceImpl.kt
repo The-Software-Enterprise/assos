@@ -129,9 +129,9 @@ constructor(
         }
   }
 
-    override suspend fun deleteEvent(eventId: String){
-        firestore.collection("events").document(eventId).delete().await()
-    }
+  override suspend fun deleteEvent(eventId: String) {
+    firestore.collection("events").document(eventId).delete().await()
+  }
 
   override suspend fun addTicketToUser(
       applicantId: String,

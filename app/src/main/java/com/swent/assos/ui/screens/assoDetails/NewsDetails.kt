@@ -174,6 +174,6 @@ fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
       title = { Text("DELETE") },
       text = { Text("Are you sure to delete $title ?") },
       confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
-        containerColor = MaterialTheme.colorScheme.background,
+      containerColor = MaterialTheme.colorScheme.background,
       dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }

@@ -8,7 +8,6 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
-import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,11 +47,9 @@ constructor(
     }
   }
 
-    fun deleteEvent(eventId: String) {
-        viewModelScope.launch(ioDispatcher) {
-        dbService.deleteEvent(eventId)
-        }
-    }
+  fun deleteEvent(eventId: String) {
+    viewModelScope.launch(ioDispatcher) { dbService.deleteEvent(eventId) }
+  }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
     val event = _event.value

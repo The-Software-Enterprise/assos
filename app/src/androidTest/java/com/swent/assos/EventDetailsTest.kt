@@ -14,7 +14,9 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
+import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.EventDetailsScreen
+import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -71,7 +73,7 @@ class EventDetailsTest : SuperTest() {
         .collection("applicants")
         .document("323232")
         .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
-      DataCache.currentUser.value = user
+    DataCache.currentUser.value = user
   }
 
   @Test
@@ -135,30 +137,38 @@ class EventDetailsTest : SuperTest() {
     }
   }
 
-    @Test
-    fun deleteEvent(){
-        composeTestRule.activity.setContent {
-            EventDetails(event2.id, navigationActions = mockNavActions, assoId = event2.associationId)
-        }
-        run {
-            ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-                step("Delete Event") {
-                    composeTestRule.waitUntil(10000) {
-                        composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
-                    }
-                    composeTestRule.onNodeWithTag("DeleteButton").performClick()
-                }
-                composeTestRule.waitUntil(10000) {
-                    composeTestRule.onNodeWithTag("No").isDisplayed()
-                }
-                step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
-                step("Delete Event") { composeTestRule.onNodeWithTag("DeleteButton").performClick() }
-                step("confirm deletion") { composeTestRule.onNodeWithText("Yes").performClick() }
-                step("check if we really delete the event") {
-                    verify { mockNavActions.goBack() }
-                    confirmVerified(mockNavActions)
-                }
-            }
-        }
+  @Test
+  fun deleteEvent() {
+    composeTestRule.activity.setContent {
+      EventDetails(event2.id, navigationActions = mockNavActions, assoId = event2.associationId)
     }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        step("Delete Event") {
+          composeTestRule.waitUntil(10000) {
+            composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
+          }
+          composeTestRule.onNodeWithTag("DeleteButton").performClick()
+        }
+        composeTestRule.waitUntil(10000) { composeTestRule.onNodeWithText("No").isDisplayed() }
+        step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
+        step("Delete Event") { composeTestRule.onNodeWithTag("DeleteButton").performClick() }
+        step("confirm deletion") { composeTestRule.onNodeWithText("Yes").performClick() }
+        step("check if we really delete the event") {
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
+        }
+      }
+    }
+    composeTestRule.activity.setContent {
+      AssoDetails(assoId = memberAssociationId, navigationActions = mockNavActions)
+    }
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("is event still there ?") {
+          composeTestRule.onNodeWithText(event2.title).assertDoesNotExist()
+        }
+      }
+    }
+  }
 }

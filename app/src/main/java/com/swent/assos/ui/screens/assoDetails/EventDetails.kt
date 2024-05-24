@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,13 +15,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -53,43 +52,43 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val profileViewModel: ProfileViewModel = hiltViewModel()
   val associations by profileViewModel.memberAssociations.collectAsState()
   val userId by assoViewModel.currentUser.collectAsState()
-    var conf by remember { mutableStateOf(false) }
+  var conf by remember { mutableStateOf(false) }
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
-      profileViewModel.updateUser()
+    profileViewModel.updateUser()
   }
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("EventDetails"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
         if (event.id != "") {
           when ((associations.map { it.id }.contains(assoId))) {
             true ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center) {
-                    DeleteButton { conf = true }
-                      if (event.isStaffingEnabled) {
+                Column {
+                  Row(
+                      modifier = Modifier.fillMaxWidth(),
+                      horizontalArrangement = Arrangement.Center) {
+                        if (event.isStaffingEnabled) {
+                          JoinUsButton(
+                              onClick = {
+                                navigationActions.navigateTo(
+                                    Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                              },
+                              text = "Staff List")
+                          Spacer(modifier = Modifier.width(10.dp))
+                        }
                         JoinUsButton(
                             onClick = {
                               navigationActions.navigateTo(
-                                  Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                                  Destinations.CREATE_TICKET.route + "/${eventId}")
                             },
-                            text = "Staff List")
-                        Spacer(modifier = Modifier.width(10.dp))
+                            text = "Create ticket")
                       }
-                      JoinUsButton(
-                          onClick = {
-                            navigationActions.navigateTo(
-                                Destinations.CREATE_TICKET.route + "/${eventId}")
-                          },
-                          text = "Create ticket")
-                    }
+                  DeleteButton { conf = true }
+                }
             false ->
                 if (event.isStaffingEnabled) {
                   val applied = eventViewModel.appliedStaff.collectAsState()
@@ -102,9 +101,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                               AssistChipDefaults.assistChipColors(
                                   containerColor = MaterialTheme.colorScheme.secondary),
                       border = null,
-                      modifier = Modifier
-                          .testTag("StaffButton")
-                          .padding(5.dp),
+                      modifier = Modifier.testTag("StaffButton").padding(5.dp),
                       onClick = {
                         if (applied.value) {
                           eventViewModel.removeRequestToStaff(event.id, userId.id)
@@ -135,14 +132,16 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-      if(conf){
-          ConfirmDialog(onDismiss = { conf = false }, onConfirm = {
-              conf = false
-              eventViewModel.deleteEvent(eventId)
-              navigationActions.goBack()
-          }, title = event.title)
-      }
-
+        if (conf) {
+          ConfirmDialog(
+              onDismiss = { conf = false },
+              onConfirm = {
+                conf = false
+                eventViewModel.deleteEvent(eventId)
+                navigationActions.goBack()
+              },
+              title = event.title)
+        }
         EventContent(
             viewModel = eventViewModel,
             paddingValues = paddingValues,
