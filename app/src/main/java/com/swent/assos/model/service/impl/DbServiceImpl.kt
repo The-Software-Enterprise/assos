@@ -380,20 +380,6 @@ constructor(
         .addOnFailureListener { onError(it.message ?: "Error") }
   }
 
-  override suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event> {
-    val query = firestore.collection("events").orderBy("startTime", Query.Direction.DESCENDING)
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(100).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(100).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
-    return snapshot.documents.map { deserializeEvent(it) }
-  }
-
   override suspend fun getNews(
       associationId: String,
       lastDocumentSnapshot: DocumentSnapshot?
@@ -555,35 +541,6 @@ constructor(
           }
         }
         .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
-  }
-
-  override suspend fun filterEventsBasedOnAssociations(
-      lastDocumentSnapshot: DocumentSnapshot?,
-      userId: String
-  ): List<Event> {
-    val query = firestore.collection("users").document(userId)
-    val snapshot = query.get().await() ?: return emptyList()
-    val followedAssociations: List<String> =
-        if (snapshot.get("following") is List<*>) {
-          (snapshot.get("following") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
-        }
-    val associationsTheUserBelongsTo: List<String> =
-        if (snapshot.get("associations") is List<*>) {
-          (snapshot.get("associations") as List<*>).filterIsInstance<String>().toMutableList()
-        } else {
-          emptyList()
-        }
-    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
-      return getAllEvents(lastDocumentSnapshot)
-    }
-    val news =
-        getAllEvents(lastDocumentSnapshot).filter { event ->
-          event.associationId in followedAssociations ||
-              event.associationId in associationsTheUserBelongsTo
-        }
-    return news
   }
 
   override suspend fun updateBanner(associationId: String, banner: Uri) {

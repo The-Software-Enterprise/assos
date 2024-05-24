@@ -94,31 +94,6 @@ constructor(
     }
   }
 
-  fun getEventsForCurrentUser() {
-    viewModelScope.launch(ioDispatcher) {
-      if (DataCache.currentUser.value.id.isNotEmpty()) {
-        dbService.filterEventsBasedOnAssociations(null, DataCache.currentUser.value.id).let {
-          _events.value = it
-          _loadingDisplay.value = false
-        }
-      } else {
-        dbService.getAllEvents(null).let {
-          _events.value = it
-          _loadingDisplay.value = false
-        }
-      }
-    }
-  }
-
-  fun loadAllEvents() {
-    viewModelScope.launch(ioDispatcher) {
-      dbService.getAllEvents(null).let {
-        _eventsOfAllAssociations.value = it
-        _loadingDisplay.value = false
-      }
-    }
-  }
-
   fun setTitle(title: String) {
     _event.value = _event.value.copy(title = title)
   }

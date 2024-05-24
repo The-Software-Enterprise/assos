@@ -154,11 +154,4 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
-
-  suspend fun filterEventsBasedOnAssociations(
-      lastDocumentSnapshot: DocumentSnapshot?,
-      userId: String
-  ): List<Event>
-
-  suspend fun getAllEvents(lastDocumentSnapshot: DocumentSnapshot?): List<Event>
 }
