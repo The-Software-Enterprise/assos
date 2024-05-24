@@ -56,9 +56,6 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
         composable(Destinations.HOME.route) {
           HomeNavigation(navigationActions = navigationActions)
         }
-        composable(Destinations.MY_TICKETS.route) {
-          MyTickets(navigationActions = navigationActions)
-        }
         composable(Destinations.TICKET_DETAILS.route + "/{eventId}") { backStackEntry ->
           TicketDetails(
               eventId = backStackEntry.arguments?.getString("eventId").toString(),
@@ -141,7 +138,6 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
 enum class Destinations(val route: String) {
   LOGIN("Login"),
   HOME("Home"),
-  MY_TICKETS("MyTickets"),
   ASSO_DETAILS("AssoDetails"),
   SIGN_UP("SignUp"),
   CREATE_NEWS("CreateNews"),
