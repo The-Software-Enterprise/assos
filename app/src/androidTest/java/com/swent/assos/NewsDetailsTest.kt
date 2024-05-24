@@ -13,7 +13,7 @@ import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.NewsDetailsScreen
-import com.swent.assos.ui.screens.Explorer
+import com.swent.assos.screens.NewsScreen
 import com.swent.assos.ui.screens.News
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -123,11 +123,12 @@ class NewsDetailsTest : SuperTest() {
     }
 
     composeTestRule.activity.setContent {
-      Explorer(navigationActions = mockNavActions)
+      News(navigationActions = mockNavActions)
       run {
-        step("Go check Home") { composeTestRule.onNodeWithText("Home").performClick() }
-        step("Check if element is still there") {
-          composeTestRule.onNodeWithText(news.title).assertDoesNotExist()
+        ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
+          step("Check if element is still there") {
+            composeTestRule.onNodeWithText(news.title).assertDoesNotExist()
+          }
         }
       }
     }
