@@ -97,6 +97,7 @@ constructor(
 
   fun createTicket(
       email: String,
+      eventId: String = _event.value.id,
       onSuccess: () -> Unit,
       onFailure: () -> Unit,
       status: ParticipationStatus
@@ -105,7 +106,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val user = dbService.getUserByEmail(email, onSuccess = onSuccess, onFailure = onFailure)
       if (user.id != "") {
-        dbService.addTicketToUser(user.id, _event.value.id, status)
+        dbService.addTicketToUser(user.id, eventId, status)
       } else {
         onFailure()
       }
