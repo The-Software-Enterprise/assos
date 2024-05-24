@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens.assoDetails
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
@@ -53,6 +55,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val associations by profileViewModel.memberAssociations.collectAsState()
   val userId by assoViewModel.currentUser.collectAsState()
   var conf by remember { mutableStateOf(false) }
+
+  val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -104,9 +108,23 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                       modifier = Modifier.testTag("StaffButton").padding(5.dp),
                       onClick = {
                         if (applied.value) {
-                          eventViewModel.removeRequestToStaff(event.id, userId.id)
+                          eventViewModel.removeRequestToStaff(
+                              event.id,
+                              userId.id,
+                              Toast.makeText(
+                                      context,
+                                      "You have successfully removed your request to staff at the event",
+                                      Toast.LENGTH_SHORT)
+                                  .show())
                         } else {
-                          eventViewModel.applyStaffing(event.id, userId.id)
+                          eventViewModel.applyStaffing(
+                              event.id,
+                              userId.id,
+                              Toast.makeText(
+                                      context,
+                                      "You have successfully applied to staff at the event",
+                                      Toast.LENGTH_SHORT)
+                                  .show())
                         }
                       },
                       label = {

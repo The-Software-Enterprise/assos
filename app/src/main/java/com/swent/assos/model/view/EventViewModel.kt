@@ -99,6 +99,7 @@ constructor(
 
   fun createTicket(
       email: String,
+      eventId: String = _event.value.id,
       onSuccess: () -> Unit,
       onFailure: () -> Unit,
       status: ParticipationStatus
@@ -107,14 +108,14 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val user = dbService.getUserByEmail(email, onSuccess = onSuccess, onFailure = onFailure)
       if (user.id != "") {
-        dbService.addTicketToUser(user.id, _event.value.id, status)
+        dbService.addTicketToUser(user.id, eventId, status)
       } else {
         onFailure()
       }
     }
   }
 
-  fun applyStaffing(eventId: String, userId: String) {
+  fun applyStaffing(eventId: String, userId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedStaffing = DataCache.currentUser.value.appliedStaffing + _event.value.id)
@@ -122,12 +123,15 @@ constructor(
       dbService.applyStaffing(
           eventId = _event.value.id,
           userId = userId,
-          onSuccess = { _appliedStaff.update { true } },
+          onSuccess = {
+            _appliedStaff.update { true }
+            successToast
+          },
           onError = {})
     }
   }
 
-  fun removeRequestToStaff(eventId: String, userId: String) {
+  fun removeRequestToStaff(eventId: String, userId: String, successToast: Unit) {
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(
             appliedStaffing = DataCache.currentUser.value.appliedStaffing.filter { it != eventId })
@@ -135,7 +139,10 @@ constructor(
       dbService.removeStaffingApplication(
           eventId = eventId,
           userId = userId,
-          onSuccess = { _appliedStaff.update { false } },
+          onSuccess = {
+            _appliedStaff.update { false }
+            successToast
+          },
           onError = {})
     }
   }
