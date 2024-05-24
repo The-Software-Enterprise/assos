@@ -157,7 +157,7 @@ fun CameraScreen(navigationActions: NavigationActions) {
   val lifecycleOwner = LocalLifecycleOwner.current
   val imageCapture = remember { ImageCapture.Builder().build() }
   val eventViewModel: EventViewModel = hiltViewModel()
-  val ticketViewModel: TicketViewModel = hiltViewModel()
+  var scanSucceeded = false
 
   val cameraPermissionLauncher =
       rememberLauncherForActivityResult(
@@ -187,22 +187,26 @@ fun CameraScreen(navigationActions: NavigationActions) {
             when (state) {
               is ScannerViewState.Success -> {
                 Log.d("CameraPreview", "Barcode scanned: $result")
-                eventViewModel.createTicket(
-                    email = DataCache.currentUser.value.email,
-                    eventId = result,
-                    onSuccess = {
-                      CoroutineScope(Dispatchers.Main).launch {
-                        Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()
-                        navigationActions.goBack()
-                      }
-                    },
-                    onFailure = {
-                      CoroutineScope(Dispatchers.Main).launch {
-                        Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()
-                        navigationActions.goBack()
-                      }
-                    },
-                    status = ParticipationStatus.Participant)
+                if (!scanSucceeded) {
+                  eventViewModel.createTicket(
+                      email = DataCache.currentUser.value.email,
+                      eventId = result,
+                      onSuccess = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                          Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()
+                          navigationActions.goBack()
+                        }
+                      },
+                      onFailure = {
+                        CoroutineScope(Dispatchers.Main).launch {
+                          Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT)
+                              .show()
+                          navigationActions.goBack()
+                        }
+                      },
+                      status = ParticipationStatus.Participant)
+                }
+                scanSucceeded = true
               }
               is ScannerViewState.Error -> {
                 Toast.makeText(context, "Barcode scanning failed, try again", Toast.LENGTH_SHORT)
