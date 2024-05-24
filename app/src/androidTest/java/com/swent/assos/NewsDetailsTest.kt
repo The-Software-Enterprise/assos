@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -91,7 +92,10 @@ class NewsDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Check the News details is correctly displayed") {
-          descriptionText { assertIsDisplayed() }
+          composeTestRule.waitUntil(10000) {
+            composeTestRule.onNodeWithText(news.description).isDisplayed()
+          }
+          composeTestRule.onNodeWithText(news.description).assertIsDisplayed()
         }
       }
     }
