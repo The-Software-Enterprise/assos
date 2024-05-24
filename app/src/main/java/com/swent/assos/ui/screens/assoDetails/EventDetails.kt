@@ -67,19 +67,13 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
           .testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-          if(conf){
-              ConfirmDialog(onDismiss = { conf = false }, onConfirm = {
-                  conf = false
-                    eventViewModel.deleteEvent(eventId)
-                    navigationActions.goBack()
-                                                                      }, title = event.title)
-          }
         if (event.id != "") {
           when ((associations.map { it.id }.contains(assoId))) {
             true ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center) {
+                    DeleteButton { conf = true }
                       if (event.isStaffingEnabled) {
                         JoinUsButton(
                             onClick = {
@@ -141,20 +135,18 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
+      if(conf){
+          ConfirmDialog(onDismiss = { conf = false }, onConfirm = {
+              conf = false
+              eventViewModel.deleteEvent(eventId)
+              navigationActions.goBack()
+          }, title = event.title)
+      }
+
         EventContent(
             viewModel = eventViewModel,
             paddingValues = paddingValues,
             isMember = (associations.map { it.id }.contains(assoId)),
             eventId = eventId)
-
-        Row(
-            verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.Start,
-        ) {
-          // if member of the association allow to delete
-            if (associations.map{ it.id }.contains(assoId)) {
-            DeleteButton {conf = true}
-            }
-        }
       }
 }

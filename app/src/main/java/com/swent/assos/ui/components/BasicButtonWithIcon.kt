@@ -28,7 +28,7 @@ import com.swent.assos.R
 fun BasicButtonWithIcon(buttonName: String, callback: () -> Unit, icon: ImageVector) {
   Row(
       modifier =
-          Modifier.fillMaxWidth()
+          Modifier
               .height(56.dp)
               .clickable { callback() }
               .testTag(buttonName + "Button"),

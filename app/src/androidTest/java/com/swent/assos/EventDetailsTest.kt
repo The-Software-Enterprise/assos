@@ -148,6 +148,9 @@ class EventDetailsTest : SuperTest() {
                     }
                     composeTestRule.onNodeWithTag("DeleteButton").performClick()
                 }
+                composeTestRule.waitUntil(10000) {
+                    composeTestRule.onNodeWithTag("No").isDisplayed()
+                }
                 step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
                 step("Delete Event") { composeTestRule.onNodeWithTag("DeleteButton").performClick() }
                 step("confirm deletion") { composeTestRule.onNodeWithText("Yes").performClick() }
