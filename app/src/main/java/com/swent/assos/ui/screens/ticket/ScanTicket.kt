@@ -43,15 +43,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.ParticipationStatus
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -153,6 +158,7 @@ fun CameraScreen(navigationActions: NavigationActions) {
   val lifecycleOwner = LocalLifecycleOwner.current
   val imageCapture = remember { ImageCapture.Builder().build() }
   val eventViewModel: EventViewModel = hiltViewModel()
+  val ticketViewModel: TicketViewModel = hiltViewModel()
 
   val cameraPermissionLauncher =
       rememberLauncherForActivityResult(
@@ -183,13 +189,20 @@ fun CameraScreen(navigationActions: NavigationActions) {
               is ScannerViewState.Success -> {
                 Log.d("CameraPreview", "Barcode scanned: $result")
                 eventViewModel.createTicket(
-                  email = DataCache.currentUser.value.email,
-                  eventId = result,
-                  onSuccess = { /*Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()*/ },
-                  onFailure = { /*Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()*/ },
-                  status = ParticipationStatus.Participant
-                )
-                navigationActions.goBack()
+                    email = DataCache.currentUser.value.email,
+                    eventId = result,
+                    onSuccess = {
+                      CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()
+                        navigationActions.navigateTo(Destinations.MY_TICKETS)
+                      }
+                    },
+                    onFailure = {
+                      CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()
+                      }
+                    },
+                    status = ParticipationStatus.Participant)
               }
               is ScannerViewState.Error -> {
                 Toast.makeText(context, "Barcode scanning failed, try again", Toast.LENGTH_SHORT)
