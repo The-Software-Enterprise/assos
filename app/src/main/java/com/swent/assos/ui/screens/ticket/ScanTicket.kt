@@ -47,7 +47,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
 import com.swent.assos.model.view.EventViewModel
-import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import java.io.File
 import java.text.SimpleDateFormat
