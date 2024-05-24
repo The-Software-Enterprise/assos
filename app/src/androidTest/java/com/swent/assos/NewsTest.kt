@@ -1,6 +1,9 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
@@ -51,13 +54,16 @@ class NewsTest : SuperTest() {
       }
     }
 
-    composeTestRule.activity.setContent { News(mockNavActions) }
+    composeTestRule.activity.setContent { News(navigationActions = mockNavActions) }
 
     run {
       ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
         step("Check if the news is displayed") {
+          composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithText(newsTitle).isDisplayed()
+          }
           newsList { assertIsDisplayed() }
-          newsListItem { assertIsDisplayed() }
+          composeTestRule.onNodeWithText(newsTitle).assertIsDisplayed()
           // newsItemTitle { assertTextContains(newsTitle) }
           // itemsDescription { assertTextContains(newsDescription) }
         }
