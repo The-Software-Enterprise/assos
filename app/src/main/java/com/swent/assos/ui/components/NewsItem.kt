@@ -1,7 +1,6 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -16,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -38,10 +38,8 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
           Modifier.semantics { testTagsAsResourceId = true }
               .testTag("NewsItem")
               .padding(0.dp)
-              .border(
-                  width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.surfaceVariant,
-                  shape = RoundedCornerShape(12.dp))) {
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {

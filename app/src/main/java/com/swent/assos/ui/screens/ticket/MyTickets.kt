@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -111,12 +110,8 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       modifier =
           Modifier.testTag("TicketItem")
               .padding(16.dp)
-            .shadow(
-              elevation = 6.dp,
-              shape = RoundedCornerShape(12.dp))
-            .shadow(
-              elevation = 2.dp,
-              shape = RoundedCornerShape(12.dp))) {
+              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
+              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
@@ -140,7 +135,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text = event.startTime?.let { dateFormatter.format(it) } ?: "",
+              text = event.startTime.let { dateFormatter.format(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
