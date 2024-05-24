@@ -111,8 +111,12 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       modifier =
           Modifier.testTag("TicketItem")
               .padding(16.dp)
-            .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-            .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
+            .shadow(
+              elevation = 6.dp,
+              shape = RoundedCornerShape(12.dp))
+            .shadow(
+              elevation = 2.dp,
+              shape = RoundedCornerShape(12.dp))) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
