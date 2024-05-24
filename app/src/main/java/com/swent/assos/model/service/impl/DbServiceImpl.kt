@@ -263,6 +263,32 @@ constructor(
     return applicants
   }
 
+  override suspend fun getApplicantByAssoIdAndUserId(assoId: String, userId: String): Applicant {
+    val querySnapshot =
+        firestore
+            .collection("associations/$assoId/applicants")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+    if (querySnapshot.isEmpty) {
+      return Applicant()
+    }
+    return deserializeApplicant(querySnapshot.documents[0])
+  }
+
+  override suspend fun getApplicantByEventIdAndUserId(eventId: String, userId: String): Applicant {
+    val querySnapshot =
+        firestore
+            .collection("events/$eventId/applicants")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+    if (querySnapshot.isEmpty) {
+      return Applicant()
+    }
+    return deserializeApplicant(querySnapshot.documents[0])
+  }
+
   override suspend fun acceptApplicant(applicantId: String, assoId: String) {
     firestore.document("associations/$assoId/applicants/$applicantId").update("status", "accepted")
   }

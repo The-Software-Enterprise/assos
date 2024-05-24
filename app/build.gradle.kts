@@ -85,6 +85,8 @@ dependencies {
   implementation("androidx.compose.ui:ui-tooling-preview")
   implementation("androidx.compose.material3:material3")
   implementation("com.google.firebase:firebase-functions-ktx:20.4.0")
+  implementation("com.google.mlkit:vision-common:17.3.0")
+  implementation("com.google.android.gms:play-services-mlkit-barcode-scanning:18.3.0")
   testImplementation("junit:junit:4.13.2")
   androidTestImplementation("androidx.test.ext:junit:1.1.5")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -169,6 +171,13 @@ dependencies {
   implementation("com.google.zxing:core:3.5.1")
 
   testImplementation("org.mockito:mockito-core:3.12.4")
+
+  // Bar code scanning
+  implementation("com.google.mlkit:barcode-scanning:17.2.0")
+  // Mock for instrumented tests
+  androidTestImplementation("org.mockito:mockito-core:5.7.0")
+  androidTestImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+  androidTestImplementation("org.powermock:powermock-module-junit4:2.0.9")
 }
 
 tasks.register("jacocoTestReport", JacocoReport::class) {

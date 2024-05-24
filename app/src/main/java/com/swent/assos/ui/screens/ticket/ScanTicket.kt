@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
@@ -38,13 +39,24 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
+import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.ParticipationStatus
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.qr_code.ScannerAnalyzer
+import com.swent.assos.model.qr_code.ScannerViewState
+import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.Executors
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -57,13 +69,17 @@ fun ScanTicket(navigationActions: NavigationActions) {
             modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketScanDetails"),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-          CameraScreen()
+          CameraScreen(navigationActions)
         }
       }
 }
 
 @Composable
-fun CameraPreview(lifecycleOwner: LifecycleOwner, imageCapture: ImageCapture) {
+fun CameraPreview(
+    lifecycleOwner: LifecycleOwner,
+    imageCapture: ImageCapture,
+    onResult: (state: ScannerViewState, result: String) -> Unit
+) {
   val context = LocalContext.current
   val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
   val executor = remember { Executors.newSingleThreadExecutor() }
@@ -75,7 +91,6 @@ fun CameraPreview(lifecycleOwner: LifecycleOwner, imageCapture: ImageCapture) {
             PreviewView(ctx).apply {
               implementationMode = PreviewView.ImplementationMode.COMPATIBLE
             }
-
         val preview =
             Preview.Builder().build().also { it.setSurfaceProvider(previewView.surfaceProvider) }
 
@@ -83,12 +98,17 @@ fun CameraPreview(lifecycleOwner: LifecycleOwner, imageCapture: ImageCapture) {
             {
               val cameraProvider = cameraProviderFuture.get()
               val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+              // setup analyzer
+              val imageAnalysis = ImageAnalysis.Builder().build()
+              imageAnalysis.setAnalyzer(
+                  ContextCompat.getMainExecutor(ctx),
+                  ScannerAnalyzer { state, barcode -> onResult(state, barcode) })
 
               cameraProvider.unbindAll()
 
               try {
                 cameraProvider.bindToLifecycle(
-                    lifecycleOwner, cameraSelector, preview, imageCapture)
+                    lifecycleOwner, cameraSelector, preview, imageAnalysis)
               } catch (e: Exception) {
                 Log.e("CameraPreview", "Binding failed", e)
                 print("Binding failed")
@@ -133,10 +153,12 @@ fun CameraCaptureButton(imageCapture: ImageCapture, localContext: Context) {
 }
 
 @Composable
-fun CameraScreen() {
+fun CameraScreen(navigationActions: NavigationActions) {
   val context = LocalContext.current
   val lifecycleOwner = LocalLifecycleOwner.current
   val imageCapture = remember { ImageCapture.Builder().build() }
+  val eventViewModel: EventViewModel = hiltViewModel()
+  val ticketViewModel: TicketViewModel = hiltViewModel()
 
   val cameraPermissionLauncher =
       rememberLauncherForActivityResult(
@@ -149,15 +171,45 @@ fun CameraScreen() {
             }
           })
 
-  LaunchedEffect(key1 = true) { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) }
+  LaunchedEffect(key1 = Unit) { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) }
 
-  val hasCameraPermission =
-      ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
-          PackageManager.PERMISSION_GRANTED
+  val hasCameraPermission by remember {
+    mutableStateOf(
+        ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED)
+  }
 
   if (hasCameraPermission) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-      CameraPreview(lifecycleOwner = lifecycleOwner, imageCapture = imageCapture)
+      CameraPreview(
+          lifecycleOwner = lifecycleOwner,
+          imageCapture = imageCapture,
+          onResult = { state, result ->
+            when (state) {
+              is ScannerViewState.Success -> {
+                Log.d("CameraPreview", "Barcode scanned: $result")
+                eventViewModel.createTicket(
+                    email = DataCache.currentUser.value.email,
+                    eventId = result,
+                    onSuccess = {
+                      CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()
+                        navigationActions.navigateTo(Destinations.MY_TICKETS)
+                      }
+                    },
+                    onFailure = {
+                      CoroutineScope(Dispatchers.Main).launch {
+                        Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()
+                      }
+                    },
+                    status = ParticipationStatus.Participant)
+              }
+              is ScannerViewState.Error -> {
+                Toast.makeText(context, "Barcode scanning failed, try again", Toast.LENGTH_SHORT)
+                    .show()
+              }
+            }
+          })
       CameraCaptureButton(imageCapture = imageCapture, localContext = context)
     }
   }
