@@ -13,7 +13,6 @@ import com.swent.assos.model.data.Event
 import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.serialize
-import com.swent.assos.model.service.impl.AuthServiceImpl
 import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.model.service.impl.StorageServiceImpl
 import com.swent.assos.model.view.EventViewModel
@@ -52,7 +51,6 @@ class CreateEventTest : SuperTest() {
         EventViewModel(
             DbServiceImpl(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()),
             StorageServiceImpl(FirebaseStorage.getInstance()),
-            AuthServiceImpl(FirebaseAuth.getInstance()),
             Dispatchers.IO)
     composeTestRule.activity.setContent {
       CreateEvent(assoId = assoId, navigationActions = mockNavActions, eventViewModel)

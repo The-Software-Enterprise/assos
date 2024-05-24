@@ -161,7 +161,6 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
                     }
                   }
             }
-
             Spacer(modifier = Modifier.height(20.dp))
           }
         }
@@ -172,8 +171,9 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
   AlertDialog(
       onDismissRequest = onDismiss,
-      title = { Text("DELETE?") },
-      text = { Text("Are you sure to delete news: $title ?") },
+      title = { Text("DELETE") },
+      text = { Text("Are you sure to delete $title ?") },
       confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
+      containerColor = MaterialTheme.colorScheme.background,
       dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }

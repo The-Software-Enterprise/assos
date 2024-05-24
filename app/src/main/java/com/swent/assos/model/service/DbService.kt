@@ -94,6 +94,8 @@ interface DbService {
 
   suspend fun getEventFromId(eventId: String): Event
 
+  suspend fun deleteEvent(eventId: String)
+
   // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
       associationId: String,
