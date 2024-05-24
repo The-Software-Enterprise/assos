@@ -43,7 +43,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LifecycleOwner
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.ParticipationStatus
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
@@ -194,12 +193,13 @@ fun CameraScreen(navigationActions: NavigationActions) {
                     onSuccess = {
                       CoroutineScope(Dispatchers.Main).launch {
                         Toast.makeText(context, "Ticket created", Toast.LENGTH_SHORT).show()
-                        navigationActions.navigateTo(Destinations.MY_TICKETS)
+                        navigationActions.goBack()
                       }
                     },
                     onFailure = {
                       CoroutineScope(Dispatchers.Main).launch {
                         Toast.makeText(context, "Ticket creation failed", Toast.LENGTH_SHORT).show()
+                        navigationActions.goBack()
                       }
                     },
                     status = ParticipationStatus.Participant)

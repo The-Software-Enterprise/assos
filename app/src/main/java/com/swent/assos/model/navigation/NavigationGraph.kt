@@ -28,7 +28,6 @@ import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
 import com.swent.assos.ui.screens.profile.Settings
 import com.swent.assos.ui.screens.ticket.CreateTicket
-import com.swent.assos.ui.screens.ticket.MyTickets
 import com.swent.assos.ui.screens.ticket.ScanTicket
 import com.swent.assos.ui.screens.ticket.TicketDetails
 
