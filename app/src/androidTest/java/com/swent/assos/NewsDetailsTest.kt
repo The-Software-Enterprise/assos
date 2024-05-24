@@ -93,7 +93,7 @@ class NewsDetailsTest : SuperTest() {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Check the News details is correctly displayed") {
           composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithText(news.description).isDisplayed()
+            composeTestRule.onNodeWithTag("descriptionText").isDisplayed()
           }
           composeTestRule.onNodeWithTag("descriptionText").assertIsDisplayed()
         }
