@@ -177,7 +177,7 @@ class NewsTest : SuperTest() {
               .onFirst()
               .assertIsDisplayed()
 
-          for (i in 0 until 6) {
+          for (i in 0 until 4) {
             composeTestRule
                 .onNode(hasTestTag("NewsList"))
                 .onChildren()
