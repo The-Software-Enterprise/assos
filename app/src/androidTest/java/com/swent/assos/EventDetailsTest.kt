@@ -89,10 +89,10 @@ class EventDetailsTest : SuperTest() {
         }
       }
     }
-  }
+    // }
 
-  @Test
-  fun unApplyStaffIsDisplayed() {
+    // @Test
+    // fun unApplyStaffIsDisplayed() {
 
     composeTestRule.activity.setContent {
       EventDetails(event3.id, navigationActions = mockNavActions, assoId = event3.associationId)

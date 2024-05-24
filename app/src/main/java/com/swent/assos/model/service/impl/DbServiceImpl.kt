@@ -332,9 +332,9 @@ constructor(
     val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
+          query.limit(50).get().await()
         } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+          query.startAfter(lastDocumentSnapshot).limit(50).get().await()
         }
     if (snapshot.isEmpty) {
       return emptyList()

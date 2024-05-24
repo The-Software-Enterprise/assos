@@ -44,17 +44,22 @@ constructor(
   private var _appliedStaff = MutableStateFlow(false)
   val appliedStaff = _appliedStaff.asStateFlow()
 
-  init {
+  /*init {
+
+    _appliedStaff.value.
     getEventsForCurrentUser()
     loadAllEvents()
-  }
+  }*/
 
   fun clear() {
     _event.value = Event(id = "CLEARED")
   }
 
   fun getEvent(eventId: String) {
-    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
+    viewModelScope.launch(ioDispatcher) {
+      _event.value = dbService.getEventById(eventId)
+      _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
+    }
   }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
