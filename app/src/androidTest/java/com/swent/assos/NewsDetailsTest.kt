@@ -95,7 +95,7 @@ class NewsDetailsTest : SuperTest() {
           composeTestRule.waitUntil(10000) {
             composeTestRule.onNodeWithText(news.description).isDisplayed()
           }
-          composeTestRule.onNodeWithText(news.description).assertIsDisplayed()
+          composeTestRule.onNodeWithTag("descriptionText").assertIsDisplayed()
         }
       }
     }
