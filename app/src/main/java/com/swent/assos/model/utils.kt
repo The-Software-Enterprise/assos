@@ -143,14 +143,14 @@ fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-fun serialize(news: News): Map<String, Any> {
+fun serialize(news: News): Map<String, Any?> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,
       "createdAt" to localDateTimeToTimestamp(news.createdAt),
       "associationId" to news.associationId,
       "images" to news.images,
-      "eventIds" to news.eventIds)
+      "eventId" to news.eventId)
 }
 
 fun serialize(applicant: Applicant): Map<String, Any> {
@@ -173,12 +173,7 @@ fun deserializeNews(doc: DocumentSnapshot): News {
           } else {
             listOf()
           },
-      eventIds =
-          if (doc["eventIds"] is List<*>) {
-            (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
-          } else {
-            mutableListOf()
-          },
+      eventId = doc.getString("eventId") ?: "",
       documentSnapshot = doc)
 }
 
