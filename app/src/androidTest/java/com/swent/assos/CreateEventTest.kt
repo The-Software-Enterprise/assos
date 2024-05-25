@@ -50,7 +50,10 @@ class CreateEventTest : SuperTest() {
     super.setup()
     eventViewModel =
         EventViewModel(
-            DbServiceImpl(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()),
+            DbServiceImpl(
+                FirebaseFirestore.getInstance(),
+                FirebaseAuth.getInstance(),
+                composeTestRule.activity),
             StorageServiceImpl(FirebaseStorage.getInstance()),
             AuthServiceImpl(FirebaseAuth.getInstance()),
             Dispatchers.IO)
