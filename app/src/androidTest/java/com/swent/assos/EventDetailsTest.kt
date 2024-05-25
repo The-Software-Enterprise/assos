@@ -6,8 +6,8 @@ import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
@@ -29,11 +29,14 @@ class EventDetailsTest : SuperTest() {
   private val event1 =
       Event("123456", "description", assoID, Uri.EMPTY, "assoId", isStaffingEnabled = true)
 
+  private val event3 =
+      Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
+
   private val profileId = "dxpZJlPsqzWAmBI47qtx3jvGMHX2"
   private val firstName = "Antoine"
   private val lastName = "Marchand"
 
-  private val memberAssociation = Association("1GysfTi14xSiW4Te9fUH")
+  private val memberAssociationId = "1GysfTi14xSiW4Te9fUH"
 
   val user =
       User(
@@ -41,42 +44,68 @@ class EventDetailsTest : SuperTest() {
           firstName = firstName,
           lastName = lastName,
           email = "antoine.marchand@epfl.ch",
-          associations = listOf(Triple(memberAssociation.id, "Chef de projet", 1)),
+          associations = listOf(Triple(memberAssociationId, "Chef de projet", 1)),
           sciper = "330249",
-          semester = "GM-BA6")
+          semester = "GM-BA6",
+          appliedStaffing = listOf(event3.id))
 
   private val event2 =
       Event(
           "123457",
           "title",
-          memberAssociation.id,
+          memberAssociationId,
           Uri.EMPTY,
           "description",
           isStaffingEnabled = true)
 
   override fun setup() {
     DataCache.currentUser.value = user
+    FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
+    FirebaseFirestore.getInstance().collection("events").document(event3.id).set(serialize(event2))
+    FirebaseFirestore.getInstance()
+        .collection("events")
+        .document(event3.id)
+        .collection("applicants")
+        .document("323232")
+        .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
   }
 
   @Test
-  fun testEventDetails() {
+  fun staffIsDisplayed() {
+
     composeTestRule.activity.setContent {
-      EventDetails(eventId = event1.id, assoId = assoID, navigationActions = mockNavActions)
+      EventDetails(event1.id, navigationActions = mockNavActions, assoId = event1.associationId)
     }
 
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
-        step("I want to join") {
-          composeTestRule.waitUntil { composeTestRule.onNodeWithText("Become Staff").isDisplayed() }
-          composeTestRule.onNodeWithText("Become Staff").performClick()
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+          composeTestRule.onNodeWithText("Apply for staffing").isDisplayed()
         }
-        step("I changed my mind") { composeTestRule.onNodeWithText("No").performClick() }
-        step("I want to join again") {
-          composeTestRule.onNodeWithText("Become Staff").performClick()
+        step("I want to staff") {
+          composeTestRule.onNodeWithText("Apply for staffing").performClick()
         }
-        step("Confirm") { composeTestRule.onNodeWithText("Yes").performClick() }
+      }
+    }
+  }
+
+  @Test
+  fun unApplyStaffIsDisplayed() {
+
+    composeTestRule.activity.setContent {
+      EventDetails(event3.id, navigationActions = mockNavActions, assoId = event3.associationId)
+    }
+
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+          composeTestRule.onNodeWithText("Remove staff application").isDisplayed()
+        }
+        step("I want to staff") {
+          composeTestRule.onNodeWithText("Remove staff application").performClick()
+        }
       }
     }
   }
@@ -85,7 +114,7 @@ class EventDetailsTest : SuperTest() {
   fun testCreateTicketButton() {
     composeTestRule.activity.setContent {
       EventDetails(
-          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociation.id)
+          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociationId)
     }
 
     run {

@@ -3,6 +3,7 @@ package com.swent.assos.model.view
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
@@ -15,6 +16,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -33,12 +35,18 @@ constructor(
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
+  private var _appliedStaff = MutableStateFlow(false)
+  val appliedStaff = _appliedStaff.asStateFlow()
+
   fun clear() {
     _event.value = Event(id = "CLEARED")
   }
 
   fun getEvent(eventId: String) {
-    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
+    viewModelScope.launch(ioDispatcher) {
+      _event.value = dbService.getEventById(eventId)
+      _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
+    }
   }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
@@ -89,6 +97,7 @@ constructor(
 
   fun createTicket(
       email: String,
+      eventId: String = _event.value.id,
       onSuccess: () -> Unit,
       onFailure: () -> Unit,
       status: ParticipationStatus
@@ -97,17 +106,42 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val user = dbService.getUserByEmail(email, onSuccess = onSuccess, onFailure = onFailure)
       if (user.id != "") {
-        dbService.addTicketToUser(user.id, _event.value.id, status)
+        dbService.addTicketToUser(user.id, eventId, status)
       } else {
         onFailure()
       }
     }
   }
 
-  fun applyStaffing(id: String, onSuccess: () -> Unit) {
+  fun applyStaffing(eventId: String, userId: String, successToast: Unit) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedStaffing = DataCache.currentUser.value.appliedStaffing + _event.value.id)
     viewModelScope.launch(ioDispatcher) {
       dbService.applyStaffing(
-          eventId = _event.value.id, userId = id, onSuccess = onSuccess, onError = {})
+          eventId = _event.value.id,
+          userId = userId,
+          onSuccess = {
+            _appliedStaff.update { true }
+            successToast
+          },
+          onError = {})
+    }
+  }
+
+  fun removeRequestToStaff(eventId: String, userId: String, successToast: Unit) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            appliedStaffing = DataCache.currentUser.value.appliedStaffing.filter { it != eventId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.removeStaffingApplication(
+          eventId = eventId,
+          userId = userId,
+          onSuccess = {
+            _appliedStaff.update { false }
+            successToast
+          },
+          onError = {})
     }
   }
 

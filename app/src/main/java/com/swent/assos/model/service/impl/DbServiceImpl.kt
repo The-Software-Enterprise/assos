@@ -166,22 +166,96 @@ constructor(
         .await()
   }
 
-  override suspend fun applyStaffing(
-      eventId: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    this.addApplicant("events", eventId, userId, onSuccess, onError)
-  }
-
   override suspend fun applyJoinAsso(
       assoId: String,
       userId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    this.addApplicant("associations", assoId, userId, onSuccess, onError)
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("associations/$assoId/applicants")
+          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("appliedAssociation", FieldValue.arrayUnion(assoId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
+  }
+
+  override suspend fun applyStaffing(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+
+    // this.addApplicant("events", eventId, userId, onSuccess, onError)
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("events/$eventId/applicants")
+          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError(it.message ?: "") }
+      firestore
+          .collection("users")
+          .document(userId)
+          .update("appliedStaffing", FieldValue.arrayUnion(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
+    }
+  }
+
+  override suspend fun removeJoinApplication(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("users")
+        .document(userId)
+        .update("appliedAssociation", FieldValue.arrayRemove(assoId))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError("Error") }
+
+    val querySnapshot = firestore.collection("associations/$assoId/applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      val applicant = deserializeApplicant(document)
+      if (applicant.userId == userId) {
+        firestore.collection("associations/$assoId/applicants").document(document.id).delete()
+      }
+    }
+  }
+
+  override suspend fun removeStaffingApplication(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("users")
+        .document(userId)
+        .update("appliedStaffing", FieldValue.arrayRemove(eventId))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError("Error") }
+
+    val querySnapshot = firestore.collection("events/$eventId/applicants").get().await()
+
+    for (document in querySnapshot.documents) {
+      val applicant = deserializeApplicant(document)
+      if (applicant.userId == userId) {
+        firestore.collection("events/$eventId/applicants").document(document.id).delete()
+      }
+    }
   }
 
   override suspend fun getEventById(eventId: String): Event {
@@ -209,6 +283,32 @@ constructor(
     }
 
     return applicants
+  }
+
+  override suspend fun getApplicantByAssoIdAndUserId(assoId: String, userId: String): Applicant {
+    val querySnapshot =
+        firestore
+            .collection("associations/$assoId/applicants")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+    if (querySnapshot.isEmpty) {
+      return Applicant()
+    }
+    return deserializeApplicant(querySnapshot.documents[0])
+  }
+
+  override suspend fun getApplicantByEventIdAndUserId(eventId: String, userId: String): Applicant {
+    val querySnapshot =
+        firestore
+            .collection("events/$eventId/applicants")
+            .whereEqualTo("userId", userId)
+            .get()
+            .await()
+    if (querySnapshot.isEmpty) {
+      return Applicant()
+    }
+    return deserializeApplicant(querySnapshot.documents[0])
   }
 
   override suspend fun acceptApplicant(applicantId: String, assoId: String) {

@@ -1,12 +1,14 @@
 package com.swent.assos.ui.screens.assoDetails
 
-import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.AssistChip
+import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -15,16 +17,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -43,28 +47,18 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val event by eventViewModel.event.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
-  var confirming by remember { mutableStateOf(false) }
 
   val userId by assoViewModel.currentUser.collectAsState()
 
   val viewModel: ProfileViewModel = hiltViewModel()
   val myAssociations by viewModel.memberAssociations.collectAsState()
 
+  val context = LocalContext.current
+
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
   }
-  ConfirmDialog(
-      onDismissRequest = { confirming = false },
-      confirmButton = {
-        ConfirmButton(
-            onConfirm = {
-              confirming = false
-              eventViewModel.applyStaffing(userId.id, {})
-            })
-      },
-      text = "Do you want to apply for staffing? \n You will be contacted by the association.",
-      showing = confirming)
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
@@ -94,7 +88,56 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                     }
             false ->
                 if (event.isStaffingEnabled) {
-                  JoinUsButton(onClick = { confirming = true }, text = "Become Staff")
+                  val applied = eventViewModel.appliedStaff.collectAsState()
+                  AssistChip(
+                      colors =
+                          if (applied.value)
+                              AssistChipDefaults.assistChipColors(
+                                  containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                          else
+                              AssistChipDefaults.assistChipColors(
+                                  containerColor = MaterialTheme.colorScheme.secondary),
+                      border = null,
+                      modifier = Modifier.testTag("StaffButton").padding(5.dp),
+                      onClick = {
+                        if (applied.value) {
+                          eventViewModel.removeRequestToStaff(
+                              event.id,
+                              userId.id,
+                              Toast.makeText(
+                                      context,
+                                      "You have successfully removed your request to staff at the event",
+                                      Toast.LENGTH_SHORT)
+                                  .show())
+                        } else {
+                          eventViewModel.applyStaffing(
+                              event.id,
+                              userId.id,
+                              Toast.makeText(
+                                      context,
+                                      "You have successfully applied to staff at the event",
+                                      Toast.LENGTH_SHORT)
+                                  .show())
+                        }
+                      },
+                      label = {
+                        if (applied.value) {
+                          Text(
+                              text = "Remove staff application",
+                              color = MaterialTheme.colorScheme.onSurfaceVariant,
+                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                              fontWeight = FontWeight.Medium,
+                          )
+                        } else {
+                          Text(
+                              text = "Apply for staffing",
+                              color = MaterialTheme.colorScheme.onSecondary,
+                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                              fontWeight = FontWeight.Medium,
+                          )
+                        }
+                      },
+                  )
                 }
           }
         }
@@ -106,29 +149,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
             isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
             eventId = eventId)
       }
-}
-
-@Composable
-fun ConfirmDialog(
-    onDismissRequest: () -> Unit,
-    confirmButton: @Composable () -> Unit,
-    text: String,
-    showing: Boolean
-) {
-  // create a dialog to confirm the action
-  if (showing) {
-    AlertDialog(
-        onDismissRequest = onDismissRequest,
-        confirmButton = confirmButton,
-        text = { Text(text = text) },
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        dismissButton = { ConfirmButton(onDismissRequest, "No") })
-  }
-}
-
-@Composable
-fun ConfirmButton(onConfirm: () -> Unit, text: String = "Yes") {
-  Text(text = text, modifier = Modifier.clickable { onConfirm() })
 }
 
 private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {

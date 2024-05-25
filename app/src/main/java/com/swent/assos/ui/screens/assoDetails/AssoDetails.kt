@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -40,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
@@ -72,6 +74,8 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   val listStateNews = rememberLazyListState()
   val listStateEvents = rememberLazyListState()
 
+  val context = LocalContext.current
+
   LaunchedEffect(key1 = Unit) {
     viewModel.getAssociation(assoId)
     viewModel.getNews(assoId)
@@ -102,9 +106,59 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
       },
       floatingActionButton = {
-        if (!currentUser.associations.map { it.first }.contains(assoId))
-            JoinUsButton(
-                onClick = { viewModel.applyToAssociation(currentUser.id, {}) }, text = "Join us")
+        if (!currentUser.associations.map { it.first }.contains(assoId)) {
+
+          val applied = viewModel.applied.collectAsState()
+
+          AssistChip(
+              colors =
+                  if (applied.value)
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                  else
+                      AssistChipDefaults.assistChipColors(
+                          containerColor = MaterialTheme.colorScheme.secondary),
+              border = null,
+              modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
+              onClick = {
+                if (applied.value) {
+                  viewModel.removeRequestToJoin(
+                      currentUser.id,
+                      assoId,
+                      Toast.makeText(
+                              context,
+                              "You have successfully removed your request to join the association",
+                              Toast.LENGTH_SHORT)
+                          .show())
+                } else {
+                  viewModel.applyToAssociation(
+                      currentUser.id,
+                      Toast.makeText(
+                              context,
+                              "You have successfully applied to join the association",
+                              Toast.LENGTH_SHORT)
+                          .show())
+                }
+              },
+              label = {
+                if (applied.value) {
+                  Text(
+                      text = "Remove application",
+                      color = MaterialTheme.colorScheme.onSurfaceVariant,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                } else {
+                  Text(
+                      text = "Join Us",
+                      color = MaterialTheme.colorScheme.onSecondary,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.Medium,
+                  )
+                }
+              },
+          )
+        }
       },
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->

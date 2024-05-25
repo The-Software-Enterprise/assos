@@ -37,6 +37,20 @@ interface DbService {
       onError: (String) -> Unit
   )
 
+  suspend fun removeJoinApplication(
+      assoId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
+  suspend fun removeStaffingApplication(
+      eventId: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
+
   // News ---------------------------------------------------------------------
   suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News>
 
@@ -123,6 +137,10 @@ interface DbService {
   suspend fun getApplicantsByEventId(eventId: String): List<Applicant>
 
   suspend fun getApplicantsByAssoId(assoId: String): List<Applicant>
+
+  suspend fun getApplicantByAssoIdAndUserId(assoId: String, userId: String): Applicant
+
+  suspend fun getApplicantByEventIdAndUserId(eventId: String, userId: String): Applicant
 
   suspend fun acceptApplicant(applicantId: String, assoId: String)
 
