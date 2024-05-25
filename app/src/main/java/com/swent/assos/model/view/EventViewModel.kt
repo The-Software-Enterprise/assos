@@ -44,13 +44,6 @@ constructor(
   private var _appliedStaff = MutableStateFlow(false)
   val appliedStaff = _appliedStaff.asStateFlow()
 
-  /*init {
-
-    _appliedStaff.value.
-    getEventsForCurrentUser()
-    loadAllEvents()
-  }*/
-
   fun clear() {
     _event.value = Event(id = "CLEARED")
   }

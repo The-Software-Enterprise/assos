@@ -1,6 +1,5 @@
 package com.swent.assos.ui.components
 
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,7 +36,6 @@ import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.NewsViewModel
-import java.time.LocalDateTime
 
 @Composable
 fun HomeItem(id: String, navigationActions: NavigationActions) {
@@ -52,19 +50,10 @@ fun HomeItem(id: String, navigationActions: NavigationActions) {
   val description: String
   var assoId: String = ""
 
-  val news =
-      allNews.find { it.id == id }
-          ?: News(
-              id = "0000",
-              title = "NO TITLE",
-              description = "NO DESCRIPTION",
-              images = listOf(Uri.EMPTY),
-              createdAt = LocalDateTime.now(),
-              associationId = "",
-              eventIds = mutableListOf("0000"))
+  val news = allNews.find { it.id == id } ?: News()
 
-  if (news.eventIds.isNotEmpty()) {
-    eventViewModel.getEvent(news.eventIds[0])
+  if (news.eventId != "") {
+    eventViewModel.getEvent(news.eventId)
     assoId = event.associationId
   }
 
@@ -78,10 +67,10 @@ fun HomeItem(id: String, navigationActions: NavigationActions) {
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(
-                    if (news.eventIds.isEmpty()) {
+                    if (news.eventId == "") {
                       Destinations.NEWS_DETAILS.route + "/${news.id}"
                     } else {
-                      Destinations.EVENT_DETAILS.route + "/${news.eventIds[0]}" + "/${assoId}"
+                      Destinations.EVENT_DETAILS.route + "/${news.eventId}" + "/${assoId}"
                     })
               }
               .testTag("NewsListItem")) {

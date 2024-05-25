@@ -11,6 +11,6 @@ data class News(
     var images: List<Uri> = mutableListOf(),
     val description: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val eventIds: MutableList<String> = mutableListOf(),
+    var eventId: String = "",
     val documentSnapshot: DocumentSnapshot? = null
 )

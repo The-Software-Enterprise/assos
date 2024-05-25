@@ -90,7 +90,7 @@ class NewsTest : SuperTest() {
           images = listOf(Uri.EMPTY),
           createdAt = LocalDateTime.now().minusHours(2),
           associationId = assoIDFollowing,
-          eventIds = mutableListOf("1111EVENT"))
+          eventId = "1111EVENT")
 
   private val newsFollowing =
       News(
@@ -99,8 +99,7 @@ class NewsTest : SuperTest() {
           description = "News Description",
           images = listOf(Uri.EMPTY),
           createdAt = LocalDateTime.now().minusHours(2),
-          associationId = assoIDFollowing,
-          eventIds = mutableListOf())
+          associationId = assoIDFollowing)
 
   private val newsOfTheEventNotFollowing =
       News(
@@ -110,7 +109,7 @@ class NewsTest : SuperTest() {
           images = listOf(Uri.EMPTY),
           createdAt = LocalDateTime.now().minusHours(2),
           associationId = assoIDNotFollowing,
-          eventIds = mutableListOf("2222EVENT"))
+          eventId = "2222EVENT")
   private val newsNotFollowing =
       News(
           id = "2222NEWS",
@@ -118,8 +117,7 @@ class NewsTest : SuperTest() {
           description = "News Description",
           images = listOf(Uri.EMPTY),
           createdAt = LocalDateTime.now().minusHours(2),
-          associationId = assoIDNotFollowing,
-          eventIds = mutableListOf())
+          associationId = assoIDNotFollowing)
 
   val user =
       User(

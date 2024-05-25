@@ -63,8 +63,7 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
               description = "NO DESCRIPTION",
               images = listOf(Uri.EMPTY),
               createdAt = LocalDateTime.now(),
-              associationId = "",
-              eventIds = mutableListOf())
+              associationId = "")
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
