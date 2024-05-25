@@ -1,8 +1,11 @@
 package com.swent.assos.model
 
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import androidx.compose.ui.graphics.ImageBitmap
@@ -232,4 +235,13 @@ fun deserializeUser(doc: DocumentSnapshot): User {
               }
             } ?: emptyList()
           } ?: emptyList())
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+  val connectivityManager =
+      context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  val activeNetwork = connectivityManager.activeNetwork ?: return false
+  val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+  return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 }
