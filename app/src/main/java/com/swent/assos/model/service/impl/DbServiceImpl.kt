@@ -39,7 +39,7 @@ constructor(
     private val auth: FirebaseAuth,
     @ApplicationContext private val context: Context
 ) : DbService {
-  val localDatabase = LocalDatabaseProvider.getLocalDatabase(context)
+  private val _localDatabase = LocalDatabaseProvider.getLocalDatabase(context)
 
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
@@ -100,7 +100,7 @@ constructor(
     if (lastDocumentSnapshot != null) {
       query = query.startAfter(lastDocumentSnapshot)
     }
-    val localAssociations = localDatabase.associationDao().getAllAssociations()
+    val localAssociations = _localDatabase.associationDao().getAllAssociations()
 
     if (!isNetworkAvailable(context)) {
       return localAssociations
@@ -116,7 +116,7 @@ constructor(
         return emptyList()
       }
       val associations = snapshot.documents.map { deserializeAssociation(it) }
-      localDatabase.associationDao().insertAssociation(*associations.toTypedArray())
+      _localDatabase.associationDao().insertAssociation(*associations.toTypedArray())
       return associations
     } catch (e: IOException) {
       return localAssociations
