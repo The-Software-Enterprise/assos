@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,8 +51,9 @@ import java.time.LocalDateTime
 fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val viewModel: NewsViewModel = hiltViewModel()
+  val news by viewModel.allNewsOfAllAssos.collectAsState()
 
-  val news by viewModel.allNews.collectAsState()
+  LaunchedEffect(key1 = Unit) { viewModel.loadNews() }
 
   val specificNews =
       news.find { it.id == newsId }
@@ -61,8 +63,7 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
               description = "NO DESCRIPTION",
               images = listOf(Uri.EMPTY),
               createdAt = LocalDateTime.now(),
-              associationId = "",
-              eventIds = mutableListOf())
+              associationId = "")
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
