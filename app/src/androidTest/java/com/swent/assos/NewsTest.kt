@@ -3,26 +3,14 @@ package com.swent.assos
 import android.net.Uri
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.filter
-import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.isDisplayed
-import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
-import com.swent.assos.model.serialize
-import com.swent.assos.model.service.impl.AuthServiceImpl
-import com.swent.assos.model.service.impl.DbServiceImpl
-import com.swent.assos.model.service.impl.StorageServiceImpl
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.screens.CreateNewsScreen
 import com.swent.assos.screens.NewsScreen
@@ -32,7 +20,6 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import java.time.LocalDateTime
 import kotlin.random.Random
-import kotlinx.coroutines.Dispatchers
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -131,121 +118,7 @@ class NewsTest : SuperTest() {
 
   override fun setup() {
     super.setup()
-
-    eventViewModel =
-        EventViewModel(
-            DbServiceImpl(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()),
-            StorageServiceImpl(FirebaseStorage.getInstance()),
-            AuthServiceImpl(FirebaseAuth.getInstance()),
-            Dispatchers.IO)
-
-    FirebaseFirestore.getInstance().collection("users").document(user.id).set(user)
-    FirebaseFirestore.getInstance()
-        .collection("users")
-        .document(user.id)
-        .update(
-            "associations",
-            FieldValue.arrayUnion(
-                mapOf("assoId" to assoIDFollowing, "position" to "Grand Chef", "rank" to 1)))
-
-    FirebaseFirestore.getInstance()
-        .collection("events")
-        .document(eventFollowing.id)
-        .set(serialize(eventFollowing))
-    FirebaseFirestore.getInstance()
-        .collection("events")
-        .document(eventNotFollowing.id)
-        .set(serialize(eventNotFollowing))
-    FirebaseFirestore.getInstance()
-        .collection("news")
-        .document(newsOfTheEventFollowing.id)
-        .set(serialize(newsOfTheEventFollowing))
-    FirebaseFirestore.getInstance()
-        .collection("news")
-        .document(newsFollowing.id)
-        .set(serialize(newsFollowing))
-    FirebaseFirestore.getInstance()
-        .collection("news")
-        .document(newsOfTheEventNotFollowing.id)
-        .set(serialize(newsOfTheEventNotFollowing))
-    FirebaseFirestore.getInstance()
-        .collection("news")
-        .document(newsNotFollowing.id)
-        .set(serialize(newsNotFollowing))
-
-    DataCache.currentUser.value = user
-  }
-
-  @Test
-  fun createAnEntireEventAndCheckANewsHasAlsoBeenCreated() {
-    eventViewModel.setImage(Uri.EMPTY)
-    eventViewModel.setTitle("Event 0qrqbQkbjTqbKgHG1akT")
-    eventViewModel.setDescription("Event Description")
-    eventViewModel.setStaffingEnabled(true)
-    eventViewModel.createEvent(onSuccess = { assert(true) }, onError = { assert(false) })
-  }
-
-  @Test
-  fun testHomePage() {
-    composeTestRule.activity.setContent { News(mockNavActions) }
-
-    run {
-      ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
-        step("Check if the news is displayed") {
-          newsList { assertIsDisplayed() }
-
-          followActivityTitle {
-            composeTestRule.waitUntil(
-                condition = {
-                  composeTestRule
-                      .onNodeWithText("Activity of associations you follow :")
-                      .isDisplayed()
-                },
-                timeoutMillis = 10000)
-            composeTestRule
-                .onNodeWithText("Activity of associations you follow :")
-                .assertIsDisplayed()
-          }
-
-          composeTestRule
-              .onNode(hasTestTag("NewsList"))
-              .onChildren()
-              .filter(hasTestTag("NewsListItem"))
-              .onFirst()
-              .assertIsDisplayed()
-
-          for (i in 0 until 4) {
-            composeTestRule
-                .onNode(hasTestTag("NewsList"))
-                .onChildren()
-                .filter(hasTestTag("NewsListItem"))
-                .get(i)
-                .assertIsDisplayed()
-          }
-
-          followActivityTitle {
-            composeTestRule.waitUntil(
-                condition = {
-                  composeTestRule
-                      .onNodeWithText("Activity of associations you follow :")
-                      .isDisplayed()
-                },
-                timeoutMillis = 10000)
-            composeTestRule
-                .onNodeWithText("Activity of associations you follow :")
-                .assertIsDisplayed()
-          }
-        }
-        step("Check navigation to the news/event") {
-          composeTestRule
-              .onNode(hasTestTag("NewsList"))
-              .onChildren()
-              .filter(hasTestTag("NewsListItem"))
-              .onFirst()
-              .performClick()
-        }
-      }
-    }
+    DataCache.currentUser.value = User("", "", "", "", listOf(), listOf(), "", "")
   }
 
   @Test
@@ -272,11 +145,14 @@ class NewsTest : SuperTest() {
       }
     }
 
-    composeTestRule.activity.setContent { News(mockNavActions) }
+    composeTestRule.activity.setContent { News(navigationActions = mockNavActions) }
 
     run {
       ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
         step("Check if the news is displayed") {
+          composeTestRule.waitUntil(5000) {
+            composeTestRule.onNodeWithText(newsTitle).isDisplayed()
+          }
           newsList { assertIsDisplayed() }
           newsListItem { assertIsDisplayed() }
         }

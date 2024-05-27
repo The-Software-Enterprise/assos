@@ -179,6 +179,9 @@ class DbServiceTest {
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
 
+    coEvery { mockFirestore.document(any<String>()).get() } returns
+        Tasks.forResult(mockDocumentSnapshot)
+
     coEvery { mockFirestore.collection(any()).whereEqualTo(any<String>(), any()).get() } returns
         Tasks.forResult(mockQuerySnapshot)
 

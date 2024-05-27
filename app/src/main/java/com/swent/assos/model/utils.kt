@@ -143,7 +143,7 @@ fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-fun serialize(news: News): Map<String, Any?> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,

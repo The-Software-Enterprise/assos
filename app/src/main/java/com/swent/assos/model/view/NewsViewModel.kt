@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
-import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +19,6 @@ class NewsViewModel
 @Inject
 constructor(
     private val dbService: DbService,
-    private val authService: AuthService,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
   private val _allNews = MutableStateFlow(emptyList<News>())
@@ -37,9 +35,17 @@ constructor(
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
-  init {
-    loadNews()
-    loadAllNews()
+  fun loadNews(newsId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.getNews(newsId).let {
+        _news.value = it
+        _loadingDisplay.value = false
+      }
+    }
+  }
+
+  fun deleteNews(newsId: String) {
+    viewModelScope.launch(ioDispatcher) { dbService.deleteNews(newsId) }
   }
 
   fun loadNews() {

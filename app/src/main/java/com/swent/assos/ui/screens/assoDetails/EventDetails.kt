@@ -2,6 +2,7 @@ package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -29,12 +33,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
@@ -47,17 +51,17 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val event by eventViewModel.event.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
-
+  val profileViewModel: ProfileViewModel = hiltViewModel()
+  val associations by profileViewModel.memberAssociations.collectAsState()
   val userId by assoViewModel.currentUser.collectAsState()
-
-  val viewModel: ProfileViewModel = hiltViewModel()
-  val myAssociations by viewModel.memberAssociations.collectAsState()
+  var conf by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
+    profileViewModel.updateUser()
   }
 
   Scaffold(
@@ -65,27 +69,30 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
         if (event.id != "") {
-          when (isMember(myAssociations = myAssociations, currentAsso = assoId)) {
+          when ((associations.map { it.id }.contains(assoId))) {
             true ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center) {
-                      if (event.isStaffingEnabled) {
+                Column {
+                  Row(
+                      modifier = Modifier.fillMaxWidth(),
+                      horizontalArrangement = Arrangement.Center) {
+                        if (event.isStaffingEnabled) {
+                          JoinUsButton(
+                              onClick = {
+                                navigationActions.navigateTo(
+                                    Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                              },
+                              text = "Staff List")
+                          Spacer(modifier = Modifier.width(10.dp))
+                        }
                         JoinUsButton(
                             onClick = {
                               navigationActions.navigateTo(
-                                  Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                                  Destinations.CREATE_TICKET.route + "/${eventId}")
                             },
-                            text = "Staff List")
-                        Spacer(modifier = Modifier.width(10.dp))
+                            text = "Create ticket")
                       }
-                      JoinUsButton(
-                          onClick = {
-                            navigationActions.navigateTo(
-                                Destinations.CREATE_TICKET.route + "/${eventId}")
-                          },
-                          text = "Create ticket")
-                    }
+                  DeleteButton { conf = true }
+                }
             false ->
                 if (event.isStaffingEnabled) {
                   val applied = eventViewModel.appliedStaff.collectAsState()
@@ -143,14 +150,20 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
+        if (conf) {
+          ConfirmDialog(
+              onDismiss = { conf = false },
+              onConfirm = {
+                conf = false
+                eventViewModel.deleteEvent(eventId)
+                navigationActions.goBack()
+              },
+              title = event.title)
+        }
         EventContent(
             viewModel = eventViewModel,
             paddingValues = paddingValues,
-            isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
+            isMember = (associations.map { it.id }.contains(assoId)),
             eventId = eventId)
       }
-}
-
-private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
-  return myAssociations.map { it.id }.contains(currentAsso)
 }
