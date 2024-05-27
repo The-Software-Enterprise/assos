@@ -185,7 +185,6 @@ fun CameraScreen(navigationActions: NavigationActions) {
           onResult = { state, result ->
             when (state) {
               is ScannerViewState.Success -> {
-                Log.d("CameraPreview", "Barcode scanned: $result")
                 if (!scanSucceeded) {
                   eventViewModel.createTicket(
                       email = DataCache.currentUser.value.email,
