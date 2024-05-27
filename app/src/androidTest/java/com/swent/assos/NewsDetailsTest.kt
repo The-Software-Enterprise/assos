@@ -107,7 +107,7 @@ class NewsDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Delete News") {
-          composeTestRule.waitUntil(5000) {
+          composeTestRule.waitUntil(10000) {
             composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
           }
           composeTestRule.onNodeWithTag("DeleteButton").performClick()

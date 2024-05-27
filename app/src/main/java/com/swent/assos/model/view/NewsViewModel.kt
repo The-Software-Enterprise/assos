@@ -24,6 +24,9 @@ constructor(
   private val _allNews = MutableStateFlow(emptyList<News>())
   val allNews = _allNews.asStateFlow()
 
+  private val _allNewsOfAllAssos = MutableStateFlow(emptyList<News>())
+  val allNewsOfAllAssos = _allNewsOfAllAssos.asStateFlow()
+
   private val _news = MutableStateFlow(News())
   val news = _news.asStateFlow()
 
@@ -57,6 +60,15 @@ constructor(
           _allNews.value = it
           _loadingDisplay.value = false
         }
+      }
+    }
+  }
+
+  fun loadAllNews() {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.getAllNews(null).let {
+        _allNewsOfAllAssos.value = it
+        _loadingDisplay.value = false
       }
     }
   }

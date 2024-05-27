@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.CreateNewsViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -38,9 +39,13 @@ import com.swent.assos.ui.screens.manageAsso.createEvent.components.FloatingButt
 fun CreateEvent(
     assoId: String,
     navigationActions: NavigationActions,
-    viewModel: EventViewModel = hiltViewModel()
+    viewModel: EventViewModel = hiltViewModel(),
 ) {
   val context = LocalContext.current
+
+  val createNewsViewModel: CreateNewsViewModel = hiltViewModel()
+
+  val news by createNewsViewModel.news.collectAsState()
 
   val event by viewModel.event.collectAsState()
   val canCreate =
@@ -48,7 +53,10 @@ fun CreateEvent(
 
   val lazyListState = rememberLazyListState()
 
-  LaunchedEffect(key1 = Unit) { event.associationId = assoId }
+  LaunchedEffect(key1 = Unit) {
+    event.associationId = assoId
+    news.associationId = assoId
+  }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("CreateEventScreen"),
@@ -79,6 +87,11 @@ fun CreateEvent(
                                           Toast.LENGTH_SHORT)
                                       .show()
                                 })
+                        createNewsViewModel.setTitle(event.title)
+                        createNewsViewModel.setDescription(event.description)
+                        createNewsViewModel.addImages(listOf(event.image))
+                        news.eventId = event.id
+                        createNewsViewModel.createNews(assoId, onSuccess = {}, onError = {})
                       }
                       .padding(vertical = 5.dp, horizontal = 10.dp)
                       .testTag("CreateButton")) {

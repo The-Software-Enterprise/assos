@@ -59,28 +59,21 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
   val viewModel: NewsViewModel = hiltViewModel()
   val specificNews by viewModel.news.collectAsState()
-  val assoViewModel: AssoViewModel = hiltViewModel()
-  val asso by assoViewModel.association.collectAsState()
   val profileViewModel: ProfileViewModel = hiltViewModel()
   val associations by profileViewModel.memberAssociations.collectAsState()
   var conf by remember { mutableStateOf(false) }
-
   LaunchedEffect(key1 = Unit) {
     viewModel.loadNews(newsId)
     profileViewModel.updateUser()
   }
-  LaunchedEffect(key1 = specificNews.associationId) {
-    assoViewModel.getAssociation(specificNews.associationId)
-  }
-
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
       floatingActionButton = {
-        if (associations.map { it.id }.contains(asso.id)) {
+        if (associations.map { it.id }.contains(specificNews.associationId)) {
           DeleteButton { conf = true }
         }
       },
-      floatingActionButtonPosition = FabPosition.End,
+      floatingActionButtonPosition = FabPosition.Center,
       topBar = {
         PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
       }) { paddingValues ->

@@ -15,6 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,21 +28,50 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.model.view.NewsViewModel
 
 @Composable
-fun HomeItem(news: News, navigationActions: NavigationActions) {
+fun HomeItem(id: String, navigationActions: NavigationActions) {
+
+  val viewModel: NewsViewModel = hiltViewModel()
+  val allNews by viewModel.allNewsOfAllAssos.collectAsState()
+
+  val eventViewModel: EventViewModel = hiltViewModel()
+  val event by eventViewModel.event.collectAsState()
+
+  val title: String
+  val description: String
+  var assoId: String = ""
+
+  val news = allNews.find { it.id == id } ?: News()
+
+  if (news.eventId != "") {
+    eventViewModel.getEvent(news.eventId)
+    assoId = event.associationId
+  }
+
+  title = news.title
+  description = news.description
+
   Box(
       modifier =
           Modifier.background(MaterialTheme.colorScheme.background)
               .fillMaxWidth()
               .height(100.dp)
               .clickable {
-                navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
+                navigationActions.navigateTo(
+                    if (news.eventId == "") {
+                      Destinations.NEWS_DETAILS.route + "/${news.id}"
+                    } else {
+                      Destinations.EVENT_DETAILS.route + "/${news.eventId}" + "/${assoId}"
+                    })
               }
               .testTag("NewsListItem")) {
         Row(
@@ -69,14 +101,14 @@ fun HomeItem(news: News, navigationActions: NavigationActions) {
                   horizontalAlignment = Alignment.Start) {
                     Text(
                         modifier = Modifier.testTag("NewsItemsTitle"),
-                        text = news.title,
+                        text = title,
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onBackground)
                     Text(
                         modifier = Modifier.weight(1f).testTag("NewsItemsDescription"),
-                        text = news.description,
+                        text = description,
                         fontSize = 14.sp,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         color = MaterialTheme.colorScheme.onBackground)
