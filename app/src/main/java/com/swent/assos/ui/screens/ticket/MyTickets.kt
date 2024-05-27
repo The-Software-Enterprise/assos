@@ -36,12 +36,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.NFCReader
+import com.swent.assos.R
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
@@ -78,6 +81,14 @@ fun MyTickets(navigationActions: NavigationActions) {
             horizontalAlignment = Alignment.CenterHorizontally,
             userScrollEnabled = true,
         ) {
+          if (myTickets.isEmpty()) {
+            item {
+              Text(
+                  text = stringResource(R.string.NoResult),
+                  textAlign = TextAlign.Center,
+                  color = MaterialTheme.colorScheme.onBackground)
+            }
+          }
           items(items = myTickets, key = { it.id }) {
             TicketItem(ticket = it, navigationActions = navigationActions)
           }

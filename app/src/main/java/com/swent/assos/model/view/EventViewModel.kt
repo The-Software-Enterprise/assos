@@ -32,6 +32,12 @@ constructor(
   private val _event = MutableStateFlow(Event(id = generateUniqueID()))
   val event = _event.asStateFlow()
 
+  private val _events = MutableStateFlow(emptyList<Event>())
+  val events = _events.asStateFlow()
+
+  private val _eventsOfAllAssociations = MutableStateFlow(emptyList<Event>())
+  val eventsOfAllAssociations = _eventsOfAllAssociations.asStateFlow()
+
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
