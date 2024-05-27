@@ -47,7 +47,6 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.DeleteButton
