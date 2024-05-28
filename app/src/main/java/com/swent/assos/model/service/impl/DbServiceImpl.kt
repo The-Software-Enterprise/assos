@@ -595,6 +595,7 @@ constructor(
     val query = firestore.collection("tickets").document(ticketId)
     val snapshot = query.get().await() ?: return Ticket("", "", "")
     return deserializeTicket(snapshot)
+
   }
 
   override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> {
