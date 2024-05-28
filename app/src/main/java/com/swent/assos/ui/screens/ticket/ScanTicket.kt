@@ -3,7 +3,6 @@
 package com.swent.assos.ui.screens.ticket
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -12,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -22,9 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -36,7 +32,6 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -48,9 +43,6 @@ import com.swent.assos.model.qr_code.ScannerAnalyzer
 import com.swent.assos.model.qr_code.ScannerViewState
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.ui.components.PageTitleWithGoBack
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Locale
 import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -120,36 +112,6 @@ fun CameraPreview(
   DisposableEffect(Unit) { onDispose { executor.shutdown() } }
 }
 
-/*@Composable
-fun CameraCaptureButton(imageCapture: ImageCapture, localContext: Context) {
-  FloatingActionButton(
-      modifier = Modifier.padding(16.dp).testTag("scanButton"),
-      onClick = {
-        val photoFile =
-            File(
-                SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-SSS", Locale.US)
-                    .format(System.currentTimeMillis()) + ".jpg")
-
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-
-        imageCapture.takePicture(
-            outputOptions,
-            ContextCompat.getMainExecutor(localContext),
-            object : ImageCapture.OnImageSavedCallback {
-              override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                Log.d("CameraXApp", "Photo capture succeeded: ${output.savedUri}")
-              }
-
-              override fun onError(exc: ImageCaptureException) {
-                Log.e("CameraXApp", "Photo capture failed: ${exc.message}", exc)
-              }
-            })
-      },
-  ) {
-    Text(text = "Scan")
-  }
-}*/
-
 @Composable
 fun CameraScreen(navigationActions: NavigationActions) {
   val context = LocalContext.current
@@ -212,7 +174,6 @@ fun CameraScreen(navigationActions: NavigationActions) {
               }
             }
           })
-      //CameraCaptureButton(imageCapture = imageCapture, localContext = context)
     }
   }
 }
