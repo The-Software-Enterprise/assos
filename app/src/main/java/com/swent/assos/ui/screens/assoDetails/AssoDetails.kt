@@ -58,6 +58,7 @@ import com.swent.assos.R
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
+import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
 
@@ -252,6 +253,8 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
 @Composable
 fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewModel: AssoViewModel) {
   val associationFollowed = viewModel.associationFollowed.collectAsState()
+  val profileViewModel: ProfileViewModel = hiltViewModel()
+
   MediumTopAppBar(
       colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Transparent),
       modifier = Modifier.testTag("Header"),
@@ -289,8 +292,10 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
               onClick = {
                 if (associationFollowed.value) {
                   viewModel.unfollowAssociation(asso.id)
+                  profileViewModel.updateNeeded()
                 } else {
                   viewModel.followAssociation(asso.id)
+                  profileViewModel.updateNeeded()
                 }
               },
               label = {
