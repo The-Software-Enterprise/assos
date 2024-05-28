@@ -37,7 +37,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       modifier =
           Modifier.semantics { testTagsAsResourceId = true }
               .testTag("NewsItem")
-              .padding(0.dp)
+              .height(150.dp)
               .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
               .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
         Column(
@@ -52,7 +52,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp)
+                        Modifier.height(75.dp)
                             .background(MaterialTheme.colorScheme.surface)
                             .testTag("NewsItemImage"))
               } else {
@@ -61,7 +61,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp)
+                        Modifier.height(75.dp)
                             .background(MaterialTheme.colorScheme.surface)
                             .testTag("NewsItemImage"))
               }
