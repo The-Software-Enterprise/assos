@@ -53,15 +53,10 @@ import kotlinx.coroutines.launch
 fun ScanTicket(navigationActions: NavigationActions) {
 
   Scaffold(
-      modifier = Modifier
-          .semantics { testTagsAsResourceId = true }
-          .testTag("TicketScanScreen"),
+      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("TicketScanScreen"),
       topBar = { PageTitleWithGoBack("Scan a ticket", navigationActions) }) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(paddingValues)
-                .testTag("TicketScanDetails"),
+            modifier = Modifier.fillMaxWidth().padding(paddingValues).testTag("TicketScanDetails"),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
           CameraScreen(navigationActions)
@@ -143,11 +138,6 @@ fun CameraScreen(navigationActions: NavigationActions) {
         ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
             PackageManager.PERMISSION_GRANTED)
   }
-
-    LaunchedEffect(key1 = Unit) {
-        //Update the value of hasCameraPermission
-        hasCameraPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-    }
 
   if (hasCameraPermission) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
