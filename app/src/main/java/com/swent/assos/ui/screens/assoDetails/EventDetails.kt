@@ -29,6 +29,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
@@ -48,6 +49,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val myAssociations by viewModel.memberAssociations.collectAsState()
 
   val context = LocalContext.current
+  val loading = viewModel.loading.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -58,7 +60,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-        if (event.id != "" && !isMember(myAssociations, asso.id) && event.isStaffingEnabled) {
+        if (!isMember(myAssociations, asso.id) && event.isStaffingEnabled && !loading.value) {
           val applied = eventViewModel.appliedStaff.collectAsState()
           AssistChip(
               colors =
@@ -112,12 +114,16 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-        EventContent(
-            viewModel = eventViewModel,
-            paddingValues = paddingValues,
-            isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
-            eventId = eventId,
-            navigationActions = navigationActions)
+        if (loading.value) {
+          LoadingCircle()
+        } else {
+          EventContent(
+              viewModel = eventViewModel,
+              paddingValues = paddingValues,
+              isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
+              eventId = eventId,
+              navigationActions = navigationActions)
+        }
       }
 }
 
