@@ -120,7 +120,7 @@ fun CameraPreview(
   DisposableEffect(Unit) { onDispose { executor.shutdown() } }
 }
 
-@Composable
+/*@Composable
 fun CameraCaptureButton(imageCapture: ImageCapture, localContext: Context) {
   FloatingActionButton(
       modifier = Modifier.padding(16.dp).testTag("scanButton"),
@@ -148,7 +148,7 @@ fun CameraCaptureButton(imageCapture: ImageCapture, localContext: Context) {
   ) {
     Text(text = "Scan")
   }
-}
+}*/
 
 @Composable
 fun CameraScreen(navigationActions: NavigationActions) {
@@ -212,7 +212,7 @@ fun CameraScreen(navigationActions: NavigationActions) {
               }
             }
           })
-      CameraCaptureButton(imageCapture = imageCapture, localContext = context)
+      //CameraCaptureButton(imageCapture = imageCapture, localContext = context)
     }
   }
 }
