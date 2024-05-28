@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -57,7 +58,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -116,11 +116,15 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
   }
 
   Scaffold(
-      modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("ManageAssoScreen"),
+      modifier = Modifier
+        .semantics { testTagsAsResourceId = true }
+        .testTag("ManageAssoScreen"),
       topBar = { TopAssoBar(asso = association, navigationActions = navigationActions) }) {
           paddingValues ->
         LazyColumn(
-            modifier = Modifier.padding(paddingValues).testTag("Content"),
+            modifier = Modifier
+              .padding(paddingValues)
+              .testTag("Content"),
             horizontalAlignment = Alignment.CenterHorizontally) {
               item {
                 Box {
@@ -133,11 +137,12 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                           },
                       contentDescription = null,
                       modifier =
-                          Modifier.fillMaxWidth()
-                              .padding(10.dp)
-                              .height(200.dp)
-                              .clip(RoundedCornerShape(20.dp))
-                              .background(GraySeparator),
+                      Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .height(150.dp)
+                        .clip(RoundedCornerShape(20.dp))
+                        .background(GraySeparator),
                       contentScale = ContentScale.Crop,
                       alignment = Alignment.Center)
 
@@ -147,7 +152,10 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                         pickImageIntent.type = "image/*"
                         launcher.launch(pickImageIntent)
                       },
-                      modifier = Modifier.size(60.dp).align(Alignment.TopEnd).padding(5.dp),
+                      modifier = Modifier
+                        .size(60.dp)
+                        .align(Alignment.TopEnd)
+                        .padding(5.dp),
                       containerColor = MaterialTheme.colorScheme.primary,
                   ) {
                     Icon(
@@ -186,20 +194,21 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                         Spacer(modifier = Modifier.width(8.dp))
                       }
                     }
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = "Applications",
-                    modifier =
-                        Modifier.testTag("ApplicationsButton").clickable {
-                          navigationActions.navigateTo(
-                              Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
-                        },
-                    style = MaterialTheme.typography.headlineMedium,
-                    textDecoration = TextDecoration.Underline,
-                    fontSize = 20.sp)
-
-                Spacer(modifier = Modifier.height(20.dp))
+                Button(
+                  modifier =
+                  Modifier
+                    .testTag("ApplicationsButton")
+                    .padding(30.dp)
+                    .width(250.dp)
+                    .height(60.dp),
+                  shape = RoundedCornerShape(16.dp),
+                  onClick = {
+                    navigationActions.navigateTo(
+                      Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
+                  }) {
+                  Icon(imageVector = Icons.Default.Inbox, contentDescription = null)
+                  Text("View Applications", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+                }
               }
             }
       }
@@ -213,7 +222,9 @@ fun HeaderWithButtonWithIcon(
     modifierButton: Modifier
 ) {
   Row(
-      modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp, vertical = 8.dp),
       verticalAlignment = Alignment.CenterVertically,
       horizontalArrangement = Arrangement.SpaceBetween) {
         Text(text = header, style = MaterialTheme.typography.headlineMedium, fontSize = 20.sp)
@@ -253,6 +264,8 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions) {
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
             imageVector = Icons.Default.ArrowBack,
             contentDescription = null,
-            modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
+            modifier = Modifier
+              .testTag("GoBackButton")
+              .clickable { navigationActions.goBack() })
       })
 }
