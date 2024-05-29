@@ -7,11 +7,11 @@ import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ApplicantViewModel
