@@ -15,4 +15,6 @@ class EventDetailsScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
   val eventDetailsDate: KNode = child { hasTestTag("EventDetailsDate") }
   val eventDetailsLocation: KNode = child { hasTestTag("EventDetailsLocation") }
   val eventStaffListButton: KNode = child { hasTestTag("JoinButton") }
+
+  val savedIcon: KNode = onNode { hasTestTag("SavedIcon") }
 }

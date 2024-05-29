@@ -167,4 +167,23 @@ class EventDetailsTest : SuperTest() {
       }
     }
   }
+
+  @Test
+  fun saveEvent() {
+    DataCache.currentUser.value.savedEvents = emptyList()
+    composeTestRule.activity.setContent {
+      EventDetails(event3.id, navigationActions = mockNavActions, assoId = event3.associationId)
+    }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        step("Save news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(DataCache.currentUser.value.savedEvents.contains(event3.id))
+          }
+        }
+      }
+    }
+  }
 }
