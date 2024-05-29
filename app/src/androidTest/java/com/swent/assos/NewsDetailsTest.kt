@@ -128,11 +128,13 @@ class NewsDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
         step("Delete News") {
-          composeTestRule.waitUntil(10000) { composeTestRule.onNodeWithTag("Button").isDisplayed() }
-          composeTestRule.onNodeWithTag("Button").performClick()
+          composeTestRule.waitUntil(10000) {
+            composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
+          }
+          composeTestRule.onNodeWithTag("DeleteButton").performClick()
         }
         step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
-        step("Delete News") { composeTestRule.onNodeWithTag("Button").performClick() }
+        step("Delete News") { composeTestRule.onNodeWithTag("DeleteButton").performClick() }
         step("confirm deletion") { composeTestRule.onNodeWithText("Yes").performClick() }
         step("check if we really delete the news") {
           verify { mockNavActions.goBack() }

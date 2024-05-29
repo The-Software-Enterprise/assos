@@ -6,5 +6,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun DeleteButton(callBack: () -> Unit) {
-  BasicButtonWithIcon(buttonName = "", callback = callBack, icon = Icons.Default.Delete)
+  BasicButtonWithIcon(buttonName = "Delete", callback = callBack, icon = Icons.Default.Delete)
 }

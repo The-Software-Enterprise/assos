@@ -2,13 +2,8 @@ package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ChipColors
@@ -125,9 +120,28 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = {
         PageTitleWithGoBack(
-            title = asso.acronym,
+            title = event.title,
             navigationActions = navigationActions,
-            actionButton = { DeleteButton { conf = true } })
+            actionButton = {
+              Row {
+                Text(
+                    text = asso.acronym,
+                    style =
+                        TextStyle(
+                            textDecoration = TextDecoration.Underline,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    textDecoration = TextDecoration.Underline,
+                    modifier =
+                        Modifier.padding(end = 16.dp).clickable {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${assoId}")
+                        })
+              }
+            })
       },
       floatingActionButton = {
         if (!(associations.map { it.id }.contains(assoId)) &&
@@ -141,6 +155,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               label = { labelStaffButton() },
           )
         }
+        DeleteButton { conf = true }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         if (conf) {
