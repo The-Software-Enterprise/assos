@@ -112,6 +112,7 @@ fun CreateEvent(
         paddingValues = paddingValues,
         isEdition = true,
         lazyListState = lazyListState,
-        eventId = event.id)
+        eventId = event.id,
+        navigationActions = navigationActions)
   }
 }

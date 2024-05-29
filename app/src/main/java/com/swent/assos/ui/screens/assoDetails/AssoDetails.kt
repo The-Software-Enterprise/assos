@@ -176,7 +176,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             modifier =
                 Modifier.fillMaxWidth()
                     .padding(10.dp)
-                    .height(200.dp)
+                    .height(150.dp)
                     .clip(shape = RoundedCornerShape(20.dp))
                     .background(Color.Gray),
             contentScale = ContentScale.Crop,
@@ -243,8 +243,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
       }
-
-      item { Spacer(modifier = Modifier.height(20.dp)) }
     }
   }
 }
