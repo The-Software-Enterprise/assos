@@ -36,7 +36,6 @@ fun PosDetails(assoId: String, posId: String, navigationActions: NavigationActio
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         LazyColumn {
           item { Text(text = "Position Details", modifier = Modifier.padding(paddingValues)) }
-
           item {
             Text(text = position.value.title, modifier = Modifier.padding(paddingValues))
             Text(text = position.value.description, modifier = Modifier.padding(paddingValues))

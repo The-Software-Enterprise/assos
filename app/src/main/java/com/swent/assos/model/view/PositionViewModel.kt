@@ -20,7 +20,7 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-  private val _position = MutableStateFlow<OpenPositions>(OpenPositions())
+  private val _position = MutableStateFlow(OpenPositions())
   val position = _position.asStateFlow()
 
   fun getPosition(positionId: String, associationId: String) {

@@ -49,9 +49,7 @@ constructor(
   val positions = _positions.asStateFlow()
 
   fun getPositions(associationId: String) {
-    viewModelScope.launch(ioDispatcher) {
-      _positions.value = dbService.getPositions(associationId, lastDocumentSnapshot = null)
-    }
+    viewModelScope.launch(ioDispatcher) { _positions.value = dbService.getPositions(associationId) }
   }
 
   fun createPosition(associationId: String, position: OpenPositions) {

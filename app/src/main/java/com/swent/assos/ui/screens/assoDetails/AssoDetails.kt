@@ -98,15 +98,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         }
   }
 
-  LaunchedEffect(listStatePos) {
-    snapshotFlow { listStatePos.layoutInfo.visibleItemsInfo }
-        .collect { visibleItems ->
-          if (visibleItems.isNotEmpty() && visibleItems.last().index == pos.size - 1) {
-            viewModel.getMorePositions(assoId)
-          }
-        }
-  }
-
   LaunchedEffect(listStateEvents) {
     snapshotFlow { listStateEvents.layoutInfo.visibleItemsInfo }
         .collect { visibleItems ->
@@ -267,10 +258,9 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
 
-        if (news.isNotEmpty()) {
+        if (pos.isNotEmpty()) {
           LazyRow(
               modifier = Modifier.testTag("Positionitem"),
-              state = listStateNews,
               contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(pos) {
                   PostionItem(it, assoId, navigationActions)

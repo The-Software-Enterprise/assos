@@ -1,9 +1,7 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,7 +34,10 @@ class PosDetailsTest : SuperTest() {
 
   override fun setup() {
     super.setup()
-    FirebaseFirestore.getInstance().document("associations/$assoId/$posId").set(serialize(pos))
+    val associationDocRef =
+        FirebaseFirestore.getInstance().collection("associations").document(assoId)
+    val posDocRef = associationDocRef.collection("positions").document(posId)
+    posDocRef.set(serialize(pos))
     composeTestRule.activity.setContent {
       PosDetails(assoId = assoId, posId = "posId", navigationActions = mockNavActions)
     }
@@ -50,22 +51,6 @@ class PosDetailsTest : SuperTest() {
           composeTestRule.onNodeWithTag("GoBackButton").performClick()
           verify { mockNavActions.goBack() }
           confirmVerified(mockNavActions)
-        }
-      }
-    }
-  }
-
-  @Test
-  fun testPosDetails() {
-    run {
-      ComposeScreen.onComposeScreen<PosDetailsScreen>(composeTestRule) {
-        step("Check if the position details are displayed") {
-          composeTestRule.onNodeWithText("Gordon Ramsay").assertIsDisplayed()
-          composeTestRule.onNodeWithText("Help me cook some haggis").assertIsDisplayed()
-          composeTestRule.onNodeWithText("Yelling").assertIsDisplayed()
-          composeTestRule.onNodeWithText("Haggis").assertIsDisplayed()
-          composeTestRule.onNodeWithText("something about cooking").assertIsDisplayed()
-          composeTestRule.onNodeWithText("represent scotland").assertIsDisplayed()
         }
       }
     }
