@@ -10,6 +10,9 @@ class SavedScreen(semanticsProvider: SemanticsNodeInteractionsProvider) :
 
   val goBackButton: KNode = onNode { hasTestTag("GoBackButton") }
   val pageTitle: KNode = onNode { hasTestTag("PageTitle") }
+  val segmentedControl: KNode = onNode { hasTestTag("SegmentedControl") }
 
   val contentSection: KNode = child { hasTestTag("ContentSection") }
+  val savedEvents: KNode = contentSection.child { hasTestTag("SavedEvents") }
+  val savedNews: KNode = contentSection.child { hasTestTag("SavedNews") }
 }

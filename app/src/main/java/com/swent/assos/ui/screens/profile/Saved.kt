@@ -115,7 +115,8 @@ fun SegmentedControlButton(
       modifier =
           Modifier.padding(8.dp)
               .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(16.dp))
-              .padding(2.dp),
+              .padding(2.dp)
+              .testTag("SegmentedControl"),
       horizontalArrangement = Arrangement.Center) {
         options.forEach { option ->
           val isSelected = selectedOption == option

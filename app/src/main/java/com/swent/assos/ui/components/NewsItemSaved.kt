@@ -27,33 +27,19 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.EventViewModel
-import com.swent.assos.model.view.NewsViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewsItemSaved(news: News, navigationActions: NavigationActions) {
 
-  val viewModel: NewsViewModel = hiltViewModel()
-  // val allNews by viewModel.allNewsOfAllAssos.collectAsState()
-
-  val eventViewModel: EventViewModel = hiltViewModel()
-  // val event by eventViewModel.event.collectAsState()
-
   val title: String
   val description: String
   var assoId: String = ""
-
-  /*if (news.eventId != "") {
-      eventViewModel.getEvent(news.eventId)
-      assoId = event.associationId
-  }*/
 
   title = news.title
   description = news.description
@@ -71,7 +57,7 @@ fun NewsItemSaved(news: News, navigationActions: NavigationActions) {
                       Destinations.EVENT_DETAILS.route + "/${news.eventId}" + "/${assoId}"
                     })
               }
-              .testTag("NewsListItem")) {
+              .testTag("SavedNews")) {
         Row(
             modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
             horizontalArrangement = Arrangement.Start,

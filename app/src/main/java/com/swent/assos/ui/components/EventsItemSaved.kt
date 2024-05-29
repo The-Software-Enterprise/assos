@@ -27,32 +27,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.swent.assos.R
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
-import com.swent.assos.model.view.EventViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EventsItemSaved(events: Event, navigationActions: NavigationActions) {
 
-  val viewModel: EventViewModel = hiltViewModel()
-  // val allNews by viewModel.allNewsOfAllAssos.collectAsState()
-
-  val eventViewModel: EventViewModel = hiltViewModel()
-  // val event by eventViewModel.event.collectAsState()
-
   val title: String
   val description: String
-  var assoId: String = ""
-
-  /*if (news.eventId != "") {
-      eventViewModel.getEvent(news.eventId)
-      assoId = event.associationId
-  }*/
 
   title = events.title
   description = events.description
@@ -72,9 +58,9 @@ fun EventsItemSaved(events: Event, navigationActions: NavigationActions) {
                           "/${events.associationId}"
                     })
               }
-              .testTag("NewsListItem")) {
+              .testTag("SavedEvents")) {
         Row(
-            modifier = Modifier.fillMaxSize().testTag("NewsItemRow"),
+            modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
               if (events.image != null) {
