@@ -172,7 +172,7 @@ dependencies {
 
   testImplementation("org.mockito:mockito-core:3.12.4")
 
-  // Local dataabse
+  // Local database
   implementation("androidx.room:room-runtime:2.6.1")
   kapt("androidx.room:room-compiler:2.6.1")
   implementation("androidx.room:room-ktx:2.6.1")
