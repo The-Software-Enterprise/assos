@@ -67,7 +67,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val userId by assoViewModel.currentUser.collectAsState()
   var conf by remember { mutableStateOf(false) }
 
-    val isSaved = eventViewModel.isSaved.collectAsState()
+  val isSaved = eventViewModel.isSaved.collectAsState()
 
   val context = LocalContext.current
 
@@ -85,10 +85,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 
           Image(
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector = if (isSaved.value)
-                  Icons.Default.Bookmark
-              else
-                  Icons.Default.BookmarkBorder,
+              imageVector =
+                  if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
               contentDescription = null,
               modifier =
                   Modifier.testTag("SavedIcon")

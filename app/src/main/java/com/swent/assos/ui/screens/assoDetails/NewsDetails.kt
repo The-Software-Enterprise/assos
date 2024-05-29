@@ -70,9 +70,9 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
   val associations by profileViewModel.memberAssociations.collectAsState()
   var conf by remember { mutableStateOf(false) }
 
-    val isSaved = viewModel.isSaved.collectAsState()
+  val isSaved = viewModel.isSaved.collectAsState()
 
-    val context = LocalContext.current
+  val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) {
     viewModel.loadNews(newsId)
@@ -92,31 +92,29 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
           Image(
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector = if (isSaved.value)
-                  Icons.Default.Bookmark
-              else
-                  Icons.Default.BookmarkBorder,
+              imageVector =
+                  if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
               contentDescription = null,
               modifier =
                   Modifier.testTag("SavedIcon")
                       .padding(16.dp)
                       .clip(RoundedCornerShape(100))
                       .clickable {
-                          if (isSaved.value) {
-                              viewModel.unSaveNews(newsId)
-                              Toast.makeText(
+                        if (isSaved.value) {
+                          viewModel.unSaveNews(newsId)
+                          Toast.makeText(
                                   context,
                                   "You have successfully removed the news from your saved list",
                                   Toast.LENGTH_SHORT)
-                                  .show()
-                          } else {
-                              viewModel.saveNews(newsId)
-                              Toast.makeText(
+                              .show()
+                        } else {
+                          viewModel.saveNews(newsId)
+                          Toast.makeText(
                                   context,
                                   "You have successfully saved the news",
                                   Toast.LENGTH_SHORT)
-                                  .show()
-                          }
+                              .show()
+                        }
                       }
                       .size(30.dp)
                       .align(Alignment.TopEnd))
