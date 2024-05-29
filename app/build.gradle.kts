@@ -172,6 +172,11 @@ dependencies {
 
   testImplementation("org.mockito:mockito-core:3.12.4")
 
+  // Local database
+  implementation("androidx.room:room-runtime:2.6.1")
+  kapt("androidx.room:room-compiler:2.6.1")
+  implementation("androidx.room:room-ktx:2.6.1")
+
   // Bar code scanning
   implementation("com.google.mlkit:barcode-scanning:17.2.0")
   // Mock for instrumented tests

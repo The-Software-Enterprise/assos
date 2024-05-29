@@ -1,7 +1,6 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -27,6 +26,7 @@ import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.shadows_item
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -35,13 +35,9 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.outlineVariant),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.semantics { testTagsAsResourceId = true }
-              .testTag("NewsItem")
-              .padding(0.dp)
-              .border(
-                  width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.surfaceVariant,
-                  shape = RoundedCornerShape(12.dp))) {
+          shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
+              .semantics { testTagsAsResourceId = true }
+              .testTag("NewsItem")) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {
