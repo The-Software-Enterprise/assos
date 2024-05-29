@@ -34,7 +34,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.HomeItem
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
@@ -80,9 +79,7 @@ fun Saved(navigationActions: NavigationActions) {
                   Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
-                items(items = events) { event ->
-                    Text (text = event.id)
-                }
+                items(items = events) { event -> Text(text = event.id) }
               }
             }
           } else {
@@ -94,9 +91,7 @@ fun Saved(navigationActions: NavigationActions) {
                   Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
-                items(items = news) {theNews ->
-                    Text (text = theNews.title)
-                }
+                items(items = news) { theNews -> Text(text = theNews.title) }
               }
             }
           }

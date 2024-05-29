@@ -40,8 +40,6 @@ class NewsDetailsTest : SuperTest() {
           following = listOf(associationID),
       )
 
-  val OtherFakeUser = User(id = "SomeOtherUserId", email = "someone.notImportant@epflch")
-
   val news: News =
       News(
           id = "SomeNewsId",
@@ -50,6 +48,12 @@ class NewsDetailsTest : SuperTest() {
           associationId = associationID,
       )
   val serNews: Map<String, Any> = serialize(news)
+
+  val OtherFakeUser =
+      User(
+          id = "SomeOtherUserId",
+          email = "someone.notImportant@epflch",
+          savedNews = listOf(news.id))
 
   @Before
   override fun setup() {
@@ -133,4 +137,36 @@ class NewsDetailsTest : SuperTest() {
       }
     }
   }
+
+  @Test
+  fun saveNews() {
+    DataCache.currentUser.value.savedNews = emptyList()
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        step("Save news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(DataCache.currentUser.value.savedNews.contains(news.id))
+          }
+        }
+      }
+    }
+  }
+
+  /*@Test
+  fun unSaveNews() {
+      DataCache.currentUser.value = OtherFakeUser
+      run {
+          ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+              step("Un save news") {
+                  savedIcon {
+                      assertIsDisplayed()
+                      performClick()
+                      assert(!DataCache.currentUser.value.savedNews.contains(news.id))
+                  }
+              }
+          }
+      }
+  }*/
 }
