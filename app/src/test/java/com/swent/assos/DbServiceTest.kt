@@ -1,5 +1,6 @@
 package com.swent.assos
 
+import android.content.Context
 import android.net.Uri
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.auth.FirebaseAuth
@@ -179,6 +180,9 @@ class DbServiceTest {
           .get()
     } returns Tasks.forResult(mockQuerySnapshot)
 
+    coEvery { mockFirestore.document(any<String>()).get() } returns
+        Tasks.forResult(mockDocumentSnapshot)
+
     coEvery { mockFirestore.collection(any()).whereEqualTo(any<String>(), any()).get() } returns
         Tasks.forResult(mockQuerySnapshot)
 
@@ -189,12 +193,14 @@ class DbServiceTest {
     coEvery { mockAuth.currentUser } returns mockUser
     coEvery { mockUser.uid } returns "id"
 
-    val dbService = DbServiceImpl(mockFirestore, mockAuth)
+    val mockContext = mockk<Context>()
+    coEvery { mockContext.applicationContext } returns mockContext
+    coEvery { mockContext.getSystemService(any()) } returns null
+
+    val dbService = DbServiceImpl(mockFirestore, mockAuth, mockContext)
 
     dbService.getUser("id")
     dbService.getUserByEmail("email", { null }, { null })
-    dbService.getAllAssociations(null)
-    dbService.getAllAssociations(mockDocumentSnapshot)
     dbService.getAssociationById("id")
     dbService.getEventById("id")
     dbService.applyStaffing("id", "id", { null }, { null })

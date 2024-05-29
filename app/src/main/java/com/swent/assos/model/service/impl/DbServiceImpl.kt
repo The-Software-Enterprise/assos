@@ -1,5 +1,6 @@
 package com.swent.assos.model.service.impl
 
+import android.content.Context
 import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -22,17 +23,24 @@ import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.deserializeNews
 import com.swent.assos.model.deserializeTicket
 import com.swent.assos.model.deserializeUser
+import com.swent.assos.model.isNetworkAvailable
+import com.swent.assos.model.local_database.LocalDatabaseProvider
 import com.swent.assos.model.serialize
 import com.swent.assos.model.service.DbService
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
+import okio.IOException
 
 class DbServiceImpl
 @Inject
 constructor(
     private val firestore: FirebaseFirestore,
     private val auth: FirebaseAuth,
+    @ApplicationContext private val context: Context
 ) : DbService {
+  private val _localDatabase = LocalDatabaseProvider.getLocalDatabase(context)
+
   override suspend fun getUser(userId: String): User {
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
@@ -74,31 +82,54 @@ constructor(
     val query = firestore.collection("users/$userId/tickets")
     // get all the tickets from the user from the ids of tickets in the user collection
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false ->
+          snapshot.documents.map { doc ->
+            val ticketId = doc.id
+            val ticketQuery = firestore.collection("tickets").document(ticketId)
+            deserializeTicket(ticketQuery.get().await())
+          }
     }
-    return snapshot.documents.map { doc ->
-      val ticketId = doc.id
-      val ticketQuery = firestore.collection("tickets").document(ticketId)
-      deserializeTicket(ticketQuery.get().await())
+  }
+
+  override suspend fun getNews(newsId: String): News {
+    if (newsId.isEmpty()) {
+      return News()
     }
+    val query = firestore.collection("news").document(newsId)
+    val snapshot = query.get().await() ?: return News()
+    return deserializeNews(snapshot)
   }
 
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
-    val query = firestore.collection("associations").orderBy("acronym")
-
-    val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
-        }
-    if (snapshot.isEmpty) {
-      return emptyList()
+    var query = firestore.collection("associations").orderBy("acronym")
+    if (lastDocumentSnapshot != null) {
+      query = query.startAfter(lastDocumentSnapshot)
     }
-    return snapshot.documents.map { deserializeAssociation(it) }
+    val localAssociations = _localDatabase.associationDao().getAllAssociations()
+
+    if (!isNetworkAvailable(context)) {
+      return localAssociations
+    }
+    try {
+      val snapshot =
+          if (localAssociations.isEmpty()) {
+            query.get().await()
+          } else {
+            query.limit(10).get().await()
+          }
+      if (snapshot.isEmpty) {
+        return emptyList()
+      }
+      val associations = snapshot.documents.map { deserializeAssociation(it) }
+      _localDatabase.associationDao().insertAssociation(*associations.toTypedArray())
+      return associations
+    } catch (e: IOException) {
+      return localAssociations
+    }
   }
 
   override suspend fun removeTicketFromUser(
@@ -118,6 +149,10 @@ constructor(
             firestore.collection("tickets").document(document.id).delete()
           }
         }
+  }
+
+  override suspend fun deleteEvent(eventId: String) {
+    firestore.collection("events").document(eventId).delete().await()
   }
 
   override suspend fun addTicketToUser(
@@ -323,23 +358,25 @@ constructor(
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
-    val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association()
-    return deserializeAssociation(snapshot)
+    if (associationId.isEmpty()) {
+      return Association()
+    }
+    val query =
+        firestore.document("associations/$associationId").get().await() ?: return Association()
+    return deserializeAssociation(query)
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
     val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(50).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(50).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(50).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(50).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false -> snapshot.documents.map { deserializeNews(it) }
     }
-    return snapshot.documents.map { deserializeNews(it) }
   }
 
   override suspend fun filterNewsBasedOnAssociations(
@@ -378,6 +415,10 @@ constructor(
         .set(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override suspend fun deleteNews(newsId: String) {
+    firestore.collection("news").document(newsId).delete().await()
   }
 
   override suspend fun getNews(
