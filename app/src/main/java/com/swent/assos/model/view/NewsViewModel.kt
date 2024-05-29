@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -89,6 +90,23 @@ constructor(
           }
         }
       }
+    }
+  }
+
+  fun saveNews(newsId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(savedNews = DataCache.currentUser.value.savedNews + newsId)
+    viewModelScope.launch(ioDispatcher) {
+      dbService.saveNews(newsId, { _isSaved.update { true } }, {})
+    }
+  }
+
+  fun unSaveNews(newsId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedNews = DataCache.currentUser.value.savedNews.filter { it != newsId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unSaveNews(newsId, { _isSaved.update { false } }, {})
     }
   }
 }
