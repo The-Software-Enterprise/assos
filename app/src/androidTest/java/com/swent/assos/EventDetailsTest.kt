@@ -61,6 +61,12 @@ class EventDetailsTest : SuperTest() {
           "description",
           isStaffingEnabled = true)
 
+  val OtherFakeUser =
+      User(
+          id = "SomeOtherUserId",
+          email = "someone.notImportant@epflch",
+          savedEvents = listOf(event1.id))
+
   override fun setup() {
 
     FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
@@ -181,6 +187,31 @@ class EventDetailsTest : SuperTest() {
             assertIsDisplayed()
             performClick()
             assert(DataCache.currentUser.value.savedEvents.contains(event3.id))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun unSaveEvent() {
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(OtherFakeUser.id)
+        .set(serialize(OtherFakeUser))
+    DataCache.currentUser.value = OtherFakeUser
+    DataCache.currentUser.value.savedEvents = listOf(event1.id)
+    composeTestRule.activity.setContent {
+      EventDetails(
+          eventId = event1.id, navigationActions = mockNavActions, assoId = event1.associationId)
+    }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        step("Unsave event") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(!DataCache.currentUser.value.savedEvents.contains(event1.id))
           }
         }
       }

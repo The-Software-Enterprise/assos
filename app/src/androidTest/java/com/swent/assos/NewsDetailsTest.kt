@@ -154,19 +154,27 @@ class NewsDetailsTest : SuperTest() {
     }
   }
 
-  /*@Test
+  @Test
   fun unSaveNews() {
-      DataCache.currentUser.value = OtherFakeUser
-      run {
-          ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
-              step("Un save news") {
-                  savedIcon {
-                      assertIsDisplayed()
-                      performClick()
-                      assert(!DataCache.currentUser.value.savedNews.contains(news.id))
-                  }
-              }
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(OtherFakeUser.id)
+        .set(serialize(OtherFakeUser))
+    DataCache.currentUser.value = OtherFakeUser
+    DataCache.currentUser.value.savedNews = listOf(news.id)
+    composeTestRule.activity.setContent {
+      NewsDetails(newsId = news.id, navigationActions = mockNavActions)
+    }
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        step("Unsave news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(!DataCache.currentUser.value.savedNews.contains(news.id))
           }
+        }
       }
-  }*/
+    }
+  }
 }
