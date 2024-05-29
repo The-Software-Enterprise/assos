@@ -1,5 +1,8 @@
 package com.swent.assos.model.view
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
@@ -25,6 +28,7 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
+
   private val _followedAssociations = MutableStateFlow(emptyList<Association>())
   val followedAssociations = _followedAssociations.asStateFlow()
 
@@ -48,6 +52,9 @@ constructor(
 
   private val _savedNews = MutableStateFlow(emptyList<News>())
   val savedNews = _savedNews.asStateFlow()
+
+  private var _selectedOption by mutableStateOf("Events")
+  //val selectedOption = _selectedOption.asStateFlow()
 
   fun signOut() {
     try {
