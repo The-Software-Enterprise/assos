@@ -132,19 +132,20 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
+        if (conf) {
+          ConfirmDialog(
+              onDismiss = { conf = false },
+              onConfirm = {
+                conf = false
+                eventViewModel.deleteEvent(eventId)
+                navigationActions.goBack()
+              },
+              title = event.title)
+        }
+
         if (loading.value) {
           LoadingCircle()
         } else {
-          if (conf) {
-            ConfirmDialog(
-                onDismiss = { conf = false },
-                onConfirm = {
-                  conf = false
-                  eventViewModel.deleteEvent(eventId)
-                  navigationActions.goBack()
-                },
-                title = event.title)
-          }
           EventContent(
               viewModel = eventViewModel,
               paddingValues = paddingValues,
