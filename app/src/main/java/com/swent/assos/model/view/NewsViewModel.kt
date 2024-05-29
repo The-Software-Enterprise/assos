@@ -35,6 +35,9 @@ constructor(
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
+  private val _isSaved = MutableStateFlow(false)
+  val isSaved = _isSaved.asStateFlow()
+
   fun loadNews(newsId: String) {
     viewModelScope.launch(ioDispatcher) {
       dbService.getNews(newsId).let {

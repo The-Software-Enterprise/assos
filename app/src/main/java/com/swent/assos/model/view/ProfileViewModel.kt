@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.Event
+import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.AuthService
@@ -39,6 +41,12 @@ constructor(
   private var _loading = MutableStateFlow(true)
   val loading = _loading.asStateFlow()
 
+  private val _savedEvents = MutableStateFlow(emptyList<Event>())
+  val savedEvents = _savedEvents.asStateFlow()
+
+  private val _savedNews = MutableStateFlow(emptyList<News>())
+  val savedNews = _savedNews.asStateFlow()
+
   fun signOut() {
     try {
       DataCache.signOut()
@@ -67,6 +75,21 @@ constructor(
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
+
+        currentUser.savedNews.forEach { newsId ->
+          dbService.getNews(newsId).let { it ->
+            _savedNews.value += it
+            _savedNews.value = _savedNews.value.distinct().sortedBy { it.createdAt }
+          }
+        }
+
+        currentUser.savedEvents.forEach { eventId ->
+          dbService.getEventById(eventId).let { it ->
+            _savedEvents.value += it
+            _savedEvents.value = _savedEvents.value.distinct().sortedBy { it.startTime }
+          }
+        }
+
         _loading.value = false
       }
     }
