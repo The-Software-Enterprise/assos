@@ -7,7 +7,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -48,6 +47,7 @@ import com.swent.assos.R
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.shadows_item
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
@@ -119,12 +119,8 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("TicketItem")
-              .padding(16.dp)
-              .border(
-                  width = 0.5.dp,
-                  color = MaterialTheme.colorScheme.outline,
-                  shape = RoundedCornerShape(12.dp))) {
+          shadows_item(16.dp, 16.dp, 16.dp, 16.dp, RoundedCornerShape(12.dp))
+              .testTag("TicketItem")) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {
@@ -148,7 +144,7 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
           Spacer(modifier = Modifier.height(6.dp))
 
           Text(
-              text = event.startTime?.let { dateFormatter.format(it) } ?: "",
+              text = event.startTime.let { dateFormatter.format(it) } ?: "",
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
           Spacer(modifier = Modifier.height(10.dp))
