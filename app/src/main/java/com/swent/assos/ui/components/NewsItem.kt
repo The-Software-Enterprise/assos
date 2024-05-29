@@ -34,7 +34,9 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.outlineVariant),
       shape = RoundedCornerShape(12.dp),
-      modifier =shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp)).semantics { testTagsAsResourceId = true }
+      modifier =
+          shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
+              .semantics { testTagsAsResourceId = true }
               .testTag("NewsItem")
               .height(150.dp)) {
         Column(
