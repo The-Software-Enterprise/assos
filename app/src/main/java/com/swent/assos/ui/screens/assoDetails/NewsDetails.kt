@@ -3,8 +3,10 @@ package com.swent.assos.ui.screens.assoDetails
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,15 +40,20 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.DeleteButton
@@ -54,17 +61,23 @@ import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
+fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationActions) {
 
   val viewModel: NewsViewModel = hiltViewModel()
   val specificNews by viewModel.news.collectAsState()
   val profileViewModel: ProfileViewModel = hiltViewModel()
   val associations by profileViewModel.memberAssociations.collectAsState()
   var conf by remember { mutableStateOf(false) }
+
+  val assoViewModel: AssoViewModel = hiltViewModel()
+  val association by assoViewModel.association.collectAsState()
+
   LaunchedEffect(key1 = Unit) {
     viewModel.loadNews(newsId)
     profileViewModel.updateUser()
+    assoViewModel.getAssociation(assoId)
   }
+
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
       floatingActionButton = {
@@ -74,7 +87,29 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
       },
       floatingActionButtonPosition = FabPosition.Center,
       topBar = {
-        PageTitleWithGoBack(title = specificNews.title, navigationActions = navigationActions)
+        PageTitleWithGoBack(
+            title = specificNews.title,
+            navigationActions = navigationActions,
+            actionButton = {
+              Row {
+                Text(
+                    text = association.acronym,
+                    style =
+                        TextStyle(
+                            textDecoration = TextDecoration.Underline,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    textDecoration = TextDecoration.Underline,
+                    modifier =
+                        Modifier.padding(end = 16.dp).clickable {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${assoId}")
+                        })
+              }
+            })
       }) { paddingValues ->
         if (conf) {
           ConfirmDialog(

@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Inbox
 import androidx.compose.material.icons.filled.ModeEdit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -148,7 +149,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                       modifier =
                           Modifier.fillMaxWidth()
                               .padding(10.dp)
-                              .height(200.dp)
+                              .height(150.dp)
                               .clip(RoundedCornerShape(20.dp))
                               .background(GraySeparator),
                       contentScale = ContentScale.Crop,
@@ -218,18 +219,22 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                     }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Text(
-                    text = "Applications",
-                    modifier =
-                        Modifier.testTag("ApplicationsButton").clickable {
-                          navigationActions.navigateTo(
-                              Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
-                        },
-                    style = MaterialTheme.typography.headlineMedium,
-                    textDecoration = TextDecoration.Underline,
-                    fontSize = 20.sp)
-
-                Spacer(modifier = Modifier.height(20.dp))
+                Button( modifier =
+                        Modifier.testTag("ApplicationsButton")
+                            .padding(30.dp)
+                            .width(250.dp)
+                            .height(60.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    onClick = {
+                      navigationActions.navigateTo(
+                          Destinations.APPLICATION_MANAGEMENT.route + "/${assoId}")
+                    }) {
+                      Icon(imageVector = Icons.Default.Inbox, contentDescription = null)
+                      Text(
+                          "View Applications",
+                          modifier = Modifier.padding(start = 12.dp),
+                          fontSize = 18.sp)
+                    }
               }
             }
       }

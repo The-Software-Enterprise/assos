@@ -81,9 +81,9 @@ class ApplicationManagementTest : SuperTest() {
       ComposeScreen.onComposeScreen<ManageAssoScreen>(composeTestRule) {
         step("Check applicant list") {
           composeTestRule.waitUntil(
-              condition = { composeTestRule.onNodeWithText("Applications").isDisplayed() },
+              condition = { composeTestRule.onNodeWithText("View Applications").isDisplayed() },
               timeoutMillis = 10000)
-          composeTestRule.onNodeWithText("Applications").performClick()
+          composeTestRule.onNodeWithText("View Applications").performClick()
         }
       }
     }

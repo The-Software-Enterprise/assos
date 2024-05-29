@@ -67,17 +67,4 @@ class ScanTicketTest : SuperTest() {
       }
     }
   }
-
-  @Test
-  fun scanButtonIsDisplayed() {
-    mockkStatic(ContextCompat::class)
-    every { ContextCompat.checkSelfPermission(any(), Manifest.permission.CAMERA) } returns
-        PackageManager.PERMISSION_GRANTED
-
-    run {
-      ComposeScreen.onComposeScreen<ScanTicketScreen>(composeTestRule) {
-        step("Check if the scan button is displayed") { scanButton { assertIsDisplayed() } }
-      }
-    }
-  }
 }

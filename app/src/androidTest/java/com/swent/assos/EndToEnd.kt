@@ -79,7 +79,7 @@ class EndToEnd : SuperTest() {
 
           Thread.sleep(3000)
           // check if we are on the Home screen
-          verify { mockNavActions.navigateTo(Destinations.HOME) }
+          verify { mockNavActions.navigateTo(Destinations.HOME.route) }
           confirmVerified(mockNavActions)
         }
       }
@@ -182,7 +182,7 @@ class EndToEnd : SuperTest() {
 
           Thread.sleep(3000)
           // check if we are on the Home screen
-          verify { mockNavActions.navigateTo(Destinations.HOME) }
+          verify { mockNavActions.navigateTo(Destinations.HOME.route) }
           confirmVerified(mockNavActions)
         }
       }
