@@ -24,18 +24,6 @@ fun CreatePosition(assoId: String, navigationActions: NavigationActions) {
   var requirements by remember { mutableStateOf(listOf<String>()) }
   var responsibilities by remember { mutableStateOf(listOf<String>()) }
 
-  @Composable
-  fun SubmitButton() {
-    FloatingActionButton(
-        onClick = {
-          assoModel.createPosition(
-              assoId, OpenPositions("", title, description, requirements, responsibilities))
-          navigationActions.goBack()
-        }) {
-          Text(text = "Submit")
-        }
-  }
-
   LaunchedEffect(key1 = Unit) { assoModel.getAssociation(assoId) }
 
   Scaffold(
@@ -44,7 +32,13 @@ fun CreatePosition(assoId: String, navigationActions: NavigationActions) {
         TopAssoBar(asso = association, navigationActions = navigationActions)
         Text(text = "Create Position", modifier = Modifier.padding(8.dp))
       },
-      floatingActionButton = { SubmitButton() },
+      floatingActionButton = {
+        SubmitButton {
+          assoModel.createPosition(
+              assoId, OpenPositions("", title, description, requirements, responsibilities))
+          navigationActions.goBack()
+        }
+      },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         LazyColumn(
             modifier =
@@ -127,5 +121,14 @@ fun DynamicFields(
                 .testTag("dynamicField|$label|add")) {
           Text("+")
         }
+  }
+}
+
+@Composable
+fun SubmitButton(onClick: () -> Unit) {
+  FloatingActionButton(
+      onClick = onClick,
+  ) {
+    Text(text = "Submit")
   }
 }

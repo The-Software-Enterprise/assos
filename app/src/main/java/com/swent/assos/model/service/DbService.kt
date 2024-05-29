@@ -158,6 +158,8 @@ interface DbService {
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<OpenPositions>
 
+  suspend fun getPositions(associationId: String): List<OpenPositions>
+
   suspend fun addPosition(associationId: String, openPositions: OpenPositions)
 
   suspend fun addUser(users: User)

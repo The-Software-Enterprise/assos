@@ -58,6 +58,20 @@ constructor(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<OpenPositions> {
     val query = firestore.collection("associations/$associationId/positions")
+    val snapshot =
+        if (lastDocumentSnapshot == null) {
+          query.limit(10).get().await()
+        } else {
+          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deSerializeOpenPositions(it) }
+  }
+
+  override suspend fun getPositions(associationId: String): List<OpenPositions> {
+    val query = firestore.collection("associations/$associationId/positions")
     val snapshot = query.get().await()
     if (snapshot.isEmpty) {
       return emptyList()
