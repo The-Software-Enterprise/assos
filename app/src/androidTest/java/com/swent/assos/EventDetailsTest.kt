@@ -120,10 +120,10 @@ class EventDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
         composeTestRule.waitUntil(timeoutMillis = 5000) {
-          composeTestRule.onNodeWithText("Create ticket").isDisplayed()
+          composeTestRule.onNodeWithText("Add ticket").isDisplayed()
         }
         step("I want to create a ticket") {
-          composeTestRule.onNodeWithText("Create ticket").performClick()
+          composeTestRule.onNodeWithText("Add ticket").performClick()
         }
         step("Check if we actually navigate to create a ticket screen") {
           verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route + "/${event2.id}") }
@@ -141,10 +141,8 @@ class EventDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
         step("Delete Event") {
-          composeTestRule.waitUntil(10000) {
-            composeTestRule.onNodeWithTag("DeleteButton").isDisplayed()
-          }
-          composeTestRule.onNodeWithTag("DeleteButton").performClick()
+          composeTestRule.waitUntil(10000) { composeTestRule.onNodeWithTag("Button").isDisplayed() }
+          composeTestRule.onNodeWithTag("Button").performClick()
         }
         composeTestRule.waitUntil(10000) { composeTestRule.onNodeWithText("No").isDisplayed() }
         step("cancel deletion") { composeTestRule.onNodeWithText("No").performClick() }
