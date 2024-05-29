@@ -45,6 +45,7 @@ constructor(
         _news.value = it
         _loadingDisplay.value = false
       }
+      _isSaved.update { DataCache.currentUser.value.savedNews.contains(_news.value.id) }
     }
   }
 

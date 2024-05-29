@@ -53,6 +53,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       _event.value = dbService.getEventById(eventId)
       _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
+        _isSaved.update { DataCache.currentUser.value.savedEvents.contains(_event.value.id) }
     }
   }
 
