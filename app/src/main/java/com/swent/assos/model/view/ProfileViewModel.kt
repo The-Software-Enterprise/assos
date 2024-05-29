@@ -28,7 +28,6 @@ constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
-
   private val _followedAssociations = MutableStateFlow(emptyList<Association>())
   val followedAssociations = _followedAssociations.asStateFlow()
 
@@ -54,7 +53,7 @@ constructor(
   val savedNews = _savedNews.asStateFlow()
 
   private var _selectedOption by mutableStateOf("Events")
-  //val selectedOption = _selectedOption.asStateFlow()
+  // val selectedOption = _selectedOption.asStateFlow()
 
   fun signOut() {
     try {

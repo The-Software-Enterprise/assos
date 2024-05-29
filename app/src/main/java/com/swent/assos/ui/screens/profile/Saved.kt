@@ -52,8 +52,6 @@ fun Saved(navigationActions: NavigationActions) {
 
   var selectedOption by remember { mutableStateOf("Events") }
 
-
-
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("SavedScreen"),
       topBar = {
