@@ -39,7 +39,6 @@ fun NewsItemSaved(news: News, navigationActions: NavigationActions) {
 
   val title: String
   val description: String
-  var assoId: String = ""
 
   title = news.title
   description = news.description
@@ -51,11 +50,7 @@ fun NewsItemSaved(news: News, navigationActions: NavigationActions) {
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(
-                    if (news.eventId == "") {
-                      Destinations.NEWS_DETAILS.route + "/${news.id}"
-                    } else {
-                      Destinations.EVENT_DETAILS.route + "/${news.eventId}" + "/${assoId}"
-                    })
+                    Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
               }
               .testTag("SavedNews")) {
         Row(

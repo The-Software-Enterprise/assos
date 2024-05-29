@@ -50,13 +50,7 @@ fun EventsItemSaved(events: Event, navigationActions: NavigationActions) {
               .height(100.dp)
               .clickable {
                 navigationActions.navigateTo(
-                    if (events.id == "") {
-                      Destinations.NEWS_DETAILS.route + "/${events.id}"
-                    } else {
-                      Destinations.EVENT_DETAILS.route +
-                          "/${events.id}" +
-                          "/${events.associationId}"
-                    })
+                    Destinations.EVENT_DETAILS.route + "/${events.id}" + "/${events.associationId}")
               }
               .testTag("SavedEvents")) {
         Row(

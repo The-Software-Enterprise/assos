@@ -184,7 +184,7 @@ class NewsDetailsTest : SuperTest() {
     DataCache.currentUser.value = OtherFakeUser
     DataCache.currentUser.value.savedNews = listOf(news.id)
     composeTestRule.activity.setContent {
-      NewsDetails(newsId = news.id, navigationActions = mockNavActions)
+      NewsDetails(newsId = news.id, assoId = news.associationId, navigationActions = mockNavActions)
     }
     run {
       ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {

@@ -153,7 +153,10 @@ class SavedTest : SuperTest() {
           }
         }
         step("Check if we navigate to the correct news") {
-          verify { mockNavActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}") }
+          verify {
+            mockNavActions.navigateTo(
+                Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
+          }
           confirmVerified(mockNavActions)
         }
       }
