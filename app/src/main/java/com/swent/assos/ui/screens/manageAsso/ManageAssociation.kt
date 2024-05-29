@@ -58,7 +58,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -219,7 +218,8 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                     }
                 Spacer(modifier = Modifier.height(10.dp))
 
-                Button( modifier =
+                Button(
+                    modifier =
                         Modifier.testTag("ApplicationsButton")
                             .padding(30.dp)
                             .width(250.dp)
