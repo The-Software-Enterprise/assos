@@ -6,7 +6,6 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
-import com.swent.assos.model.data.User
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
