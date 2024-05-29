@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -143,7 +145,7 @@ fun deserializeTicket(doc: DocumentSnapshot): Ticket {
       id = doc.id, eventId = doc.getString("eventId") ?: "", userId = doc.getString("userId") ?: "")
 }
 
-fun serialize(news: News): Map<String, Any?> {
+fun serialize(news: News): Map<String, Any> {
   return mapOf(
       "title" to news.title,
       "description" to news.description,
@@ -279,4 +281,13 @@ fun saveImageToGallery(context: Context, imageBitmap: ImageBitmap) {
       Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show()
     }
   }
+}
+
+fun isNetworkAvailable(context: Context): Boolean {
+  val connectivityManager =
+      context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  val activeNetwork = connectivityManager.activeNetwork ?: return false
+  val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+  return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+      capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
 }

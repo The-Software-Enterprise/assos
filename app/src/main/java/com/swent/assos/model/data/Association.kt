@@ -1,15 +1,18 @@
 package com.swent.assos.model.data
 
 import android.net.Uri
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.firebase.firestore.DocumentSnapshot
 
+@Entity(tableName = "associations")
 data class Association(
-    val id: String = "",
-    val acronym: String = "",
-    val fullname: String = "",
-    val url: String = "",
-    val documentSnapshot: DocumentSnapshot? = null,
-    val logo: Uri = Uri.EMPTY,
-    val banner: Uri = Uri.EMPTY,
-    val description: String = ""
+    @PrimaryKey var id: String = "",
+    var acronym: String = "",
+    var fullname: String = "",
+    var url: String = "",
+    var documentSnapshot: DocumentSnapshot? = null,
+    var logo: Uri = Uri.EMPTY,
+    var banner: Uri = Uri.EMPTY,
+    var description: String = ""
 )

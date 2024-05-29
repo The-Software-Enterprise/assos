@@ -1,6 +1,11 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -12,6 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -24,11 +32,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -42,25 +52,25 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val event by eventViewModel.event.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
-
+  val profileViewModel: ProfileViewModel = hiltViewModel()
+  val associations by profileViewModel.memberAssociations.collectAsState()
   val userId by assoViewModel.currentUser.collectAsState()
-
-  val viewModel: ProfileViewModel = hiltViewModel()
-  val myAssociations by viewModel.memberAssociations.collectAsState()
+  var conf by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
-  val loading = viewModel.loading.collectAsState()
+  val loading = profileViewModel.loading.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
     eventViewModel.getEvent(eventId)
+    profileViewModel.updateUser()
   }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-        if (!isMember(myAssociations, asso.id) && event.isStaffingEnabled && !loading.value) {
+        if (!(associations.map { it.id }.contains(assoId)) && event.isStaffingEnabled && !loading.value) {
           val applied = eventViewModel.appliedStaff.collectAsState()
           AssistChip(
               colors =
@@ -114,19 +124,26 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-        if (loading.value) {
-          LoadingCircle()
-        } else {
-          EventContent(
-              viewModel = eventViewModel,
-              paddingValues = paddingValues,
-              isMember = isMember(myAssociations = myAssociations, currentAsso = asso.id),
-              eventId = eventId,
-              navigationActions = navigationActions)
+        if (conf) {
+          ConfirmDialog(
+              onDismiss = { conf = false },
+              onConfirm = {
+                conf = false
+                eventViewModel.deleteEvent(eventId)
+                navigationActions.goBack()
+              },
+              title = event.title)
         }
+    if (loading.value) {
+      LoadingCircle()
+    } else {
+      EventContent(
+        viewModel = eventViewModel,
+        paddingValues = paddingValues,
+        isMember = (associations.map { it.id }.contains(assoId)),
+        eventId = eventId,
+        navigationActions = navigationActions)
+    }
       }
-}
 
-private fun isMember(myAssociations: List<Association>, currentAsso: String): Boolean {
-  return myAssociations.map { it.id }.contains(currentAsso)
 }
