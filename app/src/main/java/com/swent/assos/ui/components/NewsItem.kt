@@ -37,11 +37,13 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
       modifier =
           shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
               .semantics { testTagsAsResourceId = true }
-              .testTag("NewsItem")) {
+              .testTag("NewsItem")
+              .height(150.dp)) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {
-                  navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
+                  navigationActions.navigateTo(
+                      Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
                 },
             horizontalAlignment = Alignment.CenterHorizontally) {
               if (news.images.isNotEmpty()) {
@@ -50,7 +52,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp)
+                        Modifier.height(75.dp)
                             .background(MaterialTheme.colorScheme.surface)
                             .testTag("NewsItemImage"))
               } else {
@@ -59,7 +61,7 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier =
-                        Modifier.height(100.dp)
+                        Modifier.height(75.dp)
                             .background(MaterialTheme.colorScheme.surface)
                             .testTag("NewsItemImage"))
               }

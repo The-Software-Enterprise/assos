@@ -21,7 +21,8 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class NewsItemTest : SuperTest() {
 
-  private val news = News(title = "title", description = "description")
+  private val news =
+      News(title = "title", description = "description", associationId = "1UYICvqVKbImYMNK3Sz3")
 
   override fun setup() {
     super.setup()
@@ -41,7 +42,10 @@ class NewsItemTest : SuperTest() {
           assertIsDisplayed()
           performClick()
         }
-        verify { mockNavActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}") }
+        verify {
+          mockNavActions.navigateTo(
+              Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
+        }
         confirmVerified(mockNavActions)
       }
     }
@@ -59,7 +63,10 @@ class NewsItemTest : SuperTest() {
           assertIsDisplayed()
           performClick()
         }
-        verify { mockNavActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}") }
+        verify {
+          mockNavActions.navigateTo(
+              Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
+        }
         confirmVerified(mockNavActions)
       }
     }

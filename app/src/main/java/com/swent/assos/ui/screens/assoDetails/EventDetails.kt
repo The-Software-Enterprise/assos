@@ -1,15 +1,12 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ChipColors
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -27,10 +24,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
@@ -39,6 +39,7 @@ import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.DeleteButton
+import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
 
@@ -49,6 +50,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val eventViewModel: EventViewModel = hiltViewModel()
 
   val event by eventViewModel.event.collectAsState()
+  val applied = eventViewModel.appliedStaff.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
   val profileViewModel: ProfileViewModel = hiltViewModel()
@@ -57,6 +59,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   var conf by remember { mutableStateOf(false) }
 
   val context = LocalContext.current
+  val loading = profileViewModel.loading.collectAsState()
 
   LaunchedEffect(key1 = Unit) {
     assoViewModel.getAssociation(assoId)
@@ -64,90 +67,95 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
     profileViewModel.updateUser()
   }
 
+  @Composable
+  fun labelStaffButton() {
+    if (applied.value) {
+      Text(
+          text = "Remove staff application",
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.Medium,
+      )
+    } else {
+      Text(
+          text = "Apply for staffing",
+          color = MaterialTheme.colorScheme.onSecondary,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.Medium,
+      )
+    }
+  }
+
+  @Composable
+  fun staffButtonColors(): ChipColors {
+    return if (applied.value)
+        AssistChipDefaults.assistChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    else AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.secondary)
+  }
+
+  fun callBackStaffRequest() {
+    if (applied.value) {
+      eventViewModel.removeRequestToStaff(
+          event.id,
+          userId.id,
+          Toast.makeText(
+                  context,
+                  "You have successfully removed your request to staff at the event",
+                  Toast.LENGTH_SHORT)
+              .show())
+    } else {
+      eventViewModel.applyStaffing(
+          event.id,
+          userId.id,
+          Toast.makeText(
+                  context,
+                  "You have successfully applied to staff at the event",
+                  Toast.LENGTH_SHORT)
+              .show())
+    }
+  }
+
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
-      topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
+      topBar = {
+        PageTitleWithGoBack(
+            title = event.title,
+            navigationActions = navigationActions,
+            actionButton = {
+              Row {
+                Text(
+                    text = asso.acronym,
+                    style =
+                        TextStyle(
+                            textDecoration = TextDecoration.Underline,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    textDecoration = TextDecoration.Underline,
+                    modifier =
+                        Modifier.padding(end = 16.dp).clickable {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${assoId}")
+                        })
+              }
+            })
+      },
       floatingActionButton = {
-        if (event.id != "") {
-          when ((associations.map { it.id }.contains(assoId))) {
-            true ->
-                Column {
-                  Row(
-                      modifier = Modifier.fillMaxWidth(),
-                      horizontalArrangement = Arrangement.Center) {
-                        if (event.isStaffingEnabled) {
-                          JoinUsButton(
-                              onClick = {
-                                navigationActions.navigateTo(
-                                    Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
-                              },
-                              text = "Staff List")
-                          Spacer(modifier = Modifier.width(10.dp))
-                        }
-                        JoinUsButton(
-                            onClick = {
-                              navigationActions.navigateTo(
-                                  Destinations.CREATE_TICKET.route + "/${eventId}")
-                            },
-                            text = "Create ticket")
-                      }
-                  DeleteButton { conf = true }
-                }
-            false ->
-                if (event.isStaffingEnabled) {
-                  val applied = eventViewModel.appliedStaff.collectAsState()
-                  AssistChip(
-                      colors =
-                          if (applied.value)
-                              AssistChipDefaults.assistChipColors(
-                                  containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                          else
-                              AssistChipDefaults.assistChipColors(
-                                  containerColor = MaterialTheme.colorScheme.secondary),
-                      border = null,
-                      modifier = Modifier.testTag("StaffButton").padding(5.dp),
-                      onClick = {
-                        if (applied.value) {
-                          eventViewModel.removeRequestToStaff(
-                              event.id,
-                              userId.id,
-                              Toast.makeText(
-                                      context,
-                                      "You have successfully removed your request to staff at the event",
-                                      Toast.LENGTH_SHORT)
-                                  .show())
-                        } else {
-                          eventViewModel.applyStaffing(
-                              event.id,
-                              userId.id,
-                              Toast.makeText(
-                                      context,
-                                      "You have successfully applied to staff at the event",
-                                      Toast.LENGTH_SHORT)
-                                  .show())
-                        }
-                      },
-                      label = {
-                        if (applied.value) {
-                          Text(
-                              text = "Remove staff application",
-                              color = MaterialTheme.colorScheme.onSurfaceVariant,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.Medium,
-                          )
-                        } else {
-                          Text(
-                              text = "Apply for staffing",
-                              color = MaterialTheme.colorScheme.onSecondary,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.Medium,
-                          )
-                        }
-                      },
-                  )
-                }
-          }
+        if (!(associations.map { it.id }.contains(assoId)) &&
+            event.isStaffingEnabled &&
+            !loading.value) {
+          AssistChip(
+              colors = staffButtonColors(),
+              border = null,
+              modifier = Modifier.testTag("StaffButton").padding(5.dp),
+              onClick = { callBackStaffRequest() },
+              label = { labelStaffButton() },
+          )
         }
+        DeleteButton { conf = true }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         if (conf) {
@@ -160,10 +168,16 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               },
               title = event.title)
         }
-        EventContent(
-            viewModel = eventViewModel,
-            paddingValues = paddingValues,
-            isMember = (associations.map { it.id }.contains(assoId)),
-            eventId = eventId)
+
+        if (loading.value) {
+          LoadingCircle()
+        } else {
+          EventContent(
+              viewModel = eventViewModel,
+              paddingValues = paddingValues,
+              isMember = (associations.map { it.id }.contains(assoId)),
+              eventId = eventId,
+              navigationActions = navigationActions)
+        }
       }
 }
