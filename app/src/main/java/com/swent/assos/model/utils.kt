@@ -13,7 +13,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ImageBitmap
@@ -42,16 +41,10 @@ import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
 
-fun shadows_item(
-  start: Dp,
-  top: Dp,
-  end: Dp,
-  bottom: Dp,
-  shape: Shape): Modifier {
-  return Modifier
-    .padding(start, top, end, bottom)
-    .shadow(elevation = 6.dp, shape = shape)
-    .shadow(elevation = 2.dp, shape = shape)
+fun shadows_item(start: Dp, top: Dp, end: Dp, bottom: Dp, shape: Shape): Modifier {
+  return Modifier.padding(start, top, end, bottom)
+      .shadow(elevation = 6.dp, shape = shape)
+      .shadow(elevation = 2.dp, shape = shape)
 }
 
 enum class AssociationPosition(val string: String, val rank: Int) {

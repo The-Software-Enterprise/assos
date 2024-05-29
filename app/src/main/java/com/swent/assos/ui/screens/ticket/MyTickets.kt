@@ -118,7 +118,9 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
-      modifier = shadows_item(16.dp, 16.dp, 16.dp, 16.dp, RoundedCornerShape(12.dp)).testTag("TicketItem")) {
+      modifier =
+          shadows_item(16.dp, 16.dp, 16.dp, 16.dp, RoundedCornerShape(12.dp))
+              .testTag("TicketItem")) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {

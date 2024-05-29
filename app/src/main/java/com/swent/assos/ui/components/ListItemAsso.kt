@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ListItem
@@ -16,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -34,8 +32,14 @@ import com.swent.assos.model.shadows_item
 @Composable
 fun ListItemAsso(asso: Association, callback: () -> Unit) {
   ListItem(
-      modifier = shadows_item(top = 0.dp, bottom = 12.dp, start = 16.dp, end = 16.dp, shape = RoundedCornerShape(15.dp))
-          .fillMaxWidth()
+      modifier =
+          shadows_item(
+                  top = 0.dp,
+                  bottom = 12.dp,
+                  start = 16.dp,
+                  end = 16.dp,
+                  shape = RoundedCornerShape(15.dp))
+              .fillMaxWidth()
               .background(
                   color = MaterialTheme.colorScheme.background,
                   shape = RoundedCornerShape(size = 15.dp))

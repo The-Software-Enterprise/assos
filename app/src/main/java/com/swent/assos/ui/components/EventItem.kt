@@ -35,7 +35,9 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
       shape = RoundedCornerShape(12.dp),
-      modifier = shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp)).testTag("EventItem")
+      modifier =
+          shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
+              .testTag("EventItem")
               .background(
                   color = MaterialTheme.colorScheme.background,
                   shape = RoundedCornerShape(size = 12.dp))
