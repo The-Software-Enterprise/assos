@@ -254,7 +254,6 @@ fun EventContent(
             }
           }
         }
-
         itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->
           when (field) {
             is Event.Field.Text -> {

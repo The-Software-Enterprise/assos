@@ -31,6 +31,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
+import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -60,7 +61,12 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
-      topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
+      topBar = {
+        PageTitleWithGoBack(
+            title = asso.acronym,
+            navigationActions = navigationActions,
+            actionButton = { DeleteButton { conf = true } })
+      },
       floatingActionButton = {
         if (!(associations.map { it.id }.contains(assoId)) &&
             event.isStaffingEnabled &&
@@ -123,13 +129,13 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         } else {
           if (conf) {
             ConfirmDialog(
-              onDismiss = { conf = false },
-              onConfirm = {
-                conf = false
-                eventViewModel.deleteEvent(eventId)
-                navigationActions.goBack()
-              },
-              title = event.title)
+                onDismiss = { conf = false },
+                onConfirm = {
+                  conf = false
+                  eventViewModel.deleteEvent(eventId)
+                  navigationActions.goBack()
+                },
+                title = event.title)
           }
           EventContent(
               viewModel = eventViewModel,
