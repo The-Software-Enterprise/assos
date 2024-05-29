@@ -1,7 +1,9 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
@@ -23,6 +25,17 @@ class FollowingTest : SuperTest() {
   private val firstName = "Antoine"
   private val lastName = "Marchand"
   private val assoId = "QjAOBhVVcL0P2G1etPgk"
+
+  private val user2 =
+      User(
+          id = "11111",
+          firstName = "Paul",
+          lastName = "Levebre",
+          email = "paul.levebre@epfl.ch",
+          associations = emptyList(),
+          following = emptyList(),
+          sciper = "330245",
+          semester = "GM-BA2")
 
   override fun setup() {
     DataCache.currentUser.value =
@@ -84,6 +97,18 @@ class FollowingTest : SuperTest() {
         step("Check if we really navigate back to profile") {
           verify { mockNavActions.goBack() }
           confirmVerified(mockNavActions)
+        }
+      }
+    }
+  }
+
+  @Test
+  fun testTheEmptyList() {
+    DataCache.currentUser.value = user2
+    run {
+      ComposeScreen.onComposeScreen<FollowingScreen>(composeTestRule) {
+        step("Check if the empty list is displayed") {
+          composeTestRule.onNodeWithText("No results were found").assertIsDisplayed()
         }
       }
     }
