@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,10 +28,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
@@ -66,7 +70,31 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
-      topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
+      topBar = {
+        PageTitleWithGoBack(
+            title = event.title,
+            navigationActions = navigationActions,
+            actionButton = {
+              Row {
+                Text(
+                    text = asso.acronym,
+                    style =
+                        TextStyle(
+                            textDecoration = TextDecoration.Underline,
+                            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 14.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    textDecoration = TextDecoration.Underline,
+                    modifier =
+                        Modifier.padding(end = 16.dp).clickable {
+                          navigationActions.navigateTo(
+                              Destinations.ASSO_DETAILS.route + "/${assoId}")
+                        })
+              }
+            })
+      },
       floatingActionButton = {
         if (event.id != "") {
           when ((associations.map { it.id }.contains(assoId))) {

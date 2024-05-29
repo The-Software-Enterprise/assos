@@ -90,7 +90,7 @@ fun CreateEvent(
                         createNewsViewModel.setTitle(event.title)
                         createNewsViewModel.setDescription(event.description)
                         createNewsViewModel.addImages(listOf(event.image))
-                        news.eventId = event.id
+                        createNewsViewModel.setEventId(event.id)
                         createNewsViewModel.createNews(assoId, onSuccess = {}, onError = {})
                       }
                       .padding(vertical = 5.dp, horizontal = 10.dp)
