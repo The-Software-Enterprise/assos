@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -66,6 +67,8 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val userId by assoViewModel.currentUser.collectAsState()
   var conf by remember { mutableStateOf(false) }
 
+    val isSaved = eventViewModel.isSaved.collectAsState()
+
   val context = LocalContext.current
 
   LaunchedEffect(key1 = Unit) {
@@ -82,13 +85,32 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 
           Image(
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector = Icons.Default.BookmarkBorder,
+              imageVector = if (isSaved.value)
+                  Icons.Default.Bookmark
+              else
+                  Icons.Default.BookmarkBorder,
               contentDescription = null,
               modifier =
                   Modifier.testTag("SavedIcon")
                       .padding(16.dp)
                       .clip(RoundedCornerShape(100))
-                      .clickable {}
+                      .clickable {
+                        if (isSaved.value) {
+                          eventViewModel.unSaveEvent(eventId)
+                          Toast.makeText(
+                                  context,
+                                  "You have successfully removed the event from your saved list",
+                                  Toast.LENGTH_SHORT)
+                              .show()
+                        } else {
+                          eventViewModel.saveEvent(eventId)
+                          Toast.makeText(
+                                  context,
+                                  "You have successfully saved the event",
+                                  Toast.LENGTH_SHORT)
+                              .show()
+                        }
+                      }
                       .size(30.dp)
                       .align(Alignment.TopEnd))
         }

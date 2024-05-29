@@ -1,6 +1,7 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -39,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
@@ -66,6 +69,11 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
   val profileViewModel: ProfileViewModel = hiltViewModel()
   val associations by profileViewModel.memberAssociations.collectAsState()
   var conf by remember { mutableStateOf(false) }
+
+    val isSaved = viewModel.isSaved.collectAsState()
+
+    val context = LocalContext.current
+
   LaunchedEffect(key1 = Unit) {
     viewModel.loadNews(newsId)
     profileViewModel.updateUser()
@@ -84,13 +92,32 @@ fun NewsDetails(newsId: String, navigationActions: NavigationActions) {
 
           Image(
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector = Icons.Default.BookmarkBorder,
+              imageVector = if (isSaved.value)
+                  Icons.Default.Bookmark
+              else
+                  Icons.Default.BookmarkBorder,
               contentDescription = null,
               modifier =
                   Modifier.testTag("SavedIcon")
                       .padding(16.dp)
                       .clip(RoundedCornerShape(100))
-                      .clickable {}
+                      .clickable {
+                          if (isSaved.value) {
+                              viewModel.unSaveNews(newsId)
+                              Toast.makeText(
+                                  context,
+                                  "You have successfully removed the news from your saved list",
+                                  Toast.LENGTH_SHORT)
+                                  .show()
+                          } else {
+                              viewModel.saveNews(newsId)
+                              Toast.makeText(
+                                  context,
+                                  "You have successfully saved the news",
+                                  Toast.LENGTH_SHORT)
+                                  .show()
+                          }
+                      }
                       .size(30.dp)
                       .align(Alignment.TopEnd))
         }

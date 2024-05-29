@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,14 +32,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.HomeItem
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
-import java.time.LocalDateTime
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -46,43 +44,10 @@ fun Saved(navigationActions: NavigationActions) {
 
   val viewModel: ProfileViewModel = hiltViewModel()
   val loading by viewModel.loading.collectAsState()
+  val events by viewModel.savedEvents.collectAsState()
+  val news by viewModel.savedNews.collectAsState()
 
-  val event1 =
-      Event(
-          id = "1",
-          title = "Event 1",
-          associationId = "1",
-          description = "Description of event 1",
-          startTime = LocalDateTime.parse("2024-01-01T00:00:00"),
-          endTime = LocalDateTime.parse("2024-01-01T01:02:00"))
-  val event2 =
-      Event(
-          id = "2",
-          title = "Event 2",
-          associationId = "2",
-          description = "Description of event 2",
-          startTime = LocalDateTime.parse("2024-01-01T00:00:00"),
-          endTime = LocalDateTime.parse("2024-01-01T01:02:00"))
-
-  val events = listOf(event1, event2)
-
-  val news1 =
-      News(
-          id = "1",
-          title = "News 1",
-          associationId = "1",
-          description = "Description of news 1",
-          createdAt = LocalDateTime.parse("2024-01-01T00:00:00"))
-
-  val news2 =
-      News(
-          id = "2",
-          title = "News 2",
-          associationId = "2",
-          description = "Description of news 2",
-          createdAt = LocalDateTime.parse("2024-01-01T00:00:00"))
-
-  val news = listOf(news1, news2)
+  LaunchedEffect(key1 = Unit) { viewModel.updateUser() }
 
   var selectedOption by remember { mutableStateOf("Events") }
 
