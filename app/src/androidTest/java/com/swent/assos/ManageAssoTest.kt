@@ -20,14 +20,14 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class ManageAssoTest : SuperTest() {
-  val assoId = "SHJfKFTgplnrMzoBdDGS"
+  val assoId = "B986lqXA5lKTuG7zgs5T"
   val acronym = "Swiss Solar Boat"
   val fullname = "Association participating in the Monaco Solar & Energy Boat Challenge – MAKE"
 
   val testEvent =
       Event(
           id = "1",
-          title = "Test event",
+          title = "Test event 1",
           description = "Test event description",
           associationId = assoId,
           startTime = LocalDateTime.of(2025, 1, 1, 0, 0),

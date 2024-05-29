@@ -152,7 +152,7 @@ fun serialize(news: News): Map<String, Any> {
       "createdAt" to localDateTimeToTimestamp(news.createdAt),
       "associationId" to news.associationId,
       "images" to news.images,
-      "eventIds" to news.eventIds)
+      "eventId" to news.eventId)
 }
 
 fun serialize(applicant: Applicant): Map<String, Any> {
@@ -175,12 +175,7 @@ fun deserializeNews(doc: DocumentSnapshot): News {
           } else {
             listOf()
           },
-      eventIds =
-          if (doc["eventIds"] is List<*>) {
-            (doc["eventIds"] as List<*>).filterIsInstance<String>().toMutableList()
-          } else {
-            mutableListOf()
-          },
+      eventId = doc.getString("eventId") ?: "",
       documentSnapshot = doc)
 }
 

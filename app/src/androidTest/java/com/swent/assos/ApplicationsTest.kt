@@ -83,6 +83,7 @@ class ApplicationsTest : SuperTest() {
         step("Check if the application titles are displayed") {
           associationsApplicationsTitle { assertIsDisplayed() }
           staffingApplicationsTitle { assertIsDisplayed() }
+          composeTestRule.onNodeWithText("Requested Staffing").assertIsDisplayed()
         }
         composeTestRule.waitUntil {
           composeTestRule.onNodeWithText("PolyLan").isDisplayed() &&

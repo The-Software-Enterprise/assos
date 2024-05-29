@@ -93,6 +93,15 @@ constructor(
     }
   }
 
+  override suspend fun getNews(newsId: String): News {
+    if (newsId.isEmpty()) {
+      return News()
+    }
+    val query = firestore.collection("news").document(newsId)
+    val snapshot = query.get().await() ?: return News()
+    return deserializeNews(snapshot)
+  }
+
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
@@ -140,6 +149,10 @@ constructor(
             firestore.collection("tickets").document(document.id).delete()
           }
         }
+  }
+
+  override suspend fun deleteEvent(eventId: String) {
+    firestore.collection("events").document(eventId).delete().await()
   }
 
   override suspend fun addTicketToUser(
@@ -345,17 +358,20 @@ constructor(
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
-    val query = firestore.collection("associations").document(associationId)
-    val snapshot = query.get().await() ?: return Association()
-    return deserializeAssociation(snapshot)
+    if (associationId.isEmpty()) {
+      return Association()
+    }
+    val query =
+        firestore.document("associations/$associationId").get().await() ?: return Association()
+    return deserializeAssociation(query)
   }
 
   override suspend fun getAllNews(lastDocumentSnapshot: DocumentSnapshot?): List<News> {
     val query = firestore.collection("news").orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
         when (lastDocumentSnapshot) {
-          null -> query.limit(10).get().await()
-          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+          null -> query.limit(50).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(50).get().await()
         }
     return when (snapshot.isEmpty) {
       true -> emptyList()
@@ -399,6 +415,10 @@ constructor(
         .set(serialize(news))
         .addOnSuccessListener { onSucess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override suspend fun deleteNews(newsId: String) {
+    firestore.collection("news").document(newsId).delete().await()
   }
 
   override suspend fun getNews(
