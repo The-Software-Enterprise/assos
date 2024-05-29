@@ -60,6 +60,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
+import com.swent.assos.ui.components.PostionItem
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -71,8 +72,12 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   val news by viewModel.news.collectAsState()
   val events by viewModel.events.collectAsState()
 
+  val pos by viewModel.positions.collectAsState()
+
   val listStateNews = rememberLazyListState()
   val listStateEvents = rememberLazyListState()
+
+  val listStatePos = rememberLazyListState()
 
   val context = LocalContext.current
 
@@ -80,6 +85,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
     viewModel.getAssociation(assoId)
     viewModel.getNews(assoId)
     viewModel.getEvents(assoId)
+    viewModel.getPositions(assoId)
   }
 
   LaunchedEffect(listStateNews) {
@@ -87,6 +93,15 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         .collect { visibleItems ->
           if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
             viewModel.getMoreNews(assoId)
+          }
+        }
+  }
+
+  LaunchedEffect(listStatePos) {
+    snapshotFlow { listStatePos.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == pos.size - 1) {
+            viewModel.getMorePositions(assoId)
           }
         }
   }
@@ -243,6 +258,31 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
         }
       }
 
+      item {
+        Text(
+            text = "Latest Positions",
+            style = MaterialTheme.typography.headlineMedium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+
+        if (news.isNotEmpty()) {
+          LazyRow(
+              modifier = Modifier.testTag("Positionitem"),
+              state = listStateNews,
+              contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(pos) {
+                  PostionItem(it, assoId, navigationActions)
+                  Spacer(modifier = Modifier.width(8.dp))
+                }
+              }
+        } else {
+          Text(
+              text = "No latest positions",
+              style = MaterialTheme.typography.bodyMedium,
+              modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
+        }
+      }
       item { Spacer(modifier = Modifier.height(20.dp)) }
     }
   }

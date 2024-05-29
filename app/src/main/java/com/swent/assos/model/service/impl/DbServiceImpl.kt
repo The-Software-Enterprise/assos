@@ -14,9 +14,11 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
+import com.swent.assos.model.deSerializeOpenPositions
 import com.swent.assos.model.deserializeApplicant
 import com.swent.assos.model.deserializeAssociation
 import com.swent.assos.model.deserializeEvent
@@ -49,6 +51,28 @@ constructor(
       return User(id = userId)
     }
     return deserializeUser(snapshot)
+  }
+
+  override suspend fun getPositions(
+      associationId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<OpenPositions> {
+    val query = firestore.collection("associations/$associationId/positions")
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deSerializeOpenPositions(it) }
+  }
+
+  override suspend fun addPosition(associationId: String, position: OpenPositions) {
+    firestore.collection("associations/$associationId/positions").add(serialize(position)).await()
+  }
+
+  override suspend fun getPosition(associationId: String, positionId: String): OpenPositions {
+    val query = firestore.collection("associations/$associationId/positions").document(positionId)
+    val snapshot = query.get().await() ?: return OpenPositions()
+    return deSerializeOpenPositions(snapshot)
   }
 
   override suspend fun addUser(user: User) {

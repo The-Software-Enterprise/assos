@@ -8,6 +8,7 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.DbService
 import com.swent.assos.model.service.StorageService
@@ -43,6 +44,19 @@ constructor(
 
   private val _applied = MutableStateFlow(false)
   val applied = _applied.asStateFlow()
+
+  private val _positions = MutableStateFlow<List<OpenPositions>>(emptyList())
+  val positions = _positions.asStateFlow()
+
+  fun getPositions(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      _positions.value = dbService.getPositions(associationId, lastDocumentSnapshot = null)
+    }
+  }
+
+  fun createPosition(associationId: String, position: OpenPositions) {
+    viewModelScope.launch(ioDispatcher) { dbService.addPosition(associationId, position) }
+  }
 
   fun getAssociation(associationId: String) {
     viewModelScope.launch(ioDispatcher) {
@@ -84,6 +98,13 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       val lastDocumentSnapshot = _news.value.lastOrNull()?.documentSnapshot
       _news.value += dbService.getNews(associationId, lastDocumentSnapshot)
+    }
+  }
+
+  fun getMorePositions(associationId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      val lastDocumentSnapshot = _positions.value.lastOrNull()?.documentSnapshot
+      _positions.value += dbService.getPositions(associationId, lastDocumentSnapshot)
     }
   }
 
