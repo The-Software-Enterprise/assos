@@ -80,8 +80,8 @@ fun Saved(navigationActions: NavigationActions) {
                   Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
-                items(items = events, key = { it.id }) {
-                  HomeItem(id = it.id, navigationActions = navigationActions)
+                items(items = events) { event ->
+                    Text (text = event.id)
                 }
               }
             }
@@ -94,8 +94,8 @@ fun Saved(navigationActions: NavigationActions) {
                   Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
                 }
               } else {
-                items(items = news, key = { it.id }) {
-                  HomeItem(id = it.id, navigationActions = navigationActions)
+                items(items = news) {theNews ->
+                    Text (text = theNews.title)
                 }
               }
             }
