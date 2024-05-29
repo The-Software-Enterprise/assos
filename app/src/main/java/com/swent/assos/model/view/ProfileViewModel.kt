@@ -79,7 +79,6 @@ constructor(
   }
 
   fun updateUser() {
-    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
         _firstName.value = currentUser.firstName
@@ -100,7 +99,6 @@ constructor(
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
-        _loading.value = false
       }
     }
     viewModelScope.launch(ioDispatcher) { _update.value = false }

@@ -38,6 +38,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       modifier =
           shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
               .testTag("EventItem")
+              .height(150.dp)
               .background(
                   color = MaterialTheme.colorScheme.background,
                   shape = RoundedCornerShape(size = 12.dp))
@@ -54,7 +55,7 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
                   contentDescription = null,
                   contentScale = ContentScale.Crop,
                   modifier =
-                      Modifier.height(100.dp)
+                      Modifier.height(75.dp)
                           .background(MaterialTheme.colorScheme.outline)
                           .testTag("EventItemImage"))
               Text(
