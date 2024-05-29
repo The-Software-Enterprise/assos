@@ -76,9 +76,10 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
               assoId = backStackEntry.arguments?.getString("assoId").toString(),
               navigationActions = navigationActions)
         }
-        composable(Destinations.NEWS_DETAILS.route + "/{newsId}") { backStackEntry ->
+        composable(Destinations.NEWS_DETAILS.route + "/{newsId}" + "/{assoId}") { backStackEntry ->
           NewsDetails(
               newsId = backStackEntry.arguments?.getString("newsId").toString(),
+              assoId = backStackEntry.arguments?.getString("assoId").toString(),
               navigationActions = navigationActions)
         }
         composable(Destinations.STAFF_MANAGEMENT.route + "/{eventId}") { backStackEntry ->

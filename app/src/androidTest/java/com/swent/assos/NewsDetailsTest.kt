@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.NewsDetailsScreen
 import com.swent.assos.screens.NewsScreen
@@ -28,7 +29,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class NewsDetailsTest : SuperTest() {
 
-  val associationID = "GTi6W84Se3DGjfK6Z7MG"
+  val associationID = "3YHxpLIpGyHVT9NAAfEw"
 
   val fakeUser =
       User(
@@ -68,7 +69,27 @@ class NewsDetailsTest : SuperTest() {
         .set(serialize(OtherFakeUser))
     FirebaseFirestore.getInstance().collection("news").document(news.id).set(serNews)
     composeTestRule.activity.setContent {
-      NewsDetails(newsId = news.id, navigationActions = mockNavActions)
+      NewsDetails(newsId = news.id, assoId = associationID, navigationActions = mockNavActions)
+    }
+  }
+
+  @Test
+  fun testButtonToNavigateToAssociationDetailsPage() {
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        composeTestRule.waitUntil(
+            condition = { composeTestRule.onNodeWithText("Artiphys").isDisplayed() },
+            timeoutMillis = 10000)
+        step("Click on the button to navigate to the association details page") {
+          composeTestRule.onNodeWithText("Artiphys").performClick()
+        }
+        step("Check if we really navigate to the association details page") {
+          verify {
+            mockNavActions.navigateTo(Destinations.ASSO_DETAILS.route + "/${associationID}")
+          }
+          confirmVerified(mockNavActions)
+        }
+      }
     }
   }
 
