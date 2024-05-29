@@ -292,11 +292,10 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
               onClick = {
                 if (associationFollowed.value) {
                   viewModel.unfollowAssociation(asso.id)
-                  profileViewModel.updateNeeded()
                 } else {
                   viewModel.followAssociation(asso.id)
-                  profileViewModel.updateNeeded()
                 }
+                profileViewModel.updateNeeded()
               },
               label = {
                 if (associationFollowed.value) {
