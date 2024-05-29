@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.ChipColors
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -43,6 +44,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
   val eventViewModel: EventViewModel = hiltViewModel()
 
   val event by eventViewModel.event.collectAsState()
+  val applied = eventViewModel.appliedStaff.collectAsState()
   val assoViewModel: AssoViewModel = hiltViewModel()
   val asso by assoViewModel.association.collectAsState()
   val profileViewModel: ProfileViewModel = hiltViewModel()
@@ -59,6 +61,55 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
     profileViewModel.updateUser()
   }
 
+  @Composable
+  fun labelStaffButton() {
+    if (applied.value) {
+      Text(
+          text = "Remove staff application",
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.Medium,
+      )
+    } else {
+      Text(
+          text = "Apply for staffing",
+          color = MaterialTheme.colorScheme.onSecondary,
+          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+          fontWeight = FontWeight.Medium,
+      )
+    }
+  }
+
+  @Composable
+  fun staffButtonColors(): ChipColors {
+    return if (applied.value)
+        AssistChipDefaults.assistChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    else AssistChipDefaults.assistChipColors(containerColor = MaterialTheme.colorScheme.secondary)
+  }
+
+  fun callBackStaffRequest() {
+    if (applied.value) {
+      eventViewModel.removeRequestToStaff(
+          event.id,
+          userId.id,
+          Toast.makeText(
+                  context,
+                  "You have successfully removed your request to staff at the event",
+                  Toast.LENGTH_SHORT)
+              .show())
+    } else {
+      eventViewModel.applyStaffing(
+          event.id,
+          userId.id,
+          Toast.makeText(
+                  context,
+                  "You have successfully applied to staff at the event",
+                  Toast.LENGTH_SHORT)
+              .show())
+    }
+  }
+
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = {
@@ -71,55 +122,12 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         if (!(associations.map { it.id }.contains(assoId)) &&
             event.isStaffingEnabled &&
             !loading.value) {
-          val applied = eventViewModel.appliedStaff.collectAsState()
           AssistChip(
-              colors =
-                  if (applied.value)
-                      AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                  else
-                      AssistChipDefaults.assistChipColors(
-                          containerColor = MaterialTheme.colorScheme.secondary),
+              colors = staffButtonColors(),
               border = null,
               modifier = Modifier.testTag("StaffButton").padding(5.dp),
-              onClick = {
-                if (applied.value) {
-                  eventViewModel.removeRequestToStaff(
-                      event.id,
-                      userId.id,
-                      Toast.makeText(
-                              context,
-                              "You have successfully removed your request to staff at the event",
-                              Toast.LENGTH_SHORT)
-                          .show())
-                } else {
-                  eventViewModel.applyStaffing(
-                      event.id,
-                      userId.id,
-                      Toast.makeText(
-                              context,
-                              "You have successfully applied to staff at the event",
-                              Toast.LENGTH_SHORT)
-                          .show())
-                }
-              },
-              label = {
-                if (applied.value) {
-                  Text(
-                      text = "Remove staff application",
-                      color = MaterialTheme.colorScheme.onSurfaceVariant,
-                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                      fontWeight = FontWeight.Medium,
-                  )
-                } else {
-                  Text(
-                      text = "Apply for staffing",
-                      color = MaterialTheme.colorScheme.onSecondary,
-                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                      fontWeight = FontWeight.Medium,
-                  )
-                }
-              },
+              onClick = { callBackStaffRequest() },
+              label = { labelStaffButton() },
           )
         }
       },
