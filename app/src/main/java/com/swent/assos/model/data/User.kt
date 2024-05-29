@@ -12,4 +12,6 @@ data class User(
     var tickets: List<String> = mutableListOf(),
     var appliedAssociation: List<String> = mutableListOf(),
     var appliedStaffing: List<String> = mutableListOf(),
+    var savedEvent: List<String> = mutableListOf(),
+    var savedNews: List<String> = mutableListOf()
 )

@@ -6,7 +6,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.User
 import com.swent.assos.screens.SavedScreen
-import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.Saved
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
