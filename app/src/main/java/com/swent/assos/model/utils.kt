@@ -12,8 +12,14 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.zxing.BarcodeFormat
@@ -34,6 +40,12 @@ import java.time.format.FormatStyle
 import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
+
+fun shadows_item(start: Dp, top: Dp, end: Dp, bottom: Dp, shape: Shape): Modifier {
+  return Modifier.padding(start, top, end, bottom)
+      .shadow(elevation = 6.dp, shape = shape)
+      .shadow(elevation = 2.dp, shape = shape)
+}
 
 enum class AssociationPosition(val string: String, val rank: Int) {
   PRESIDENT("president", 1),
