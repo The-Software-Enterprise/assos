@@ -26,6 +26,7 @@ import com.swent.assos.ui.screens.profile.Applications
 import com.swent.assos.ui.screens.profile.Following
 import com.swent.assos.ui.screens.profile.MyAssociations
 import com.swent.assos.ui.screens.profile.NotificationSettings
+import com.swent.assos.ui.screens.profile.Saved
 import com.swent.assos.ui.screens.profile.Settings
 import com.swent.assos.ui.screens.ticket.CreateTicket
 import com.swent.assos.ui.screens.ticket.ScanTicket
@@ -114,6 +115,8 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
           Following(navigationActions = navigationActions)
         }
 
+        composable(Destinations.SAVED.route) { Saved(navigationActions = navigationActions) }
+
         composable(Destinations.NOTIFICATION_SETTINGS.route) {
           NotificationSettings(navigationActions = navigationActions)
         }
@@ -154,5 +157,6 @@ enum class Destinations(val route: String) {
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
   CREATE_TICKET("CreateTicket"),
-  APPLICATIONS("Applications")
+  APPLICATIONS("Applications"),
+  SAVED("Saved")
 }
