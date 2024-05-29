@@ -39,7 +39,10 @@ fun News(navigationActions: NavigationActions) {
   val listState = rememberLazyListState()
   val loading = viewModel.loading.collectAsState()
 
-  LaunchedEffect(key1 = Unit) { viewModel.loadAllNews() }
+  LaunchedEffect(key1 = Unit) {
+    viewModel.loadNews()
+    viewModel.loadAllNews()
+  }
 
   Scaffold(modifier = Modifier.testTag("NewsScreen"), topBar = { PageTitle(title = "Home") }) {
       paddingValues ->

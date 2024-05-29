@@ -57,4 +57,8 @@ constructor(
   fun removeImage(image: Uri) {
     _news.value = _news.value.copy(images = _news.value.images - image)
   }
+
+  fun setEventId(eventId: String) {
+    _news.value = _news.value.copy(eventId = eventId)
+  }
 }

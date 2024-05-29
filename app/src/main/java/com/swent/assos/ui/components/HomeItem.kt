@@ -52,13 +52,14 @@ fun HomeItem(id: String, navigationActions: NavigationActions) {
 
   val news = allNews.find { it.id == id } ?: News()
 
-  if (news.eventId != "") {
+  /*if (news.eventId != "") {
     eventViewModel.getEvent(news.eventId)
     assoId = event.associationId
-  }
+  }*/
 
   title = news.title
   description = news.description
+  assoId = news.associationId
 
   Box(
       modifier =
@@ -68,7 +69,7 @@ fun HomeItem(id: String, navigationActions: NavigationActions) {
               .clickable {
                 navigationActions.navigateTo(
                     if (news.eventId == "") {
-                      Destinations.NEWS_DETAILS.route + "/${news.id}"
+                      Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${assoId}"
                     } else {
                       Destinations.EVENT_DETAILS.route + "/${news.eventId}" + "/${assoId}"
                     })

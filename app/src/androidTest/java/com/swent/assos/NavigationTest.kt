@@ -29,7 +29,7 @@ class NavigationTest : SuperTest() {
     navHostController.navigate(Destinations.SCAN_TICKET.route)
     navHostController.navigate(Destinations.ASSO_DETAILS.route + "/assoId")
     navHostController.navigate(Destinations.EVENT_DETAILS.route + "/eventId" + "/assoId")
-    navHostController.navigate(Destinations.NEWS_DETAILS.route + "/newsId")
+    navHostController.navigate(Destinations.NEWS_DETAILS.route + "/newsId" + "/assoId")
     navHostController.navigate(Destinations.STAFF_MANAGEMENT.route + "/eventId")
     navHostController.navigate(Destinations.APPLICATION_MANAGEMENT.route + "/assoId")
     navHostController.navigate(Destinations.CREATE_NEWS.route + "/assoId")

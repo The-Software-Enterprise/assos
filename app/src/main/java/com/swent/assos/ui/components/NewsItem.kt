@@ -42,7 +42,8 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {
-                  navigationActions.navigateTo(Destinations.NEWS_DETAILS.route + "/${news.id}")
+                  navigationActions.navigateTo(
+                      Destinations.NEWS_DETAILS.route + "/${news.id}" + "/${news.associationId}")
                 },
             horizontalAlignment = Alignment.CenterHorizontally) {
               if (news.images.isNotEmpty()) {
