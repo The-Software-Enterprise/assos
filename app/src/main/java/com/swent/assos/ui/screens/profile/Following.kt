@@ -1,5 +1,6 @@
 package com.swent.assos.ui.screens.profile
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -27,6 +29,7 @@ import com.swent.assos.ui.components.ListItemAsso
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
+@SuppressLint("SuspiciousIndentation")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Following(navigationActions: NavigationActions) {
@@ -34,6 +37,11 @@ fun Following(navigationActions: NavigationActions) {
   val viewModel: ProfileViewModel = hiltViewModel()
   val followedAssociationsList by viewModel.followedAssociations.collectAsState()
   val loading by viewModel.loading.collectAsState()
+  val update = viewModel.update.collectAsState()
+
+  LaunchedEffect(key1 = Unit) { viewModel.updateUser() }
+
+  LaunchedEffect(key1 = update.value) { viewModel.updateUser() }
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("FollowingScreen"),

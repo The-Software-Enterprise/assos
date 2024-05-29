@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
-import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.News
 import com.swent.assos.model.data.User
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.AuthService
@@ -40,6 +38,9 @@ constructor(
 
   private var _loading = MutableStateFlow(true)
   val loading = _loading.asStateFlow()
+
+  private val _update = MutableStateFlow(false)
+  val update = _update.asStateFlow()
 
   private val _savedEvents = MutableStateFlow(emptyList<Event>())
   val savedEvents = _savedEvents.asStateFlow()
@@ -95,15 +96,35 @@ constructor(
     }
   }
 
+  fun updateNeeded() {
+    viewModelScope.launch(ioDispatcher) { _update.value = true }
+  }
+
   fun updateUser() {
     _loading.value = true
     viewModelScope.launch(ioDispatcher) {
-      authService.currentUser.collect { firebaseUser ->
-        val user: User = dbService.getUser(firebaseUser.uid)
-        _firstName.value = user.firstName
-        _lastName.value = user.lastName
+      DataCache.currentUser.collect { currentUser ->
+        _firstName.value = currentUser.firstName
+        _lastName.value = currentUser.lastName
+
+        _followedAssociations.value = emptyList()
+        currentUser.following.forEach { id ->
+          dbService.getAssociationById(id).let {
+            _followedAssociations.value += it
+            _followedAssociations.value =
+                _followedAssociations.value.distinct().sortedBy { it.acronym }
+          }
+        }
+        _memberAssociations.value = emptyList()
+        currentUser.associations.forEach { (assoId, _, _) ->
+          dbService.getAssociationById(assoId).let {
+            _memberAssociations.value += it
+            _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
+          }
+        }
         _loading.value = false
       }
     }
+    viewModelScope.launch(ioDispatcher) { _update.value = false }
   }
 }
