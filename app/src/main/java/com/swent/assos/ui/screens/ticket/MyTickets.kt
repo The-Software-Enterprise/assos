@@ -32,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -48,6 +47,7 @@ import com.swent.assos.R
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.shadows_item
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.TicketViewModel
 import com.swent.assos.ui.components.PageTitle
@@ -119,10 +119,8 @@ fun TicketItem(ticket: Ticket, navigationActions: NavigationActions) {
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimary),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("TicketItem")
-              .padding(16.dp)
-              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
+          shadows_item(16.dp, 16.dp, 16.dp, 16.dp, RoundedCornerShape(12.dp))
+              .testTag("TicketItem")) {
         Column(
             modifier =
                 Modifier.fillMaxWidth().padding(vertical = 0.dp).clickable {

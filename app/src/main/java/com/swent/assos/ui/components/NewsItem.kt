@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -27,6 +26,7 @@ import com.swent.assos.R
 import com.swent.assos.model.data.News
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.shadows_item
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -34,12 +34,9 @@ fun NewsItem(news: News, navigationActions: NavigationActions) {
   Card(
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.outlineVariant),
       shape = RoundedCornerShape(12.dp),
-      modifier =
-          Modifier.semantics { testTagsAsResourceId = true }
+      modifier =shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp)).semantics { testTagsAsResourceId = true }
               .testTag("NewsItem")
-              .height(150.dp)
-              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))) {
+              .height(150.dp)) {
         Column(
             modifier =
                 Modifier.width(200.dp).clickable {

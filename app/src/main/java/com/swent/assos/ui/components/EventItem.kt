@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
@@ -28,6 +27,7 @@ import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
+import com.swent.assos.model.shadows_item
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -36,10 +36,9 @@ fun EventItem(event: Event, navigationActions: NavigationActions, asso: Associat
       colors = CardDefaults.cardColors(MaterialTheme.colorScheme.background),
       shape = RoundedCornerShape(12.dp),
       modifier =
-          Modifier.testTag("EventItem")
+          shadows_item(0.dp, 0.dp, 0.dp, 0.dp, RoundedCornerShape(12.dp))
+              .testTag("EventItem")
               .height(150.dp)
-              .shadow(elevation = 6.dp, shape = RoundedCornerShape(12.dp))
-              .shadow(elevation = 2.dp, shape = RoundedCornerShape(12.dp))
               .background(
                   color = MaterialTheme.colorScheme.background,
                   shape = RoundedCornerShape(size = 12.dp))
