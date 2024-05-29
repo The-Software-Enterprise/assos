@@ -1,11 +1,6 @@
 package com.swent.assos.ui.screens.assoDetails
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
@@ -32,13 +27,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.R
-import com.swent.assos.model.navigation.Destinations
-import com.swent.assos.model.data.Association
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -70,7 +62,9 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("EventDetails"),
       topBar = { PageTitleWithGoBack(title = asso.acronym, navigationActions = navigationActions) },
       floatingActionButton = {
-        if (!(associations.map { it.id }.contains(assoId)) && event.isStaffingEnabled && !loading.value) {
+        if (!(associations.map { it.id }.contains(assoId)) &&
+            event.isStaffingEnabled &&
+            !loading.value) {
           val applied = eventViewModel.appliedStaff.collectAsState()
           AssistChip(
               colors =
@@ -124,8 +118,11 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
         }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
-        if (conf) {
-          ConfirmDialog(
+        if (loading.value) {
+          LoadingCircle()
+        } else {
+          if (conf) {
+            ConfirmDialog(
               onDismiss = { conf = false },
               onConfirm = {
                 conf = false
@@ -133,17 +130,13 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                 navigationActions.goBack()
               },
               title = event.title)
+          }
+          EventContent(
+              viewModel = eventViewModel,
+              paddingValues = paddingValues,
+              isMember = (associations.map { it.id }.contains(assoId)),
+              eventId = eventId,
+              navigationActions = navigationActions)
         }
-    if (loading.value) {
-      LoadingCircle()
-    } else {
-      EventContent(
-        viewModel = eventViewModel,
-        paddingValues = paddingValues,
-        isMember = (associations.map { it.id }.contains(assoId)),
-        eventId = eventId,
-        navigationActions = navigationActions)
-    }
       }
-
 }

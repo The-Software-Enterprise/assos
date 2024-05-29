@@ -73,13 +73,11 @@ constructor(
   }
 
   fun updateUser() {
-    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       authService.currentUser.collect { firebaseUser ->
         val user: User = dbService.getUser(firebaseUser.uid)
         _firstName.value = user.firstName
         _lastName.value = user.lastName
-        _loading.value = false
       }
     }
   }
