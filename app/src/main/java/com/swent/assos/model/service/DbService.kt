@@ -79,6 +79,10 @@ interface DbService {
 
   suspend fun getNews(newsId: String): News
 
+  suspend fun saveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+  suspend fun unSaveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
   // Events -------------------------------------------------------------------
   suspend fun getEventsFromAnAssociation(
       associationId: String,
@@ -95,6 +99,10 @@ interface DbService {
   suspend fun getEventFromId(eventId: String): Event
 
   suspend fun deleteEvent(eventId: String)
+
+  suspend fun saveEvent(eventId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+  suspend fun unSaveEvent(eventId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 
   // Follow -------------------------------------------------------------------
   suspend fun followAssociation(

@@ -189,4 +189,22 @@ constructor(
   fun setStaffingEnabled(isEnabled: Boolean) {
     _event.value = _event.value.copy(isStaffingEnabled = isEnabled)
   }
+
+  fun saveEvent(eventId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedEvents = DataCache.currentUser.value.savedEvents + eventId)
+    viewModelScope.launch(ioDispatcher) {
+      dbService.saveEvent(eventId, { _isSaved.update { true } }, {})
+    }
+  }
+
+  fun unSaveEvent(eventId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedEvents = DataCache.currentUser.value.savedEvents.filter { it != eventId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unSaveEvent(eventId, { _isSaved.update { false } }, {})
+    }
+  }
 }

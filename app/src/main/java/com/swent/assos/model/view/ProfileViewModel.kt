@@ -120,7 +120,22 @@ constructor(
         currentUser.associations.forEach { (assoId, _, _) ->
           dbService.getAssociationById(assoId).let {
             _memberAssociations.value += it
+            //
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
+          }
+        }
+        _savedEvents.value = emptyList()
+        currentUser.savedEvents.forEach { id ->
+          dbService.getEventById(id).let {
+            _savedEvents.value += it
+            _savedEvents.value = _savedEvents.value.distinct().sortedBy { it.startTime }
+          }
+        }
+        _savedNews.value = emptyList()
+        currentUser.savedNews.forEach { id ->
+          dbService.getNews(id).let {
+            _savedNews.value += it
+            _savedNews.value = _savedNews.value.distinct().sortedBy { it.createdAt }
           }
         }
         _loading.value = false
