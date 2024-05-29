@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -43,7 +42,6 @@ import com.swent.assos.R
 import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
-import org.w3c.dom.Text
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -204,7 +202,7 @@ fun SignUpScreen(navigationActions: NavigationActions) {
                 return@signUp
               } else {
                 try {
-                  navigationActions.navigateTo(Destinations.HOME)
+                  navigationActions.navigateTo(Destinations.HOME.route)
                 } catch (e: Exception) {
                   throw e
                 }
