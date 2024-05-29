@@ -108,11 +108,18 @@ class StaffManagementTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<StaffManagementScreen>(composeTestRule) {
         step("Check if the staff list is displayed") { staffList { assertIsDisplayed() } }
-        step("Check the accept button") { composeTestRule.onNodeWithText("Accept").performClick() }
+        step("Check the pending button") {
+          composeTestRule.onNodeWithText("pending").performClick()
+        }
 
         step("Check if the staff is accepted") {
-          composeTestRule.onNodeWithText("Un-Accept").assertIsDisplayed()
-          composeTestRule.onNodeWithText("Un-Accept").performClick()
+          composeTestRule.onNodeWithText("accepted").assertIsDisplayed()
+          composeTestRule.onNodeWithText("accepted").performClick()
+        }
+
+        step("Check if the staff is rejected") {
+          composeTestRule.onNodeWithText("rejected").assertIsDisplayed()
+          composeTestRule.onNodeWithText("rejected").performClick()
         }
 
         step("Check if the garbage button is displayed") {
