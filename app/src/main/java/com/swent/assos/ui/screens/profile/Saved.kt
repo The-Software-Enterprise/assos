@@ -72,31 +72,38 @@ fun Saved(navigationActions: NavigationActions) {
             Modifier.testTag("ContentSection")
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)) {
-          if (selectedOption == "Events") {
-            if (loading) {
-              item { LoadingCircle() }
-            } else {
-              if (events.isEmpty()) {
-                item {
-                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+          when (selectedOption) {
+            "Events" -> {
+              when {
+                loading -> {
+                  item { LoadingCircle() }
                 }
-              } else {
-                items(items = events, key = { it.id }) {
-                  EventsItemSaved(it, navigationActions = navigationActions)
+                events.isEmpty() -> {
+                  item {
+                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                  }
+                }
+                else -> {
+                  items(items = events, key = { it.id }) {
+                    EventsItemSaved(it, navigationActions = navigationActions)
+                  }
                 }
               }
             }
-          } else {
-            if (loading) {
-              item { LoadingCircle() }
-            } else {
-              if (news.isEmpty()) {
-                item {
-                  Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+            else -> {
+              when {
+                loading -> {
+                  item { LoadingCircle() }
                 }
-              } else {
-                items(items = news, key = { it.id }) {
-                  NewsItemSaved(it, navigationActions = navigationActions)
+                news.isEmpty() -> {
+                  item {
+                    Text(text = stringResource(R.string.NoResult), textAlign = TextAlign.Center)
+                  }
+                }
+                else -> {
+                  items(items = news, key = { it.id }) {
+                    NewsItemSaved(it, navigationActions = navigationActions)
+                  }
                 }
               }
             }

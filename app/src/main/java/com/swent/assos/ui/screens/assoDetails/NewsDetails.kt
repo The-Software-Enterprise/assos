@@ -132,20 +132,23 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
                       .padding(16.dp)
                       .clip(RoundedCornerShape(100))
                       .clickable {
-                        if (isSaved.value) {
-                          viewModel.unSaveNews(newsId)
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully removed the news from your saved list",
-                                  Toast.LENGTH_SHORT)
-                              .show()
-                        } else {
-                          viewModel.saveNews(newsId)
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully saved the news",
-                                  Toast.LENGTH_SHORT)
-                              .show()
+                        when (isSaved.value) {
+                          true -> {
+                            viewModel.unSaveNews(newsId)
+                            Toast.makeText(
+                                    context,
+                                    "You have successfully removed the news from your saved list",
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                          }
+                          false -> {
+                            viewModel.saveNews(newsId)
+                            Toast.makeText(
+                                    context,
+                                    "You have successfully saved the news",
+                                    Toast.LENGTH_SHORT)
+                                .show()
+                          }
                         }
                       }
                       .size(30.dp)

@@ -57,20 +57,12 @@ fun EventsItemSaved(events: Event, navigationActions: NavigationActions) {
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.Start,
             verticalAlignment = Alignment.CenterVertically) {
-              if (events.image != null) {
-                AsyncImage(
-                    model = events.image,
-                    contentDescription = "event image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)),
-                )
-              } else {
-                AsyncImage(
-                    model = R.drawable.ic_launcher_foreground,
-                    contentDescription = "event image",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)))
-              }
+              AsyncImage(
+                  model = R.drawable.ic_launcher_foreground,
+                  contentDescription = "event image",
+                  contentScale = ContentScale.Crop,
+                  modifier = Modifier.width(100.dp).padding(6.dp).clip(RoundedCornerShape(15.dp)))
+
               Column(
                   modifier =
                       Modifier.padding(start = 16.dp, top = 20.dp)

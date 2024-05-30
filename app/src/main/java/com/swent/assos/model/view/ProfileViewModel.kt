@@ -53,7 +53,6 @@ constructor(
   val savedNews = _savedNews.asStateFlow()
 
   private var _selectedOption by mutableStateOf("Events")
-  // val selectedOption = _selectedOption.asStateFlow()
 
   fun signOut() {
     try {
@@ -85,15 +84,15 @@ constructor(
         }
 
         currentUser.savedNews.forEach { newsId ->
-          dbService.getNews(newsId).let { it ->
-            _savedNews.value += it
+          dbService.getNews(newsId).let { news ->
+            _savedNews.value += news
             _savedNews.value = _savedNews.value.distinct().sortedBy { it.createdAt }
           }
         }
 
         currentUser.savedEvents.forEach { eventId ->
-          dbService.getEventById(eventId).let { it ->
-            _savedEvents.value += it
+          dbService.getEventById(eventId).let { event ->
+            _savedEvents.value += event
             _savedEvents.value = _savedEvents.value.distinct().sortedBy { it.startTime }
           }
         }
@@ -124,8 +123,8 @@ constructor(
         }
         _memberAssociations.value = emptyList()
         currentUser.associations.forEach { (assoId, _, _) ->
-          dbService.getAssociationById(assoId).let {
-            _memberAssociations.value += it
+          dbService.getAssociationById(assoId).let { association ->
+            _memberAssociations.value += association
             //
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
