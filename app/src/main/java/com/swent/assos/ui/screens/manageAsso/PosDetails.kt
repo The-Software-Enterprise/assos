@@ -1,4 +1,4 @@
-package com.swent.assos.ui.screens.manageAsso.createEvent
+package com.swent.assos.ui.screens.manageAsso
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding

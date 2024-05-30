@@ -8,7 +8,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.PosDetailsScreen
-import com.swent.assos.ui.screens.manageAsso.createEvent.PosDetails
+import com.swent.assos.ui.screens.manageAsso.PosDetails
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
 import io.mockk.confirmVerified
