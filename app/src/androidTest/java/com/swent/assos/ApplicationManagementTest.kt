@@ -4,8 +4,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
-import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -27,7 +26,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class ApplicationManagementTest : SuperTest() {
 
-  private val assoID = "02s16UZba2Bsx5opTcQb"
+  private val assoID = "5i5QaClE1R5nWKhUY6PF"
   private val applicantId = "123456"
 
   val user1 =
@@ -60,7 +59,6 @@ class ApplicationManagementTest : SuperTest() {
         .update(
             "associations",
             FieldValue.arrayUnion(mapOf("assoId" to assoID, "position" to "Director", "rank" to 1)))
-
     FirebaseFirestore.getInstance()
         .collection("associations")
         .document(assoID)
@@ -95,14 +93,13 @@ class ApplicationManagementTest : SuperTest() {
 
     run {
       ComposeScreen.onComposeScreen<ApplicationManagementScreen>(composeTestRule) {
-        val firstApplication = composeTestRule.onAllNodesWithTag("GarbageIcon")[0]
         step("Check if the applications list is displayed") {
           applicationList { assertIsDisplayed() }
 
           applicationListItem { assertIsDisplayed() }
         }
         step("Check the pending button") {
-          composeTestRule.onAllNodesWithText("pending")[0].performClick()
+          composeTestRule.onNodeWithText("pending").performClick()
         }
 
         step("Check if the staff is accepted") {
@@ -110,12 +107,13 @@ class ApplicationManagementTest : SuperTest() {
           composeTestRule.onNodeWithText("accepted").performClick()
         }
         step("Check if the garbage button is displayed") {
-          composeTestRule.onAllNodesWithTag("GarbageIcon")[0].assertIsDisplayed()
-          composeTestRule.onAllNodesWithTag("GarbageIcon")[0].performClick()
+          composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
+          composeTestRule.onNodeWithTag("GarbageIcon").performClick()
         }
         step("Check if the staff list is displayed") {
           composeTestRule.waitUntil(
-              condition = { firstApplication.isNotDisplayed() }, timeoutMillis = 10000)
+              condition = { composeTestRule.onNodeWithText("No Applicants").isNotDisplayed() },
+              timeoutMillis = 10000)
         }
       }
     }
