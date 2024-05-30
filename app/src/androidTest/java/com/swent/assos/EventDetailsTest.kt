@@ -120,7 +120,6 @@ class EventDetailsTest : SuperTest() {
   fun testCreateTicketButton() {
     composeTestRule.activity.setContent {
       EventDetails(
-
           eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociationId)
     }
 
