@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class ApplicationsTest : SuperTest() {
 
-  private val assoId = "02s16UZba2Bsx5opTcQb"
+  private val assoId = "05DUlszwHL5YZTb1Jwo8"
   private val eventId = "eventId"
   private val user =
       User(
@@ -87,11 +87,11 @@ class ApplicationsTest : SuperTest() {
           composeTestRule.onNodeWithText("Requested Staffing").assertIsDisplayed()
         }
         composeTestRule.waitUntil(10000) {
-          composeTestRule.onNodeWithText("PolyLan").isDisplayed() &&
+          composeTestRule.onNodeWithText("Zero Emission Group – ZEG").isDisplayed() &&
               composeTestRule.onNodeWithText("test event").isDisplayed()
         }
         step("Check if the association application is displayed") {
-          composeTestRule.onNodeWithText("PolyLan").assertIsDisplayed()
+          composeTestRule.onNodeWithText("Zero Emission Group – ZEG").assertIsDisplayed()
           composeTestRule.onNodeWithText("Status: pending").assertIsDisplayed()
         }
         step("Check if the staffing application is displayed") {
