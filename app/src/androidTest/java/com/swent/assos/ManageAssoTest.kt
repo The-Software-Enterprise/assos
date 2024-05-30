@@ -113,6 +113,7 @@ class ManageAssoTest : SuperTest() {
         step("Create position") {
           composeTestRule.onNodeWithTag("AddPositionButton").performClick()
         }
+        composeTestRule.waitForIdle()
         step("Check if we actually navigate to create position screen") {
           verify { mockNavActions.navigateTo(Destinations.CREATE_POSITION.route + "/${assoId}") }
           confirmVerified(mockNavActions)
