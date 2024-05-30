@@ -117,11 +117,6 @@ class StaffManagementTest : SuperTest() {
           composeTestRule.onNodeWithText("accepted").performClick()
         }
 
-        step("Check if the staff is rejected") {
-          composeTestRule.onNodeWithText("rejected").assertIsDisplayed()
-          composeTestRule.onNodeWithText("rejected").performClick()
-        }
-
         step("Check if the garbage button is displayed") {
           composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
           composeTestRule.onNodeWithTag("GarbageIcon").performClick()

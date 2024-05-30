@@ -19,4 +19,5 @@ class ApplicationManagementScreen(semanticsProvider: SemanticsNodeInteractionsPr
       applicationItemRow.child { hasTestTag("ApplicationListItemFullName") }
 
   val acceptButton: KNode = applicationItemRow.child { hasTestTag("AcceptApplicationButton") }
+  val garbageIcon: KNode = onNode { hasTestTag("GarbageIcon") }
 }

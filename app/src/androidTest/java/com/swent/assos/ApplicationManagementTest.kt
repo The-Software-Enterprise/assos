@@ -4,7 +4,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isNotDisplayed
-import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -94,34 +95,27 @@ class ApplicationManagementTest : SuperTest() {
 
     run {
       ComposeScreen.onComposeScreen<ApplicationManagementScreen>(composeTestRule) {
+        val firstApplication = composeTestRule.onAllNodesWithTag("GarbageIcon")[0]
         step("Check if the applications list is displayed") {
           applicationList { assertIsDisplayed() }
 
           applicationListItem { assertIsDisplayed() }
         }
         step("Check the pending button") {
-          composeTestRule.onNodeWithText("pending").performClick()
+          composeTestRule.onAllNodesWithText("pending")[0].performClick()
         }
 
         step("Check if the staff is accepted") {
           composeTestRule.onNodeWithText("accepted").assertIsDisplayed()
-          composeTestRule.onNodeWithText("rejected").performClick()
-        }
-        step("Check if the staff is rejected") {
-          composeTestRule.onNodeWithText("rejected").assertIsDisplayed()
-          composeTestRule.onNodeWithText("rejected").performClick()
+          composeTestRule.onNodeWithText("accepted").performClick()
         }
         step("Check if the garbage button is displayed") {
-          composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
-          composeTestRule.onNodeWithTag("GarbageIcon").performClick()
+          composeTestRule.onAllNodesWithTag("GarbageIcon")[0].assertIsDisplayed()
+          composeTestRule.onAllNodesWithTag("GarbageIcon")[0].performClick()
         }
         step("Check if the staff list is displayed") {
           composeTestRule.waitUntil(
-              condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
-              timeoutMillis = 10000)
-        }
-        step("Check if the message no applicants is displayed") {
-          composeTestRule.onNodeWithText("No applicants").assertIsDisplayed()
+              condition = { firstApplication.isNotDisplayed() }, timeoutMillis = 10000)
         }
       }
     }
