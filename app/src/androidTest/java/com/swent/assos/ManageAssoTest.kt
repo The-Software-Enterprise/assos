@@ -1,6 +1,8 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.Event
@@ -100,6 +102,17 @@ class ManageAssoTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<ManageAssoScreen>(composeTestRule) {
         step("Check that the news is displayed") { newsItem { assertIsDisplayed() } }
+      }
+    }
+  }
+
+  @Test
+  fun testCreatePosNav() {
+    run {
+      ComposeScreen.onComposeScreen<ManageAssoScreen>(composeTestRule) {
+        step("Create position") {
+          composeTestRule.onNodeWithTag("AddPositionButton").performClick()
+        }
       }
     }
   }

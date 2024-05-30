@@ -42,6 +42,9 @@ constructor(
   private var _appliedStaff = MutableStateFlow(false)
   val appliedStaff = _appliedStaff.asStateFlow()
 
+  private val _isSaved = MutableStateFlow(false)
+  val isSaved = _isSaved.asStateFlow()
+
   fun clear() {
     _event.value = Event(id = "CLEARED")
   }
@@ -50,6 +53,7 @@ constructor(
     viewModelScope.launch(ioDispatcher) {
       _event.value = dbService.getEventById(eventId)
       _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
+      _isSaved.update { DataCache.currentUser.value.savedEvents.contains(_event.value.id) }
     }
   }
 
@@ -185,5 +189,23 @@ constructor(
 
   fun setStaffingEnabled(isEnabled: Boolean) {
     _event.value = _event.value.copy(isStaffingEnabled = isEnabled)
+  }
+
+  fun saveEvent(eventId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedEvents = DataCache.currentUser.value.savedEvents + eventId)
+    viewModelScope.launch(ioDispatcher) {
+      dbService.saveEvent(eventId, { _isSaved.update { true } }, {})
+    }
+  }
+
+  fun unSaveEvent(eventId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedEvents = DataCache.currentUser.value.savedEvents.filter { it != eventId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unSaveEvent(eventId, { _isSaved.update { false } }, {})
+    }
   }
 }

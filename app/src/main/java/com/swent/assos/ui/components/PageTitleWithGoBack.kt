@@ -3,7 +3,11 @@ package com.swent.assos.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,17 +40,21 @@ fun PageTitleWithGoBack(
     actionButton: @Composable RowScope.() -> Unit = {}
 ) {
   TopAppBar(
+      modifier = Modifier.padding(top = 10.dp),
       title = {
-        Text(
-            text = title,
-            style =
-                TextStyle(
-                    fontSize = 30.sp,
-                    lineHeight = 32.sp,
-                    fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onBackground),
-            modifier = Modifier.testTag("PageTitle"))
+        Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+          Text(
+              text = title,
+              style =
+                  TextStyle(
+                      fontSize = 24.sp,
+                      lineHeight = 20.sp,
+                      fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                      fontWeight = FontWeight.SemiBold,
+                      color = MaterialTheme.colorScheme.onBackground),
+              modifier = Modifier.testTag("PageTitle"))
+          Row { actionButton() }
+        }
       },
       navigationIcon = {
         Image(
@@ -62,7 +70,6 @@ fun PageTitleWithGoBack(
                     .padding()
                     .size(20.dp))
       },
-      actions = actionButton,
       colors =
           TopAppBarDefaults.mediumTopAppBarColors(
               containerColor = MaterialTheme.colorScheme.background),
