@@ -18,9 +18,11 @@ import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import com.swent.assos.ui.screens.manageAsso.ApplicationManagement
 import com.swent.assos.ui.screens.manageAsso.CreateNews
+import com.swent.assos.ui.screens.manageAsso.CreatePosition
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
 import com.swent.assos.ui.screens.manageAsso.StaffManagement
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
+import com.swent.assos.ui.screens.manageAsso.createEvent.PosDetails
 import com.swent.assos.ui.screens.profile.Appearance
 import com.swent.assos.ui.screens.profile.Applications
 import com.swent.assos.ui.screens.profile.Following
@@ -81,6 +83,12 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
               assoId = backStackEntry.arguments?.getString("assoId").toString(),
               navigationActions = navigationActions)
         }
+        composable(Destinations.POS_DETAILS.route + "/{assoId}" + "/{posId}") { backStackEntry ->
+          PosDetails(
+              posId = backStackEntry.arguments?.getString("posId").toString(),
+              assoId = backStackEntry.arguments?.getString("assoId").toString(),
+              navigationActions = navigationActions)
+        }
         composable(Destinations.STAFF_MANAGEMENT.route + "/{eventId}") { backStackEntry ->
           StaffManagement(
               eventId = backStackEntry.arguments?.getString("eventId").toString(),
@@ -103,6 +111,11 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
         }
         composable(Destinations.ASSO_MODIFY_PAGE.route + "/{assoId}") { backStackEntry ->
           ManageAssociation(
+              assoId = backStackEntry.arguments?.getString("assoId") ?: "",
+              navigationActions = navigationActions)
+        }
+        composable(Destinations.CREATE_POSITION.route + "/{assoId}") { backStackEntry ->
+          CreatePosition(
               assoId = backStackEntry.arguments?.getString("assoId") ?: "",
               navigationActions = navigationActions)
         }
@@ -155,5 +168,7 @@ enum class Destinations(val route: String) {
   TICKET_DETAILS("TicketDetails"),
   SCAN_TICKET("ScanTicket"),
   CREATE_TICKET("CreateTicket"),
-  APPLICATIONS("Applications")
+  APPLICATIONS("Applications"),
+  CREATE_POSITION("CreatePosition"),
+  POS_DETAILS("PosDetails")
 }
