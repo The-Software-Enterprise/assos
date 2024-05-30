@@ -6,6 +6,7 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
@@ -83,6 +84,10 @@ interface DbService {
 
   suspend fun getNews(newsId: String): News
 
+  suspend fun saveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+  suspend fun unSaveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
   // Events -------------------------------------------------------------------
   suspend fun getEventsFromAnAssociation(
       associationId: String,
@@ -99,6 +104,10 @@ interface DbService {
   suspend fun getEventFromId(eventId: String): Event
 
   suspend fun deleteEvent(eventId: String)
+
+  suspend fun saveEvent(eventId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
+
+  suspend fun unSaveEvent(eventId: String, onSuccess: () -> Unit, onError: (String) -> Unit)
 
   // Follow -------------------------------------------------------------------
   suspend fun followAssociation(
@@ -156,6 +165,15 @@ interface DbService {
 
   suspend fun unAcceptApplicant(applicantId: String, assoId: String)
 
+  suspend fun getPositions(
+      associationId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<OpenPositions>
+
+  suspend fun getPositions(associationId: String): List<OpenPositions>
+
+  suspend fun addPosition(associationId: String, openPositions: OpenPositions)
+
   suspend fun addUser(users: User)
 
   suspend fun quitAssociation(
@@ -164,4 +182,6 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
+
+  suspend fun getPosition(associationId: String, positionId: String): OpenPositions
 }

@@ -29,6 +29,7 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
 import java.io.OutputStream
@@ -174,6 +175,16 @@ fun serialize(applicant: Applicant): Map<String, Any> {
       "createdAt" to localDateTimeToTimestamp(applicant.createdAt))
 }
 
+fun deSerializeOpenPositions(doc: DocumentSnapshot): OpenPositions {
+  return OpenPositions(
+      id = doc.id,
+      title = doc.getString("title") ?: "",
+      description = doc.getString("description") ?: "",
+      requirements = doc.get("requirements") as? List<String> ?: emptyList(),
+      responsibilities = doc.get("responsibilities") as? List<String> ?: emptyList(),
+      documentSnapshot = doc)
+}
+
 fun deserializeNews(doc: DocumentSnapshot): News {
   return News(
       id = doc.id,
@@ -223,7 +234,10 @@ fun serialize(user: User): Map<String, Any> {
       "associations" to
           user.associations.map {
             mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
-          })
+          },
+      "savedEvents" to user.savedEvents,
+      "savedNews" to user.savedNews,
+  )
 }
 
 fun deserializeUser(doc: DocumentSnapshot): User {
@@ -248,7 +262,9 @@ fun deserializeUser(doc: DocumentSnapshot): User {
                 null
               }
             } ?: emptyList()
-          } ?: emptyList())
+          } ?: emptyList(),
+      savedEvents = (doc.get("savedEvents") as? MutableList<String>) ?: mutableListOf(),
+      savedNews = (doc.get("savedNews") as? MutableList<String>) ?: mutableListOf())
 }
 
 fun generateQRCode(text: String, size: Int): Bitmap {
@@ -293,6 +309,14 @@ fun saveImageToGallery(context: Context, imageBitmap: ImageBitmap) {
       Toast.makeText(context, "Image saved", Toast.LENGTH_SHORT).show()
     }
   }
+}
+
+fun serialize(position: OpenPositions): Map<String, Any> {
+  return mapOf(
+      "title" to position.title,
+      "description" to position.description,
+      "requirements" to position.requirements,
+      "responsibilities" to position.responsibilities)
 }
 
 fun isNetworkAvailable(context: Context): Boolean {

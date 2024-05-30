@@ -6,5 +6,6 @@ data class Applicant(
     val id: String = "",
     val userId: String = "",
     val createdAt: LocalDateTime = LocalDateTime.now(),
+    val position: String = "",
     val status: String = "",
 )

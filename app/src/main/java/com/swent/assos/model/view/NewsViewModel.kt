@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -35,12 +36,16 @@ constructor(
   private var _loadingDisplay = MutableStateFlow(true)
   val loading = _loadingDisplay.asStateFlow()
 
+  private val _isSaved = MutableStateFlow(false)
+  val isSaved = _isSaved.asStateFlow()
+
   fun loadNews(newsId: String) {
     viewModelScope.launch(ioDispatcher) {
       dbService.getNews(newsId).let {
         _news.value = it
         _loadingDisplay.value = false
       }
+      _isSaved.update { DataCache.currentUser.value.savedNews.contains(_news.value.id) }
     }
   }
 
@@ -86,6 +91,23 @@ constructor(
           }
         }
       }
+    }
+  }
+
+  fun saveNews(newsId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(savedNews = DataCache.currentUser.value.savedNews + newsId)
+    viewModelScope.launch(ioDispatcher) {
+      dbService.saveNews(newsId, { _isSaved.update { true } }, {})
+    }
+  }
+
+  fun unSaveNews(newsId: String) {
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(
+            savedNews = DataCache.currentUser.value.savedNews.filter { it != newsId })
+    viewModelScope.launch(ioDispatcher) {
+      dbService.unSaveNews(newsId, { _isSaved.update { false } }, {})
     }
   }
 }
