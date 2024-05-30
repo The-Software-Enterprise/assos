@@ -13,6 +13,7 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
+import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
@@ -27,12 +28,19 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class EventDetailsTest : SuperTest() {
+
   private val assoID = "02s16UZba2Bsx5opTcQb"
   private val event1 =
       Event("123456", "description", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
 
   private val event3 =
       Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
+
+  // users that are applicants to the event
+
+
+
+
 
   private val profileId = "theIDofJoe"
   private val firstName = "Joe"
@@ -60,7 +68,26 @@ class EventDetailsTest : SuperTest() {
           "description",
           isStaffingEnabled = true)
 
-  val OtherFakeUser =
+    val applicant1 = User(
+        id = "userapp1",
+        email = "",
+        appliedStaffing = listOf(event2.id),
+        associations = emptyList(),
+        savedEvents = emptyList())
+    val applicant2 = User(
+        id = "userapp2",
+        email = "",
+        appliedStaffing = listOf(event2.id),
+        associations = emptyList(),
+        savedEvents = emptyList())
+    val applicant3 = User(
+        id = "userapp3",
+        email = "",
+        appliedStaffing = listOf(event2.id),
+        associations = emptyList(),
+        savedEvents = emptyList())
+
+  val otherFakeUser =
       User(
           id = "SomeOtherUserId",
           email = "someone.notImportant@epflch",
@@ -72,6 +99,36 @@ class EventDetailsTest : SuperTest() {
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
     FirebaseFirestore.getInstance().collection("events").document(event3.id).set(serialize(event2))
+FirebaseFirestore.getInstance().collection("users").document(applicant1.id).set(serialize(applicant1))
+    FirebaseFirestore.getInstance().collection("users").document(applicant1.id).set(serialize(applicant1))
+    FirebaseFirestore.getInstance().collection("users").document(applicant2.id).set(serialize(applicant2))
+    FirebaseFirestore.getInstance().collection("users").document(applicant3.id).set(serialize(applicant3))
+
+    
+    FirebaseFirestore.getInstance()
+        .collection("events")
+        .document(event2.id)
+        .collection("applicants")
+        .document("323232")
+        .set(mapOf("userId" to applicant1.id, "status" to "pending", "createdAt" to Timestamp.now()))
+
+
+    FirebaseFirestore.getInstance()
+      .collection("events")
+      .document(event2.id)
+      .collection("applicants")
+      .document("323232")
+      .set(mapOf("userId" to applicant2.id, "status" to "pending", "createdAt" to Timestamp.now()))
+
+    FirebaseFirestore.getInstance()
+      .collection("events")
+      .document(event2.id)
+      .collection("applicants")
+      .document("323232")
+      .set(mapOf("userId" to applicant3.id, "status" to "pending", "createdAt" to Timestamp.now()))
+
+
+
     FirebaseFirestore.getInstance()
         .collection("events")
         .document(event3.id)
@@ -192,9 +249,9 @@ class EventDetailsTest : SuperTest() {
   fun unSaveEvent() {
     FirebaseFirestore.getInstance()
         .collection("users")
-        .document(OtherFakeUser.id)
-        .set(serialize(OtherFakeUser))
-    DataCache.currentUser.value = OtherFakeUser
+        .document(otherFakeUser.id)
+        .set(serialize(otherFakeUser))
+    DataCache.currentUser.value = otherFakeUser
     DataCache.currentUser.value.savedEvents = listOf(event1.id)
     composeTestRule.activity.setContent {
       EventDetails(
