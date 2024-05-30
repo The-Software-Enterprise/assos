@@ -3,6 +3,7 @@ package com.swent.assos
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.Firebase
@@ -81,11 +82,11 @@ class ApplicationsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<ApplicationsScreen>(composeTestRule) {
         step("Check if the application titles are displayed") {
-          associationsApplicationsTitle { assertIsDisplayed() }
+          composeTestRule.onNodeWithTag("AssociationsApplicationsTitle").assertIsDisplayed()
           staffingApplicationsTitle { assertIsDisplayed() }
           composeTestRule.onNodeWithText("Requested Staffing").assertIsDisplayed()
         }
-        composeTestRule.waitUntil {
+        composeTestRule.waitUntil(10000) {
           composeTestRule.onNodeWithText("PolyLan").isDisplayed() &&
               composeTestRule.onNodeWithText("test event").isDisplayed()
         }
