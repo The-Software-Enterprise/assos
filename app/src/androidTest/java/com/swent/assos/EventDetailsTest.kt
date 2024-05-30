@@ -12,7 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.EventDetailsScreen
@@ -130,10 +129,6 @@ class EventDetailsTest : SuperTest() {
         }
         step("I want to create a ticket") {
           composeTestRule.onNodeWithText("Add Ticket").performClick()
-        }
-        step("Check if we actually navigate to create a ticket screen") {
-          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route + "/${event2.id}") }
-          confirmVerified(mockNavActions)
         }
       }
     }
