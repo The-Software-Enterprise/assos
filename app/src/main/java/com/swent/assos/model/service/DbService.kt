@@ -6,6 +6,7 @@ import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
+import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.data.User
@@ -160,6 +161,15 @@ interface DbService {
 
   suspend fun unAcceptApplicant(applicantId: String, assoId: String)
 
+  suspend fun getPositions(
+      associationId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<OpenPositions>
+
+  suspend fun getPositions(associationId: String): List<OpenPositions>
+
+  suspend fun addPosition(associationId: String, openPositions: OpenPositions)
+
   suspend fun addUser(users: User)
 
   suspend fun quitAssociation(
@@ -168,4 +178,6 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
+
+  suspend fun getPosition(associationId: String, positionId: String): OpenPositions
 }

@@ -69,6 +69,7 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
 import com.swent.assos.ui.components.NewsItem
+import com.swent.assos.ui.components.PostionItem
 import com.swent.assos.ui.theme.GraySeparator
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -79,9 +80,11 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
   val association by viewModel.association.collectAsState()
   val news by viewModel.news.collectAsState()
   val events by viewModel.events.collectAsState()
+  val pos by viewModel.positions.collectAsState()
 
   val listStateNews = rememberLazyListState()
   val listStateEvents = rememberLazyListState()
+  val listStatePos = rememberLazyListState()
 
   val launcher =
       rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result
@@ -95,6 +98,7 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
     viewModel.getAssociation(assoId)
     viewModel.getNews(assoId)
     viewModel.getEvents(assoId)
+    viewModel.getPositions(assoId)
   }
 
   LaunchedEffect(listStateNews) {
@@ -102,6 +106,15 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
         .collect { visibleItems ->
           if (visibleItems.isNotEmpty() && visibleItems.last().index == news.size - 1) {
             viewModel.getMoreNews(assoId)
+          }
+        }
+  }
+
+  LaunchedEffect(key1 = listStatePos) {
+    snapshotFlow { listStatePos.layoutInfo.visibleItemsInfo }
+        .collect { visibleItems ->
+          if (visibleItems.isNotEmpty() && visibleItems.last().index == pos.size - 1) {
+            viewModel.getMorePositions(assoId)
           }
         }
   }
@@ -186,6 +199,25 @@ fun ManageAssociation(assoId: String, navigationActions: NavigationActions) {
                         Spacer(modifier = Modifier.width(8.dp))
                       }
                     }
+
+                HeaderWithButtonWithIcon(
+                    header = "Latest Positions",
+                    buttonText = "Add Position",
+                    onButtonClick = {
+                      navigationActions.navigateTo(
+                          Destinations.CREATE_POSITION.route + "/${assoId}")
+                    },
+                    modifierButton = Modifier.testTag("AddPositionButton"))
+                LazyRow(
+                    modifier = Modifier.testTag("PositionItem"),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                      items(pos) {
+                        PostionItem(it, assoId, navigationActions)
+                        Spacer(modifier = Modifier.width(8.dp))
+                      }
+                    }
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Button(
                     modifier =
                         Modifier.testTag("ApplicationsButton")
