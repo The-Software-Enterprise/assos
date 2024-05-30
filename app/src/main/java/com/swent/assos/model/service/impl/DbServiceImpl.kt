@@ -574,6 +574,66 @@ constructor(
     }
   }
 
+  override suspend fun saveEvent(
+      eventId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("savedEvents", FieldValue.arrayUnion(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Saving Error") }
+    }
+  }
+
+  override suspend fun saveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("savedNews", FieldValue.arrayUnion(newsId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Saving Error") }
+    }
+  }
+
+  override suspend fun unSaveEvent(
+      eventId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("savedEvents", FieldValue.arrayRemove(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("UnSaving Error") }
+    }
+  }
+
+  override suspend fun unSaveNews(
+      newsId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    val user = auth.currentUser
+    if (user != null) {
+      firestore
+          .collection("users")
+          .document(user.uid)
+          .update("savedNews", FieldValue.arrayRemove(newsId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("UnSaving Error") }
+    }
+  }
+
   override suspend fun joinAssociation(
       triple: Triple<String, String, Int>,
       userId: String,

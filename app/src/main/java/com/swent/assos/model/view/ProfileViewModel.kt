@@ -1,9 +1,14 @@
 package com.swent.assos.model.view
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
+import com.swent.assos.model.data.Event
+import com.swent.assos.model.data.News
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.service.AuthService
 import com.swent.assos.model.service.DbService
@@ -41,6 +46,14 @@ constructor(
   private val _update = MutableStateFlow(false)
   val update = _update.asStateFlow()
 
+  private val _savedEvents = MutableStateFlow(emptyList<Event>())
+  val savedEvents = _savedEvents.asStateFlow()
+
+  private val _savedNews = MutableStateFlow(emptyList<News>())
+  val savedNews = _savedNews.asStateFlow()
+
+  private var _selectedOption by mutableStateOf("Events")
+
   fun signOut() {
     try {
       DataCache.signOut()
@@ -69,6 +82,21 @@ constructor(
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
+
+        currentUser.savedNews.forEach { newsId ->
+          dbService.getNews(newsId).let { news ->
+            _savedNews.value += news
+            _savedNews.value = _savedNews.value.distinct().sortedBy { it.createdAt }
+          }
+        }
+
+        currentUser.savedEvents.forEach { eventId ->
+          dbService.getEventById(eventId).let { event ->
+            _savedEvents.value += event
+            _savedEvents.value = _savedEvents.value.distinct().sortedBy { it.startTime }
+          }
+        }
+
         _loading.value = false
       }
     }
@@ -79,6 +107,7 @@ constructor(
   }
 
   fun updateUser() {
+    _loading.value = true
     viewModelScope.launch(ioDispatcher) {
       DataCache.currentUser.collect { currentUser ->
         _firstName.value = currentUser.firstName
@@ -94,11 +123,27 @@ constructor(
         }
         _memberAssociations.value = emptyList()
         currentUser.associations.forEach { (assoId, _, _) ->
-          dbService.getAssociationById(assoId).let {
-            _memberAssociations.value += it
+          dbService.getAssociationById(assoId).let { association ->
+            _memberAssociations.value += association
+            //
             _memberAssociations.value = _memberAssociations.value.distinct().sortedBy { it.acronym }
           }
         }
+        _savedEvents.value = emptyList()
+        currentUser.savedEvents.forEach { id ->
+          dbService.getEventById(id).let {
+            _savedEvents.value += it
+            _savedEvents.value = _savedEvents.value.distinct().sortedBy { it.startTime }
+          }
+        }
+        _savedNews.value = emptyList()
+        currentUser.savedNews.forEach { id ->
+          dbService.getNews(id).let {
+            _savedNews.value += it
+            _savedNews.value = _savedNews.value.distinct().sortedBy { it.createdAt }
+          }
+        }
+        _loading.value = false
       }
     }
     viewModelScope.launch(ioDispatcher) { _update.value = false }

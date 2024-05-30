@@ -234,7 +234,10 @@ fun serialize(user: User): Map<String, Any> {
       "associations" to
           user.associations.map {
             mapOf("assoId" to it.first, "position" to it.second, "rank" to it.third)
-          })
+          },
+      "savedEvents" to user.savedEvents,
+      "savedNews" to user.savedNews,
+  )
 }
 
 fun deserializeUser(doc: DocumentSnapshot): User {
@@ -259,7 +262,9 @@ fun deserializeUser(doc: DocumentSnapshot): User {
                 null
               }
             } ?: emptyList()
-          } ?: emptyList())
+          } ?: emptyList(),
+      savedEvents = (doc.get("savedEvents") as? MutableList<String>) ?: mutableListOf(),
+      savedNews = (doc.get("savedNews") as? MutableList<String>) ?: mutableListOf())
 }
 
 fun generateQRCode(text: String, size: Int): Bitmap {

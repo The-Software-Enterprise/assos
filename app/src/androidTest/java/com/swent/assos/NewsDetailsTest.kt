@@ -41,8 +41,6 @@ class NewsDetailsTest : SuperTest() {
           following = listOf(associationID),
       )
 
-  val OtherFakeUser = User(id = "SomeOtherUserId", email = "someone.notImportant@epflch")
-
   val news: News =
       News(
           id = "SomeNewsId",
@@ -51,6 +49,12 @@ class NewsDetailsTest : SuperTest() {
           associationId = associationID,
       )
   val serNews: Map<String, Any> = serialize(news)
+
+  val OtherFakeUser =
+      User(
+          id = "SomeOtherUserId",
+          email = "someone.notImportant@epflch",
+          savedNews = listOf(news.id))
 
   @Before
   override fun setup() {
@@ -149,6 +153,46 @@ class NewsDetailsTest : SuperTest() {
         ComposeScreen.onComposeScreen<NewsScreen>(composeTestRule) {
           step("Check if element is still there") {
             composeTestRule.onNodeWithText(news.title).assertDoesNotExist()
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun saveNews() {
+    DataCache.currentUser.value.savedNews = emptyList()
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        step("Save news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(DataCache.currentUser.value.savedNews.contains(news.id))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun unSaveNews() {
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(OtherFakeUser.id)
+        .set(serialize(OtherFakeUser))
+    DataCache.currentUser.value = OtherFakeUser
+    DataCache.currentUser.value.savedNews = listOf(news.id)
+    composeTestRule.activity.setContent {
+      NewsDetails(newsId = news.id, assoId = news.associationId, navigationActions = mockNavActions)
+    }
+    run {
+      ComposeScreen.onComposeScreen<NewsDetailsScreen>(composeTestRule) {
+        step("Unsave news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(!DataCache.currentUser.value.savedNews.contains(news.id))
           }
         }
       }

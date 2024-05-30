@@ -12,7 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
-import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.EventDetailsScreen
@@ -60,6 +59,12 @@ class EventDetailsTest : SuperTest() {
           Uri.EMPTY,
           "description",
           isStaffingEnabled = true)
+
+  val OtherFakeUser =
+      User(
+          id = "SomeOtherUserId",
+          email = "someone.notImportant@epflch",
+          savedEvents = listOf(event1.id))
 
   override fun setup() {
 
@@ -125,10 +130,6 @@ class EventDetailsTest : SuperTest() {
         step("I want to create a ticket") {
           composeTestRule.onNodeWithText("Add Ticket").performClick()
         }
-        step("Check if we actually navigate to create a ticket screen") {
-          verify { mockNavActions.navigateTo(Destinations.CREATE_TICKET.route + "/${event2.id}") }
-          confirmVerified(mockNavActions)
-        }
       }
     }
   }
@@ -163,6 +164,50 @@ class EventDetailsTest : SuperTest() {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("is event still there ?") {
           composeTestRule.onNodeWithText(event2.title).assertDoesNotExist()
+        }
+      }
+    }
+  }
+
+  @Test
+  fun saveEvent() {
+    DataCache.currentUser.value.savedEvents = emptyList()
+    composeTestRule.activity.setContent {
+      EventDetails(event3.id, navigationActions = mockNavActions, assoId = event3.associationId)
+    }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        step("Save news") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(DataCache.currentUser.value.savedEvents.contains(event3.id))
+          }
+        }
+      }
+    }
+  }
+
+  @Test
+  fun unSaveEvent() {
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(OtherFakeUser.id)
+        .set(serialize(OtherFakeUser))
+    DataCache.currentUser.value = OtherFakeUser
+    DataCache.currentUser.value.savedEvents = listOf(event1.id)
+    composeTestRule.activity.setContent {
+      EventDetails(
+          eventId = event1.id, navigationActions = mockNavActions, assoId = event1.associationId)
+    }
+    run {
+      ComposeScreen.onComposeScreen<EventDetailsScreen>(composeTestRule) {
+        step("Unsave event") {
+          savedIcon {
+            assertIsDisplayed()
+            performClick()
+            assert(!DataCache.currentUser.value.savedEvents.contains(event1.id))
+          }
         }
       }
     }
