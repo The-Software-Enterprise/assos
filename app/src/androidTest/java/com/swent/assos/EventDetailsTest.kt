@@ -13,7 +13,6 @@ import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
-import com.swent.assos.model.service.impl.DbServiceImpl
 import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.EventDetailsScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
@@ -37,10 +36,6 @@ class EventDetailsTest : SuperTest() {
       Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
 
   // users that are applicants to the event
-
-
-
-
 
   private val profileId = "theIDofJoe"
   private val firstName = "Joe"
@@ -68,24 +63,27 @@ class EventDetailsTest : SuperTest() {
           "description",
           isStaffingEnabled = true)
 
-    val applicant1 = User(
-        id = "userapp1",
-        email = "",
-        appliedStaffing = listOf(event2.id),
-        associations = emptyList(),
-        savedEvents = emptyList())
-    val applicant2 = User(
-        id = "userapp2",
-        email = "",
-        appliedStaffing = listOf(event2.id),
-        associations = emptyList(),
-        savedEvents = emptyList())
-    val applicant3 = User(
-        id = "userapp3",
-        email = "",
-        appliedStaffing = listOf(event2.id),
-        associations = emptyList(),
-        savedEvents = emptyList())
+  val applicant1 =
+      User(
+          id = "userapp1",
+          email = "",
+          appliedStaffing = listOf(event2.id),
+          associations = emptyList(),
+          savedEvents = emptyList())
+  val applicant2 =
+      User(
+          id = "userapp2",
+          email = "",
+          appliedStaffing = listOf(event2.id),
+          associations = emptyList(),
+          savedEvents = emptyList())
+  val applicant3 =
+      User(
+          id = "userapp3",
+          email = "",
+          appliedStaffing = listOf(event2.id),
+          associations = emptyList(),
+          savedEvents = emptyList())
 
   val otherFakeUser =
       User(
@@ -99,35 +97,46 @@ class EventDetailsTest : SuperTest() {
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
     FirebaseFirestore.getInstance().collection("events").document(event3.id).set(serialize(event2))
-FirebaseFirestore.getInstance().collection("users").document(applicant1.id).set(serialize(applicant1))
-    FirebaseFirestore.getInstance().collection("users").document(applicant1.id).set(serialize(applicant1))
-    FirebaseFirestore.getInstance().collection("users").document(applicant2.id).set(serialize(applicant2))
-    FirebaseFirestore.getInstance().collection("users").document(applicant3.id).set(serialize(applicant3))
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(applicant1.id)
+        .set(serialize(applicant1))
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(applicant1.id)
+        .set(serialize(applicant1))
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(applicant2.id)
+        .set(serialize(applicant2))
+    FirebaseFirestore.getInstance()
+        .collection("users")
+        .document(applicant3.id)
+        .set(serialize(applicant3))
 
-    
     FirebaseFirestore.getInstance()
         .collection("events")
         .document(event2.id)
         .collection("applicants")
         .document("323232")
-        .set(mapOf("userId" to applicant1.id, "status" to "pending", "createdAt" to Timestamp.now()))
-
-
-    FirebaseFirestore.getInstance()
-      .collection("events")
-      .document(event2.id)
-      .collection("applicants")
-      .document("323232")
-      .set(mapOf("userId" to applicant2.id, "status" to "pending", "createdAt" to Timestamp.now()))
+        .set(
+            mapOf("userId" to applicant1.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
     FirebaseFirestore.getInstance()
-      .collection("events")
-      .document(event2.id)
-      .collection("applicants")
-      .document("323232")
-      .set(mapOf("userId" to applicant3.id, "status" to "pending", "createdAt" to Timestamp.now()))
+        .collection("events")
+        .document(event2.id)
+        .collection("applicants")
+        .document("323232")
+        .set(
+            mapOf("userId" to applicant2.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
-
+    FirebaseFirestore.getInstance()
+        .collection("events")
+        .document(event2.id)
+        .collection("applicants")
+        .document("323232")
+        .set(
+            mapOf("userId" to applicant3.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
     FirebaseFirestore.getInstance()
         .collection("events")
