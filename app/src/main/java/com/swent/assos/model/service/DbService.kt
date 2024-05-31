@@ -74,6 +74,8 @@ interface DbService {
 
   suspend fun acceptStaff(applicantId: String, eventId: String)
 
+  suspend fun deleteApplicants(eventId: String)
+
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
