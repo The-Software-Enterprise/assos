@@ -40,7 +40,7 @@ class PosDetailsTest : SuperTest() {
         FirebaseFirestore.getInstance().collection("associations").document(assoId)
     val posDocRef = associationDocRef.collection("positions").document(posId)
     posDocRef.set(serialize(pos))
-      DataCache.currentUser.value.associations = listOf(Triple(assoId, "name", 0))
+    DataCache.currentUser.value.associations = listOf(Triple(assoId, "name", 0))
     composeTestRule.activity.setContent {
       PosDetails(assoId = assoId, posId = posId, navigationActions = mockNavActions)
     }
@@ -59,16 +59,16 @@ class PosDetailsTest : SuperTest() {
     }
   }
 
-    @Test
-    fun deletePosition() {
-        run {
-            ComposeScreen.onComposeScreen<PosDetailsScreen>(composeTestRule) {
-                step("Delete position") {
-                    composeTestRule.onNodeWithText("Delete").performClick()
-                    verify { mockNavActions.goBack() }
-                    confirmVerified(mockNavActions)
-                }
-            }
+  @Test
+  fun deletePosition() {
+    run {
+      ComposeScreen.onComposeScreen<PosDetailsScreen>(composeTestRule) {
+        step("Delete position") {
+          composeTestRule.onNodeWithText("Delete").performClick()
+          verify { mockNavActions.goBack() }
+          confirmVerified(mockNavActions)
         }
+      }
     }
+  }
 }

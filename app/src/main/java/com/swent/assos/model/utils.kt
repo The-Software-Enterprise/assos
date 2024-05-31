@@ -36,8 +36,6 @@ import java.io.OutputStream
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
@@ -172,7 +170,7 @@ fun serialize(applicant: Applicant): Map<String, Any> {
 }
 
 fun deSerializeOpenPositions(doc: DocumentSnapshot): OpenPositions {
-    println("deSerializeOpenPositions$doc")
+  println("deSerializeOpenPositions$doc")
   return OpenPositions(
       id = doc.id,
       title = doc.getString("title") ?: "",

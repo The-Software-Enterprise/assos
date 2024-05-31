@@ -80,7 +80,10 @@ constructor(
   }
 
   override suspend fun addPosition(associationId: String, openPositions: OpenPositions) {
-    firestore.collection("associations/$associationId/positions").add(serialize(openPositions)).await()
+    firestore
+        .collection("associations/$associationId/positions")
+        .add(serialize(openPositions))
+        .await()
   }
 
   override suspend fun getPosition(associationId: String, positionId: String): OpenPositions {

@@ -41,9 +41,7 @@ fun PosDetails(assoId: String, posId: String, navigationActions: NavigationActio
     viewModel.checkCanDelete(assoId)
   }
 
-    LaunchedEffect(key1 = assoId, key2 = posId) {
-        viewModel.getPosition(assoId, posId)
-    }
+  LaunchedEffect(key1 = assoId, key2 = posId) { viewModel.getPosition(assoId, posId) }
 
   Scaffold(
       modifier = Modifier.fillMaxSize(),
