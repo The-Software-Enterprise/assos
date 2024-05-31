@@ -112,6 +112,23 @@ constructor(
     return deserializeUser(snapshot.documents[0])
   }
 
+  override suspend fun deleteApplicants(eventId: String) {
+    // get all the applicants from the event
+    val query = firestore.collection("events/$eventId/applicants")
+    val snapshot = query.get().await()
+
+    // delete all the applicants
+    for (document in snapshot.documents) {
+      firestore
+          .collection("users")
+          .document(document.get("userId").toString())
+          .update("appliedStaffing", FieldValue.arrayRemove(eventId))
+    }
+    for (document in snapshot.documents) {
+      firestore.collection("events/$eventId/applicants").document(document.id).delete()
+    }
+  }
+
   override suspend fun getTicketsUser(userId: String): List<Ticket> {
     // get all the tickets from the user from the ids of tickets in the user collection
     when {

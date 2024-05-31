@@ -58,7 +58,10 @@ constructor(
   }
 
   fun deleteEvent(eventId: String) {
-    viewModelScope.launch(ioDispatcher) { dbService.deleteEvent(eventId) }
+    viewModelScope.launch(ioDispatcher) {
+      dbService.deleteEvent(eventId)
+      dbService.deleteApplicants(eventId)
+    }
   }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
