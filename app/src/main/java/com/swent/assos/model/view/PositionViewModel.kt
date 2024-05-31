@@ -28,7 +28,7 @@ constructor(
   private val _canDelete = MutableStateFlow(false)
   val canDelete = _canDelete.asStateFlow()
 
-  fun getPosition(positionId: String, associationId: String) {
+  fun getPosition(associationId: String, positionId: String) {
     viewModelScope.launch(ioDispatcher) {
       _position.value = dbService.getPosition(associationId, positionId)
     }

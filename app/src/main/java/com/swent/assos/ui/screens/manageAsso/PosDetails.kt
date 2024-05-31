@@ -36,11 +36,14 @@ fun PosDetails(assoId: String, posId: String, navigationActions: NavigationActio
   val position by viewModel.position.collectAsState()
   val canDelete by viewModel.canDelete.collectAsState()
 
-  LaunchedEffect(key1 = Unit) {
+  LaunchedEffect(key1 = assoId) {
     assoModel.getAssociation(assoId)
-    viewModel.getPosition(assoId, posId)
     viewModel.checkCanDelete(assoId)
   }
+
+    LaunchedEffect(key1 = assoId, key2 = posId) {
+        viewModel.getPosition(assoId, posId)
+    }
 
   Scaffold(
       modifier = Modifier.fillMaxSize(),

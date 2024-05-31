@@ -54,10 +54,6 @@ enum class AssociationPosition(val string: String, val rank: Int) {
   MEMBER("member", 3)
 }
 
-fun formatDateTime(date: LocalDateTime): String {
-  return date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
-}
-
 fun generateUniqueID(): String {
   val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
   return (1..20).map { chars.random() }.joinToString("")
@@ -176,6 +172,7 @@ fun serialize(applicant: Applicant): Map<String, Any> {
 }
 
 fun deSerializeOpenPositions(doc: DocumentSnapshot): OpenPositions {
+    println("deSerializeOpenPositions$doc")
   return OpenPositions(
       id = doc.id,
       title = doc.getString("title") ?: "",
