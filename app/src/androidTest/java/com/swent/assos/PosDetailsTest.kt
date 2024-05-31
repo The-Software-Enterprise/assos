@@ -2,9 +2,11 @@ package com.swent.assos
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.FirebaseFirestore
+import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.OpenPositions
 import com.swent.assos.model.serialize
 import com.swent.assos.screens.PosDetailsScreen
@@ -38,8 +40,9 @@ class PosDetailsTest : SuperTest() {
         FirebaseFirestore.getInstance().collection("associations").document(assoId)
     val posDocRef = associationDocRef.collection("positions").document(posId)
     posDocRef.set(serialize(pos))
+      DataCache.currentUser.value.associations = listOf(Triple(assoId, "name", 0))
     composeTestRule.activity.setContent {
-      PosDetails(assoId = assoId, posId = "posId", navigationActions = mockNavActions)
+      PosDetails(assoId = assoId, posId = posId, navigationActions = mockNavActions)
     }
   }
 
@@ -55,4 +58,17 @@ class PosDetailsTest : SuperTest() {
       }
     }
   }
+
+    @Test
+    fun deletePosition() {
+        run {
+            ComposeScreen.onComposeScreen<PosDetailsScreen>(composeTestRule) {
+                step("Delete position") {
+                    composeTestRule.onNodeWithText("Delete").performClick()
+                    verify { mockNavActions.goBack() }
+                    confirmVerified(mockNavActions)
+                }
+            }
+        }
+    }
 }
