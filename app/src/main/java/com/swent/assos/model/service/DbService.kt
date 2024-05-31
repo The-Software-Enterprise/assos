@@ -78,6 +78,8 @@ interface DbService {
 
   suspend fun acceptStaff(applicantId: String, eventId: String)
 
+  suspend fun deleteApplicants(eventId: String)
+
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
   suspend fun getNews(associationId: String, lastDocumentSnapshot: DocumentSnapshot?): List<News>
@@ -184,4 +186,11 @@ interface DbService {
   )
 
   suspend fun getPosition(associationId: String, positionId: String): OpenPositions
+
+  suspend fun deletePosition(
+      associationId: String,
+      positionId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 }

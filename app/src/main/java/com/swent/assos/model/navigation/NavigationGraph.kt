@@ -20,9 +20,9 @@ import com.swent.assos.ui.screens.manageAsso.ApplicationManagement
 import com.swent.assos.ui.screens.manageAsso.CreateNews
 import com.swent.assos.ui.screens.manageAsso.CreatePosition
 import com.swent.assos.ui.screens.manageAsso.ManageAssociation
+import com.swent.assos.ui.screens.manageAsso.PosDetails
 import com.swent.assos.ui.screens.manageAsso.StaffManagement
 import com.swent.assos.ui.screens.manageAsso.createEvent.CreateEvent
-import com.swent.assos.ui.screens.manageAsso.createEvent.PosDetails
 import com.swent.assos.ui.screens.profile.Appearance
 import com.swent.assos.ui.screens.profile.Applications
 import com.swent.assos.ui.screens.profile.Following

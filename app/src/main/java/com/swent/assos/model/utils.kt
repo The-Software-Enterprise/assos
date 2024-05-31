@@ -36,8 +36,6 @@ import java.io.OutputStream
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.Date
 
 val MIN_LOADED_ITEMS = 8
@@ -52,10 +50,6 @@ enum class AssociationPosition(val string: String, val rank: Int) {
   PRESIDENT("president", 1),
   TREASURER("treasurer", 2),
   MEMBER("member", 3)
-}
-
-fun formatDateTime(date: LocalDateTime): String {
-  return date.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
 }
 
 fun generateUniqueID(): String {
