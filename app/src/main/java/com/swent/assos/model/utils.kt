@@ -170,7 +170,6 @@ fun serialize(applicant: Applicant): Map<String, Any> {
 }
 
 fun deSerializeOpenPositions(doc: DocumentSnapshot): OpenPositions {
-  println("deSerializeOpenPositions$doc")
   return OpenPositions(
       id = doc.id,
       title = doc.getString("title") ?: "",
