@@ -180,4 +180,11 @@ interface DbService {
   )
 
   suspend fun getPosition(associationId: String, positionId: String): OpenPositions
+
+  suspend fun deletePosition(
+      associationId: String,
+      positionId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 }
