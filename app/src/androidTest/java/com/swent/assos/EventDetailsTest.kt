@@ -35,6 +35,10 @@ class EventDetailsTest : SuperTest() {
   private val event3 =
       Event("12345678", "title", assoID, Uri.EMPTY, "description", isStaffingEnabled = true)
 
+  val applicatioId1 = "1"
+  val applicatioId2 = "2"
+  val applicatioId3 = "3"
+
   // users that are applicants to the event
 
   private val profileId = "theIDofJoe"
@@ -126,7 +130,7 @@ class EventDetailsTest : SuperTest() {
         .collection("events")
         .document(event2.id)
         .collection("applicants")
-        .document("323232")
+        .document(applicatioId1)
         .set(
             mapOf("userId" to applicant2.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
@@ -134,15 +138,15 @@ class EventDetailsTest : SuperTest() {
         .collection("events")
         .document(event2.id)
         .collection("applicants")
-        .document("323232")
+        .document(applicatioId2)
         .set(
             mapOf("userId" to applicant3.id, "status" to "pending", "createdAt" to Timestamp.now()))
 
     FirebaseFirestore.getInstance()
         .collection("events")
-        .document(event3.id)
+        .document(event2.id)
         .collection("applicants")
-        .document("323232")
+        .document(applicatioId3)
         .set(mapOf("userId" to user.id, "status" to "pending", "createdAt" to Timestamp.now()))
     DataCache.currentUser.value = user
   }
