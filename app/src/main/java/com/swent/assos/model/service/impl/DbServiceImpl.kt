@@ -79,14 +79,31 @@ constructor(
     return snapshot.documents.map { deSerializeOpenPositions(it) }
   }
 
-  override suspend fun addPosition(associationId: String, position: OpenPositions) {
-    firestore.collection("associations/$associationId/positions").add(serialize(position)).await()
+  override suspend fun addPosition(associationId: String, openPositions: OpenPositions) {
+    firestore
+        .collection("associations/$associationId/positions")
+        .add(serialize(openPositions))
+        .await()
   }
 
   override suspend fun getPosition(associationId: String, positionId: String): OpenPositions {
     val query = firestore.collection("associations/$associationId/positions").document(positionId)
     val snapshot = query.get().await() ?: return OpenPositions()
     return deSerializeOpenPositions(snapshot)
+  }
+
+  override suspend fun deletePosition(
+      associationId: String,
+      positionId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  ) {
+    firestore
+        .collection("associations/$associationId/positions")
+        .document(positionId)
+        .delete()
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onError(it.message ?: "Error") }
   }
 
   override suspend fun addUser(user: User) {
