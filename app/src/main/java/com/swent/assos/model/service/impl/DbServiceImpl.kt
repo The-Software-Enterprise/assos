@@ -11,6 +11,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -21,6 +22,7 @@ import com.swent.assos.model.data.User
 import com.swent.assos.model.deSerializeOpenPositions
 import com.swent.assos.model.deserializeApplicant
 import com.swent.assos.model.deserializeAssociation
+import com.swent.assos.model.deserializeCommitteeMember
 import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.deserializeNews
 import com.swent.assos.model.deserializeTicket
@@ -104,6 +106,17 @@ constructor(
         .delete()
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError(it.message ?: "Error") }
+  }
+
+  override suspend fun getCommittee(associationId: String): List<CommitteeMember> {
+    val members = mutableListOf<CommitteeMember>()
+    val querySnapshot = firestore.collection("associations/$associationId/committee").get().await()
+
+    for (document in querySnapshot.documents) {
+      members.add(deserializeCommitteeMember(document))
+    }
+
+    return members
   }
 
   override suspend fun addUser(user: User) {
@@ -684,6 +697,9 @@ constructor(
                     "assoId" to triple.first, "position" to triple.second, "rank" to triple.third)))
         .addOnSuccessListener { onSuccess() }
         .addOnFailureListener { onError(it.message ?: "") }
+    firestore
+        .collection("associations/${triple.first}/committee")
+        .add(mapOf("memberId" to userId, "position" to triple.second, "rank" to triple.third))
   }
 
   override suspend fun quitAssociation(
@@ -714,6 +730,28 @@ constructor(
           }
         }
         .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
+
+    val assoRef = firestore.collection("associations").document(assoId)
+    userRef
+        .get()
+        .addOnSuccessListener { document ->
+          if (document.exists()) {
+            val associations = document.get("committee") as List<Map<String, Any>>?
+            associations
+                ?.find { it["memberId"] == userId }
+                ?.let { associationToQuit ->
+                  userRef
+                      .update("committee", FieldValue.arrayRemove(associationToQuit))
+                      .addOnSuccessListener { onSuccess() }
+                      .addOnFailureListener {
+                        onError(it.message ?: "Failed to remove member from committee")
+                      }
+                } ?: onError("Member not found")
+          } else {
+            onError("User not found")
+          }
+        }
+        .addOnFailureListener { onError(it.message ?: "Error fetching asso details") }
   }
 
   override suspend fun updateBanner(associationId: String, banner: Uri) {

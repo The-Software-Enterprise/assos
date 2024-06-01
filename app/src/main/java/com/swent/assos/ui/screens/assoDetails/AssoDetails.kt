@@ -56,6 +56,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.ProfileViewModel
@@ -273,6 +274,22 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
               style = MaterialTheme.typography.bodyMedium,
               modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
+      }
+
+      item {
+        Text(
+            text = "The Committee",
+            style = MaterialTheme.typography.headlineMedium,
+            fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+            fontWeight = FontWeight.Bold,
+            modifier =
+                Modifier.padding(horizontal = 16.dp, vertical = 10.dp).clickable {
+                  navigationActions.navigateTo(
+                      Destinations.COMMITTEE_DETAILS.route +
+                          "/${assoId}" +
+                          "/${association.acronym}")
+                })
+        Spacer(modifier = Modifier.height(50.dp))
       }
       item { Spacer(modifier = Modifier.height(20.dp)) }
     }
