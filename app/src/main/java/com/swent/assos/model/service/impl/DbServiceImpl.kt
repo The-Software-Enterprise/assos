@@ -404,6 +404,14 @@ constructor(
     firestore.document("associations/$assoId/applicants/$applicantId").update("status", "pending")
   }
 
+  override suspend fun rejectApplicant(applicantId: String, assoId: String) {
+    firestore.document("associations/$assoId/applicants/$applicantId").update("status", "rejected")
+  }
+
+  override suspend fun rejectStaff(applicantId: String, eventId: String) {
+    firestore.document("events/$eventId/applicants/$applicantId").update("status", "rejected")
+  }
+
   override suspend fun unAcceptStaff(applicantId: String, eventId: String) {
     firestore.document("events/$eventId/applicants/$applicantId").update("status", "pending")
   }

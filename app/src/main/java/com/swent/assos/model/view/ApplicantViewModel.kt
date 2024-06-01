@@ -70,6 +70,16 @@ constructor(
     }
   }
 
+  fun rejectApplicant(applicantId: String, assoId: String) {
+    viewModelScope.launch(ioDispatcher) {
+      dbService.rejectApplicant(applicantId = applicantId, assoId = assoId)
+    }
+  }
+
+  fun rejectStaff(applicantId: String, eventId: String) {
+    viewModelScope.launch { dbService.rejectStaff(applicantId = applicantId, eventId = eventId) }
+  }
+
   fun deleteRequest(userId: String, assoId: String) {
     viewModelScope.launch(ioDispatcher) {
       dbService.removeJoinApplication(

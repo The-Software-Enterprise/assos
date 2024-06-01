@@ -1,6 +1,5 @@
 package com.swent.assos.ui.components
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +26,6 @@ import com.swent.assos.model.data.Applicant
 
 @Composable
 fun ApplicationItem(application: Pair<String, Applicant>) {
-  Log.d("ApplicationItem", "ApplicationItem: $application")
   Box(
       modifier =
           Modifier.border(0.5.dp, MaterialTheme.colorScheme.onSurface, RoundedCornerShape(6.dp))
@@ -53,9 +51,17 @@ fun ApplicationItem(application: Pair<String, Applicant>) {
                   modifier =
                       Modifier.background(
                           color =
-                              if (application.second.status == "accepted")
+                              when (application.second.status) {
+                                "accepted" -> {
                                   MaterialTheme.colorScheme.secondary
-                              else MaterialTheme.colorScheme.surface,
+                                }
+                                "rejected" -> {
+                                  MaterialTheme.colorScheme.error
+                                }
+                                else -> {
+                                  MaterialTheme.colorScheme.surface
+                                }
+                              },
                           shape = RoundedCornerShape(6.dp)),
               )
             }
