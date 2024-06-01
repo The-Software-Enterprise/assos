@@ -731,14 +731,14 @@ constructor(
         }
         .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
 
-      val querySnapshot = firestore.collection("associations/$assoId/committee").get().await()
+    val querySnapshot = firestore.collection("associations/$assoId/committee").get().await()
 
-      for (document in querySnapshot.documents) {
-          val member = deserializeCommitteeMember(document)
-          if (member.memberId == userId) {
-              firestore.collection("associations/$assoId/committee").document(document.id).delete()
-          }
+    for (document in querySnapshot.documents) {
+      val member = deserializeCommitteeMember(document)
+      if (member.memberId == userId) {
+        firestore.collection("associations/$assoId/committee").document(document.id).delete()
       }
+    }
   }
 
   override suspend fun updateBanner(associationId: String, banner: Uri) {
