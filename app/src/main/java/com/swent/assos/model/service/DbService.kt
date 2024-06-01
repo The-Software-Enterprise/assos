@@ -73,6 +73,10 @@ interface DbService {
 
   suspend fun unAcceptStaff(applicantId: String, eventId: String)
 
+  suspend fun rejectApplicant(applicantId: String, assoId: String)
+
+  suspend fun rejectStaff(applicantId: String, eventId: String)
+
   suspend fun acceptStaff(applicantId: String, eventId: String)
 
   suspend fun deleteApplicants(eventId: String)
