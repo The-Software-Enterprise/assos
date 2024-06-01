@@ -18,7 +18,7 @@ abstract class LocalDatabase : RoomDatabase() {
 
 @Dao
 interface AssociationDao {
-  @Query("SELECT * FROM associations") fun getAllAssociations(): List<Association>
+  @Query("SELECT * FROM associations ORDER BY acronym ASC") fun getAllAssociations(): List<Association>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   suspend fun insertAssociation(vararg associations: Association)
