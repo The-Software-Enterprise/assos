@@ -265,30 +265,25 @@ constructor(
       event: Boolean
   ) {
 
-    when (event) {
-      true -> {
+    val prefix =
+        when (event) {
+          true -> "Events"
+          false -> "Associations"
+        }
+
+    val user = auth.currentUser
+    when (user) {
+      null -> return
+      else -> {
         firestore
-            .collection("events/$id/applicants")
+            .collection("${prefix.lowercase()}/$id/applicants")
             .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure("Error") }
         firestore
             .collection("users")
             .document(userId)
-            .update("appliedStaffing", FieldValue.arrayUnion(id))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure("Error") }
-      }
-      false -> {
-        firestore
-            .collection("associations/$id/applicants")
-            .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure("Error") }
-        firestore
-            .collection("users")
-            .document(userId)
-            .update("appliedAssociation", FieldValue.arrayUnion(id))
+            .update("applied$prefix", FieldValue.arrayUnion(id))
             .addOnSuccessListener { onSuccess() }
             .addOnFailureListener { onFailure("Error") }
       }
@@ -301,11 +296,7 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    when (user) {
-      null -> return
-      else -> apply(assoId, userId, onSuccess, onError, false)
-    }
+    apply(assoId, userId, onSuccess, onError, false)
   }
 
   override suspend fun applyStaffing(
@@ -314,12 +305,7 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-
-    val user = auth.currentUser
-    when (user) {
-      null -> return
-      else -> apply(eventId, userId, onSuccess, onError, true)
-    }
+    apply(eventId, userId, onSuccess, onError, true)
   }
 
   override suspend fun removeJoinApplication(
