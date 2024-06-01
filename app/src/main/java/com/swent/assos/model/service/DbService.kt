@@ -62,14 +62,6 @@ interface DbService {
       userId: String
   ): List<News>
 
-  suspend fun addApplicant(
-      toWhat: String,
-      id: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  )
-
   suspend fun unAcceptStaff(applicantId: String, eventId: String)
 
   suspend fun rejectApplicant(applicantId: String, assoId: String)

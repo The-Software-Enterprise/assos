@@ -56,7 +56,8 @@ class EventDetailsTest : SuperTest() {
           associations = listOf(Triple(memberAssociationId, "Chef de projet", 1)),
           sciper = "330249",
           semester = "GM-BA6",
-          appliedStaffing = listOf(event3.id))
+          appliedStaffing = listOf(event3.id),
+      )
 
   private val event2 =
       Event(
@@ -96,7 +97,6 @@ class EventDetailsTest : SuperTest() {
           savedEvents = listOf(event1.id))
 
   override fun setup() {
-
     FirebaseFirestore.getInstance().collection("users").document(user.id).set(serialize(user))
     FirebaseFirestore.getInstance().collection("events").document(event1.id).set(serialize(event1))
     FirebaseFirestore.getInstance().collection("events").document(event2.id).set(serialize(event2))
@@ -189,7 +189,7 @@ class EventDetailsTest : SuperTest() {
   fun testCreateTicketButton() {
     composeTestRule.activity.setContent {
       EventDetails(
-          eventId = event2.id, navigationActions = mockNavActions, assoId = memberAssociationId)
+          eventId = event3.id, navigationActions = mockNavActions, assoId = memberAssociationId)
     }
 
     run {
@@ -276,7 +276,9 @@ class EventDetailsTest : SuperTest() {
           savedIcon {
             assertIsDisplayed()
             performClick()
-            assert(!DataCache.currentUser.value.savedEvents.contains(event1.id))
+            composeTestRule.waitUntil {
+              !DataCache.currentUser.value.savedEvents.contains(event1.id)
+            }
           }
         }
       }

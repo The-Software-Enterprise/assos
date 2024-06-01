@@ -58,9 +58,9 @@ constructor(
   ): List<OpenPositions> {
     val query = firestore.collection("associations/$associationId/positions")
     val snapshot =
-        when (lastDocumentSnapshot == null) {
-          true -> query.limit(10).get().await()
-          false -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
     return when (snapshot.isEmpty) {
       true -> emptyList()
@@ -192,6 +192,7 @@ constructor(
     if (!isNetworkAvailable(context)) {
       return localAssociations
     }
+
     try {
       val snapshot =
           if (localAssociations.isEmpty()) {
@@ -199,9 +200,6 @@ constructor(
           } else {
             query.limit(10).get().await()
           }
-      if (snapshot.isEmpty) {
-        return emptyList()
-      }
       val associations = snapshot.documents.map { deserializeAssociation(it) }
       _localDatabase.associationDao().insertAssociation(*associations.toTypedArray())
       return associations
@@ -257,7 +255,7 @@ constructor(
         .await()
   }
 
-  private suspend fun apply(
+  private fun apply(
       id: String,
       userId: String,
       onSuccess: () -> Unit,
@@ -270,24 +268,17 @@ constructor(
           true -> "Events"
           false -> "Associations"
         }
-
-    val user = auth.currentUser
-    when (user) {
-      null -> return
-      else -> {
-        firestore
-            .collection("${prefix.lowercase()}/$id/applicants")
-            .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure("Error") }
-        firestore
-            .collection("users")
-            .document(userId)
-            .update("applied$prefix", FieldValue.arrayUnion(id))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onFailure("Error") }
-      }
-    }
+    firestore
+        .collection("${prefix.lowercase()}/$id/applicants")
+        .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure("Error") }
+    firestore
+        .collection("users")
+        .document(userId)
+        .update("applied$prefix", FieldValue.arrayUnion(id))
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { onFailure("Error") }
   }
 
   override suspend fun applyJoinAsso(
@@ -388,10 +379,8 @@ constructor(
             .whereEqualTo("userId", userId)
             .get()
             .await()
-    if (querySnapshot.isEmpty) {
-      return Applicant()
-    }
-    return deserializeApplicant(querySnapshot.documents[0])
+    val doc = querySnapshot.documents.firstOrNull() ?: return Applicant()
+    return deserializeApplicant(doc)
   }
 
   override suspend fun getApplicantByEventIdAndUserId(eventId: String, userId: String): Applicant {
@@ -401,10 +390,8 @@ constructor(
             .whereEqualTo("userId", userId)
             .get()
             .await()
-    if (querySnapshot.isEmpty) {
-      return Applicant()
-    }
-    return deserializeApplicant(querySnapshot.documents[0])
+    val doc = querySnapshot.documents.firstOrNull() ?: return Applicant()
+    return deserializeApplicant(doc)
   }
 
   override suspend fun acceptApplicant(applicantId: String, assoId: String) {
@@ -431,23 +418,6 @@ constructor(
     firestore.document("events/$eventId/applicants/$applicantId").update("status", "accepted")
   }
 
-  override suspend fun addApplicant(
-      toWhat: String,
-      id: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  ) {
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("$toWhat/$id/applicants")
-          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
-    }
-  }
-
   override suspend fun getAssociationById(associationId: String): Association {
     val query =
         firestore.document("associations/$associationId").get().await() ?: return Association()
@@ -461,37 +431,19 @@ constructor(
           null -> query.limit(50).get().await()
           else -> query.startAfter(lastDocumentSnapshot).limit(50).get().await()
         }
-    return when (snapshot.isEmpty) {
-      true -> emptyList()
-      false -> snapshot.documents.map { deserializeNews(it) }
-    }
+    return snapshot.documents.map { deserializeNews(it) }
   }
 
   override suspend fun filterNewsBasedOnAssociations(
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
   ): List<News> {
-    val query = firestore.collection("users").document(userId)
-    val snapshot = query.get().await() ?: return emptyList()
-    val followedAssociations: List<String> =
-        when (snapshot["following"]) {
-          is List<*> ->
-              (snapshot["following"] as List<*>).filterIsInstance<String>().toMutableList()
-          else -> emptyList()
-        }
-    val associationsTheUserBelongsTo: List<String> =
-        when (snapshot["associations"]) {
-          is List<*> ->
-              (snapshot["associations"] as List<*>).filterIsInstance<String>().toMutableList()
-          else -> emptyList()
-        }
-    if (followedAssociations.isEmpty() && associationsTheUserBelongsTo.isEmpty()) {
-      return getAllNews(lastDocumentSnapshot)
-    }
+    val associations =
+        DataCache.currentUser.value.following +
+            DataCache.currentUser.value.associations.map { it.first }
     val news =
         getAllNews(lastDocumentSnapshot).filter { news ->
-          news.associationId in followedAssociations ||
-              news.associationId in associationsTheUserBelongsTo
+          associations.isEmpty() || news.associationId in associations
         }
     return news
   }
@@ -519,14 +471,10 @@ constructor(
             .whereEqualTo("associationId", associationId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
     return snapshot.documents.map { deserializeNews(it) }
   }
 
@@ -541,14 +489,10 @@ constructor(
             .whereGreaterThan("startTime", Timestamp.now())
             .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
     return snapshot.documents.map { deserializeEvent(it) }
   }
 
@@ -556,9 +500,6 @@ constructor(
       associationIds: List<String>,
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Event> {
-    if (associationIds.isEmpty()) {
-      return emptyList()
-    }
     val query =
         firestore
             .collection("events")
@@ -566,14 +507,10 @@ constructor(
             .whereGreaterThan("startTime", Timestamp.now())
             .orderBy("startTime", Query.Direction.ASCENDING)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
     return snapshot.documents.map { deserializeEvent(it) }
   }
 
@@ -597,11 +534,10 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("following", FieldValue.arrayUnion(associationId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Error") }
@@ -613,11 +549,10 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("following", FieldValue.arrayRemove(associationId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Unfollow Error") }
@@ -629,11 +564,10 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("savedEvents", FieldValue.arrayUnion(eventId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Saving Error") }
@@ -641,11 +575,10 @@ constructor(
   }
 
   override suspend fun saveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("savedNews", FieldValue.arrayUnion(newsId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("Saving Error") }
@@ -657,11 +590,10 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("savedEvents", FieldValue.arrayRemove(eventId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("UnSaving Error") }
@@ -673,11 +605,10 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
+    auth.currentUser?.let {
       firestore
           .collection("users")
-          .document(user.uid)
+          .document(it.uid)
           .update("savedNews", FieldValue.arrayRemove(newsId))
           .addOnSuccessListener { onSuccess() }
           .addOnFailureListener { onError("UnSaving Error") }
@@ -749,14 +680,10 @@ constructor(
     }
     val query = firestore.collection("tickets").whereEqualTo("userId", userId)
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
     return snapshot.documents.map { deserializeTicket(it) }
   }
 
@@ -769,9 +696,6 @@ constructor(
   override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> {
     val query = firestore.collection("tickets").whereEqualTo("eventId", eventId)
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
-    }
     return snapshot.documents.map { deserializeTicket(it) }
   }
 }
