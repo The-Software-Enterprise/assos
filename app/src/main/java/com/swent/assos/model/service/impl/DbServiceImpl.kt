@@ -8,7 +8,6 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
 import com.swent.assos.model.data.DataCache
@@ -47,10 +46,10 @@ constructor(
     val query = firestore.collection("users").document(userId)
     val snapshot = query.get().await() ?: return User()
 
-    if (!snapshot.exists()) {
-      return User(id = userId)
+    return when (snapshot.exists()) {
+      false -> User(id = userId)
+      true -> deserializeUser(snapshot)
     }
-    return deserializeUser(snapshot)
   }
 
   override suspend fun getPositions(
@@ -59,24 +58,23 @@ constructor(
   ): List<OpenPositions> {
     val query = firestore.collection("associations/$associationId/positions")
     val snapshot =
-        if (lastDocumentSnapshot == null) {
-          query.limit(10).get().await()
-        } else {
-          query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        when (lastDocumentSnapshot == null) {
+          true -> query.limit(10).get().await()
+          false -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
-    if (snapshot.isEmpty) {
-      return emptyList()
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false -> snapshot.documents.map { deSerializeOpenPositions(it) }
     }
-    return snapshot.documents.map { deSerializeOpenPositions(it) }
   }
 
   override suspend fun getPositions(associationId: String): List<OpenPositions> {
     val query = firestore.collection("associations/$associationId/positions")
     val snapshot = query.get().await()
-    if (snapshot.isEmpty) {
-      return emptyList()
+    return when (snapshot.isEmpty) {
+      true -> emptyList()
+      false -> snapshot.documents.map { deSerializeOpenPositions(it) }
     }
-    return snapshot.documents.map { deSerializeOpenPositions(it) }
   }
 
   override suspend fun addPosition(associationId: String, openPositions: OpenPositions) {
@@ -110,7 +108,7 @@ constructor(
     // get the id of the user
     val id = firestore.collection("users").add(serialize(user)).await().id
     // set the id of the user
-    firestore.collection("users").document(id).set(mapOf("id" to id), SetOptions.merge()).await()
+    firestore.collection("users").document(id).set(serialize(user.copy(id = id))).await()
     DataCache.currentUser.value = user.copy(id = id)
   }
 
@@ -121,12 +119,16 @@ constructor(
   ): User {
     val query = firestore.collection("users").whereEqualTo("email", email)
     val snapshot = query.get().await()
-    if (snapshot.isEmpty || snapshot.documents.isEmpty()) {
-      onFailure()
-      return User(email = email)
+    return when (snapshot.isEmpty || snapshot.documents.isEmpty()) {
+      true -> {
+        onFailure()
+        User(email = email)
+      }
+      false -> {
+        onSuccess()
+        deserializeUser(snapshot.documents[0])
+      }
     }
-    onSuccess()
-    return deserializeUser(snapshot.documents[0])
   }
 
   override suspend fun deleteApplicants(eventId: String) {
@@ -135,10 +137,10 @@ constructor(
     val snapshot = query.get().await()
 
     // delete all the applicants
-    for (document in snapshot.documents) {
+    for (documents in snapshot.documents) {
       firestore
           .collection("users")
-          .document(document.get("userId").toString())
+          .document(documents["userId"].toString())
           .update("appliedStaffing", FieldValue.arrayRemove(eventId))
     }
     for (document in snapshot.documents) {
@@ -166,21 +168,25 @@ constructor(
   }
 
   override suspend fun getNews(newsId: String): News {
-    if (newsId.isEmpty()) {
-      return News()
+    return when (newsId.isEmpty()) {
+      true -> News()
+      false -> {
+        val query = firestore.collection("news").document(newsId)
+        val snapshot = query.get().await() ?: return News()
+        deserializeNews(snapshot)
+      }
     }
-    val query = firestore.collection("news").document(newsId)
-    val snapshot = query.get().await() ?: return News()
-    return deserializeNews(snapshot)
   }
 
   override suspend fun getAllAssociations(
       lastDocumentSnapshot: DocumentSnapshot?
   ): List<Association> {
-    var query = firestore.collection("associations").orderBy("acronym")
-    if (lastDocumentSnapshot != null) {
-      query = query.startAfter(lastDocumentSnapshot)
-    }
+
+    var query =
+        when (lastDocumentSnapshot) {
+          null -> firestore.collection("associations").orderBy("acronym")
+          else -> firestore.collection("associations").startAfter(lastDocumentSnapshot)
+        }
     val localAssociations = _localDatabase.associationDao().getAllAssociations()
 
     if (!isNetworkAvailable(context)) {
@@ -251,26 +257,46 @@ constructor(
         .await()
   }
 
+  private suspend fun apply(
+      id: String,
+      userId: String,
+      onSuccess: () -> Unit,
+      onFailure: (String) -> Unit,
+      event: Boolean
+  ) {
+
+    val prefix =
+        when (event) {
+          true -> "Events"
+          false -> "Associations"
+        }
+
+    val user = auth.currentUser
+    when (user) {
+      null -> return
+      else -> {
+        firestore
+            .collection("${prefix.lowercase()}/$id/applicants")
+            .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure("Error") }
+        firestore
+            .collection("users")
+            .document(userId)
+            .update("applied$prefix", FieldValue.arrayUnion(id))
+            .addOnSuccessListener { onSuccess() }
+            .addOnFailureListener { onFailure("Error") }
+      }
+    }
+  }
+
   override suspend fun applyJoinAsso(
       assoId: String,
       userId: String,
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("associations/$assoId/applicants")
-          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
-      firestore
-          .collection("users")
-          .document(user.uid)
-          .update("appliedAssociation", FieldValue.arrayUnion(assoId))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError("Error") }
-    }
+    apply(assoId, userId, onSuccess, onError, false)
   }
 
   override suspend fun applyStaffing(
@@ -279,22 +305,7 @@ constructor(
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   ) {
-
-    // this.addApplicant("events", eventId, userId, onSuccess, onError)
-    val user = auth.currentUser
-    if (user != null) {
-      firestore
-          .collection("events/$eventId/applicants")
-          .add(mapOf("userId" to userId, "status" to "pending", "createdAt" to Timestamp.now()))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError(it.message ?: "") }
-      firestore
-          .collection("users")
-          .document(userId)
-          .update("appliedStaffing", FieldValue.arrayUnion(eventId))
-          .addOnSuccessListener { onSuccess() }
-          .addOnFailureListener { onError("Error") }
-    }
+    apply(eventId, userId, onSuccess, onError, true)
   }
 
   override suspend fun removeJoinApplication(
@@ -438,9 +449,6 @@ constructor(
   }
 
   override suspend fun getAssociationById(associationId: String): Association {
-    if (associationId.isEmpty()) {
-      return Association()
-    }
     val query =
         firestore.document("associations/$associationId").get().await() ?: return Association()
     return deserializeAssociation(query)
@@ -706,7 +714,7 @@ constructor(
         .get()
         .addOnSuccessListener { document ->
           if (document.exists()) {
-            val associations = document.get("associations") as List<Map<String, Any>>?
+            val associations = document["associations"] as? List<Map<String, Any>>
             associations
                 ?.find { it["assoId"] == assoId }
                 ?.let { associationToQuit ->
