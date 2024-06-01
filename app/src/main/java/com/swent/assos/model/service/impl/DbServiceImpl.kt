@@ -731,27 +731,14 @@ constructor(
         }
         .addOnFailureListener { onError(it.message ?: "Error fetching user details") }
 
-    val assoRef = firestore.collection("associations").document(assoId)
-    userRef
-        .get()
-        .addOnSuccessListener { document ->
-          if (document.exists()) {
-            val associations = document.get("committee") as List<Map<String, Any>>?
-            associations
-                ?.find { it["memberId"] == userId }
-                ?.let { associationToQuit ->
-                  userRef
-                      .update("committee", FieldValue.arrayRemove(associationToQuit))
-                      .addOnSuccessListener { onSuccess() }
-                      .addOnFailureListener {
-                        onError(it.message ?: "Failed to remove member from committee")
-                      }
-                } ?: onError("Member not found")
-          } else {
-            onError("User not found")
+      val querySnapshot = firestore.collection("associations/$assoId/committee").get().await()
+
+      for (document in querySnapshot.documents) {
+          val member = deserializeCommitteeMember(document)
+          if (member.memberId == userId) {
+              firestore.collection("associations/$assoId/committee").document(document.id).delete()
           }
-        }
-        .addOnFailureListener { onError(it.message ?: "Error fetching asso details") }
+      }
   }
 
   override suspend fun updateBanner(associationId: String, banner: Uri) {
