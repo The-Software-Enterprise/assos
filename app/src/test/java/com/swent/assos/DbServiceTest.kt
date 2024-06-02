@@ -10,9 +10,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import com.swent.assos.model.data.Event
-import com.swent.assos.model.data.News
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.service.impl.DbServiceImpl
+import com.swent.assos.ui.screens.News
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
@@ -209,10 +209,9 @@ class DbServiceTest {
     dbService.getAllNews(mockDocumentSnapshot)
     dbService.filterNewsBasedOnAssociations(null, "id")
     dbService.filterNewsBasedOnAssociations(mockDocumentSnapshot, "id")
-    dbService.addApplicant("toWhat", "id", "id", { null }, { null })
     dbService.unAcceptStaff("applicantId", "eventId")
     dbService.acceptStaff("applicantId", "eventId")
-    dbService.createNews(News(), { null }, { null })
+    dbService.createNews(com.swent.assos.model.data.News(), { null }, { null })
     dbService.getNews("id", null)
     dbService.getNews("id", mockDocumentSnapshot)
     dbService.getEventsFromAnAssociation("id", null)
