@@ -1,14 +1,11 @@
 package com.swent.assos.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -40,7 +37,6 @@ fun PageTitleWithGoBack(
     actionButton: @Composable RowScope.() -> Unit = {}
 ) {
   TopAppBar(
-      modifier = Modifier.padding(top = 10.dp),
       title = {
         Column(modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
           Text(
@@ -53,7 +49,6 @@ fun PageTitleWithGoBack(
                       fontWeight = FontWeight.SemiBold,
                       color = MaterialTheme.colorScheme.onBackground),
               modifier = Modifier.testTag("PageTitle"))
-          Row { actionButton() }
         }
       },
       navigationIcon = {
@@ -63,15 +58,38 @@ fun PageTitleWithGoBack(
             contentDescription = null,
             modifier =
                 Modifier.testTag("GoBackButton")
-                    .padding(start = 16.dp)
                     .clip(RoundedCornerShape(100))
                     .clickable { navigationActions.goBack() }
-                    .padding(start = 10.dp, end = 5.dp, top = 7.dp, bottom = 7.dp)
-                    .padding()
                     .size(20.dp))
       },
       colors =
           TopAppBarDefaults.mediumTopAppBarColors(
               containerColor = MaterialTheme.colorScheme.background),
-  )
+      actions = { actionButton() })
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PageTitleWithGoBack(
+    title: @Composable () -> Unit = {},
+    navigationActions: NavigationActions,
+    actionButton: @Composable RowScope.() -> Unit = {}
+) {
+  TopAppBar(
+      title = title,
+      navigationIcon = {
+        Image(
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+            imageVector = Icons.Default.ArrowBackIos,
+            contentDescription = null,
+            modifier =
+                Modifier.testTag("GoBackButton")
+                    .clip(RoundedCornerShape(100))
+                    .clickable { navigationActions.goBack() }
+                    .size(20.dp))
+      },
+      colors =
+          TopAppBarDefaults.mediumTopAppBarColors(
+              containerColor = MaterialTheme.colorScheme.background),
+      actions = { actionButton() })
 }

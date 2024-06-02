@@ -5,10 +5,12 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +26,6 @@ import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -66,7 +67,7 @@ import com.swent.assos.model.view.ProfileViewModel
 import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationActions) {
 
@@ -100,28 +101,38 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
       topBar = {
         Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
           PageTitleWithGoBack(
-              title = specificNews.title,
-              navigationActions = navigationActions,
-              actionButton = {
-                Row {
-                  Text(
-                      text = association.acronym,
-                      style =
-                          TextStyle(
-                              textDecoration = TextDecoration.Underline,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.SemiBold,
-                              fontSize = 14.sp,
-                              color = MaterialTheme.colorScheme.onBackground,
-                          ),
-                      textDecoration = TextDecoration.Underline,
-                      modifier =
-                          Modifier.padding(end = 16.dp).clickable {
-                            navigationActions.navigateTo(
-                                Destinations.ASSO_DETAILS.route + "/${assoId}")
-                          })
-                }
-              })
+              title = {
+                Column(
+                    modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                      Text(
+                          text = specificNews.title,
+                          style =
+                              TextStyle(
+                                  fontSize = 24.sp,
+                                  lineHeight = 20.sp,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  color = MaterialTheme.colorScheme.onBackground),
+                          modifier = Modifier.testTag("PageTitle"))
+                      Text(
+                          text = association.acronym,
+                          style =
+                              TextStyle(
+                                  textDecoration = TextDecoration.Underline,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  fontSize = 14.sp,
+                                  color = MaterialTheme.colorScheme.onBackground,
+                              ),
+                          textDecoration = TextDecoration.Underline,
+                          modifier =
+                              Modifier.clickable {
+                                navigationActions.navigateTo(
+                                    Destinations.ASSO_DETAILS.route + "/${assoId}")
+                              })
+                    }
+              },
+              navigationActions = navigationActions)
           Image(
               colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
               imageVector =
