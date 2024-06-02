@@ -4,6 +4,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -102,67 +103,68 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("AssoDetailsScreen"),
       topBar = {
-        TopAssoBar(asso = association, navigationActions = navigationActions, viewModel = viewModel)
-      },
-      floatingActionButton = {
-        if (!currentUser.associations.map { it.first }.contains(assoId)) {
+        TopAssoBar(
+            asso = association,
+            navigationActions = navigationActions,
+            viewModel = viewModel,
+            joinButton = {
+              if (!currentUser.associations.map { it.first }.contains(assoId)) {
+                val applied = viewModel.applied.collectAsState()
 
-          val applied = viewModel.applied.collectAsState()
-
-          AssistChip(
-              colors =
-                  when (applied.value) {
-                    true ->
-                        AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    false ->
-                        AssistChipDefaults.assistChipColors(
-                            containerColor = MaterialTheme.colorScheme.secondary)
-                  },
-              border = null,
-              modifier = Modifier.testTag("JoinUsButton").padding(5.dp),
-              onClick = {
-                when (applied.value) {
-                  true ->
-                      viewModel.removeRequestToJoin(
-                          currentUser.id,
-                          assoId,
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully removed your request to join the association",
-                                  Toast.LENGTH_SHORT)
-                              .show())
-                  false ->
-                      viewModel.applyToAssociation(
-                          currentUser.id,
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully applied to join the association",
-                                  Toast.LENGTH_SHORT)
-                              .show())
-                }
-              },
-              label = {
-                when (applied.value) {
-                  true ->
-                      Text(
-                          text = "Remove application",
-                          color = MaterialTheme.colorScheme.onSurfaceVariant,
-                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                          fontWeight = FontWeight.Medium,
-                      )
-                  false ->
-                      Text(
-                          text = "Join Us",
-                          color = MaterialTheme.colorScheme.onSecondary,
-                          fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                          fontWeight = FontWeight.Medium,
-                      )
-                }
-              },
-          )
-        }
+                AssistChip(
+                    colors =
+                        when (applied.value) {
+                          true ->
+                              AssistChipDefaults.assistChipColors(
+                                  containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                          false ->
+                              AssistChipDefaults.assistChipColors(
+                                  containerColor = MaterialTheme.colorScheme.secondary)
+                        },
+                    border = null,
+                    modifier = Modifier.testTag("JoinUsButton"),
+                    onClick = {
+                      when (applied.value) {
+                        true ->
+                            viewModel.removeRequestToJoin(
+                                currentUser.id,
+                                assoId,
+                                Toast.makeText(
+                                        context,
+                                        "You have successfully removed your request to join the association",
+                                        Toast.LENGTH_SHORT)
+                                    .show())
+                        false ->
+                            viewModel.applyToAssociation(
+                                currentUser.id,
+                                Toast.makeText(
+                                        context,
+                                        "You have successfully applied to join the association",
+                                        Toast.LENGTH_SHORT)
+                                    .show())
+                      }
+                    },
+                    label = {
+                      when (applied.value) {
+                        true ->
+                            Text(
+                                text = "Remove application",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                fontWeight = FontWeight.Medium)
+                        false ->
+                            Text(
+                                text = "Join Us",
+                                color = MaterialTheme.colorScheme.onSecondary,
+                                fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                fontWeight = FontWeight.Medium)
+                      }
+                    },
+                )
+              }
+            })
       },
+      floatingActionButton = {},
       floatingActionButtonPosition = FabPosition.Center,
   ) { paddingValues ->
     LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
@@ -248,17 +250,21 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
       }
 
       item {
-        Button(
-            modifier =
-                Modifier.testTag("CommitteeButton").padding(30.dp).width(250.dp).height(60.dp),
-            shape = RoundedCornerShape(16.dp),
-            onClick = {
-              navigationActions.navigateTo(
-                  Destinations.COMMITTEE_DETAILS.route + "/${assoId}" + "/${association.acronym}")
-            }) {
-              Icon(imageVector = Icons.Default.Accessibility, contentDescription = null)
-              Text("The Committee", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
-            }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+          Button(
+              modifier =
+                  Modifier.testTag("CommitteeButton").fillMaxWidth().padding(30.dp).height(60.dp),
+              shape = RoundedCornerShape(16.dp),
+              onClick = {
+                navigationActions.navigateTo(
+                    Destinations.COMMITTEE_DETAILS.route + "/${assoId}" + "/${association.acronym}")
+              }) {
+                Icon(imageVector = Icons.Default.Accessibility, contentDescription = null)
+                Text("The Committee", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+              }
+        }
       }
 
       item {

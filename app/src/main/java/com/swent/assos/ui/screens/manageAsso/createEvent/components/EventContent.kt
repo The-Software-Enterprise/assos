@@ -95,12 +95,7 @@ fun EventContent(
 
   val launcher =
       rememberLauncherForActivityResult(
-          contract = ActivityResultContracts.StartActivityForResult()) { result ->
-            // Handle the result of the activity here
-            // For example, you can retrieve data from the activity result
-            val data = result.data
-            // Handle the data accordingly
-          }
+          contract = ActivityResultContracts.StartActivityForResult(), onResult = {})
   val intent = Intent(LocalContext.current, NFCWriter::class.java).putExtra("eventID", eventId)
 
   LazyColumn(
@@ -195,63 +190,75 @@ fun EventContent(
 
         if (!isEdition && isMember) {
           item {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-              Button(
-                  modifier =
-                      Modifier.testTag("DownloadQRCode").padding(12.dp).width(175.dp).height(60.dp),
-                  shape = RoundedCornerShape(16.dp),
-                  onClick = {
-                    saveImageToGallery(
-                        context, generateQRCode(event.id, QR_CODE_SIZE).asImageBitmap())
-                  }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.download_icon),
-                        contentDescription = null)
-                    Text("QR Code", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
-                  }
-              Button(
-                  modifier =
-                      Modifier.testTag("SetupNFCTag").padding(12.dp).width(175.dp).height(60.dp),
-                  shape = RoundedCornerShape(16.dp),
-                  onClick = { launcher.launch(intent) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.nfc_icon),
-                        contentDescription = null)
-                    Text("NFC", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
-                  }
-            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly) {
+                  Button(
+                      modifier =
+                          Modifier.testTag("DownloadQRCode")
+                              .padding(12.dp)
+                              .weight(1f)
+                              .height(60.dp),
+                      shape = RoundedCornerShape(16.dp),
+                      onClick = {
+                        saveImageToGallery(
+                            context, generateQRCode(event.id, QR_CODE_SIZE).asImageBitmap())
+                      }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.download_icon),
+                            contentDescription = null)
+                        Text(
+                            "QR Code", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+                      }
+                  Button(
+                      modifier =
+                          Modifier.testTag("SetupNFCTag").padding(12.dp).weight(1f).height(60.dp),
+                      shape = RoundedCornerShape(16.dp),
+                      onClick = { launcher.launch(intent) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.nfc_icon),
+                            contentDescription = null)
+                        Text("NFC", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+                      }
+                }
           }
           item {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-              if (event.isStaffingEnabled) {
-                Button(
-                    modifier = Modifier.padding(12.dp).width(175.dp).height(60.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    onClick = {
-                      navigationActions.navigateTo(
-                          Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
-                    }) {
-                      Icon(
-                          painter = painterResource(id = R.drawable.list_icon),
-                          contentDescription = null)
-                      Text(
-                          "Staff List",
-                          modifier = Modifier.padding(start = 12.dp),
-                          fontSize = 18.sp)
-                    }
-              }
-              Button(
-                  modifier = Modifier.padding(12.dp).width(175.dp).height(60.dp),
-                  shape = RoundedCornerShape(16.dp),
-                  onClick = {
-                    navigationActions.navigateTo(Destinations.CREATE_TICKET.route + "/${eventId}")
-                  }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.add_icon),
-                        contentDescription = null)
-                    Text("Add Ticket", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly) {
+                  if (event.isStaffingEnabled) {
+                    Button(
+                        modifier = Modifier.padding(12.dp).weight(1f).height(60.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        onClick = {
+                          navigationActions.navigateTo(
+                              Destinations.STAFF_MANAGEMENT.route + "/${eventId}")
+                        }) {
+                          Icon(
+                              painter = painterResource(id = R.drawable.list_icon),
+                              contentDescription = null)
+                          Text(
+                              "Staff List",
+                              modifier = Modifier.padding(start = 12.dp),
+                              fontSize = 18.sp)
+                        }
                   }
-            }
+                  Button(
+                      modifier = Modifier.padding(12.dp).weight(1f).height(60.dp),
+                      shape = RoundedCornerShape(16.dp),
+                      onClick = {
+                        navigationActions.navigateTo(
+                            Destinations.CREATE_TICKET.route + "/${eventId}")
+                      }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.add_icon),
+                            contentDescription = null)
+                        Text(
+                            "Add Ticket",
+                            modifier = Modifier.padding(start = 12.dp),
+                            fontSize = 18.sp)
+                      }
+                }
           }
         }
         itemsIndexed(event.fields, key = { index, _ -> index }) { index, field ->

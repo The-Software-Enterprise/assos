@@ -5,10 +5,12 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,10 +23,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -63,10 +65,9 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationActions) {
 
@@ -91,79 +92,96 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
-      floatingActionButton = {
-        if (associations.map { it.id }.contains(specificNews.associationId)) {
-          DeleteButton { conf = true }
-        }
-      },
       floatingActionButtonPosition = FabPosition.Center,
       topBar = {
         Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
           PageTitleWithGoBack(
-              title = specificNews.title,
+              title = {
+                Column(
+                    modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                      Text(
+                          text = specificNews.title,
+                          style =
+                              TextStyle(
+                                  fontSize = 24.sp,
+                                  lineHeight = 20.sp,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  color = MaterialTheme.colorScheme.onBackground),
+                          modifier = Modifier.testTag("PageTitle"))
+                      Text(
+                          text = association.acronym,
+                          style =
+                              TextStyle(
+                                  textDecoration = TextDecoration.Underline,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  fontSize = 14.sp,
+                                  color = MaterialTheme.colorScheme.onBackground,
+                              ),
+                          textDecoration = TextDecoration.Underline,
+                          modifier =
+                              Modifier.clickable {
+                                navigationActions.navigateTo(
+                                    Destinations.ASSO_DETAILS.route + "/${assoId}")
+                              })
+                    }
+              },
               navigationActions = navigationActions,
               actionButton = {
-                Row {
-                  Text(
-                      text = association.acronym,
-                      style =
-                          TextStyle(
-                              textDecoration = TextDecoration.Underline,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.SemiBold,
-                              fontSize = 14.sp,
-                              color = MaterialTheme.colorScheme.onBackground,
-                          ),
-                      textDecoration = TextDecoration.Underline,
+                Image(
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                    imageVector =
+                        if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                    contentDescription = null,
+                    modifier =
+                        Modifier.testTag("SavedIcon")
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(100))
+                            .clickable {
+                              when (isSaved.value) {
+                                true -> {
+                                  viewModel.unSaveNews(newsId)
+                                  Toast.makeText(
+                                          context,
+                                          "You have successfully removed the news from your saved list",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                }
+                                false -> {
+                                  viewModel.saveNews(newsId)
+                                  Toast.makeText(
+                                          context,
+                                          "You have successfully saved the news",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                }
+                              }
+                            }
+                            .size(30.dp))
+                if (associations.map { it.id }.contains(specificNews.associationId)) {
+                  Image(
+                      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                      imageVector = Icons.Default.Delete,
+                      contentDescription = null,
                       modifier =
-                          Modifier.padding(end = 16.dp).clickable {
-                            navigationActions.navigateTo(
-                                Destinations.ASSO_DETAILS.route + "/${assoId}")
-                          })
+                          Modifier.testTag("DeleteButton")
+                              .padding(16.dp)
+                              .clip(RoundedCornerShape(100))
+                              .clickable { conf = true })
                 }
               })
-          Image(
-              colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector =
-                  if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-              contentDescription = null,
-              modifier =
-                  Modifier.testTag("SavedIcon")
-                      .padding(16.dp)
-                      .clip(RoundedCornerShape(100))
-                      .clickable {
-                        when (isSaved.value) {
-                          true -> {
-                            viewModel.unSaveNews(newsId)
-                            Toast.makeText(
-                                    context,
-                                    "You have successfully removed the news from your saved list",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          }
-                          false -> {
-                            viewModel.saveNews(newsId)
-                            Toast.makeText(
-                                    context,
-                                    "You have successfully saved the news",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          }
-                        }
-                      }
-                      .size(30.dp)
-                      .align(Alignment.TopEnd))
         }
       }) { paddingValues ->
         if (conf) {
-          ConfirmDialog(
-              { conf = false },
-              {
+          ConfirmNewsDialog(
+              onDismiss = { conf = false },
+              onConfirm = {
                 viewModel.deleteNews(newsId)
                 navigationActions.goBack()
                 conf = false
               },
-              specificNews.title)
+              title = specificNews.title)
         }
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
@@ -239,10 +257,10 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
 }
 
 @Composable
-fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
+fun ConfirmNewsDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
   AlertDialog(
       onDismissRequest = onDismiss,
-      title = { Text("DELETE") },
+      title = { Text("Delete news") },
       text = { Text("Are you sure to delete $title ?") },
       confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
       containerColor = MaterialTheme.colorScheme.background,
