@@ -2,7 +2,6 @@ package com.swent.assos.model.service.impl
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -271,14 +270,13 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("following", FieldValue.arrayUnion(associationId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("following", FieldValue.arrayUnion(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Error") }
     }
   }
 
@@ -288,14 +286,13 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("following", FieldValue.arrayRemove(associationId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("Unfollow Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("following", FieldValue.arrayRemove(associationId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Unfollow Error") }
     }
   }
 
@@ -305,27 +302,25 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("savedEvents", FieldValue.arrayUnion(eventId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("Saving Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("savedEvents", FieldValue.arrayUnion(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Saving Error") }
     }
   }
 
   override suspend fun saveNews(newsId: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("savedNews", FieldValue.arrayUnion(newsId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("Saving Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("savedNews", FieldValue.arrayUnion(newsId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("Saving Error") }
     }
   }
 
@@ -335,14 +330,13 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("savedEvents", FieldValue.arrayRemove(eventId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("UnSaving Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("savedEvents", FieldValue.arrayRemove(eventId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("UnSaving Error") }
     }
   }
 
@@ -352,14 +346,13 @@ constructor(
       onError: (String) -> Unit
   ) {
     firestoreCallWithCatchError {
-      auth.currentUser?.let {
-        firestore
-            .collection("users")
-            .document(it.uid)
-            .update("savedNews", FieldValue.arrayRemove(newsId))
-            .addOnSuccessListener { onSuccess() }
-            .addOnFailureListener { onError("UnSaving Error") }
-      }
+      val uid = auth.currentUser?.uid ?: ""
+      firestore
+          .collection("users")
+          .document(uid)
+          .update("savedNews", FieldValue.arrayRemove(newsId))
+          .addOnSuccessListener { onSuccess() }
+          .addOnFailureListener { onError("UnSaving Error") }
     }
   }
 
