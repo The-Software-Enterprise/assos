@@ -193,8 +193,6 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 0.dp))
       }
 
-      item {}
-
       item {
         Text(
             text = "Upcoming Events",
