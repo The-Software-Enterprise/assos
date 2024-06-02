@@ -11,6 +11,7 @@ object LocalDatabaseProvider {
       instance =
           Room.databaseBuilder(
                   context.applicationContext, LocalDatabase::class.java, "local-database")
+              .fallbackToDestructiveMigration()
               .build()
     }
     return instance!!
