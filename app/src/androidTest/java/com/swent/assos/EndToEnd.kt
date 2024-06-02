@@ -222,7 +222,7 @@ class EndToEnd : SuperTest() {
     }
 
     composeTestRule.activity.setContent {
-      AssoDetails("jMWo6NgngIS2hCq054TF", navigationActions = mockNavActions)
+      AssoDetails("05DUlszwHL5YZTb1Jwo8", navigationActions = mockNavActions)
     }
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
