@@ -15,8 +15,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -224,7 +226,7 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         if (conf) {
-          ConfirmDialog(
+          ConfirmEventDialog(
               onDismiss = { conf = false },
               onConfirm = {
                 conf = false
@@ -245,4 +247,15 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               navigationActions = navigationActions)
         }
       }
+}
+
+@Composable
+fun ConfirmEventDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = { Text("Delete event") },
+    text = { Text("Are you sure to delete $title ?") },
+    confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
+    containerColor = MaterialTheme.colorScheme.background,
+    dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }

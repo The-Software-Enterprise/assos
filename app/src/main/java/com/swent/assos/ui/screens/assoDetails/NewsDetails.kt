@@ -174,7 +174,7 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
         }
       }) { paddingValues ->
         if (conf) {
-          ConfirmDialog(
+          ConfirmNewsDialog(
               onDismiss = { conf = false },
               onConfirm = {
                 viewModel.deleteNews(newsId)
@@ -257,10 +257,10 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
 }
 
 @Composable
-fun ConfirmDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
+fun ConfirmNewsDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
   AlertDialog(
       onDismissRequest = onDismiss,
-      title = { Text("DELETE") },
+      title = { Text("Delete news") },
       text = { Text("Are you sure to delete $title ?") },
       confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
       containerColor = MaterialTheme.colorScheme.background,
