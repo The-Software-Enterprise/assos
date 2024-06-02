@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.firestore.DocumentSnapshot
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.OpenPositions
@@ -61,14 +62,6 @@ interface DbService {
       lastDocumentSnapshot: DocumentSnapshot?,
       userId: String
   ): List<News>
-
-  suspend fun addApplicant(
-      toWhat: String,
-      id: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  )
 
   suspend fun unAcceptStaff(applicantId: String, eventId: String)
 
@@ -193,4 +186,6 @@ interface DbService {
       onSuccess: () -> Unit,
       onError: (String) -> Unit
   )
+
+  suspend fun getCommittee(associationId: String): List<CommitteeMember>
 }

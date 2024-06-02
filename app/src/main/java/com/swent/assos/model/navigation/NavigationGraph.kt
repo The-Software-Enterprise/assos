@@ -14,6 +14,7 @@ import com.swent.assos.model.view.AppViewModel
 import com.swent.assos.ui.login.LoginScreen
 import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
+import com.swent.assos.ui.screens.assoDetails.CommitteeDetails
 import com.swent.assos.ui.screens.assoDetails.EventDetails
 import com.swent.assos.ui.screens.assoDetails.NewsDetails
 import com.swent.assos.ui.screens.manageAsso.ApplicationManagement
@@ -148,6 +149,13 @@ fun NavigationGraph(navController: NavHostController = rememberNavController()) 
               navigationActions = navigationActions,
               eventId = backStackEntry.arguments?.getString("eventId") ?: "")
         }
+        composable(Destinations.COMMITTEE_DETAILS.route + "/{assoId}" + "/{assoName}") {
+            backStackEntry ->
+          CommitteeDetails(
+              navigationActions = navigationActions,
+              assoId = backStackEntry.arguments?.getString("assoId") ?: "",
+              assoName = backStackEntry.arguments?.getString("assoName") ?: "")
+        }
       }
 }
 
@@ -174,5 +182,6 @@ enum class Destinations(val route: String) {
   APPLICATIONS("Applications"),
   SAVED("Saved"),
   CREATE_POSITION("CreatePosition"),
-  POS_DETAILS("PosDetails")
+  POS_DETAILS("PosDetails"),
+  COMMITTEE_DETAILS("CommitteeDetails")
 }
