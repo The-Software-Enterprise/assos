@@ -25,8 +25,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.EventViewModel
+import com.swent.assos.ui.components.JoinUsButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
-import com.swent.assos.ui.screens.assoDetails.JoinUsButton
 
 @Composable
 fun EmailSubmit(onClick: () -> Unit) {
