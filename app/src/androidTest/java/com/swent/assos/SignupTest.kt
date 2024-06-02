@@ -12,8 +12,8 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.LoginViewModel
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.SignupScreen
-import com.swent.assos.ui.login.LoginScreen
-import com.swent.assos.ui.login.SignUpScreen
+import com.swent.assos.ui.screens.login.LoginScreen
+import com.swent.assos.ui.screens.login.SignUpScreen
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
