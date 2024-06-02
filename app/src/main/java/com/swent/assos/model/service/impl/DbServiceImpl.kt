@@ -430,6 +430,35 @@ constructor(
           .update("banner", banner.toString())
           .await()
     }
+    val query = firestore.collection("tickets").whereEqualTo("userId", userId)
+    val snapshot =
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
+
+  override suspend fun getTicketsFromUserIdAndEventId(
+      userId: String,
+      eventId: String
+  ): List<Ticket> {
+    val query =
+        firestore
+            .collection("tickets")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("eventId", eventId)
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
+
+  override suspend fun getTicketFromId(ticketId: String): Ticket {
+    val query = firestore.collection("tickets").document(ticketId)
+    val snapshot = query.get().await() ?: return Ticket("", "", "")
+    return deserializeTicket(snapshot)
   }
 
   override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> =
