@@ -52,11 +52,6 @@ fun HomeItem(id: String, navigationActions: NavigationActions) {
 
   val news = allNews.find { it.id == id } ?: News()
 
-  /*if (news.eventId != "") {
-    eventViewModel.getEvent(news.eventId)
-    assoId = event.associationId
-  }*/
-
   title = news.title
   description = news.description
   assoId = news.associationId

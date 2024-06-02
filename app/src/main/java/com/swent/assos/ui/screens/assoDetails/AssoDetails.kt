@@ -15,9 +15,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Accessibility
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.FabPosition
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,9 +45,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.swent.assos.R
+import com.swent.assos.model.navigation.Destinations
 import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.ui.components.EventItem
@@ -242,6 +248,20 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
       }
 
       item {
+        Button(
+            modifier =
+                Modifier.testTag("CommitteeButton").padding(30.dp).width(250.dp).height(60.dp),
+            shape = RoundedCornerShape(16.dp),
+            onClick = {
+              navigationActions.navigateTo(
+                  Destinations.COMMITTEE_DETAILS.route + "/${assoId}" + "/${association.acronym}")
+            }) {
+              Icon(imageVector = Icons.Default.Accessibility, contentDescription = null)
+              Text("The Committee", modifier = Modifier.padding(start = 12.dp), fontSize = 18.sp)
+            }
+      }
+
+      item {
         Text(
             text = "Latest Positions",
             style = MaterialTheme.typography.headlineMedium,
@@ -266,7 +286,7 @@ fun AssoDetails(assoId: String, navigationActions: NavigationActions) {
                   modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp))
         }
       }
-      item { Spacer(modifier = Modifier.height(20.dp)) }
+      item { Spacer(modifier = Modifier.height(60.dp)) }
     }
   }
 }

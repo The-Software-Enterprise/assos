@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.AssociationPosition
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
@@ -30,6 +31,9 @@ constructor(
 ) : ViewModel() {
   val currentUser = DataCache.currentUser.asStateFlow()
 
+  private val _committee = MutableStateFlow(emptyList<CommitteeMember>())
+  val committee = _committee.asStateFlow()
+
   private val _association = MutableStateFlow(Association())
   val association = _association.asStateFlow()
 
@@ -47,6 +51,10 @@ constructor(
 
   private val _positions = MutableStateFlow<List<OpenPositions>>(emptyList())
   val positions = _positions.asStateFlow()
+
+  fun getCommittee(associationId: String) {
+    viewModelScope.launch(ioDispatcher) { _committee.value = dbService.getCommittee(associationId) }
+  }
 
   fun getPositions(associationId: String) {
     viewModelScope.launch(ioDispatcher) { _positions.value = dbService.getPositions(associationId) }

@@ -27,6 +27,7 @@ import com.google.zxing.MultiFormatWriter
 import com.google.zxing.common.BitMatrix
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
+import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
 import com.swent.assos.model.data.OpenPositions
@@ -214,6 +215,14 @@ fun deserializeApplicant(doc: DocumentSnapshot): Applicant {
       userId = doc.getString("userId") ?: "",
       status = doc.getString("status") ?: "unknown",
       createdAt = timestampToLocalDateTime(doc.getTimestamp("createdAt")))
+}
+
+fun deserializeCommitteeMember(doc: DocumentSnapshot): CommitteeMember {
+  return CommitteeMember(
+      id = doc.id,
+      memberId = doc.getString("memberId") ?: "",
+      position = doc.getString("position") ?: "unknown",
+      rank = doc.getLong("rank")?.toInt() ?: 0)
 }
 
 fun serialize(user: User): Map<String, Any> {
