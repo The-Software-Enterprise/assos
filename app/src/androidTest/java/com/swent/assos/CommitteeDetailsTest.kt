@@ -4,13 +4,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.User
 import com.swent.assos.model.serialize
+import com.swent.assos.screens.AssoDetailsScreen
 import com.swent.assos.screens.CreateNewsScreen
+import com.swent.assos.ui.screens.assoDetails.AssoDetails
 import com.swent.assos.ui.screens.assoDetails.CommitteeDetails
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
@@ -43,6 +46,28 @@ class CommitteeDetailsTest : SuperTest() {
         .collection("committee")
         .document(member.id)
         .set(member)
+  }
+
+  @Test
+  fun testNavigationToCommitteeDetails() {
+
+    composeTestRule.activity.setContent {
+      AssoDetails(assoId = assoId, navigationActions = mockNavActions)
+    }
+
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Check if the committee button is displayed") {
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithText("The Committee").isDisplayed() },
+              timeoutMillis = 10000)
+        }
+
+        step("Click on the committee button") {
+          composeTestRule.onNodeWithText("The Committee").performClick()
+        }
+      }
+    }
   }
 
   @Test
