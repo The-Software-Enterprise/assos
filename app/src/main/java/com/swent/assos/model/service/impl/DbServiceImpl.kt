@@ -2,6 +2,7 @@ package com.swent.assos.model.service.impl
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -249,19 +250,20 @@ constructor(
       eventId: String,
       status: ParticipationStatus
   ) {
-    firestoreCallWithCatchError { // remove ticket from ticket collection
-      firestore
-          .collection("tickets")
-          .whereEqualTo("userId", applicantId)
-          .whereEqualTo("eventId", eventId)
-          .whereEqualTo("participantStatus", status)
-          .get()
-          .addOnSuccessListener {
-            for (document in it.documents) {
-              firestore.collection("tickets").document(document.id).delete()
-            }
+    // remove ticket from ticket collection
+    firestore
+        .collection("tickets")
+        .whereEqualTo("userId", applicantId)
+        .whereEqualTo("eventId", eventId)
+        .whereEqualTo("participantStatus", status)
+        .get()
+        .addOnSuccessListener {
+          for (document in it.documents) {
+            firestore.collection("tickets").document(document.id).delete()
+            firestore.collection("users/$applicantId/tickets").document(document.id).delete()
           }
-    }
+        }
+        .addOnFailureListener { Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show() }
   }
 
   override suspend fun deleteEvent(eventId: String) {
@@ -783,6 +785,44 @@ constructor(
           .update("banner", banner.toString())
           .await()
     }
+  }
+
+  override suspend fun getTickets(
+      userId: String,
+      lastDocumentSnapshot: DocumentSnapshot?
+  ): List<Ticket> {
+    if (userId.isEmpty()) {
+      return emptyList()
+    }
+    val query = firestore.collection("tickets").whereEqualTo("userId", userId)
+    val snapshot =
+        when (lastDocumentSnapshot) {
+          null -> query.limit(10).get().await()
+          else -> query.startAfter(lastDocumentSnapshot).limit(10).get().await()
+        }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
+
+  override suspend fun getTicketsFromUserIdAndEventId(
+      userId: String,
+      eventId: String
+  ): List<Ticket> {
+    val query =
+        firestore
+            .collection("tickets")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("eventId", eventId)
+    val snapshot = query.get().await()
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
+
+  override suspend fun getTicketFromId(ticketId: String): Ticket {
+    val query = firestore.collection("tickets").document(ticketId)
+    val snapshot = query.get().await() ?: return Ticket("", "", "")
+    return deserializeTicket(snapshot)
   }
 
   override suspend fun getTicketsFromEventId(eventId: String): List<Ticket> =
