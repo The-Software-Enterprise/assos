@@ -43,7 +43,8 @@ import java.util.Date
 val MIN_LOADED_ITEMS = 8
 
 fun shadows_item(start: Dp, top: Dp, end: Dp, bottom: Dp, shape: Shape): Modifier {
-  return Modifier.padding(start, top, end, bottom)
+  return Modifier
+      .padding(start, top, end, bottom)
       .shadow(elevation = 6.dp, shape = shape)
       .shadow(elevation = 2.dp, shape = shape)
 }
@@ -245,30 +246,35 @@ fun serialize(user: User): Map<String, Any> {
 }
 
 fun deserializeUser(doc: DocumentSnapshot): User {
-  return User(
-      id = doc.id,
-      firstName = doc.getString("firstname") ?: "",
-      lastName = doc.getString("name") ?: "",
-      email = doc.getString("email") ?: "",
-      following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
-      appliedAssociation =
-          (doc.get("appliedAssociation") as? MutableList<String>) ?: mutableListOf(),
-      appliedStaffing = (doc.get("appliedStaffing") as? MutableList<String>) ?: mutableListOf(),
-      associations =
-          doc.get("associations")?.let { associations ->
-            (associations as? List<Map<String, Any>>)?.mapNotNull {
-              val assoId = it["assoId"] as? String
-              val position = it["position"] as? String
-              val rank = (it["rank"] as? Long)?.toInt()
-              if (assoId != null && position != null && rank != null) {
-                Triple(assoId, position, rank)
-              } else {
-                null
-              }
-            } ?: emptyList()
-          } ?: emptyList(),
-      savedEvents = (doc.get("savedEvents") as? MutableList<String>) ?: mutableListOf(),
-      savedNews = (doc.get("savedNews") as? MutableList<String>) ?: mutableListOf())
+    if (doc.exists()) {
+        return User(
+            id = doc.id,
+            firstName = doc.getString("firstname") ?: "",
+            lastName = doc.getString("name") ?: "",
+            email = doc.getString("email") ?: "",
+            following = (doc.get("following") as? MutableList<String>) ?: mutableListOf(),
+            appliedAssociation =
+            (doc.get("appliedAssociation") as? MutableList<String>) ?: mutableListOf(),
+            appliedStaffing = (doc.get("appliedStaffing") as? MutableList<String>)
+                ?: mutableListOf(),
+            associations =
+            doc.get("associations")?.let { associations ->
+                (associations as? List<Map<String, Any>>)?.mapNotNull {
+                    val assoId = it["assoId"] as? String
+                    val position = it["position"] as? String
+                    val rank = (it["rank"] as? Long)?.toInt()
+                    if (assoId != null && position != null && rank != null) {
+                        Triple(assoId, position, rank)
+                    } else {
+                        null
+                    }
+                } ?: emptyList()
+            } ?: emptyList(),
+            savedEvents = (doc.get("savedEvents") as? MutableList<String>) ?: mutableListOf(),
+            savedNews = (doc.get("savedNews") as? MutableList<String>) ?: mutableListOf())
+    } else {
+        return User()
+    }
 }
 
 fun generateQRCode(text: String, size: Int): Bitmap {
