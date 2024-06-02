@@ -1,6 +1,7 @@
 package com.swent.assos
 
 import androidx.activity.compose.setContent
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -89,6 +90,20 @@ class AssoDetailsTest : SuperTest() {
 
     composeTestRule.activity.setContent {
       AssoDetails(assoId = assoId, navigationActions = mockNavActions)
+    }
+  }
+
+  @Test
+  fun testNavigationToCommitteeDetails() {
+    run {
+      ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
+        step("Check if the committee button is displayed") {
+          composeTestRule.onNodeWithText("The Committee").assertIsDisplayed()
+        }
+        step("Click on the committee button") {
+          composeTestRule.onNodeWithText("The Committee").performClick()
+        }
+      }
     }
   }
 
