@@ -23,7 +23,7 @@ Figma : https://www.figma.com/team_invite/redeem/Z6aOlqKXBjUkzQUDpnfWkr
 <img width="1291" alt="Capture d’écran 2024-05-03 à 13 23 30" src="https://github.com/The-Software-Enterprise/assos/assets/91310864/88f8ed79-8504-4966-897f-4e1aeb3b26c8">
 
 **App Demo** \
-https://drive.google.com/file/d/1qz8so-vaiTXz4xeH3b-ecy717V9jR5cF/view?usp=share_link
+https://drive.google.com/file/d/1NErWjYjNT8Xtwnz8Pj_R8FFo1AmbMK-g/view?usp=sharing
 
 **PRD** \
 [MVP Swent.pdf](https://github.com/The-Software-Enterprise/assos/files/15370886/MVP.Swent.pdf)
