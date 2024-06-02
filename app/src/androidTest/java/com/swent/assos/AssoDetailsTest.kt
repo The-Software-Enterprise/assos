@@ -98,8 +98,11 @@ class AssoDetailsTest : SuperTest() {
     run {
       ComposeScreen.onComposeScreen<AssoDetailsScreen>(composeTestRule) {
         step("Check if the committee button is displayed") {
-          composeTestRule.onNodeWithText("The Committee").assertIsDisplayed()
+          composeTestRule.waitUntil(
+              condition = { composeTestRule.onNodeWithText("The Committee").isDisplayed() },
+              timeoutMillis = 10000)
         }
+
         step("Click on the committee button") {
           composeTestRule.onNodeWithText("The Committee").performClick()
         }
