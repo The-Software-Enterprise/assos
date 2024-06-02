@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.ChipColors
@@ -50,7 +51,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -195,6 +195,17 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
                               }
                             }
                             .size(30.dp))
+                if (associations.map { it.id }.contains(assoId) && !loading.value) {
+                  Image(
+                      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                      imageVector = Icons.Default.Delete,
+                      contentDescription = null,
+                      modifier =
+                          Modifier.testTag("DeleteButton")
+                              .padding(16.dp)
+                              .clip(RoundedCornerShape(100))
+                              .clickable { conf = true })
+                }
               })
         }
       },
@@ -210,7 +221,6 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               label = { labelStaffButton() },
           )
         }
-        DeleteButton { conf = true }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         if (conf) {

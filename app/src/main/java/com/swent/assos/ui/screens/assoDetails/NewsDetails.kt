@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -64,7 +65,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.NewsViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.PageTitleWithGoBack
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -92,11 +92,6 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
 
   Scaffold(
       modifier = Modifier.semantics { testTagsAsResourceId = true }.testTag("NewsDetailsScreen"),
-      floatingActionButton = {
-        if (associations.map { it.id }.contains(specificNews.associationId)) {
-          DeleteButton { conf = true }
-        }
-      },
       floatingActionButtonPosition = FabPosition.Center,
       topBar = {
         Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
@@ -132,49 +127,61 @@ fun NewsDetails(newsId: String, assoId: String, navigationActions: NavigationAct
                               })
                     }
               },
-              navigationActions = navigationActions)
-          Image(
-              colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector =
-                  if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-              contentDescription = null,
-              modifier =
-                  Modifier.testTag("SavedIcon")
-                      .padding(16.dp)
-                      .clip(RoundedCornerShape(100))
-                      .clickable {
-                        when (isSaved.value) {
-                          true -> {
-                            viewModel.unSaveNews(newsId)
-                            Toast.makeText(
-                                    context,
-                                    "You have successfully removed the news from your saved list",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          }
-                          false -> {
-                            viewModel.saveNews(newsId)
-                            Toast.makeText(
-                                    context,
-                                    "You have successfully saved the news",
-                                    Toast.LENGTH_SHORT)
-                                .show()
-                          }
-                        }
-                      }
-                      .size(30.dp)
-                      .align(Alignment.TopEnd))
+              navigationActions = navigationActions,
+              actionButton = {
+                Image(
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                    imageVector =
+                        if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                    contentDescription = null,
+                    modifier =
+                        Modifier.testTag("SavedIcon")
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(100))
+                            .clickable {
+                              when (isSaved.value) {
+                                true -> {
+                                  viewModel.unSaveNews(newsId)
+                                  Toast.makeText(
+                                          context,
+                                          "You have successfully removed the news from your saved list",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                }
+                                false -> {
+                                  viewModel.saveNews(newsId)
+                                  Toast.makeText(
+                                          context,
+                                          "You have successfully saved the news",
+                                          Toast.LENGTH_SHORT)
+                                      .show()
+                                }
+                              }
+                            }
+                            .size(30.dp))
+                if (associations.map { it.id }.contains(specificNews.associationId)) {
+                  Image(
+                      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                      imageVector = Icons.Default.Delete,
+                      contentDescription = null,
+                      modifier =
+                          Modifier.testTag("DeleteButton")
+                              .padding(16.dp)
+                              .clip(RoundedCornerShape(100))
+                              .clickable { conf = true })
+                }
+              })
         }
       }) { paddingValues ->
         if (conf) {
           ConfirmDialog(
-              { conf = false },
-              {
+              onDismiss = { conf = false },
+              onConfirm = {
                 viewModel.deleteNews(newsId)
                 navigationActions.goBack()
                 conf = false
               },
-              specificNews.title)
+              title = specificNews.title)
         }
         LazyColumn(modifier = Modifier.padding(paddingValues).testTag("Content")) {
           item {
