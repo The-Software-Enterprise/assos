@@ -3,8 +3,10 @@ package com.swent.assos.ui.screens.assoDetails
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,8 +14,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.AssistChipDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
@@ -26,14 +31,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.TextStyle
@@ -50,7 +53,6 @@ import com.swent.assos.model.navigation.NavigationActions
 import com.swent.assos.model.view.AssoViewModel
 import com.swent.assos.model.view.EventViewModel
 import com.swent.assos.model.view.ProfileViewModel
-import com.swent.assos.ui.components.DeleteButton
 import com.swent.assos.ui.components.LoadingCircle
 import com.swent.assos.ui.components.PageTitleWithGoBack
 import com.swent.assos.ui.screens.manageAsso.createEvent.components.EventContent
@@ -135,56 +137,78 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
       topBar = {
         Box(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
           PageTitleWithGoBack(
-              title = event.title,
+              title = {
+                Column(
+                    modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center) {
+                      Text(
+                          text = event.title,
+                          style =
+                              TextStyle(
+                                  fontSize = 24.sp,
+                                  lineHeight = 20.sp,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  color = MaterialTheme.colorScheme.onBackground),
+                          modifier = Modifier.testTag("PageTitle"))
+                      Text(
+                          text = asso.acronym,
+                          style =
+                              TextStyle(
+                                  textDecoration = TextDecoration.Underline,
+                                  fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
+                                  fontWeight = FontWeight.SemiBold,
+                                  fontSize = 14.sp,
+                                  color = MaterialTheme.colorScheme.onBackground,
+                              ),
+                          textDecoration = TextDecoration.Underline,
+                          modifier =
+                              Modifier.clickable {
+                                navigationActions.navigateTo(
+                                    Destinations.ASSO_DETAILS.route + "/${assoId}")
+                              })
+                    }
+              },
               navigationActions = navigationActions,
               actionButton = {
-                Row {
-                  Text(
-                      text = asso.acronym,
-                      style =
-                          TextStyle(
-                              textDecoration = TextDecoration.Underline,
-                              fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
-                              fontWeight = FontWeight.SemiBold,
-                              fontSize = 14.sp,
-                              color = MaterialTheme.colorScheme.onBackground,
-                          ),
-                      textDecoration = TextDecoration.Underline,
+                Image(
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
+                    imageVector =
+                        if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+                    contentDescription = null,
+                    modifier =
+                        Modifier.testTag("SavedIcon")
+                            .padding(16.dp)
+                            .clip(RoundedCornerShape(100))
+                            .clickable {
+                              if (isSaved.value) {
+                                eventViewModel.unSaveEvent(eventId)
+                                Toast.makeText(
+                                        context,
+                                        "You have successfully removed the event from your saved list",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              } else {
+                                eventViewModel.saveEvent(eventId)
+                                Toast.makeText(
+                                        context,
+                                        "You have successfully saved the event",
+                                        Toast.LENGTH_SHORT)
+                                    .show()
+                              }
+                            }
+                            .size(30.dp))
+                if (associations.map { it.id }.contains(assoId) && !loading.value) {
+                  Image(
+                      colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.error),
+                      imageVector = Icons.Default.Delete,
+                      contentDescription = null,
                       modifier =
-                          Modifier.padding(end = 16.dp).clickable {
-                            navigationActions.navigateTo(
-                                Destinations.ASSO_DETAILS.route + "/${assoId}")
-                          })
+                          Modifier.testTag("DeleteButton")
+                              .padding(16.dp)
+                              .clip(RoundedCornerShape(100))
+                              .clickable { conf = true })
                 }
               })
-          Image(
-              colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground),
-              imageVector =
-                  if (isSaved.value) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
-              contentDescription = null,
-              modifier =
-                  Modifier.testTag("SavedIcon")
-                      .padding(16.dp)
-                      .clip(RoundedCornerShape(100))
-                      .clickable {
-                        if (isSaved.value) {
-                          eventViewModel.unSaveEvent(eventId)
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully removed the event from your saved list",
-                                  Toast.LENGTH_SHORT)
-                              .show()
-                        } else {
-                          eventViewModel.saveEvent(eventId)
-                          Toast.makeText(
-                                  context,
-                                  "You have successfully saved the event",
-                                  Toast.LENGTH_SHORT)
-                              .show()
-                        }
-                      }
-                      .size(30.dp)
-                      .align(Alignment.TopEnd))
         }
       },
       floatingActionButton = {
@@ -199,11 +223,10 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               label = { labelStaffButton() },
           )
         }
-        DeleteButton { conf = true }
       },
       floatingActionButtonPosition = FabPosition.Center) { paddingValues ->
         if (conf) {
-          ConfirmDialog(
+          ConfirmEventDialog(
               onDismiss = { conf = false },
               onConfirm = {
                 conf = false
@@ -224,4 +247,15 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
               navigationActions = navigationActions)
         }
       }
+}
+
+@Composable
+fun ConfirmEventDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
+  AlertDialog(
+      onDismissRequest = onDismiss,
+      title = { Text("Delete event") },
+      text = { Text("Are you sure to delete $title ?") },
+      confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
+      containerColor = MaterialTheme.colorScheme.background,
+      dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }
