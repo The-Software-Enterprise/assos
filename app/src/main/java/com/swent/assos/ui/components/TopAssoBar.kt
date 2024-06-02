@@ -33,7 +33,12 @@ import com.swent.assos.model.view.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewModel: AssoViewModel) {
+fun TopAssoBar(
+    asso: Association,
+    navigationActions: NavigationActions,
+    viewModel: AssoViewModel,
+    joinButton: @Composable () -> Unit = {}
+) {
   val associationFollowed = viewModel.associationFollowed.collectAsState()
   val profileViewModel: ProfileViewModel = hiltViewModel()
 
@@ -60,6 +65,7 @@ fun TopAssoBar(asso: Association, navigationActions: NavigationActions, viewMode
             modifier = Modifier.testTag("GoBackButton").clickable { navigationActions.goBack() })
       },
       actions = {
+        joinButton()
         if (asso.id != "") {
           AssistChip(
               colors =
