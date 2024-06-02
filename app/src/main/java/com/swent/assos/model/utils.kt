@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
@@ -329,4 +330,13 @@ fun isNetworkAvailable(context: Context): Boolean {
   val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
   return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
       capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+}
+
+suspend fun <T> firestoreCallWithCatchError(firestoreCall: suspend () -> T?): T? {
+  try {
+    return firestoreCall()
+  } catch (e: Exception) {
+    Log.e("Firestore", e.message ?: "Unknown error")
+    return null
+  }
 }
