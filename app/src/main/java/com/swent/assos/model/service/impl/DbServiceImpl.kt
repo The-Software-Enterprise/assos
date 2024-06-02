@@ -10,27 +10,18 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.swent.assos.model.data.Applicant
 import com.swent.assos.model.data.Association
-import com.swent.assos.model.data.CommitteeMember
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.News
-import com.swent.assos.model.data.OpenPositions
-import com.swent.assos.model.data.ParticipationStatus
 import com.swent.assos.model.data.Ticket
-import com.swent.assos.model.data.User
-import com.swent.assos.model.deSerializeOpenPositions
 import com.swent.assos.model.deserializeApplicant
 import com.swent.assos.model.deserializeAssociation
 import com.swent.assos.model.deserializeCommitteeMember
 import com.swent.assos.model.deserializeEvent
 import com.swent.assos.model.deserializeNews
 import com.swent.assos.model.deserializeTicket
-import com.swent.assos.model.deserializeUser
 import com.swent.assos.model.firestoreCallWithCatchError
-import com.swent.assos.model.isNetworkAvailable
-import com.swent.assos.model.local_database.LocalDatabaseProvider
 import com.swent.assos.model.serialize
-import com.swent.assos.model.service.DbService
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -38,7 +29,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okio.IOException
 
 class DbServiceImpl
 @Inject
