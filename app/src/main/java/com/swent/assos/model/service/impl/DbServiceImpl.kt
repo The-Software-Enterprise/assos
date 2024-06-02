@@ -32,9 +32,9 @@ import com.swent.assos.model.local_database.LocalDatabaseProvider
 import com.swent.assos.model.serialize
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import okio.IOException
-import javax.inject.Inject
 
 class DbServiceImpl
 @Inject
