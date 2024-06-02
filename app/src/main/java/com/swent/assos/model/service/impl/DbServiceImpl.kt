@@ -2,6 +2,7 @@ package com.swent.assos.model.service.impl
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
@@ -30,9 +31,9 @@ import com.swent.assos.model.local_database.LocalDatabaseProvider
 import com.swent.assos.model.serialize
 import com.swent.assos.model.service.DbService
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import okio.IOException
+import javax.inject.Inject
 
 class DbServiceImpl
 @Inject
@@ -185,8 +186,10 @@ constructor(
         .addOnSuccessListener {
           for (document in it.documents) {
             firestore.collection("tickets").document(document.id).delete()
+            firestore.collection("users/$applicantId/tickets").document(document.id).delete()
           }
         }
+        .addOnFailureListener { Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show() }
   }
 
   override suspend fun deleteEvent(eventId: String) {
@@ -704,6 +707,22 @@ constructor(
         } else {
           query.startAfter(lastDocumentSnapshot).limit(10).get().await()
         }
+    if (snapshot.isEmpty) {
+      return emptyList()
+    }
+    return snapshot.documents.map { deserializeTicket(it) }
+  }
+
+  override suspend fun getTicketsFromUserIdAndEventId(
+      userId: String,
+      eventId: String
+  ): List<Ticket> {
+    val query =
+        firestore
+            .collection("tickets")
+            .whereEqualTo("userId", userId)
+            .whereEqualTo("eventId", eventId)
+    val snapshot = query.get().await()
     if (snapshot.isEmpty) {
       return emptyList()
     }

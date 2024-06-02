@@ -1,11 +1,13 @@
 package com.swent.assos.model.view
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swent.assos.model.data.DataCache
 import com.swent.assos.model.data.Event
 import com.swent.assos.model.data.ParticipationStatus
+import com.swent.assos.model.data.Ticket
 import com.swent.assos.model.di.IoDispatcher
 import com.swent.assos.model.generateUniqueID
 import com.swent.assos.model.service.DbService
@@ -58,7 +60,23 @@ constructor(
   }
 
   fun deleteEvent(eventId: String) {
-    viewModelScope.launch(ioDispatcher) { dbService.deleteEvent(eventId) }
+    var newTickets = emptyList<Ticket>()
+    viewModelScope.launch(ioDispatcher) {
+      dbService.deleteEvent(eventId)
+      val associatedTicket =
+          dbService.getTicketsFromUserIdAndEventId(DataCache.currentUser.value.id, eventId)
+      if (associatedTicket.isNotEmpty()) {
+        dbService.removeTicketFromUser(
+            DataCache.currentUser.value.id,
+            eventId,
+            // there should be only one ticket with this eventId and userId
+            associatedTicket[0].status)
+      }
+      newTickets = dbService.getTicketsFromEventId(eventId)
+    }
+    DataCache.currentUser.value =
+        DataCache.currentUser.value.copy(tickets = newTickets.map { it.id })
+    Log.d("EventViewModel", "datacache: ${DataCache.currentUser.value.tickets}")
   }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {
