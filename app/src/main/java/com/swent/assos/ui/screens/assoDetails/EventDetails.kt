@@ -252,10 +252,10 @@ fun EventDetails(eventId: String, navigationActions: NavigationActions, assoId: 
 @Composable
 fun ConfirmEventDialog(onDismiss: () -> Unit, onConfirm: () -> Unit, title: String) {
   AlertDialog(
-    onDismissRequest = onDismiss,
-    title = { Text("Delete event") },
-    text = { Text("Are you sure to delete $title ?") },
-    confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
-    containerColor = MaterialTheme.colorScheme.background,
-    dismissButton = { Button(onClick = onDismiss) { Text("No") } })
+      onDismissRequest = onDismiss,
+      title = { Text("Delete event") },
+      text = { Text("Are you sure to delete $title ?") },
+      confirmButton = { Button(onClick = onConfirm) { Text("Yes") } },
+      containerColor = MaterialTheme.colorScheme.background,
+      dismissButton = { Button(onClick = onDismiss) { Text("No") } })
 }
