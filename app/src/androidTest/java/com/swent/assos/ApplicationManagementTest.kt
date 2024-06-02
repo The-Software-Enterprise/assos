@@ -26,7 +26,7 @@ import org.junit.runner.RunWith
 @HiltAndroidTest
 class ApplicationManagementTest : SuperTest() {
 
-  private val assoID = "02s16UZba2Bsx5opTcQb"
+  private val assoID = "5i5QaClE1R5nWKhUY6PF"
   private val applicantId = "123456"
 
   val user1 =
@@ -59,7 +59,6 @@ class ApplicationManagementTest : SuperTest() {
         .update(
             "associations",
             FieldValue.arrayUnion(mapOf("assoId" to assoID, "position" to "Director", "rank" to 1)))
-
     FirebaseFirestore.getInstance()
         .collection("associations")
         .document(assoID)
@@ -99,11 +98,13 @@ class ApplicationManagementTest : SuperTest() {
 
           applicationListItem { assertIsDisplayed() }
         }
-        step("Check the accept button") { composeTestRule.onNodeWithText("Accept").performClick() }
+        step("Check the pending button") {
+          composeTestRule.onNodeWithText("pending").performClick()
+        }
 
         step("Check if the staff is accepted") {
-          composeTestRule.onNodeWithText("Un-Accept").assertIsDisplayed()
-          composeTestRule.onNodeWithText("Un-Accept").performClick()
+          composeTestRule.onNodeWithText("accepted").assertIsDisplayed()
+          composeTestRule.onNodeWithText("accepted").performClick()
         }
         step("Check if the garbage button is displayed") {
           composeTestRule.onNodeWithTag("GarbageIcon").assertIsDisplayed()
@@ -111,11 +112,8 @@ class ApplicationManagementTest : SuperTest() {
         }
         step("Check if the staff list is displayed") {
           composeTestRule.waitUntil(
-              condition = { composeTestRule.onNodeWithTag("GarbageIcon").isNotDisplayed() },
+              condition = { composeTestRule.onNodeWithText("No Applicants").isNotDisplayed() },
               timeoutMillis = 10000)
-        }
-        step("Check if the message no applicants is displayed") {
-          composeTestRule.onNodeWithText("No applicants").assertIsDisplayed()
         }
       }
     }

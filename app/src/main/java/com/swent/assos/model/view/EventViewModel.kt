@@ -52,17 +52,16 @@ constructor(
   }
 
   fun getEvent(eventId: String) {
-    viewModelScope.launch(ioDispatcher) {
-      _event.value = dbService.getEventById(eventId)
-      _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(_event.value.id) }
-      _isSaved.update { DataCache.currentUser.value.savedEvents.contains(_event.value.id) }
-    }
+    _appliedStaff.update { DataCache.currentUser.value.appliedStaffing.contains(eventId) }
+    _isSaved.update { DataCache.currentUser.value.savedEvents.contains(eventId) }
+    viewModelScope.launch(ioDispatcher) { _event.value = dbService.getEventById(eventId) }
   }
 
   fun deleteEvent(eventId: String) {
     var newTickets = emptyList<Ticket>()
     viewModelScope.launch(ioDispatcher) {
       dbService.deleteEvent(eventId)
+      dbService.deleteApplicants(eventId)
       val associatedTicket =
           dbService.getTicketsFromUserIdAndEventId(DataCache.currentUser.value.id, eventId)
       if (associatedTicket.isNotEmpty()) {
@@ -76,7 +75,6 @@ constructor(
     }
     DataCache.currentUser.value =
         DataCache.currentUser.value.copy(tickets = newTickets.map { it.id })
-    Log.d("EventViewModel", "datacache: ${DataCache.currentUser.value.tickets}")
   }
 
   fun createEvent(onSuccess: () -> Unit, onError: () -> Unit) {

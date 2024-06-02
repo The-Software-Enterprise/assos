@@ -95,45 +95,59 @@ fun ApplicationListItem(
                   colors =
                       if (status == "accepted")
                           AssistChipDefaults.assistChipColors(
-                              containerColor = MaterialTheme.colorScheme.surface)
+                              containerColor = MaterialTheme.colorScheme.secondary)
+                      else if (status == "rejected")
+                          AssistChipDefaults.assistChipColors(
+                              containerColor = MaterialTheme.colorScheme.error)
                       else
                           AssistChipDefaults.assistChipColors(
-                              containerColor = MaterialTheme.colorScheme.primary),
+                              containerColor = MaterialTheme.colorScheme.surface),
                   border = null,
                   modifier =
                       Modifier.testTag("AcceptApplicationButton").padding(5.dp).fillMaxHeight(),
                   onClick = {
                     scope.launch {
                       if (isStaffing) {
-                        if (status == "accepted") {
-                          applicantsViewModel.unAcceptStaff(applicant.id, eventId)
-                          status = "pending" // Assuming pending is the initial state
-                        } else {
-                          applicantsViewModel.acceptStaff(applicant.id, eventId)
-                          status = "accepted"
+                        when (status) {
+                          "accepted" -> {
+                            applicantsViewModel.rejectStaff(applicant.id, eventId)
+                            status = "rejected"
+                          }
+                          "pending" -> {
+                            applicantsViewModel.acceptStaff(applicant.id, eventId)
+                            status = "accepted"
+                          }
+                          else -> {
+                            applicantsViewModel.unAcceptStaff(applicant.id, eventId)
+                            status = "pending"
+                          }
                         }
                       } else {
-                        if (status == "accepted") {
-                          assoViewModel.quitAssociation(eventId, userId)
-                          applicantsViewModel.unAcceptApplicant(
-                              applicantId = applicant.id, assoId = eventId)
-                          status = "pending"
-                        } else {
-
-                          assoViewModel.joinAssociation(eventId, userId)
-                          applicantsViewModel.acceptApplicant(
-                              applicantId = applicant.id, assoId = eventId)
-                          status = "accepted"
+                        when (status) {
+                          "accepted" -> {
+                            assoViewModel.quitAssociation(eventId, userId)
+                            applicantsViewModel.rejectApplicant(
+                                applicantId = applicant.id, assoId = assoId)
+                            status = "rejected"
+                          }
+                          "pending" -> {
+                            assoViewModel.joinAssociation(eventId, userId)
+                            applicantsViewModel.acceptApplicant(
+                                applicantId = applicant.id, assoId = assoId)
+                            status = "accepted"
+                          }
+                          else -> {
+                            assoViewModel.quitAssociation(eventId, userId)
+                            applicantsViewModel.unAcceptApplicant(applicant.id, assoId)
+                            status = "pending"
+                          }
                         }
                       }
                     }
                   },
                   label = {
                     Text(
-                        text = if (status == "accepted") "Un-Accept" else "Accept",
-                        color =
-                            if (status == "accepted") MaterialTheme.colorScheme.onSurface
-                            else MaterialTheme.colorScheme.onPrimary,
+                        text = status,
                         fontFamily = FontFamily(Font(R.font.sf_pro_display_regular)),
                         fontWeight = FontWeight.Medium,
                     )
@@ -147,7 +161,7 @@ fun ApplicationListItem(
                       Modifier.testTag("GarbageIcon")
                           .padding(start = 16.dp)
                           .clip(RoundedCornerShape(100))
-                          .clickable {
+                          .clickable(enabled = status != "pending") {
                             if (isStaffing) {
                               applicantsViewModel.deleteStaffRequest(userId, eventId)
                             } else {

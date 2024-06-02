@@ -62,17 +62,15 @@ interface DbService {
       userId: String
   ): List<News>
 
-  suspend fun addApplicant(
-      toWhat: String,
-      id: String,
-      userId: String,
-      onSuccess: () -> Unit,
-      onError: (String) -> Unit
-  )
-
   suspend fun unAcceptStaff(applicantId: String, eventId: String)
 
+  suspend fun rejectApplicant(applicantId: String, assoId: String)
+
+  suspend fun rejectStaff(applicantId: String, eventId: String)
+
   suspend fun acceptStaff(applicantId: String, eventId: String)
+
+  suspend fun deleteApplicants(eventId: String)
 
   fun createNews(news: News, onSucess: () -> Unit, onError: (String) -> Unit)
 
@@ -182,4 +180,11 @@ interface DbService {
   )
 
   suspend fun getPosition(associationId: String, positionId: String): OpenPositions
+
+  suspend fun deletePosition(
+      associationId: String,
+      positionId: String,
+      onSuccess: () -> Unit,
+      onError: (String) -> Unit
+  )
 }
