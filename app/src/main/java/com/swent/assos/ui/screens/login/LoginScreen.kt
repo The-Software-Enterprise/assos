@@ -1,4 +1,4 @@
-package com.swent.assos.ui.login
+package com.swent.assos.ui.screens.login
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

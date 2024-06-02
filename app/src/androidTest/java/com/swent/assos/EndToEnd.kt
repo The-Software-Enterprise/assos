@@ -17,10 +17,10 @@ import com.swent.assos.screens.HomeScreen
 import com.swent.assos.screens.LoginScreen
 import com.swent.assos.screens.ProfileScreen
 import com.swent.assos.screens.SignupScreen
-import com.swent.assos.ui.login.LoginScreen
-import com.swent.assos.ui.login.SignUpScreen
 import com.swent.assos.ui.screens.Explorer
 import com.swent.assos.ui.screens.assoDetails.AssoDetails
+import com.swent.assos.ui.screens.login.LoginScreen
+import com.swent.assos.ui.screens.login.SignUpScreen
 import com.swent.assos.ui.screens.profile.Following
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.github.kakaocup.compose.node.element.ComposeScreen
